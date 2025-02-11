@@ -1,0 +1,29 @@
+---
+en:
+  application:
+    account_menu:
+      login: Login
+      logout: Logout
+      logout_msg: Really log out?
+      my_account: My account
+    app_name: "Schulungen"
+    color_modes:
+      auto: Auto
+      dark: Dark
+      light: Light
+    footer:
+      address: Address / How to find us
+      impressum: Impressum
+      legal_notices: Legal notice
+      opening_hours: Opening and service hours
+      privacy_policy: Privacy policy
+      quicklinks: Quicklinks
+    main_menu:
+      color_mode: Color scheme
+      home: Start
+      language: Language
+      settings: Settings
+    menu: Menu
+    ub: University Library
+    ub_pb: UB Paderborn
+

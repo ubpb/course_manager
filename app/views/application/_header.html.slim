@@ -1,0 +1,12 @@
+header
+  .container.d-flex.flex-row.align-items-start.align-items-md-center.justify-content-between
+    = link_to root_path do
+      = inline_svg_tag "ub-logo.svg", alt: "Universitätsbibliothek Paderborn"
+
+    div
+      #app-name
+        = t("application.app_name")
+      .d-flex.gap-3.d-print-none
+        .ms-auto
+        = render "account_menu"
+        = render "main_menu"

@@ -1,0 +1,30 @@
+- global      = local_assigns.fetch(:global)      { false }
+- animate     = local_assigns.fetch(:animate)     { true }
+- dismissible = local_assigns.fetch(:dismissible) { true }
+
+- flash.each do |key, message|
+  ruby:
+    flash.delete(key)
+
+    alert_class = case key.to_sym
+      when :alert, :warning
+        "alert alert-warning"
+      when :error
+        "alert alert-danger"
+      when :notice, :info
+        "alert alert-info"
+      when :success
+        "alert alert-success"
+      else
+        "alert alert-primary"
+      end
+
+    alert_class += " alert-global shadow" if global
+    alert_class += " animate__animated animate__flipInX" if animate
+    alert_class += " alert-dismissible" if dismissible
+
+  - if message.is_a?(String)
+    div(class=alert_class role="alert")
+      == message
+      - if dismissible
+        button(type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close")

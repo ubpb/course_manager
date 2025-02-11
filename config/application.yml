@@ -1,0 +1,13 @@
+# Shared values get merged with the environment-specific values below
+shared:
+  color_mode:
+    enabled: true
+
+  locale_switching:
+    enabled: true
+
+# Values for the development environment
+development:
+
+# Values for the production environment
+production:

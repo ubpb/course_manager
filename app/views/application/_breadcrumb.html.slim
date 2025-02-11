@@ -1,0 +1,22 @@
+nav.mb-4(aria-label="breadcrumb")
+  ol.breadcrumb.p-0.m-0
+    li.breadcrumb-item
+      = link_to t("application.ub"), "https://ub.uni-paderborn.de", target: "_blank"
+
+    - if breadcrumb.empty?
+      li.breadcrumb-item.active
+        = t("application.app_name")
+    - else
+      li.breadcrumb-item
+        = link_to t("application.app_name"), root_path
+
+    - breadcrumb.each.with_index do |b, i|
+      - last_element = (i+1) == breadcrumb.count
+      - label        = b[:label]
+      - path         = b[:path]
+      li.breadcrumb-item(class=active_when(last_element))
+        - unless last_element
+          = link_to label, path
+        - else
+          = label
+

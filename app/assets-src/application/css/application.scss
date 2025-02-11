@@ -1,0 +1,91 @@
+// Use SASS math module
+@use "sass:math";
+
+//
+// Local fonts
+//
+@import "./fonts.scss";
+
+//
+// Import FontAwesome
+//
+$fa-font-path: "~node_modules/@fortawesome/fontawesome-free/webfonts";
+@import "@fortawesome/fontawesome-free/scss/fontawesome.scss";
+@import "@fortawesome/fontawesome-free/scss/regular.scss";
+@import "@fortawesome/fontawesome-free/scss/solid.scss";
+@import "@fortawesome/fontawesome-free/scss/brands.scss";
+
+//
+// Import Bootstrap
+//
+// 1. Include functions first (so you can manipulate colors, SVGs, calc, etc)
+@import "bootstrap/scss/functions";
+
+// 2. Include any default variable overrides here
+@import "./variables.scss"; // our custom variables and bootstrap overrides
+
+// 3. Include remainder of required Bootstrap stylesheets
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/variables-dark";
+
+// 4. Include any default map overrides here
+
+// 5. Include remainder of required parts
+@import "bootstrap/scss/maps";
+@import "bootstrap/scss/mixins";
+@import "bootstrap/scss/root";
+
+// 6. Optionally include any other parts as needed
+@import "bootstrap/scss/utilities";
+@import "bootstrap/scss/reboot";
+@import "bootstrap/scss/type";
+@import "bootstrap/scss/images";
+@import "bootstrap/scss/containers";
+@import "bootstrap/scss/grid";
+@import "bootstrap/scss/helpers";
+@import "bootstrap/scss/tables.scss";
+@import "bootstrap/scss/forms.scss";
+@import "bootstrap/scss/buttons.scss";
+@import "bootstrap/scss/transitions.scss";
+@import "bootstrap/scss/dropdown.scss";
+@import "bootstrap/scss/button-group.scss";
+@import "bootstrap/scss/nav.scss";
+@import "bootstrap/scss/navbar.scss";
+@import "bootstrap/scss/card.scss";
+@import "bootstrap/scss/accordion.scss";
+@import "bootstrap/scss/breadcrumb.scss";
+@import "bootstrap/scss/pagination.scss";
+@import "bootstrap/scss/badge.scss";
+@import "bootstrap/scss/alert.scss";
+@import "bootstrap/scss/progress.scss";
+@import "bootstrap/scss/list-group.scss";
+@import "bootstrap/scss/close.scss";
+@import "bootstrap/scss/toasts.scss";
+@import "bootstrap/scss/modal.scss";
+@import "bootstrap/scss/tooltip.scss";
+@import "bootstrap/scss/popover.scss";
+@import "bootstrap/scss/carousel.scss";
+@import "bootstrap/scss/spinners.scss";
+@import "bootstrap/scss/offcanvas.scss";
+@import "bootstrap/scss/placeholders.scss";
+
+// 7. Optionally include utilities API last to generate classes based on the Sass map in `_utilities.scss`
+@import "./utilities"; // add our custom utilities or modify the bootstrap ones
+@import "bootstrap/scss/utilities/api";
+
+//
+// Import other libs
+//
+@import "~node_modules/animate.css/animate.css";
+
+//
+// Import our stuff
+//
+@import "./layout";
+@import "./breadcrumb";
+@import "./dropdown";
+@import "./cards";
+@import "./callouts";
+@import "./key_value_list";
+@import "./list_group";
+@import "./print";

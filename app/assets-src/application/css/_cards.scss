@@ -1,0 +1,16 @@
+@media print {
+  .card {
+    border: 1px solid $gray-300;
+
+    &.card-shadowed {
+      filter: none;
+    }
+  }
+}
+
+@include color-mode(dark, true) {
+  .card {
+    --#{$prefix}card-border-color: var(--bs-border-color);
+  }
+
+}

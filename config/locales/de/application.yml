@@ -1,0 +1,28 @@
+---
+de:
+  application:
+    account_menu:
+      login: Anmelden
+      logout: Abmelden
+      logout_msg: Wirklich abmelden?
+      my_account: Mein Konto
+    app_name: "Schulungen"
+    color_modes:
+      auto: Automatisch
+      dark: Dunkel
+      light: Hell
+    footer:
+      address: Anschrift / Anreise
+      impressum: Impressum
+      legal_notices: Rechtliches
+      opening_hours: Öffnungs- und Servicezeiten
+      privacy_policy: Datenschutzerklärung
+      quicklinks: Schnellzugriffe
+    main_menu:
+      color_mode: Farbschema
+      home: Start
+      language: Sprache
+      settings: Einstellungen
+    menu: Menü
+    ub: Universitätsbibliothek
+    ub_pb: UB Paderborn
