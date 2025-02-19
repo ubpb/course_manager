@@ -10,6 +10,7 @@ class Event < ApplicationRecord
   validates :date_and_time, presence: true
   validates :duration, numericality: {only_integer: true, greater_than_or_equal_to: 0}, allow_nil: true
   validates :max_no_of_participants, numericality: {only_integer: true, greater_than_or_equal_to: 0}
+  validates :email_from, format: {with: Course::EMAIL_REGEX}
 
   # Scopes
   scope :published, -> { where(published: true) }
@@ -42,6 +43,14 @@ class Event < ApplicationRecord
 
   def full?
     limited? && registrations_count >= max_no_of_participants
+  end
+
+  def effective_reminder_message
+    reminder_message.presence || course.reminder_message.presence
+  end
+
+  def effective_email_from
+    email_from.presence || course.email_from.presence
   end
 
 end

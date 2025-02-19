@@ -94,6 +94,12 @@ GEM
       public_suffix (>= 2.0.2, < 7.0)
     airbrussh (1.5.3)
       sshkit (>= 1.6.1, != 1.7.0)
+    alma_api (2.0.3)
+      activesupport (> 6)
+      faraday (~> 2.7)
+      hashie (~> 5.0)
+      nokogiri (~> 1.11)
+      oj (~> 3.11)
     ast (2.4.2)
     base64 (0.2.0)
     benchmark (0.4.0)
@@ -156,6 +162,12 @@ GEM
     erubi (1.13.1)
     et-orbi (1.2.11)
       tzinfo
+    faraday (2.12.2)
+      faraday-net_http (>= 2.0, < 3.5)
+      json
+      logger
+    faraday-net_http (3.4.0)
+      net-http (>= 0.5.0)
     fugit (1.11.1)
       et-orbi (~> 1, >= 1.2.11)
       raabro (~> 1.4)
@@ -163,6 +175,7 @@ GEM
     github-markup (5.0.1)
     globalid (1.2.1)
       activesupport (>= 6.1)
+    hashie (5.0.0)
     hexapdf (1.1.1)
       cmdparse (~> 3.0, >= 3.0.3)
       geom2d (~> 0.4, >= 0.4.1)
@@ -226,6 +239,8 @@ GEM
     msgpack (1.8.0)
     mutex_m (0.3.0)
     mysql2 (0.5.6)
+    net-http (0.6.0)
+      uri
     net-imap (0.5.5)
       date
       net-protocol
@@ -257,6 +272,9 @@ GEM
       racc (~> 1.4)
     nokogiri (1.18.2-x86_64-linux-musl)
       racc (~> 1.4)
+    oj (3.16.9)
+      bigdecimal (>= 3.0)
+      ostruct (>= 0.2)
     openssl (3.3.0)
     ostruct (0.6.1)
     parallel (1.26.3)
@@ -453,6 +471,7 @@ PLATFORMS
 DEPENDENCIES
   active_flag (~> 2.0)
   acts_as_list (~> 1.1)
+  alma_api (~> 2.0)
   bootsnap
   brakeman
   capistrano

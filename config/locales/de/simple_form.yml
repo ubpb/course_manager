@@ -1,0 +1,37 @@
+de:
+  simple_form:
+    labels:
+      defaults:
+        published: "Veröffentlicht"
+        title: "Titel"
+        description: "Beschreibung"
+        learning_targets: "Lernziele"
+        reminder_message: "E-Mail Erinnerung"
+        email_from: "E-Mail Antwortadresse"
+        topics: "Themen"
+        target_groups: "Zielgruppen"
+        category: "Kategorie"
+        location: "Ort / Treffpunkt"
+        date_and_time: "Datum und Uhrzeit"
+        duration: "Dauer"
+        online: "Online-Veranstaltung?"
+        registration_required: "Anmeldung erforderlich?"
+        max_no_of_participants: "Maximale Teilnehmerzahl"
+    hints:
+      defaults:
+        description: >
+          Formatierungen mit <a href="https://www.markdownguide.org/basic-syntax" target="_blank">Markdown</a> möglich
+        learning_targets: >
+          Formatierungen mit <a href="https://www.markdownguide.org/basic-syntax" target="_blank">Markdown</a> möglich
+        email_from: >
+          Die Adresse wird dem Empfänger als 'Antwort an' angezeigt. Diese muss auf '@ub.uni-paderborn.de' enden.
+          Als Standard wird schulungen@ub.uni-paderborn.de verwendet.
+        reminder_message: >
+          Mailvorlage für den Versand einer Erinnerungsmail an die angemeldeten Teilnehmer der Veranstaltung. Sie können
+          <code>###ANREDE###</code>, <code>###DATUM###</code>, <code>###UHRZEIT###</code>, <code>###DAUER###</code>,
+          <code>###TREFFPUNKT###</code> und <code>###TITEL###</code> in der Nachricht als Platzhalter verwenden. Die Nachricht wird automatisch
+          an die Teilnehmer versendet.
+        max_no_of_participants: >
+          0 => Keine Beschränkung
+        duration: >
+          ... in Minuten

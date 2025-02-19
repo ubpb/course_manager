@@ -1,0 +1,30 @@
+/ <%# locals: (form:, course:, event:) -%>
+
+h5.m-0 Allgemeine Angaben
+hr.mt-1.mb-3
+= form.input :published, as: :boolean
+= form.input :date_and_time, html5: true
+.row
+  .col
+    = form.input :duration
+  .col
+    = form.input :location
+    = form.input :online, as: :boolean
+.row
+  .col
+    = form.input :registration_required, as: :boolean
+    = form.input :max_no_of_participants
+
+h5.mt-4.mb-0 Adminstrative Angaben
+hr.mt-1.mb-3
+= form.label :reminder_message
+- if course.reminder_message.present?
+    div.badge.text-bg-light.d-block.mb-1
+      = "Wird von der Veranstaltung übernommen oder hier überschrieben"
+= form.input :reminder_message, label: false
+
+= form.label :email_from
+- if course.email_from.present?
+    div.badge.text-bg-light.d-block.mb-1
+      = "Wird von der Veranstaltung übernommen oder hier überschrieben"
+= form.input :email_from, label: false

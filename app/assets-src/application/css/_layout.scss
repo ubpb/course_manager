@@ -1,3 +1,8 @@
+html {
+  // Disable smooth scrolling for all browsers
+  scroll-behavior: auto !important;
+}
+
 #test-server-warning {
   text-align: center;
   padding: 8px;
@@ -32,7 +37,7 @@
     font-size: 1.0rem;
     text-transform: uppercase;
     color: $upb-ultrablau;
-    margin-bottom: $spacer / 2;
+    margin-bottom: $spacer;
 
     @include media-breakpoint-up(md) {
       font-size: 1.2rem;

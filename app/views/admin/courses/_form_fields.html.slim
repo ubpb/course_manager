@@ -1,0 +1,20 @@
+/ <%# locals: (form:, course:) -%>
+
+h5.m-0 Allgemeine Angaben
+hr.mt-1.mb-3
+= form.input :published, as: :boolean
+= form.input :title
+= form.association :category, prompt: true
+.row
+  .col
+    = form.association :topics, as: :check_boxes
+  .col
+    = form.association :target_groups, as: :check_boxes
+
+= form.input :description
+= form.input :learning_targets
+
+h5.mt-4.mb-0 Adminstrative Angaben
+hr.mt-1.mb-3
+= form.input :reminder_message
+= form.input :email_from

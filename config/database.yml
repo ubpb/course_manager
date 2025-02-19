@@ -53,7 +53,13 @@ test:
 #     url: <%= ENV['DATABASE_URL'] %>
 #
 production:
-  <<: *default
-  database: course_manager_production
-  username: course_manager
-  password: <%= ENV['COURSE_MANAGER_DATABASE_PASSWORD'] %>
+  primary:
+    <<: *default
+    database: course_manager_production
+    username: course_manager
+    password: <%= ENV['COURSE_MANAGER_DATABASE_PASSWORD'] %>
+  migration:
+    <<: *default
+    database: schulungs_db_development
+    replica: true
+

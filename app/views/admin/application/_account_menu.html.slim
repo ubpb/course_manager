@@ -1,0 +1,9 @@
+#account-menu
+  - if current_admin_user
+    = link_to admin_session_path, data: {turbo_method: :delete, turbo_confirm: t("application.account_menu.logout_msg")}, class: "btn btn-primary d-block" do
+      i.fas.fa-power-off.fa-fw
+      span.ms-2.d-none.d-sm-inline = t("application.account_menu.logout")
+  - else
+    = link_to new_admin_session_path, class: "btn btn-primary d-block" do
+      i.far.fa-user.fa-fw
+      span.ms-2.d-none.d-sm-inline =< t("application.account_menu.login")

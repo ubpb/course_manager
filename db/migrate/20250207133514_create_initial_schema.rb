@@ -23,6 +23,8 @@ class CreateInitialSchema < ActiveRecord::Migration[8.0]
       t.datetime :date_and_time, null: false
       t.integer :duration
       t.string :location
+      t.text :reminder_message
+      t.string :email_from
       t.boolean :online, null: false, default: false
       t.boolean :published, null: false, default: false, index: true
       t.boolean :registration_required, default: false, null: false

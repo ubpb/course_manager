@@ -1,0 +1,37 @@
+/ <%# locals: (course:, events:) -%>
+
+table.table
+  thead
+    tr
+      th(colspan="2") = "Datum / Uhrzeit"
+      th = "Anmeldungen"
+      th = "Online?"
+      th.actions = "Aktionen"
+  tbody
+    - events.each do |event|
+      tr(id=dom_id(event))
+        td(width="1" class="#{event.published? ? "table-success" : "table-danger"}") = ""
+        td = l(event.date_and_time)
+        td
+          = event.registrations_count
+          - if event.max_no_of_participants.positive?
+            = " / #{event.max_no_of_participants}"
+          - else
+            = " / ∞"
+        td = event.online? ? "Ja" : "Nein"
+        td.actions
+          .dropdown
+            button.btn.btn-outline-primary.btn-sm.dropdown-toggle(type="button" data-bs-toggle="dropdown")
+              i.fas.fa-cog
+            ul.dropdown-menu.dropdown-menu-end
+              li
+                = link_to edit_admin_course_event_path(course, event), class: "dropdown-item" do
+                  i.fa-solid.fa-edit.me-2
+                  = "Bearbeiten"
+                = link_to duplicate_admin_course_event_path(course, event), class: "dropdown-item" do
+                  i.fa-solid.fa-clone.me-2
+                  = "Duplizieren"
+              /hr.dropdown-divider
+                = link_to admin_course_events_path(course), class: "dropdown-item" do
+                  i.fa-solid.fa-calendar-alt.me-2
+                  = "Termine"

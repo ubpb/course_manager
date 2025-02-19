@@ -71,6 +71,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_10_160423) do
     t.datetime "date_and_time", null: false
     t.integer "duration"
     t.string "location"
+    t.text "reminder_message"
+    t.string "email_from"
     t.boolean "online", default: false, null: false
     t.boolean "published", default: false, null: false
     t.boolean "registration_required", default: false, null: false

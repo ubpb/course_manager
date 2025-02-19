@@ -7,11 +7,9 @@ class MigrateData < ActiveRecord::Migration[8.0]
     OldCourse.find_each do |old_course|
       course = Course.find_or_create_by!(title: old_course.title) do |course|
         course.id = old_course.id
-        course.published = old_course.published
+        course.published = false
         course.description = old_course.description
         course.learning_targets = old_course.learning_targets
-        course.reminder_message = old_course.reminder_message
-        course.email_from = old_course.email_from
       end
 
       Event.create! do |event|
@@ -22,6 +20,8 @@ class MigrateData < ActiveRecord::Migration[8.0]
         event.location = old_course.location
         event.online = old_course.location&.downcase == "online"
         event.published = old_course.published
+        event.reminder_message = old_course.reminder_message
+        event.email_from = old_course.email_from
         event.registration_required = old_course.registration_required
         event.max_no_of_participants = old_course.max_no_of_participants
       end
@@ -139,6 +139,16 @@ class MigrateData < ActiveRecord::Migration[8.0]
 
       course.target_groups << target_group if course && target_group
     end
+
+    #
+    # Create categories
+    #
+    Category.create!(title: "Orientieren", color_code: "#000000")
+    Category.create!(title: "Literatur suchen", color_code: "#000000")
+    Category.create!(title: "Literatur verwalten", color_code: "#000000")
+    Category.create!(title: "Literatur bewerten", color_code: "#000000")
+    Category.create!(title: "Schreiben", color_code: "#000000")
+    Category.create!(title: "Veröffentlichen", color_code: "#000000")
   end
 
   def down

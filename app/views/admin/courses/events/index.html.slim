@@ -1,0 +1,14 @@
+.card.card-shadowed
+  .card-header.d-flex.align-items-center.gap-2
+    h5.mb-0 = "Termine für '#{@course.title}'"
+    .ms-auto
+    = link_to new_admin_course_event_path, class: "btn btn-primary btn-sm" do
+      i.fa-solid.fa-plus.me-2
+      = "Neuen Termin anlegen"
+    = link_to admin_courses_path(anchor: dom_id(@course)) do
+      i.fa-solid.fa-times
+  .card-body
+    - if @events.present?
+      = render "listing", course: @course, events: @events
+    - else
+      .text-muted = "Keine Events vorhanden"
