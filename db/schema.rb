@@ -14,8 +14,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_10_160423) do
   create_table "categories", charset: "utf8mb3", collation: "utf8mb3_uca1400_ai_ci", force: :cascade do |t|
     t.string "title", null: false
     t.string "color_code", null: false
+    t.integer "position"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["position"], name: "index_categories_on_position"
     t.index ["title"], name: "index_categories_on_title", unique: true
   end
 
@@ -34,7 +36,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_10_160423) do
     t.string "signature"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["event_id"], name: "index_certifications_on_event_id"
+    t.index ["event_id"], name: "index_certifications_on_event_id", unique: true
   end
 
   create_table "courses", charset: "utf8mb3", collation: "utf8mb3_uca1400_ai_ci", force: :cascade do |t|
@@ -71,6 +73,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_10_160423) do
     t.datetime "date_and_time", null: false
     t.integer "duration"
     t.string "location"
+    t.text "reminder_message"
+    t.string "email_from"
     t.boolean "online", default: false, null: false
     t.boolean "published", default: false, null: false
     t.boolean "registration_required", default: false, null: false
@@ -87,10 +91,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_10_160423) do
     t.string "last_name", null: false
     t.string "email", null: false
     t.string "field_of_interest"
-    t.text "notes"
+    t.text "user_notes"
     t.text "internal_notes"
     t.boolean "gdrp_consent", default: false, null: false
-    t.timestamp "sent_reminder_message_at"
+    t.timestamp "reminder_message_sent_at"
     t.timestamp "certificate_sent_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -99,9 +103,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_10_160423) do
 
   create_table "reports", charset: "utf8mb3", collation: "utf8mb3_uca1400_ai_ci", force: :cascade do |t|
     t.bigint "event_id", null: false
-    t.integer "duration", default: 0
-    t.integer "number_of_participants", default: 0
-    t.string "lecturer"
+    t.integer "duration", null: false
+    t.integer "number_of_participants", null: false
+    t.string "lecturer", null: false
     t.integer "lecturer_md", default: 0
     t.integer "lecturer_gd", default: 0
     t.integer "lecturer_hd", default: 0
@@ -114,7 +118,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_10_160423) do
     t.integer "focus", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["event_id"], name: "index_reports_on_event_id"
+    t.index ["event_id"], name: "index_reports_on_event_id", unique: true
   end
 
   create_table "target_groups", charset: "utf8mb3", collation: "utf8mb3_uca1400_ai_ci", force: :cascade do |t|

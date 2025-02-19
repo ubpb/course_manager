@@ -1,0 +1,19 @@
+/ <%# locals: (target_groups:) -%>
+
+ul#target-groups.list-group(
+  data-controller="sortable"
+  data-sortable-handle-value=".sort-handle"
+  data-sortable-resource-name-value="target_group"
+)
+  - target_groups.each do |target_group|
+    li.list-group-item(data-sortable-update-url=reorder_admin_target_group_path(target_group))
+      = turbo_frame_tag(target_group) do
+        .d-flex.w-100.justify-content-between.align-items-center
+          div
+            i.fa-solid.fa-bars.fa-lg.sort-handle.me-2
+            strong =< target_group.title
+          .btn-toolbar.justify-content-end.flex-nowrap.gap-2
+            div = link_to edit_admin_target_group_path(target_group), class: "btn btn-outline-primary btn-sm", data: {turbo_frame: dom_id(target_group)} do
+              i.fa-solid.fa-pencil-alt
+            div = link_to admin_target_group_path(target_group), data: {turbo_method: :delete, turbo_confirm: t("admin.application.confirm_delete")}, class: "btn btn-outline-danger btn-sm" do
+              i.fa-solid.fa-trash

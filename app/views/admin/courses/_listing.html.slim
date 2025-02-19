@@ -1,0 +1,28 @@
+/ <%# locals: (courses:) -%>
+
+table.table
+  thead
+    tr
+      th(colspan="2") = "Name"
+      th = "Kategorie"
+      th = "Termine"
+      th.actions = "Aktionen"
+  tbody
+    - courses.each do |course|
+      tr(id=dom_id(course))
+        td(width="1" class="#{course.published? ? "table-success" : "table-danger"}") = ""
+        td = course.title
+        td = course.category&.title || "–"
+        td = "#{course.events.upcoming.count} / #{course.events.past.count}"
+        td.actions
+          .dropdown
+            button.btn.btn-outline-primary.btn-sm.dropdown-toggle(type="button" data-bs-toggle="dropdown")
+              i.fas.fa-cog
+            ul.dropdown-menu.dropdown-menu-end
+              li = link_to edit_admin_course_path(course), class: "dropdown-item" do
+                i.fa-solid.fa-edit.me-2
+                = "Bearbeiten"
+              hr.dropdown-divider
+              li = link_to admin_course_events_path(course), class: "dropdown-item" do
+                i.fa-solid.fa-calendar-alt.me-2
+                = "Termine"

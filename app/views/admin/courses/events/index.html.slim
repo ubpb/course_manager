@@ -1,0 +1,24 @@
+.card.card-shadowed
+  .card-header.d-flex.align-items-center.gap-2
+    h5.mb-0 = "Termine für '#{@course.title}'"
+    .ms-auto
+    = link_to new_admin_course_event_path, class: "btn btn-primary btn-sm" do
+      i.fa-solid.fa-plus.me-2
+      = "Neuen Termin anlegen"
+    = link_to admin_courses_path(anchor: dom_id(@course)), class: "btn btn-link btn-sm" do
+      i.fa-solid.fa-times
+  .card-body
+    h5.m-0.p-2.d-block.bg-body-tertiary.bg-gradient.border-bottom
+      = "Kommende Termine"
+    - if @upcoming_events.present?
+      = render "listing", course: @course, events: @upcoming_events
+    - else
+      .p-2.text-muted = "Keine Termine vorhanden"
+
+    .mt-4
+    h5.m-0.p-2.d-block.bg-body-tertiary.bg-gradient.border-bottom
+      = "Vergangene Termine"
+    - if @past_events.present?
+      = render "listing", course: @course, events: @past_events
+    - else
+      .p-2.text-muted = "Keine Termine vorhanden"

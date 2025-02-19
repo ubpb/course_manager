@@ -1,0 +1,16 @@
+.card.card-shadowed
+  .card-header.d-flex.align-items-center.gap-2
+    h5.mb-0 = "Kurse"
+    .ms-auto
+    = link_to new_admin_course_path, class: "btn btn-primary btn-sm" do
+      i.fa-solid.fa-plus.me-2
+      = "Neuen Kurs anlegen"
+  .card-body
+    .row
+      .col-md-9
+        - if @courses.present?
+          = render "listing", courses: @courses
+        - else
+          .p-2.text-muted = "Keine Kurse vorhanden"
+      .col-md-3
+        = render "filters"

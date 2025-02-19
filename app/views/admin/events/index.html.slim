@@ -1,0 +1,21 @@
+.card.card-shadowed
+  .card-header.d-flex.align-items-center.gap-2
+    h5.mb-0 = "Termine"
+    .ms-auto
+    .dropdown
+      button.btn.btn-outline-primary.btn-sm.dropdown-toggle(type="button" data-bs-toggle="dropdown")
+        i.fas.fa-cog
+      ul.dropdown-menu.dropdown-menu-end
+        li
+          = link_to reports_admin_events_path(format: :xlsx), class: "dropdown-item" do
+            i.fa-solid.fa-download.me-2
+            = "Statistik (Excel Export)"
+  .card-body
+    .row
+      .col-md-9
+        - if @events.present?
+          = render "listing", events: @events
+        - else
+          .p-2.text-muted = "Keine Termine vorhanden"
+      .col-md-3
+        = render "filters"

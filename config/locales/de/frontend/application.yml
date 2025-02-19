@@ -1,0 +1,12 @@
+de:
+  frontend:
+    application:
+      contact_help_card:
+        header: "Fragen?"
+        body_html: >
+          <p>Für Fragen rund um unser Schulungsangebot steht Ihnen unser Schulungsteam gern zur
+          Verfügung. Sprechen Sie uns an!</p>
+          <p>E-Mail: <a href="mailto:schulung@ub.uni-paderborn.de">schulung@ub.uni-paderborn.de</a><br/>
+          Telefon: 05251 60-2017</p>
+          <p class="mb-0">Weitere Informationen zu unserem Schulungsangebot finden Sie auf unserer
+          <a href="https://www.ub.uni-paderborn.de/unterstuetzung/schulungen/">Webseite</a>.</p>

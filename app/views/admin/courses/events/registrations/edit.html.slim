@@ -1,0 +1,17 @@
+- return_path = admin_course_event_registrations_path(@course, @event, anchor: dom_id(@registration))
+
+= simple_form_for [:admin, @course, @event, @registration] do |form|
+  .card.card-shadowed
+    .card-header.d-flex.align-items-center.gap-2
+      h5.mb-0 = "Teilnehmer bearbeiten"
+      .ms-auto
+      = link_to return_path, class: "btn btn-link btn-sm" do
+        i.fa-solid.fa-times
+    .card-body
+      = render "form_fields", form: form
+    .card-footer
+      .d-flex.gap-2.flex-column.flex-md-row
+        = form.submit t("admin.application.btn_save"), class: "btn btn-primary"
+        = link_to t("admin.application.btn_cancel"), return_path, class: "btn btn-outline-secondary"
+        .d-none.d-md-block.ms-md-auto
+        = link_to t("admin.application.btn_delete"), admin_course_event_registration_path(@course, @event, @registration), data: {turbo_method: :delete, turbo_confirm: t("admin.application.confirm_delete")}, class: "btn btn-danger"

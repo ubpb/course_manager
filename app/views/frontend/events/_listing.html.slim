@@ -1,0 +1,22 @@
+/ <%# locals: (events:) -%>
+
+- events.each do |event|
+  - course = event.course
+
+  .mb-3
+    .d-flex.justify-content-between.align-items-center
+      div
+        span.fw-bold = l(event.date_and_time)
+        span.ms-1.badge.text-bg-dark =< date_in_words(event.date_and_time.to_date)
+      div
+        - if event.online?
+          span.badge.text-bg-light
+            i.fa-solid.fa-globe.fa-fw.me-1
+            = "Online"
+
+  div
+    = link_to frontend_event_path(event) do
+      h4.mb-2 = course.title
+    = render "frontend/courses/badges", course: course
+
+  hr

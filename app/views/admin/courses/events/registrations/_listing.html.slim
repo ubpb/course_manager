@@ -1,0 +1,64 @@
+/ <%# locals: (course:, event:, registrations:) -%>
+
+#bulk-action-form
+
+= form_tag bulk_process_admin_course_event_registrations_path(@course, @event), method: :patch
+  table.table(
+    data-controller="checkbox-select-all"
+  )
+    thead
+      - if @bulk_process_actions.any?
+        tr
+          th.table-light(colspan="7")
+            .btn-toolbar.justify-content-start.flex-nowrap.align-items-center
+              .ms-0 = check_box_tag :bulk_process_select_all, 0, false, "data-checkbox-select-all-target": "checkboxAll"
+              .ms-2 = select_tag(:bulk_process_action, options_for_select(@bulk_process_actions), class: "form-control form-control-sm", prompt: "Aktion wählen")
+              .ms-2 = submit_tag("Ausführen", class: "btn btn-primary btn-sm")
+      tr
+        - if @bulk_process_actions.any?
+          th.table-light(width="10")
+        th = "Nachname"
+        th = "Vorname"
+        th = "E-Mail"
+        th = "Erinnerungsmail?"
+        th = "Zertifikat gesendet?"
+        th.actions = "Aktionen"
+    tbody
+      - registrations.each do |registration|
+        tr(id=dom_id(registration))
+          - if @bulk_process_actions.any?
+            td.table-light = check_box_tag "bulk_process_ids[]", registration.id, false, id: nil, "data-checkbox-select-all-target": "checkbox"
+          td = registration.last_name
+          td = registration.first_name
+          td = registration.email
+          td = registration.reminder_message_sent_at? ? l(registration.reminder_message_sent_at) : "Nein"
+          td = registration.certificate_sent_at? ? "Ja" : "Nein"
+          td.actions
+            .dropdown
+              button.btn.btn-outline-primary.btn-sm.dropdown-toggle(type="button" data-bs-toggle="dropdown")
+                i.fas.fa-cog
+              ul.dropdown-menu.dropdown-menu-end
+                li = link_to edit_admin_course_event_registration_path(course, event, registration), class: "dropdown-item" do
+                  i.fa-solid.fa-edit.me-2
+                  = "Bearbeiten"
+                - if @event.certification.present?
+                  li.dropdown-divider
+                  li: h6.dropdown-header = "Zertifikat"
+                  li = link_to download_certificate_admin_course_event_registration_path(course, event, registration), class: "dropdown-item" do
+                    i.fa-solid.fa-download.me-2
+                    =< "Download"
+                  li = link_to send_certificate_admin_course_event_registration_path(course, event, registration), data: {turbo_method: :patch, turbo_confirm: "Zertifikat wirklich senden?"}, class: "dropdown-item" do
+                    i.fa-solid.fa-envelope.me-2
+                    =< "Senden"
+                - if @event.effective_reminder_message.present?
+                  li.dropdown-divider
+                  li: h6.dropdown-header = "Erinnerungsmail"
+                  li = link_to send_reminder_message_admin_course_event_registration_path(course, event, registration), data: {turbo_method: :patch, turbo_confirm: "Erinnerungsmail wirklich senden?"}, class: "dropdown-item" do
+                    i.fa-solid.fa-envelope.me-2
+                    =< "(Erneut) senden"
+
+/ Fix to reset indeterminate state of checkbox on turbo:load
+javascript:
+  document.addEventListener("turbo:load", function() {
+    document.querySelector("#bulk_process_select_all").indeterminate = false;
+  })

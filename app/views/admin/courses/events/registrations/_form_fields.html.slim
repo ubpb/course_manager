@@ -1,0 +1,19 @@
+/ <%# locals: (form:) -%>
+
+- if form.object.errors.any?
+  .alert.alert-danger.mb-3.text-center
+    i.fa-solid.fa-exclamation-triangle.me-2
+    = t("admin.application.form.error", count: form.object.errors.count)
+
+h5.m-0 Allgemeine Angaben
+hr.mt-1.mb-3
+.row
+  .col = form.input :first_name
+  .col = form.input :last_name
+= form.input :email
+= form.input :field_of_interest
+= form.input :user_notes
+
+h5.m-0 Interne Angaben
+hr.mt-1.mb-3
+= form.input :internal_notes

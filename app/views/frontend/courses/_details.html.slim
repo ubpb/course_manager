@@ -1,0 +1,12 @@
+/ <%# locals: (course:) -%>
+
+- if course.description.present?
+  h5 = "Kursbeschreibung"
+  == render_markdown(course.description)
+
+- if course.learning_targets.present?
+  h5 = "Lernziele"
+  == render_markdown(course.learning_targets)
+
+h5 = "Kategorisierung"
+= render "frontend/courses/badges", course: course

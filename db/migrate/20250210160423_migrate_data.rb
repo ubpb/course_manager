@@ -7,11 +7,9 @@ class MigrateData < ActiveRecord::Migration[8.0]
     OldCourse.find_each do |old_course|
       course = Course.find_or_create_by!(title: old_course.title) do |course|
         course.id = old_course.id
-        course.published = old_course.published
+        course.published = false
         course.description = old_course.description
         course.learning_targets = old_course.learning_targets
-        course.reminder_message = old_course.reminder_message
-        course.email_from = old_course.email_from
       end
 
       Event.create! do |event|
@@ -22,6 +20,8 @@ class MigrateData < ActiveRecord::Migration[8.0]
         event.location = old_course.location
         event.online = old_course.location&.downcase == "online"
         event.published = old_course.published
+        event.reminder_message = old_course.reminder_message
+        event.email_from = old_course.email_from
         event.registration_required = old_course.registration_required
         event.max_no_of_participants = old_course.max_no_of_participants
       end
@@ -33,21 +33,27 @@ class MigrateData < ActiveRecord::Migration[8.0]
     OldRegistration.find_each do |old_registration|
       event = Event.find(old_registration.training_course_id)
 
-      Registration.new do |registration|
+      registration = Registration.new do |registration|
         registration.id = old_registration.id
         registration.event = event
         registration.first_name = old_registration.firstname
         registration.last_name = old_registration.lastname
         registration.email = old_registration.email
         registration.field_of_interest = old_registration.field_of_interest
-        registration.notes = old_registration.notes
+        registration.user_notes = old_registration.notes
         registration.internal_notes = old_registration.internal_notes
         registration.gdrp_consent = old_registration.dsgvo_consent
-        registration.sent_reminder_message_at = old_registration.sent_reminder_message_at
+        registration.reminder_message_sent_at = old_registration.sent_reminder_message_at
         registration.certificate_sent_at = old_registration.certificate_sent_at
         registration.created_at = old_registration.created_at
         registration.updated_at = old_registration.updated_at
-      end.save!(validate: false) # We need to disable validation as old data might not be valid
+      end
+
+      # Because of the `validate: false` on the save operation we need to strip attributes manually
+      StripAttributes.strip(registration, collapse_spaces: true)
+
+      # We need to disable validation as old data might not be valid
+      registration.save!(validate: false)
     end
 
     #
@@ -55,9 +61,11 @@ class MigrateData < ActiveRecord::Migration[8.0]
     #
     OldCourse.find_each do |old_course| # rubocop:disable Style/CombinableLoops
       event = Event.find(old_course.id)
-      next if old_course.statistics_duration.blank? || old_course.statistics_duration.zero?
+      next if old_course.statistics_duration.blank? || old_course.statistics_duration.zero? || old_course.statistics_lecturer.blank?
 
       Report.create! do |report|
+        # binding.b if old_course.id == 1184
+
         report.event = event
         report.duration = old_course.statistics_duration
         report.number_of_participants = old_course.number_of_participants
@@ -107,11 +115,11 @@ class MigrateData < ActiveRecord::Migration[8.0]
     #
     # Migrate topics
     #
-    OldTopic.find_each do |old_topic|
+    OldTopic.order(:position, :asc).find_each.with_index(1) do |old_topic, i|
       Topic.create! do |topic|
         topic.id = old_topic.id
         topic.title = old_topic.title
-        topic.position = old_topic.position
+        topic.position = i
       end
     end
 
@@ -125,11 +133,11 @@ class MigrateData < ActiveRecord::Migration[8.0]
     #
     # Migrate target groups
     #
-    OldTargetGroup.find_each do |old_target_group|
+    OldTargetGroup.order(:position, :asc).find_each.with_index(1) do |old_target_group, i|
       TargetGroup.create! do |target_group|
         target_group.id = old_target_group.id
         target_group.title = old_target_group.title
-        target_group.position = old_target_group.position
+        target_group.position = i
       end
     end
 
@@ -139,6 +147,16 @@ class MigrateData < ActiveRecord::Migration[8.0]
 
       course.target_groups << target_group if course && target_group
     end
+
+    #
+    # Create categories
+    #
+    Category.create!(title: "Orientieren", color_code: "#000000", position: 1)
+    Category.create!(title: "Literatur suchen", color_code: "#000000", position: 2)
+    Category.create!(title: "Literatur verwalten", color_code: "#000000", position: 3)
+    Category.create!(title: "Literatur bewerten", color_code: "#000000", position: 4)
+    Category.create!(title: "Schreiben", color_code: "#000000", position: 5)
+    Category.create!(title: "Veröffentlichen", color_code: "#000000", position: 6)
   end
 
   def down

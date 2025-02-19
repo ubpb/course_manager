@@ -1,0 +1,19 @@
+/ <%# locals: (event:, registration:) -%>
+
+= simple_form_for [:frontend, event, registration] do |f|
+  .row
+    .col-xl-6 = f.input :first_name
+    .col-xl-6 = f.input :last_name
+  .row
+    .col-12 = f.input :email
+  /- if event.enable_field_of_interest_for_registrations
+    .row
+      .col-12 = f.input :field_of_interest
+  .row
+    .col-12 = f.input :user_notes, input_html: {rows: 4}
+  .row
+    .col-12 = f.input :gdrp_consent
+
+  = f.submit "Jetzt anmelden", class: "btn btn-primary"
+  =< link_to "Abbrechen", frontend_event_path(event), class: "btn btn-link"
+

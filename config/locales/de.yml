@@ -5,3 +5,7 @@ de:
   english: Englisch
   german: Deutsch
   save: Speichern
+  time:
+    formats:
+      default: "%d.%m.%Y, %H:%M Uhr"
+      only_time: "%H:%M Uhr"

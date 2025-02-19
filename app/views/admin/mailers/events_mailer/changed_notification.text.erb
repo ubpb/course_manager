@@ -1,0 +1,25 @@
+<%= render "application/mailers/salutation" -%>
+
+Sie haben sich für die Schulungsveranstaltung "<%= @course.title %>" angemeldet. Wir möchten Sie hiermit darüber informieren, dass sich Daten der Veranstaltung geändert haben.
+
+Es gab folgende Änderungen:
+
+<% @event.changes.each do |k, v| %>
+<% if k == "date_and_time" %>
+Datum/Uhrzeit
+-------------
+Bisher: <%= l(v[0]) %>
+NEU: <%= l(v[1]) %>
+<% end %>
+
+<% if k == "location" %>
+Treffpunkt
+----------
+Bisher: <%= v[0] %>
+NEU: <%= v[1] %>
+<% end %>
+<% end %>
+
+Sollten Sie Fragen haben oder auf Grund der Änderung nicht mehr teilnehmen können, können Sie uns kontaktieren, indem Sie einfach auf diese E-Mail antworten.
+
+<%= render "application/mailers/footer" -%>

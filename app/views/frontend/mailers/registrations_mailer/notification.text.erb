@@ -1,0 +1,12 @@
+Hallo Schulungsteam!
+
+Es gab eine neue Anmeldung für eine Schulung.
+
+Schulung: <%= @course.title %>
+Termin: <%= l(@event.date_and_time.to_date) %>
+Zeit: <%= l(@event.date_and_time.to_time, format: :short) %> Uhr
+
+Folgende Person hat sich angemeldet:
+  Nachname: <%= @registration.last_name %>
+  Vorname: <%= @registration.first_name %>
+  E-Mail: <%= @registration.email %>

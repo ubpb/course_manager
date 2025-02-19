@@ -1,0 +1,14 @@
+.row
+  .col-md-8
+    .card.card-shadowed
+      .card-header.d-flex.align-items-center.gap-2
+        h5.mb-0 = "Unser Schulungsangebot"
+      .card-body
+        - if @courses.present?
+          = render "listing", courses: @courses
+        - else
+          .p-2.text-muted = "Keine Angebote vorhanden"
+  .col-md-4
+    .mb-3 = render "filters"
+    .mb-0 = render "contact_help_card"
+

@@ -1,0 +1,44 @@
+#
+# Headers
+#
+
+# Static headers
+headers = [
+  "Vorname",
+  "Nachname",
+  "E-Mail",
+  "Registriert am",
+  "Fachgebiet",
+  "Notizen des Nutzers",
+  "Interne Notizen"
+]
+
+# Add header row
+sheet.add_row(headers)
+
+#
+# Values
+#
+registrations.each do |r|
+  values = [
+    r.first_name,
+    r.last_name,
+    r.email,
+    r.created_at,
+    r.field_of_interest,
+    r.user_notes,
+    r.internal_notes
+  ]
+
+  # Add values row
+  sheet.add_row(values)
+end
+
+# Make the first row a header
+sheet.sheet_view.pane do |pane|
+  pane.top_left_cell = "A2"
+  pane.state = :frozen_split
+  pane.y_split = 1
+  pane.x_split = 0
+  pane.active_pane = :bottom_right
+end

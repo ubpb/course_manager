@@ -4,8 +4,9 @@ class Report < ApplicationRecord
   belongs_to :event
 
   # Validations
-  validates :duration, numericality: {greater_than_or_equal_to: 0}
-  validates :number_of_participants, numericality: {only_integer: true, greater_than_or_equal_to: 0}
+  validates :duration, presence: true, numericality: {greater_than_or_equal_to: 0}
+  validates :number_of_participants, presence: true, numericality: {only_integer: true, greater_than_or_equal_to: 0}
+  validates :lecturer, presence: true
   validates :lecturer_md, numericality: {only_integer: true, greater_than_or_equal_to: 0}
   validates :lecturer_gd, numericality: {only_integer: true, greater_than_or_equal_to: 0}
   validates :lecturer_hd, numericality: {only_integer: true, greater_than_or_equal_to: 0}

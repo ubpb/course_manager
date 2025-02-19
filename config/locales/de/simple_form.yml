@@ -1,0 +1,86 @@
+de:
+  simple_form:
+    labels:
+      defaults:
+        published: "Veröffentlicht"
+        title: "Titel"
+        description: "Beschreibung"
+        learning_targets: "Lernziele"
+        reminder_message: "E-Mail Erinnerung"
+        email_from: "E-Mail Antwortadresse"
+        topics: "Themen"
+        target_groups: "Zielgruppen"
+        category: "Kategorie"
+        location: "Ort / Treffpunkt"
+        date_and_time: "Datum und Uhrzeit"
+        duration: "Dauer"
+        online: "Online-Veranstaltung?"
+        registration_required: "Anmeldung erforderlich?"
+        max_no_of_participants: "Maximale Teilnehmerzahl"
+        first_name: "Vorname"
+        last_name: "Nachname"
+        email: "E-Mail"
+        field_of_interest: "Fachgebiet"
+        user_notes: "Notizen des Nutzers"
+        internal_notes: "Interne Notizen"
+      certification:
+        learning_results: "Lernergebnisse"
+        signature: "Unterschrift"
+      report:
+        lecturer: "Dozent(en)"
+        presence_types: "Format"
+        organization_types: "Organisatorische Form"
+        forms: "Didaktische Form"
+        levels: "Niveau"
+        categories: "Fachliche Ausrichtung"
+        audiences: "Zielgruppen"
+        focus: "Inhaltlicher Schwerpunkt"
+        number_of_participants: "Anzahl der Teilnehmer"
+        lecturer_md: "mittlerer Dienst"
+        lecturer_gd: "gehobener Dienst"
+        lecturer_hd: "höherer Dienst"
+      filter:
+        published: "Veröffentlicht?"
+        upcoming_or_past: "Termine"
+        with_report: "Statistik erfasst?"
+        from_date: "Datum von"
+        to_date: "Datum bis"
+        date_range: "Datum"
+      registration:
+        user_notes: "Anmerkungen"
+        gdrp_consent: "Einwilligungserklärung"
+    hints:
+      defaults:
+        description: >
+          Formatierungen mit <a href="https://www.markdownguide.org/basic-syntax" target="_blank">Markdown</a> möglich
+        learning_targets: >
+          Formatierungen mit <a href="https://www.markdownguide.org/basic-syntax" target="_blank">Markdown</a> möglich
+        email_from: >
+          Die Adresse wird dem Empfänger als 'Antwort an' angezeigt. Diese muss auf '@ub.uni-paderborn.de' enden.
+          Als Standard wird schulungen@ub.uni-paderborn.de verwendet.
+        reminder_message: >
+          Mailvorlage für den Versand einer Erinnerungsmail an die angemeldeten Teilnehmer der Veranstaltung. Sie können
+          <code>###NAME###</code>, <code>###ANREDE###</code>, <code>###DATUM###</code>, <code>###UHRZEIT###</code>, <code>###DAUER###</code>,
+          <code>###TREFFPUNKT###</code> und <code>###TITEL###</code> in der Nachricht als Platzhalter verwenden. Die Nachricht wird automatisch
+          an die Teilnehmer versendet.
+        max_no_of_participants: >
+          0 => Keine Beschränkung
+        duration: >
+          ... in Minuten
+        user_notes: >
+          Notizen, die für den Nutzer sichtbar sind
+        internal_notes: >
+          Interne Notizen, die nur für Mitarbeiter sichtbar sind
+      registration:
+        user_notes: ""
+        gdrp_consent: >
+          Ich willige hiermit ein (Art. 6 Abs. 1 lit. a DSGVO), dass meine übermittelten persönlichen Daten verarbeitet und
+          gespeichert werden dürfen. Ich versichere, dass ich über 16 Jahre alt bin bzw. die Zustimmung der / des
+          Sorgeberechtigten zur Anmeldung zur Schulung und Weitergabe der Daten vorliegt. Die <a href="https://ub.uni-paderborn.de/datenschutz" target="_blank">Datenschutzerklärung</a>
+          habe ich gelesen. Das Recht des Widerrufs ist mir bekannt.
+    options:
+      filter:
+        date_range:
+          week: "... in der nächsten 7 Tagen"
+          month: "... in den nächsten 4 Wochen"
+          quarter: "... in den nächsten 3 Monaten"

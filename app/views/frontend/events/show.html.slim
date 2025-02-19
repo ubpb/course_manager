@@ -1,0 +1,38 @@
+.d-flex.justify-content-between.align-items-center.gap-2.mb-3
+  h4.m-0
+    = @event.course.title
+    =< "am #{l(@event.date_and_time.to_date)}"
+  div
+    = link_to frontend_course_path(@event.course), class: "btn btn-outline-primary btn-sm" do
+      i.fa-solid.fa-arrows-turn-right.fa-flip-horizontal.fa-fw.me-1
+      span = "Weitere Termine dieses Kurses"
+
+.row
+  .col-md-7.col-lg-8
+    .card.card-shadowed
+      .card-body
+        = render "frontend/courses/details", course: @event.course
+
+  .col-md-5.col-lg-4
+    .card.card-shadowed.mb-3
+      .card-header.d-flex.align-items-center.justify-content-between.gap-2
+        h5.mb-0 = "Termindetails"
+      .card-body
+        = render "details", event: @event, show_location: true, show_registration_info: true
+
+    .card.card-shadowed
+      .card-header
+        h5.mb-0 = "Anmeldung"
+      .card-body
+        - if @event.registration_required?
+          - if @event.full?
+            .p-2.text-muted = "Keine freien Plätze mehr"
+          - elsif @event.registration_closed?
+            .p-2.text-muted = "Anmeldung nicht mehr möglich"
+          - else
+            .d-grid.gap-2
+              = link_to "Jetzt anmelden", frontend_event_registrations_path(@event), class: "btn btn-primary"
+              - if @event.limited?
+                .text-center = "Noch #{@event.no_of_free_spaces} freie Plätze verfügbar"
+        - else
+          .p-2.text-muted = "Keine Anmeldung erforderlich"

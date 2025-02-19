@@ -1,0 +1,15 @@
+- new_target_group_turbo_frame_name = dom_id(TargetGroup.new)
+
+.card.card-shadowed
+  .card-header.d-flex.align-items-center.gap-2
+    h5.mb-0 = "Zielgruppen"
+    .ms-auto
+    = link_to new_admin_target_group_path, class: "btn btn-primary btn-sm", data: {turbo_frame: new_target_group_turbo_frame_name} do
+      i.fa-solid.fa-plus
+  .card-body
+    = turbo_frame_tag(new_target_group_turbo_frame_name)
+
+    - if @target_groups.present?
+      = render "listing", target_groups: @target_groups
+    - else
+      .p-2.text-muted = "Keine Zielgruppen vorhanden"

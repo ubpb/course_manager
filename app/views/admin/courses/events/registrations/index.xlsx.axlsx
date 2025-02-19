@@ -1,0 +1,8 @@
+wb = xlsx_package.workbook
+
+wb.add_worksheet(name: "Teilnehmer") do |sheet|
+  render "listing", workbook: wb, sheet: sheet, registrations: @registrations
+end
+
+# To make it work in Numbers
+xlsx_package.use_shared_strings = true

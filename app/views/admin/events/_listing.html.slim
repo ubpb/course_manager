@@ -1,0 +1,46 @@
+/ <%# locals: (events:) -%>
+
+table.table
+  thead
+    tr
+      th(colspan="2") = "Datum / Uhrzeit"
+      th = "Teilnehmer"
+      th = "Online?"
+      th = "Statistik erfasst?"
+      th = "Zertifikat erstellt?"
+      th.actions = "Aktionen"
+  tbody
+    - events.each do |event|
+      tr(id=dom_id(event))
+        td(width="1" class="#{event.published? ? "table-success" : "table-danger"}") = ""
+        td
+          span = l(event.date_and_time)
+          span.ms-1.text-muted = "... #{date_in_words(event.date_and_time.to_date)}" if event.upcoming?
+          div = link_to event.course.title, admin_course_events_path(event.course)
+        td
+          = event.registrations_count
+          - if event.max_no_of_participants.positive?
+            = " / #{event.max_no_of_participants}"
+          - else
+            = " / ∞"
+        td = event.online? ? "Ja" : "Nein"
+        td = event.report.present? ? "Ja" : "Nein"
+        td = event.certification.present? ? "Ja" : "Nein"
+        td.actions
+          .dropdown
+            button.btn.btn-outline-primary.btn-sm.dropdown-toggle(type="button" data-bs-toggle="dropdown")
+              i.fas.fa-cog
+            ul.dropdown-menu.dropdown-menu-end
+              li = link_to edit_admin_course_event_path(event.course, event, nav_scope: "events"), class: "dropdown-item" do
+                i.fa-solid.fa-edit.me-2
+                = "Bearbeiten"
+              hr.dropdown-divider
+              li = link_to admin_course_event_registrations_path(event.course, event, nav_scope: "events"), class: "dropdown-item" do
+                i.fa-solid.fa-users.me-2
+                = "Teilnehmer"
+              li = link_to admin_course_event_report_path(event.course, event, nav_scope: "events"), class: "dropdown-item" do
+                i.fa-solid.fa-chart-line.me-2
+                = "Statistik"
+              li = link_to admin_course_event_certification_path(event.course, event, nav_scope: "events"), class: "dropdown-item" do
+                i.fa-solid.fa-certificate.me-2
+                = "Zertifizierung"

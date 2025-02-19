@@ -16,7 +16,7 @@ de:
       impressum: Impressum
       legal_notices: Rechtliches
       opening_hours: Öffnungs- und Servicezeiten
-      privacy_policy: Datenschutzerklärung
+      privacy_policy: Datenschutz
       quicklinks: Schnellzugriffe
     main_menu:
       color_mode: Farbschema
@@ -26,3 +26,37 @@ de:
     menu: Menü
     ub: Universitätsbibliothek
     ub_pb: UB Paderborn
+
+  datetime:
+    today: "Heute"
+    tomorrow: "Morgen"
+    day_after_tomorrow: "Übermorgen"
+    distance_in_words:
+      date_only:
+        about_x_hours: "Heute"
+        about_x_months:
+          one: in etwa einem Monat
+          other: in etwa %{count} Monaten
+        about_x_years:
+          one: in etwa einem Jahr
+          other: in etwa %{count} Jahren
+        almost_x_years:
+          one: in fast einem Jahr
+          other: in fast %{count} Jahren
+        half_a_minute: "Heute"
+        less_than_x_minutes: "Heute"
+        less_than_x_seconds: "Heute"
+        over_x_years:
+          one: in mehr als einem Jahr
+          other: in mehr als %{count} Jahren
+        x_days:
+          one: in einem Tag
+          other: "in %{count} Tagen"
+        x_minutes: "Heute"
+        x_months:
+          one: in einem Monat
+          other: "in %{count} Monaten"
+        x_years:
+          one: in einem Jahr
+          other: "in %{count} Jahren"
+        x_seconds: "Heute"

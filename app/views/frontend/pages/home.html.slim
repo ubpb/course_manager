@@ -1,0 +1,19 @@
+.card.card-shadowed
+  .card-header
+    h5.card-title.mb-0 = "Willkommen in unserem Schulungsportal"
+  .card-body
+    p
+      | TODO: Hier finden Sie unser aktuelles Schulungsangebot. Sie können sich für die Schulungen anmelden und erhalten alle Informationen zu den Schulungen.
+    p
+      | TODO: Wenn Sie Fragen haben, können Sie uns gerne kontaktieren.
+    p
+      | TODO: Wir wünschen Ihnen viel Erfolg bei der Teilnahme an unseren Schulungen.
+
+    .d-flex.gap-2.justify-content-center
+      = link_to frontend_courses_path, class: "btn btn-primary" do
+        i.fa-solid.fa-graduation-cap.me-2
+        = "Zur Kursübersicht"
+
+      = link_to frontend_events_path, class: "btn btn-primary" do
+        i.fa-solid.fa-calendar-alt.me-2
+        = "Zur Terminübersicht"
