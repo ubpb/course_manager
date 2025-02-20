@@ -1,5 +1,10 @@
 / <%# locals: (form:, course:) -%>
 
+- if form.object.errors.any?
+  .alert.alert-danger.mb-3.text-center
+    i.fa-solid.fa-exclamation-triangle.me-2
+    = t("admin.application.form.error", count: form.object.errors.count)
+
 h5.m-0 Allgemeine Angaben
 hr.mt-1.mb-3
 = form.input :published, as: :boolean

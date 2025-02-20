@@ -40,10 +40,10 @@ class MigrateData < ActiveRecord::Migration[8.0]
         registration.last_name = old_registration.lastname
         registration.email = old_registration.email
         registration.field_of_interest = old_registration.field_of_interest
-        registration.notes = old_registration.notes
+        registration.user_notes = old_registration.notes
         registration.internal_notes = old_registration.internal_notes
         registration.gdrp_consent = old_registration.dsgvo_consent
-        registration.sent_reminder_message_at = old_registration.sent_reminder_message_at
+        registration.reminder_message_sent_at = old_registration.sent_reminder_message_at
         registration.certificate_sent_at = old_registration.certificate_sent_at
         registration.created_at = old_registration.created_at
         registration.updated_at = old_registration.updated_at

@@ -15,7 +15,7 @@ nav.mb-4(aria-label="breadcrumb")
       - label        = b[:label]
       - path         = b[:path]
       li.breadcrumb-item(class=active_when(last_element))
-        - unless last_element
+        - if path.present?
           = link_to label, path
         - else
           = label

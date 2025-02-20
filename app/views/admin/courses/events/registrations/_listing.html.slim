@@ -1,0 +1,28 @@
+/ <%# locals: (course:, event:, registrations:) -%>
+
+table.table
+  thead
+    tr
+      th = "Nachname"
+      th = "Vorname"
+      th = "E-Mail"
+      th.actions = "Aktionen"
+  tbody
+    - registrations.each do |registration|
+      tr(id=dom_id(registration))
+        td = registration.last_name
+        td = registration.first_name
+        td = registration.email
+        td.actions
+          .dropdown
+            button.btn.btn-outline-primary.btn-sm.dropdown-toggle(type="button" data-bs-toggle="dropdown")
+              i.fas.fa-cog
+            ul.dropdown-menu.dropdown-menu-end
+              li
+                = link_to edit_admin_course_event_registration_path(course, event, registration), class: "dropdown-item" do
+                  i.fa-solid.fa-edit.me-2
+                  = "Bearbeiten"
+              hr.dropdown-divider
+                = link_to admin_course_event_registration_path(course, event, registration), data: {turbo_method: :delete, turbo_confirm: t("admin.application.confirm_delete")}, class: "dropdown-item" do
+                  i.fa-solid.fa-trash.me-2
+                  = "Löschen"

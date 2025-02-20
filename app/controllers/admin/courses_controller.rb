@@ -1,8 +1,10 @@
 module Admin
   class CoursesController < ApplicationController
 
+    before_action :raise_if_action_is_inherited
+
     before_action -> { add_breadcrumb "Kurse", admin_courses_path }
-    before_action :load_course, only: [:edit, :update, :destroy]
+    before_action :load_course
 
     def index
       @courses = Course.order("title").includes(:category)
@@ -16,7 +18,7 @@ module Admin
       @course = Course.new(course_params)
 
       if @course.save
-        redirect_to admin_courses_path, notice: t("admin.application.form.success")
+        redirect_to edit_admin_course_path(@course), notice: t("admin.application.form.success")
       else
         render :new, status: :unprocessable_entity
       end
@@ -26,7 +28,7 @@ module Admin
 
     def update
       if @course.update(course_params)
-        redirect_to admin_course_path(@course), notice: t("admin.application.form.success")
+        redirect_to edit_admin_course_path(@course), notice: t("admin.application.form.success")
       else
         render :edit, status: :unprocessable_entity
       end
@@ -40,8 +42,10 @@ module Admin
     private
 
     def load_course
-      @course = Course.find(params[:id])
-      add_breadcrumb @course.title, edit_admin_course_path(params[:id])
+      course_id = params[:course_id] || params[:id] || return
+
+      @course = Course.includes(:events).find(course_id)
+      add_breadcrumb @course.title, admin_courses_path(anchor: helpers.dom_id(@course))
     end
 
     def course_params

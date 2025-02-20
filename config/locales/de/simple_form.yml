@@ -17,6 +17,12 @@ de:
         online: "Online-Veranstaltung?"
         registration_required: "Anmeldung erforderlich?"
         max_no_of_participants: "Maximale Teilnehmerzahl"
+        first_name: "Vorname"
+        last_name: "Nachname"
+        email: "E-Mail"
+        field_of_interest: "Fachgebiet"
+        user_notes: "Notizen des Nutzers"
+        internal_notes: "Interne Notizen"
     hints:
       defaults:
         description: >
@@ -35,3 +41,7 @@ de:
           0 => Keine Beschränkung
         duration: >
           ... in Minuten
+        user_notes: >
+          Notizen, die für den Nutzer sichtbar sind
+        internal_notes: >
+          Interne Notizen, die nur für Mitarbeiter sichtbar sind

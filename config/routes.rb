@@ -25,8 +25,9 @@ Rails.application.routes.draw do
     root "dashboard#show"
     resource :session, only: [:new, :create, :destroy]
     resources :courses, except: [:show] do
-      resources :events, except: [:show], controller: "courses/events" do
+      resources :events, except: [:show], module: :courses do
         get :duplicate, on: :member
+        resources :registrations, except: [:show], module: :events
       end
     end
   end

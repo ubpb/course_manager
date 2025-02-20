@@ -41,10 +41,10 @@ class CreateInitialSchema < ActiveRecord::Migration[8.0]
       t.string :last_name, null: false
       t.string :email, null: false
       t.string :field_of_interest
-      t.text :notes
+      t.text :user_notes
       t.text :internal_notes
       t.boolean :gdrp_consent, null: false, default: false
-      t.timestamp :sent_reminder_message_at
+      t.timestamp :reminder_message_sent_at
       t.timestamp :certificate_sent_at
       t.timestamps
     end
@@ -53,7 +53,7 @@ class CreateInitialSchema < ActiveRecord::Migration[8.0]
     # Reports
     #
     create_table :reports do |t|
-      t.references :event, null: false, foreign_key: true
+      t.references :event, null: false, foreign_key: true, index: {unique: true}
       t.integer :duration, default: 0
       t.integer :number_of_participants, default: 0
       t.string :lecturer
@@ -74,7 +74,7 @@ class CreateInitialSchema < ActiveRecord::Migration[8.0]
     # Certifications
     #
     create_table :certifications do |t|
-      t.references :event, null: false, foreign_key: true
+      t.references :event, null: false, foreign_key: true, index: {unique: true}
       t.text :learning_results
       t.string :signature
       t.timestamps
