@@ -1,0 +1,38 @@
+/ <%# locals: (form:, course:, event:, report:) -%>
+
+- if form.object.errors.any?
+  .alert.alert-danger.mb-3.text-center
+    i.fa-solid.fa-exclamation-triangle.me-2
+    = t("admin.application.form.error", count: form.object.errors.count)
+
+.row
+  .col-md-6
+    = form.input :duration, as: :integer
+  .col.md-6
+    = form.input :number_of_participants, as: :integer
+.row
+  .col-md-6
+    = form.input :lecturer
+  .col-md-2
+    = form.input :lecturer_md, as: :integer
+  .col-md-2
+    = form.input :lecturer_gd, as: :integer
+  .col-md-2
+    = form.input :lecturer_hd, as: :integer
+.row
+  .col-6
+    = form.input :presence_types, collection: Report.presence_types.pairs
+  .col-6
+    = form.input :organization_types, collection: Report.organization_types.pairs
+.row
+  .col-6
+    = form.input :levels, collection: Report.levels.pairs
+  .col-6
+    = form.input :categories, collection: Report.categories.pairs
+.row
+  .col-4
+    = form.input :forms, as: :check_boxes, collection: Report.forms.pairs
+  .col-4
+    = form.input :audiences, as: :check_boxes, collection: Report.audiences.pairs
+  .col-4
+    = form.input :focus, as: :check_boxes, collection: Report.focus.pairs

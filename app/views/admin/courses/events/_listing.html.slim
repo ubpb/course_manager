@@ -33,6 +33,9 @@ table.table
                 = link_to duplicate_admin_course_event_path(course, event), data: {turbo_method: :get, turbo_confirm: "Termin duplizieren? Datum und Uhrzeit wird auf JETZT voreingestellt und muss geändert werden."}, class: "dropdown-item" do
                   i.fa-solid.fa-clone.me-2
                   = "Duplizieren"
+                = link_to new_admin_course_event_report_path(course, event), class: "dropdown-item" do
+                  i.fa-solid.fa-chart-line.me-2
+                  = "Statistik"
               hr.dropdown-divider
                 = link_to admin_course_event_path(course, event), data: {turbo_method: :delete, turbo_confirm: t("admin.application.confirm_delete")}, class: "dropdown-item" do
                   i.fa-solid.fa-trash.me-2

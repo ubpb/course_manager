@@ -28,6 +28,7 @@ Rails.application.routes.draw do
       resources :events, except: [:show], module: :courses do
         get :duplicate, on: :member
         resources :registrations, except: [:show], module: :events
+        resource :report, except: [:show, :destroy], module: :events
       end
     end
   end

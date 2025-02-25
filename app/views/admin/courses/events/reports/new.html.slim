@@ -1,0 +1,17 @@
+- cancel_path = admin_course_events_path(anchor: dom_id(@event))
+
+= simple_form_for @report, url: admin_course_event_report_path(@course, @event, @report) do |form|
+  .card.card-shadowed
+    .card-header.d-flex.align-items-center.gap-2
+      div
+        h5.mb-0 = "Statistik anlegen für '#{@course.title}'"
+        h6.mb-0.text-muted = "am #{l(@event.date_and_time)}"
+      .ms-auto
+      = link_to cancel_path do
+        i.fa-solid.fa-times
+    .card-body
+      = render "form_fields", form: form, course: @course, event: @event, report: @report
+    .card-footer
+      .d-flex.gap-2.flex-column.flex-md-row
+        = form.submit t("admin.application.btn_save"), class: "btn btn-primary"
+        = link_to t("admin.application.btn_cancel"), cancel_path, class: "btn btn-outline-secondary"

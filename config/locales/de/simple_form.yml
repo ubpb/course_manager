@@ -23,6 +23,19 @@ de:
         field_of_interest: "Fachgebiet"
         user_notes: "Notizen des Nutzers"
         internal_notes: "Interne Notizen"
+      report:
+        lecturer: "Dozent(en)"
+        presence_types: "Format"
+        organization_types: "Organisatorische Form"
+        forms: "Didaktische Form"
+        levels: "Niveau"
+        categories: "Fachliche Ausrichtung"
+        audiences: "Zielgruppen"
+        focus: "Inhaltlicher Schwerpunkt"
+        number_of_participants: "Anzahl der Teilnehmer"
+        lecturer_md: "mittlerer Dienst"
+        lecturer_gd: "gehobener Dienst"
+        lecturer_hd: "höherer Dienst"
     hints:
       defaults:
         description: >
