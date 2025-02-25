@@ -8,6 +8,19 @@ module Admin
 
         def index
           @registrations = @event.registrations.order(last_name: :asc, first_name: :asc)
+
+          respond_to do |format|
+            format.html
+            format.xlsx {
+              filename = [
+                I18n.l(@event.date_and_time.to_date, format: "%Y-%m-%d").parameterize,
+                I18n.l(@event.date_and_time.to_time, format: "%H-%M").parameterize,
+                @course.title.parameterize
+              ].join("_")
+
+              response.headers["Content-Disposition"] = "attachment; filename=\"#{filename}.xlsx\""
+            }
+          end
         end
 
         def new
