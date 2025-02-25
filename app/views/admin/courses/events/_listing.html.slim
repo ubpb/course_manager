@@ -30,7 +30,7 @@ table.table
                 = link_to edit_admin_course_event_path(course, event), class: "dropdown-item" do
                   i.fa-solid.fa-edit.me-2
                   = "Bearbeiten"
-                = link_to duplicate_admin_course_event_path(course, event), class: "dropdown-item" do
+                = link_to duplicate_admin_course_event_path(course, event), data: {turbo_method: :get, turbo_confirm: "Termin duplizieren? Datum und Uhrzeit wird auf JETZT voreingestellt und muss geändert werden."}, class: "dropdown-item" do
                   i.fa-solid.fa-clone.me-2
                   = "Duplizieren"
               hr.dropdown-divider

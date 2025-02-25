@@ -1,13 +1,32 @@
 module Admin
   class CoursesController < ApplicationController
 
+    include Filterable
+
     before_action :raise_if_action_is_inherited
 
     before_action -> { add_breadcrumb "Kurse", admin_courses_path }
     before_action :load_course
 
+    define_filter :courses do
+      filter_by :title do |arel, title|
+        arel.where("title like ?", "%#{title}%") if title.present?
+      end
+
+      filter_by :category do |arel, id|
+        arel.where(category: id) if id.present?
+      end
+
+      filter_by :published do |arel, published|
+        arel.where(published: published) if published == true
+      end
+    end
+
     def index
       @courses = Course.order("title").includes(:category)
+
+      @filter = apply_filter(:courses) or return
+      @courses = @filter.filter(@courses)
     end
 
     def new

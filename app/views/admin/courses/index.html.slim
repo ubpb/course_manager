@@ -6,7 +6,11 @@
       i.fa-solid.fa-plus.me-2
       = "Neuen Kurs anlegen"
   .card-body
-    - if @courses.present?
-      = render "listing", courses: @courses
-    - else
-      .text-muted = "Keine Kurse vorhanden"
+    .row
+      .col-md-9
+        - if @courses.present?
+          = render "listing", courses: @courses
+        - else
+          .text-muted = "Keine Kurse vorhanden"
+      .col-md-3
+        = render "filters"

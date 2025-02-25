@@ -72,4 +72,8 @@ Rails.application.configure do
 
   # Raise on unpermitted parameters being submitted
   config.action_controller.action_on_unpermitted_parameters = :raise
+
+  # Send emails to letter_opener
+  config.action_mailer.delivery_method = :letter_opener_web
+  config.action_mailer.perform_deliveries = true
 end

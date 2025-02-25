@@ -6,6 +6,8 @@ de:
       btn_cancel: "Abbrechen"
       btn_delete: "Löschen"
       btn_edit: "Bearbeiten"
+      btn_filter: "Filtern"
+      btn_filter_reset: "Filter zurücksetzen"
       confirm_delete: "Wirklich löschen?"
 
       form:
