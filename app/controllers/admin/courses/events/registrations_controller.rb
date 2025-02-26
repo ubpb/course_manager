@@ -11,7 +11,7 @@ module Admin
 
           respond_to do |format|
             format.html
-            format.xlsx {
+            format.xlsx do
               filename = [
                 I18n.l(@event.date_and_time.to_date, format: "%Y-%m-%d").parameterize,
                 I18n.l(@event.date_and_time.to_time, format: "%H-%M").parameterize,
@@ -19,7 +19,7 @@ module Admin
               ].join("_")
 
               response.headers["Content-Disposition"] = "attachment; filename=\"#{filename}.xlsx\""
-            }
+            end
           end
         end
 

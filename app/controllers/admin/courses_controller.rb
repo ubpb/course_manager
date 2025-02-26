@@ -9,16 +9,16 @@ module Admin
     before_action :load_course
 
     define_filter :courses do
-      filter_by :title do |arel, title|
-        arel.where("title like ?", "%#{title}%") if title.present?
+      filter_by :published, :boolean, default: nil do |arel, published|
+        arel.where(published: published)
       end
 
-      filter_by :category do |arel, id|
-        arel.where(category: id) if id.present?
+      filter_by :title, :string do |arel, title|
+        arel.where("title like ?", "%#{title}%")
       end
 
-      filter_by :published do |arel, published|
-        arel.where(published: published) if published == true
+      filter_by :category, :integer do |arel, id|
+        arel.where(category: id)
       end
     end
 

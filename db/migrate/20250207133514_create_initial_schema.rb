@@ -54,9 +54,9 @@ class CreateInitialSchema < ActiveRecord::Migration[8.0]
     #
     create_table :reports do |t|
       t.references :event, null: false, foreign_key: true, index: {unique: true}
-      t.integer :duration, default: 0
-      t.integer :number_of_participants, default: 0
-      t.string :lecturer
+      t.integer :duration, null: false
+      t.integer :number_of_participants, null: false
+      t.string :lecturer, null: false
       t.integer :lecturer_md, default: 0
       t.integer :lecturer_gd, default: 0
       t.integer :lecturer_hd, default: 0

@@ -101,9 +101,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_10_160423) do
 
   create_table "reports", charset: "utf8mb3", collation: "utf8mb3_uca1400_ai_ci", force: :cascade do |t|
     t.bigint "event_id", null: false
-    t.integer "duration", default: 0
-    t.integer "number_of_participants", default: 0
-    t.string "lecturer"
+    t.integer "duration", null: false
+    t.integer "number_of_participants", null: false
+    t.string "lecturer", null: false
     t.integer "lecturer_md", default: 0
     t.integer "lecturer_gd", default: 0
     t.integer "lecturer_hd", default: 0

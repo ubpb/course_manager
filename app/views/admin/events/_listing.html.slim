@@ -1,4 +1,4 @@
-/ <%# locals: (course:, events:) -%>
+/ <%# locals: (events:) -%>
 
 table.table
   thead
@@ -12,7 +12,9 @@ table.table
     - events.each do |event|
       tr(id=dom_id(event))
         td(width="1" class="#{event.published? ? "table-success" : "table-danger"}") = ""
-        td = l(event.date_and_time)
+        td
+          = l(event.date_and_time)
+          div.text-muted = event.course.title
         td
           = event.registrations_count
           - if event.max_no_of_participants.positive?
@@ -27,16 +29,16 @@ table.table
               i.fas.fa-cog
             ul.dropdown-menu.dropdown-menu-end
               li
-                = link_to edit_admin_course_event_path(course, event), class: "dropdown-item" do
+                = link_to edit_admin_course_event_path(event.course, event), class: "dropdown-item" do
                   i.fa-solid.fa-edit.me-2
                   = "Bearbeiten"
-                = link_to duplicate_admin_course_event_path(course, event), data: {turbo_method: :get, turbo_confirm: "Termin duplizieren? Datum und Uhrzeit wird auf JETZT voreingestellt und muss geändert werden."}, class: "dropdown-item" do
+                = link_to duplicate_admin_course_event_path(event.course, event), data: {turbo_method: :get, turbo_confirm: "Termin duplizieren? Datum und Uhrzeit wird auf JETZT voreingestellt und muss geändert werden."}, class: "dropdown-item" do
                   i.fa-solid.fa-clone.me-2
                   = "Duplizieren"
               hr.dropdown-divider
-                = link_to admin_course_event_registrations_path(course, event), class: "dropdown-item" do
+                = link_to admin_course_event_registrations_path(event.course, event), class: "dropdown-item" do
                   i.fa-solid.fa-users.me-2
                   = "Teilnehmer"
-                = link_to admin_course_event_report_path(course, event), class: "dropdown-item" do
+                = link_to admin_course_event_report_path(event.course, event), class: "dropdown-item" do
                   i.fa-solid.fa-chart-line.me-2
                   = "Statistik"

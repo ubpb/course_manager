@@ -1,0 +1,134 @@
+##
+## Values
+##
+
+# Zuordnung der fachlichen Ausrichtung
+category = 0
+category = 6  if report.categories.chemistry?
+category = 8  if report.categories.geography?
+category = 10 if report.categories.history?
+category = 11 if report.categories.engineering?
+category = 12 if report.categories.computer_science?
+category = 13 if report.categories.art_history?
+category = 15 if report.categories.media_studies?
+category = 17 if report.categories.musicology?
+category = 18 if report.categories.pedagogy?
+category = 20 if report.categories.philosophy?
+category = 21 if report.categories.physics?
+category = 23 if report.categories.psychology?
+category = 25 if report.categories.sociology?
+category = 26 if report.categories.sports?
+category = 27 if report.categories.theology?
+category = 28 if report.categories.economics?
+category = 29 if report.categories.interdisciplinary?
+category = 30 if report.categories.other?
+category = 31 if report.categories.english_studies?
+category = 32 if report.categories.german_studies?
+category = 33 if report.categories.romance_studies?
+category = 36 if report.categories.nutritional_science?
+category = 38 if report.categories.natural_science?
+
+values = [
+  "",
+  "Paderborn",
+  I18n.transliterate(report.lecturer.presence || ""),
+  report.duration,
+
+  # Organisatorische Form
+  report.organization_types.library? ? 1 : "",
+  report.organization_types.integrated? ? 1 : "",
+  report.organization_types.independent? ? 1 : "",
+  report.organization_types.consultation? ? 1 : "",
+  report.organization_types.media? ? 1 : "",
+  report.organization_types.webinar? ? 1 : "",
+  report.organization_types.elearning? ? 1 : "",
+  report.organization_types.blended? ? 1 : "",
+
+  # Didaktische Form
+  report.forms.presentation? ? 1 : "",
+  report.forms.workshop? ? 1 : "",
+
+  # Niveau
+  "", # 14 fehlt
+  report.levels.beginner? ? 1 : "",
+  report.levels.advanced? ? 1 : "",
+
+  # Integration
+  report.organization_types.integrated? ? 3 : 1,
+
+  # Fachliche Ausrichtung
+  category,
+
+  # Dozent
+  report.lecturer_gd,
+  report.lecturer_hd,
+  report.lecturer_md,
+  0,
+  0,
+
+  # Zielgruppe
+  report.audiences.bachelor_students? ? 1 : "",
+  report.audiences.master_students? ? 1 : "",
+  report.audiences.tutors? ? 1 : "",
+  report.audiences.phd_students? ? 1 : "",
+  report.audiences.scientists? ? 1 : "",
+  report.audiences.university_others? ? 1 : "",
+  report.audiences.pupils? ? 1 : "",
+  report.audiences.trainees? ? 1 : "",
+  report.audiences.teachers? ? 1 : "",
+  report.audiences.seniors? ? 1 : "",
+  report.audiences.foreign_students? ? 1 : "",
+  report.audiences.others? ? 1 : "",
+  "", # 36 unspezifische Gruppe
+
+  # Schwerpunkte
+  report.focus.information_competence? ? 1 : "",
+  report.focus.library_usage? ? 1 : "",
+  report.focus.search_methods? ? 1 : "",
+  report.focus.catalogs? ? 1 : "",
+  report.focus.internet_research? ? 1 : "",
+  report.focus.information_management? ? 1 : "",
+  report.focus.legal_issues? ? 1 : "",
+  report.focus.electronic_publishing? ? 1 : "",
+  report.focus.interlending? ? 1 : "",
+  report.focus.others? ? 1 : "",
+  report.focus.scientific_work? ? 1 : "",
+  report.focus.special_collections? ? 1 : "",
+
+  # Teilnehmerzahl
+  report.number_of_participants,
+
+  1, # Sitzungsanzahl
+  "", # Semester
+
+  # Datum
+  event.date_and_time,
+
+  # Text 1
+  course.title,
+  # Text 2
+  "",
+  # Text 3
+  "",
+  # Text 4
+  "",
+  # Text 5
+  report.presence_types.presence? ? "vor Ort" : "",
+
+  "//"
+]
+
+# Add values row
+style = workbook.styles.add_style(alignment: {wrap_text: true, vertical: :top})
+row = sheet.add_row(values, style: style)
+row.cells[52].style = date_format
+
+
+# Make the first row a header
+sheet.sheet_view.pane do |pane|
+  pane.top_left_cell = "A4"
+  pane.state = :frozen_split
+  pane.y_split = 3
+  pane.x_split = 0
+  pane.active_pane = :bottom_right
+end

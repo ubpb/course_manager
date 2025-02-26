@@ -5,7 +5,7 @@
     .card-header.d-flex.align-items-center.gap-2
       h5.mb-0 = "Teilnehmer bearbeiten"
       .ms-auto
-      = link_to cancel_path do
+      = link_to cancel_path, class: "btn btn-link btn-sm" do
         i.fa-solid.fa-times
     .card-body
       = render "form_fields", form: form

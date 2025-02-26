@@ -22,15 +22,19 @@ Rails.application.routes.draw do
   # Admin
   #
   namespace :admin do
-    root "dashboard#show"
+    root to: redirect("/admin/courses")
+
     resource :session, only: [:new, :create, :destroy]
+
     resources :courses, except: [:show] do
       resources :events, except: [:show], module: :courses do
         get :duplicate, on: :member
         resources :registrations, except: [:show], module: :events
-        resource :report, except: [:show, :destroy], module: :events
+        resource :report, except: [:destroy], module: :events
       end
     end
+
+    resources :events, only: [:index]
   end
 
   # Dev Tools

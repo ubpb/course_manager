@@ -27,54 +27,68 @@ module Filterable
     def define_filter(name, &block)
       name = name.to_s
 
-      filter_context = FilterContext.new(name)
+      filter_context = FilterContext.new
       filter_contexts[name] = filter_context
 
-      filter_context.instance_eval(&block)
+      filter_context.instance_eval(&block) if block_given?
     end
 
     def filter_contexts
-      @filter_contexts ||= {}
+      @filter_contexts ||= {}.with_indifferent_access
     end
   end
 
   class FilterContext
 
-    attr_reader :name, :filters
+    def filter_by(name, cast_type = :string, default: nil, **options, &block)
+      name = name.to_s
 
-    def initialize(name)
-      @name = name
-      @filters = {}.with_indifferent_access
+      filters[name] = {
+        cast_type: cast_type,
+        default: default,
+        options: options,
+        block: block
+      }
     end
 
-    def filter_by(name, &block)
-      name = name.to_s
-      filters[name] = block
+    def filters
+      @filters ||= {}.with_indifferent_access
     end
 
   end
 
   class Filter
 
+    include ActiveModel::Attributes
+
     def initialize(filter_context, filter_attributes = {})
       @context = filter_context
 
-      @context.filters.each_key do |k|
-        self.class.attr_accessor(k)
-        send("#{k}=", filter_attributes[k].presence)
+      @context.filters.each do |k, v|
+        self.class.attribute(k, v[:cast_type], default: v[:default], **v[:options])
+      end
+
+      super() # important to make ActiveModel::Attributes work
+
+      @context.filters.each do |k, v|
+        filter_value = filter_attributes[k]
+        filter_value = filter_value.presence if v[:cast_type] == :string
+
+        send("#{k}=", filter_value) if respond_to?("#{k}=")
       end
     end
 
     def active?
-      @context.filters.keys.any? { |k| send(k).present? }
+      @context.filters.keys.any? { |k| !send(k).nil? }
     end
 
     def filter(arel)
-      @context.filters.each do |name, callable|
-        value = send(name)
+      @context.filters.each do |k, v|
+        filter_value = send(k)
+        callable = v[:block]
 
-        if value.present? && callable.respond_to?(:call)
-          result = callable.call(arel, value)
+        if callable.respond_to?(:call) && filter_value.present?
+          result = callable.call(arel, filter_value)
           arel = result if result
         end
       end

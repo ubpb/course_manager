@@ -5,8 +5,35 @@ module Admin
 
         before_action :load_report
 
+        def show
+          if @report
+            respond_to do |format|
+              format.html do
+                redirect_to edit_admin_course_event_report_path(@course, @event)
+              end
+
+              format.xlsx do
+                filename = [
+                  I18n.l(@event.date_and_time.to_date, format: "%Y-%m-%d").parameterize,
+                  I18n.l(@event.date_and_time.to_time, format: "%H-%M").parameterize,
+                  @course.title.parameterize,
+                  "report"
+                ].join("_")
+
+                response.headers["Content-Disposition"] = "attachment; filename=\"#{filename}.xlsx\""
+              end
+            end
+          else
+            redirect_to new_admin_course_event_report_path(@course, @event)
+          end
+        end
+
         def new
-          redirect_to edit_admin_course_event_report_path(@course, @event) unless @report.new_record?
+          if @report
+            redirect_to edit_admin_course_event_report_path(@course, @event)
+          else
+            @report = @event.build_report
+          end
         end
 
         def create
@@ -32,8 +59,8 @@ module Admin
         private
 
         def load_report
-          @report = @event.report || @event.build_report
-          add_breadcrumb "Statistik", new_admin_course_event_report_path(@course, @event, @report)
+          @report = @event.report
+          add_breadcrumb "Statistik", admin_course_event_report_path(@course, @event)
         end
 
         def report_params

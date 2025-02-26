@@ -54,7 +54,7 @@ de:
         trainees: "Auszubildende"
         teachers: "Lehrkräfte"
         seniors: "Senior/innen"
-        forign_students: "ausländische Studierende"
+        foreign_students: "ausländische Studierende"
         others: "Externe/Sonstige"
       focus:
         information_competence: "Informationskompetenz umfassend (Kurse mit umfassenden Ansatz)"
@@ -62,7 +62,7 @@ de:
         search_methods: "Suchstrategien und Suchtechniken (ueberwiegend methodischer Ansatz)"
         catalogs: "Einzelne Kataloge und Datenbanken (Handhabung einzelner Kataloge und Datenbanken)"
         internet_research: "Internetrecherche (z. B. Suchmaschinen, Internetverzeichnisse, Fachportale / Evaluierung von Internetressourcen)"
-        information_managment: "Informationsverarbeitung/-verwaltung (z. B. Literaturverwaltungsprogramme, Praesentationsprogramme, Lernplattform)"
+        information_management: "Informationsverarbeitung/-verwaltung (z. B. Literaturverwaltungsprogramme, Praesentationsprogramme, Lernplattform)"
         legal_issues: "Rechtliche, ökonomische und ethische Fragen (z. B. Open Access, Urheberrecht)"
         electronic_publishing: "Elektronisches Publizieren (z. B. Hochschulserver, technische Handhabung, organisatorische Fragen)"
         interlending: "Fernleihe/Dokumentlieferung"

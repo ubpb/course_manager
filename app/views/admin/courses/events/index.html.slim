@@ -5,29 +5,20 @@
     = link_to new_admin_course_event_path, class: "btn btn-primary btn-sm" do
       i.fa-solid.fa-plus.me-2
       = "Neuen Termin anlegen"
-    = link_to admin_courses_path(anchor: dom_id(@course)) do
+    = link_to admin_courses_path(anchor: dom_id(@course)), class: "btn btn-link btn-sm" do
       i.fa-solid.fa-times
   .card-body
-    ul.nav.nav-tabs
-      li.nav-item
-        button.nav-link.active(id="upcoming-tab" data-bs-toggle="tab" data-bs-target="#upcoming-tab-pane" type="button")
-          = "Kommende Termine"
-          span.badge.text-bg-secondary.ms-2 = @upcoming_events.count
+    h5.m-0.p-2.d-block.bg-body-tertiary.bg-gradient.border-bottom
+      = "Kommende Termine"
+    - if @upcoming_events.present?
+      = render "listing", course: @course, events: @upcoming_events
+    - else
+      .text-muted = "Keine Termine vorhanden"
 
-      li.nav-item
-        button.nav-link(id="past-tab" data-bs-toggle="tab" data-bs-target="#past-tab-pane" type="button")
-          = "Vergangene Termine"
-          span.badge.text-bg-secondary.ms-2 = @past_events.count
-
-    .tab-content
-      .tab-pane.fade.show.active.mt-3(id="upcoming-tab-pane" role="tabpanel")
-        - if @upcoming_events.present?
-          = render "listing", course: @course, events: @upcoming_events
-        - else
-          .text-muted = "Keine Termine vorhanden"
-
-      .tab-pane.fade.mt-3(id="past-tab-pane" role="tabpanel")
-        - if @past_events.present?
-          = render "listing", course: @course, events: @past_events
-        - else
-          .text-muted = "Keine Termine vorhanden"
+    .mt-4
+    h5.m-0.p-2.d-block.bg-body-tertiary.bg-gradient.border-bottom
+      = "Vergangene Termine"
+    - if @past_events.present?
+      = render "listing", course: @course, events: @past_events
+    - else
+      .text-muted = "Keine Termine vorhanden"

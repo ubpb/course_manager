@@ -3,7 +3,7 @@
     .card-header
       h5.mb-0.card-title Filter
     .card-body
-      = form.input :published, as: :boolean, required: false
+      = form.input :published, as: :select, collection: [["Ja", "true"], ["Nein", "false"]], include_blank: true, required: false
       = form.input :title, required: false
       = form.input :category, collection: Category.all, required: false
     .card-footer
