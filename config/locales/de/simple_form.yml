@@ -36,6 +36,12 @@ de:
         lecturer_md: "mittlerer Dienst"
         lecturer_gd: "gehobener Dienst"
         lecturer_hd: "höherer Dienst"
+      filter:
+        published: "Veröffentlicht?"
+        upcoming_or_past: "Termine"
+        with_report: "Statistik erfasst?"
+        from_date: "Datum von"
+        to_date: "Datum bis"
     hints:
       defaults:
         description: >

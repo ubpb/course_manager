@@ -13,7 +13,7 @@
     - if @upcoming_events.present?
       = render "listing", course: @course, events: @upcoming_events
     - else
-      .text-muted = "Keine Termine vorhanden"
+      .p-2.text-muted = "Keine Termine vorhanden"
 
     .mt-4
     h5.m-0.p-2.d-block.bg-body-tertiary.bg-gradient.border-bottom
@@ -21,4 +21,4 @@
     - if @past_events.present?
       = render "listing", course: @course, events: @past_events
     - else
-      .text-muted = "Keine Termine vorhanden"
+      .p-2.text-muted = "Keine Termine vorhanden"

@@ -21,4 +21,4 @@
     - if @registrations.present?
       = render "listing", course: @course, event: @event, registrations: @registrations
     - else
-      .text-muted = "Keine Anmeldungen vorhanden"
+      .p-2.text-muted = "Keine Anmeldungen vorhanden"

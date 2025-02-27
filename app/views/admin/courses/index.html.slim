@@ -11,6 +11,6 @@
         - if @courses.present?
           = render "listing", courses: @courses
         - else
-          .text-muted = "Keine Kurse vorhanden"
+          .p-2.text-muted = "Keine Kurse vorhanden"
       .col-md-3
         = render "filters"

@@ -1,16 +1,12 @@
 .card.card-shadowed
   .card-header.d-flex.align-items-center.gap-2
     h5.mb-0 = "Termine"
-    / .ms-auto
-    / = link_to new_admin_course_path, class: "btn btn-primary btn-sm" do
-    /   i.fa-solid.fa-plus.me-2
-    /   = "Neuen Kurs anlegen"
   .card-body
     .row
       .col-md-9
         - if @events.present?
           = render "listing", events: @events
         - else
-          .text-muted = "Keine Termine vorhanden"
+          .p-2.text-muted = "Keine Termine vorhanden"
       .col-md-3
         = render "filters"
