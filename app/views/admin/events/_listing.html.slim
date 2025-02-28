@@ -15,7 +15,7 @@ table.table
         td
           span = l(event.date_and_time)
           span.ms-1.text-muted = "... #{date_in_words(event.date_and_time.to_date)}" if event.upcoming?
-          div = link_to event.course.title, admin_course_events_path(event.course, nav_scope: "events")
+          div = link_to event.course.title, admin_course_events_path(event.course)
         td
           = event.registrations_count
           - if event.max_no_of_participants.positive?
