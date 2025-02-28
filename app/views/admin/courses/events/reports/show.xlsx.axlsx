@@ -3,13 +3,13 @@ wb = xlsx_package.workbook
 date_format = wb.styles.add_style(format_code: "yyyy-mm-dd")
 
 wb.add_worksheet(name: "Schulungen") do |sheet|
-  render "header", workbook: wb, sheet: sheet, date_format: date_format, from: @from, to: @to
+  render "admin/courses/events/reports/header", workbook: wb, sheet: sheet, date_format: date_format, from: @from_date, to: @to_date
 
   if @report.present?
-    render "report", workbook: wb, sheet: sheet, date_format: date_format, course: @course, event: @event, report: @report
+    render "admin/courses/events/reports/report", workbook: wb, sheet: sheet, date_format: date_format, course: @report.event.course, event: @report.event, report: @report
   elsif @reports.present?
     @reports.each do |report|
-      render "report", workbook: wb, sheet: sheet, date_format: date_format, course: @course, event: @event, report: report
+      render "admin/courses/events/reports/report", workbook: wb, sheet: sheet, date_format: date_format, course: report.event.course, event: report.event, report: report
     end
   end
 end

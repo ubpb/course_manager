@@ -44,6 +44,35 @@ module Admin
     end
 
     def index
+      load_events
+    end
+
+    def reports
+      @reports = load_events.with_report.map(&:report)
+
+      if @filter&.active?
+        @from_date = @filter.from_date
+        @to_date = @filter.to_date
+      end
+
+      respond_to do |format|
+        format.xlsx do
+          filename = [
+            @from_date ? I18n.l(@from_date, format: "%Y-%m-%d") : nil,
+            @to_date ? I18n.l(@to_date, format: "%Y-%m-%d") : nil,
+            "report"
+          ].compact.join("_")
+
+          response.headers["Content-Disposition"] = "attachment; filename=\"#{filename}.xlsx\""
+
+          render "admin/courses/events/reports/show"
+        end
+      end
+    end
+
+    private
+
+    def load_events
       @events = Event.includes(:course, :report).order(date_and_time: :desc)
 
       @filter = apply_filter(:events) or return

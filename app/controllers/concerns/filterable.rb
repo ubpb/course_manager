@@ -87,10 +87,11 @@ module Filterable
         filter_value = send(k)
         callable = v[:block]
 
-        if callable.respond_to?(:call) && filter_value.present?
-          result = callable.call(arel, filter_value)
-          arel = result if result
-        end
+        next if filter_value.blank?
+        next unless callable
+
+        result = callable.call(arel, filter_value)
+        arel = result if result
       end
 
       arel

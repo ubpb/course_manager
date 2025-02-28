@@ -34,7 +34,9 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :events, only: [:index]
+    resources :events, only: [:index] do
+      get :reports, on: :collection, constraints: {format: :xlsx}
+    end
   end
 
   # Dev Tools
