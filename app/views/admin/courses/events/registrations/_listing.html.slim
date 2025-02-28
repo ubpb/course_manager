@@ -18,7 +18,6 @@ table.table
             button.btn.btn-outline-primary.btn-sm.dropdown-toggle(type="button" data-bs-toggle="dropdown")
               i.fas.fa-cog
             ul.dropdown-menu.dropdown-menu-end
-              li
-                = link_to edit_admin_course_event_registration_path(course, event, registration), class: "dropdown-item" do
-                  i.fa-solid.fa-edit.me-2
-                  = "Bearbeiten"
+              li = link_to edit_admin_course_event_registration_path(course, event, registration), class: "dropdown-item" do
+                i.fa-solid.fa-edit.me-2
+                = "Bearbeiten"

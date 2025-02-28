@@ -15,4 +15,5 @@ de:
           one: Ein Fehler verhindert die Speicherung. Bitte prüfen Sie das Formular auf rot markierte Felder.
           other: "%{count} Fehler verhindern die Speicherung. Bitte prüfen Sie das Formular auf rot markierte Felder."
         success: "Erfolgreich gespeichert."
+        destroy_success: "Erfolgreich gelöscht."
 

@@ -39,7 +39,7 @@ group :development do
   gem "capistrano-passenger"
   gem "capistrano-rails"
   gem "capistrano-rvm"
-  gem "i18n-debug"
+  # gem "i18n-debug"
   gem "i18n-tasks"
   gem "letter_opener_web"
   gem "web-console"

@@ -186,8 +186,6 @@ GEM
     htmlentities (4.3.4)
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
-    i18n-debug (1.2.0)
-      i18n (< 2)
     i18n-tasks (1.0.14)
       activesupport (>= 4.0.2)
       ast (>= 2.1.0)
@@ -485,7 +483,6 @@ DEPENDENCIES
   debug
   github-markup (~> 5.0)
   hexapdf (~> 1.1)
-  i18n-debug
   i18n-tasks
   inline_svg (~> 1.10)
   jbuilder

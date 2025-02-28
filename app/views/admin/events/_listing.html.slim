@@ -28,14 +28,13 @@ table.table
             button.btn.btn-outline-primary.btn-sm.dropdown-toggle(type="button" data-bs-toggle="dropdown")
               i.fas.fa-cog
             ul.dropdown-menu.dropdown-menu-end
-              li
-                = link_to edit_admin_course_event_path(event.course, event, return_path: admin_events_path(anchor: dom_id(event))), class: "dropdown-item" do
-                  i.fa-solid.fa-edit.me-2
-                  = "Bearbeiten"
+              li = link_to edit_admin_course_event_path(event.course, event, nav_scope: "events"), class: "dropdown-item" do
+                i.fa-solid.fa-edit.me-2
+                = "Bearbeiten"
               hr.dropdown-divider
-                = link_to admin_course_event_registrations_path(event.course, event), class: "dropdown-item" do
-                  i.fa-solid.fa-users.me-2
-                  = "Teilnehmer"
-                = link_to admin_course_event_report_path(event.course, event), class: "dropdown-item" do
-                  i.fa-solid.fa-chart-line.me-2
-                  = "Statistik"
+              li = link_to admin_course_event_registrations_path(event.course, event, nav_scope: "events"), class: "dropdown-item" do
+                i.fa-solid.fa-users.me-2
+                = "Teilnehmer"
+              li = link_to admin_course_event_report_path(event.course, event, nav_scope: "events"), class: "dropdown-item" do
+                i.fa-solid.fa-chart-line.me-2
+                = "Statistik"

@@ -51,7 +51,7 @@ module Admin
 
         def destroy
           @registration.destroy
-          redirect_to admin_course_event_registrations_path(@course, @event)
+          redirect_to admin_course_event_registrations_path(@course, @event), notice: t("admin.application.form.destroy_success")
         end
 
         private

@@ -55,7 +55,7 @@ module Admin
 
     def destroy
       @course.destroy
-      redirect_to admin_courses_path
+      redirect_to admin_courses_path, notice: t("admin.application.form.destroy_success")
     end
 
     private

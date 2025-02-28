@@ -1,6 +1,8 @@
 module Admin
   class ApplicationController < ::ApplicationController
 
+    include NavScope
+
     before_action -> { add_breadcrumb("Admin", admin_root_path) }
     before_action :authenticate!
 

@@ -2,11 +2,8 @@ module Admin
   module Courses
     class EventsController < CoursesController
 
-      include ReturnPath
-
       before_action -> { add_breadcrumb "Termine", admin_course_events_path(@course) }
       before_action :load_event
-      before_action :require_return_path, only: [:edit, :update, :destroy]
 
       def index
         @upcoming_events = @course.events.upcoming.order(date_and_time: :desc)
@@ -31,7 +28,7 @@ module Admin
 
       def update
         if @event.update(event_params)
-          redirect_to edit_admin_course_event_path(@course, @event, return_path: return_path), notice: t("admin.application.form.success")
+          redirect_to edit_admin_course_event_path(@course, @event), notice: t("admin.application.form.success")
         else
           render :edit, status: :unprocessable_entity
         end
@@ -39,7 +36,14 @@ module Admin
 
       def destroy
         @event.destroy
-        redirect_to return_path
+
+        flash[:notice] = t("admin.application.form.destroy_success")
+
+        if nav_scope == "events"
+          redirect_to admin_events_path(nav_scope: nil)
+        else
+          redirect_to admin_course_events_path(@course)
+        end
       end
 
       def duplicate

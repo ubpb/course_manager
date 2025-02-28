@@ -1,4 +1,6 @@
-= simple_form_for @event, url: admin_course_event_path(@course, @event, return_path: return_path) do |form|
+- return_path = (nav_scope == "events") ? admin_events_path(anchor: dom_id(@event), nav_scope: nil) : admin_course_events_path(anchor: dom_id(@event), nav_scope: nil)
+
+= simple_form_for @event, url: admin_course_event_path(@course, @event) do |form|
   .card.card-shadowed
     .card-header.d-flex.align-items-center.gap-2
       h5.mb-0 = "Event bearbeiten"
@@ -12,4 +14,4 @@
         = form.submit t("admin.application.btn_save"), class: "btn btn-primary"
         = link_to t("admin.application.btn_cancel"), return_path, class: "btn btn-outline-secondary"
         .d-none.d-md-block.ms-md-auto
-        = link_to t("admin.application.btn_delete"), admin_course_event_path(@course, @event, return_path: return_path), data: {turbo_method: :delete, turbo_confirm: t("admin.application.confirm_delete")}, class: "btn btn-danger"
+        = link_to t("admin.application.btn_delete"), admin_course_event_path(@course, @event), data: {turbo_method: :delete, turbo_confirm: t("admin.application.confirm_delete")}, class: "btn btn-danger"
