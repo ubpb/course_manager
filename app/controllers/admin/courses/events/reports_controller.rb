@@ -1,9 +1,9 @@
 module Admin
   module Courses
     module Events
-      class ReportsController < EventsController
+      class ReportsController < ApplicationController
 
-        before_action :load_report
+        before_action :prepare_course_event_report_context
 
         def show
           if @report
@@ -57,11 +57,6 @@ module Admin
         end
 
         private
-
-        def load_report
-          @report = @event.report
-          add_breadcrumb "Statistik", admin_course_event_report_path(@course, @event)
-        end
 
         def report_params
           params.require(:report).permit(

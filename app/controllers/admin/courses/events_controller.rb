@@ -1,9 +1,8 @@
 module Admin
   module Courses
-    class EventsController < CoursesController
+    class EventsController < ApplicationController
 
-      before_action -> { add_breadcrumb "Termine", admin_course_events_path(@course) }
-      before_action :load_event
+      before_action :prepare_course_event_context
 
       def index
         @upcoming_events = @course.events.upcoming.order(date_and_time: :desc)
@@ -58,13 +57,6 @@ module Admin
       end
 
       private
-
-      def load_event
-        event_id = params[:event_id] || params[:id] || return
-
-        @event = @course.events.includes(:report, :registrations).find(event_id)
-        add_breadcrumb I18n.l(@event.date_and_time), edit_admin_course_event_path(@course, @event)
-      end
 
       def event_params
         params.require(:event).permit(

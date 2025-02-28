@@ -2,6 +2,7 @@ module Admin
   class ApplicationController < ::ApplicationController
 
     include NavScope
+    include ContextHelpers
 
     before_action -> { add_breadcrumb("Admin", admin_root_path) }
     before_action :authenticate!
@@ -25,14 +26,6 @@ module Admin
       end
     end
     helper_method :current_admin_user
-
-    def raise_if_action_is_inherited
-      action_is_implemented = self.class.instance_method(action_name).owner == self.class
-
-      if respond_to?(action_name) && !action_is_implemented
-        raise NotImplementedError, "Action #{action_name} is not implemented in #{self.class}"
-      end
-    end
 
   end
 end

@@ -1,10 +1,9 @@
 module Admin
   module Courses
     module Events
-      class RegistrationsController < EventsController
+      class RegistrationsController < ApplicationController
 
-        before_action -> { add_breadcrumb "Anmeldungen", admin_course_event_registrations_path(@course, @event) }
-        before_action :load_registration
+        before_action :prepare_course_event_registration_context
 
         def index
           @registrations = @event.registrations.order(last_name: :asc, first_name: :asc)
@@ -55,13 +54,6 @@ module Admin
         end
 
         private
-
-        def load_registration
-          registration_id = params[:registration_id] || params[:id] || return
-
-          @registration = @event.registrations.find(registration_id)
-          add_breadcrumb @registration.full_name_reversed, edit_admin_course_event_path(@course, @event)
-        end
 
         def registration_params
           params.require(:registration).permit(

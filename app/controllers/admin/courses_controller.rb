@@ -3,10 +3,7 @@ module Admin
 
     include Filterable
 
-    before_action :raise_if_action_is_inherited
-
-    before_action -> { add_breadcrumb "Kurse", admin_courses_path }
-    before_action :load_course
+    before_action :prepare_course_context
 
     define_filter :courses do
       filter_by :published, :boolean, default: nil do |arel, published|
@@ -59,13 +56,6 @@ module Admin
     end
 
     private
-
-    def load_course
-      course_id = params[:course_id] || params[:id] || return
-
-      @course = Course.includes(:events).find(course_id)
-      add_breadcrumb @course.title, admin_courses_path(anchor: helpers.dom_id(@course))
-    end
 
     def course_params
       params.require(:course).permit(
