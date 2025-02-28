@@ -176,7 +176,7 @@ GEM
     globalid (1.2.1)
       activesupport (>= 6.1)
     hashie (5.0.0)
-    hexapdf (1.1.1)
+    hexapdf (1.2.0)
       cmdparse (~> 3.0, >= 3.0.3)
       geom2d (~> 0.4, >= 0.4.1)
       openssl (>= 2.2.1)
@@ -482,7 +482,7 @@ DEPENDENCIES
   commonmarker (~> 2.0)
   debug
   github-markup (~> 5.0)
-  hexapdf (~> 1.1)
+  hexapdf (~> 1.2)
   i18n-tasks
   inline_svg (~> 1.10)
   jbuilder

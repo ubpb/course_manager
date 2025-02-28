@@ -7,7 +7,7 @@ gem "bootsnap", require: false
 gem "caxlsx_rails", "~> 0.6.2"
 gem "commonmarker", "~> 2.0"
 gem "github-markup", "~> 5.0", require: "github/markup"
-gem "hexapdf", "~> 1.1"
+gem "hexapdf", "~> 1.2"
 gem "jbuilder"
 gem "mysql2"
 gem "propshaft"
