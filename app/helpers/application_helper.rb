@@ -21,4 +21,13 @@ module ApplicationHelper
     end
   end
 
+  def date_in_words(date)
+    case date
+    when Time.zone.today          then t("datetime.today")
+    when Time.zone.today + 1.day  then t("datetime.tomorrow")
+    when Time.zone.today + 2.days then t("datetime.day_after_tomorrow")
+    else distance_of_time_in_words_to_now(date, scope: "datetime.distance_in_words.date_only")
+    end
+  end
+
 end

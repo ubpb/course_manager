@@ -13,7 +13,8 @@ table.table
       tr(id=dom_id(event))
         td(width="1" class="#{event.published? ? "table-success" : "table-danger"}") = ""
         td
-          = l(event.date_and_time)
+          span = l(event.date_and_time)
+          span.ms-1.text-muted = "... #{date_in_words(event.date_and_time.to_date)}" if event.upcoming?
           div = link_to event.course.title, admin_course_events_path(event.course, nav_scope: "events")
         td
           = event.registrations_count
