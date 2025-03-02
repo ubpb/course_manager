@@ -85,9 +85,9 @@ module Filterable
     def filter(arel)
       @context.filters.each do |k, v|
         filter_value = send(k)
-        callable = v[:block]
-
         next if filter_value.nil?
+
+        callable = v[:block]
         next unless callable
 
         result = callable.call(arel, filter_value)

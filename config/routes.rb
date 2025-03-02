@@ -37,6 +37,10 @@ Rails.application.routes.draw do
     resources :events, only: [:index] do
       get :reports, on: :collection, constraints: {format: :xlsx}
     end
+
+    resources :target_groups, path: "target-groups", except: [:show] do
+      patch :reorder, on: :member
+    end
   end
 
   # Dev Tools

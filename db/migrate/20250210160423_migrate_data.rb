@@ -109,11 +109,11 @@ class MigrateData < ActiveRecord::Migration[8.0]
     #
     # Migrate topics
     #
-    OldTopic.find_each do |old_topic|
+    OldTopic.order(:position, :asc).find_each.with_index(1) do |old_topic, i|
       Topic.create! do |topic|
         topic.id = old_topic.id
         topic.title = old_topic.title
-        topic.position = old_topic.position
+        topic.position = i
       end
     end
 
@@ -127,11 +127,11 @@ class MigrateData < ActiveRecord::Migration[8.0]
     #
     # Migrate target groups
     #
-    OldTargetGroup.find_each do |old_target_group|
+    OldTargetGroup.order(:position, :asc).find_each.with_index(1) do |old_target_group, i|
       TargetGroup.create! do |target_group|
         target_group.id = old_target_group.id
         target_group.title = old_target_group.title
-        target_group.position = old_target_group.position
+        target_group.position = i
       end
     end
 
