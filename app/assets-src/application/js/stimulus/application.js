@@ -8,6 +8,10 @@ export { application }
 application.debug = false
 window.Stimulus   = application
 
-// Register sortable component
+// Register ColorModeSwitcher
+import ColorModeSwitcher from "./color_mode_switcher.js"
+application.register("color-mode-switcher", ColorModeSwitcher)
+
+// Register Sortable controller
 import Sortable from "@stimulus-components/sortable"
 application.register("sortable", Sortable)
