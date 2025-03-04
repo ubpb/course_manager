@@ -7,6 +7,7 @@ table.table
       th = "Teilnehmer"
       th = "Online?"
       th = "Statistik erfasst?"
+      th = "Zertifikat erstellt?"
       th.actions = "Aktionen"
   tbody
     - events.each do |event|
@@ -24,6 +25,7 @@ table.table
             = " / ∞"
         td = event.online? ? "Ja" : "Nein"
         td = event.report.present? ? "Ja" : "Nein"
+        td = event.certification.present? ? "Ja" : "Nein"
         td.actions
           .dropdown
             button.btn.btn-outline-primary.btn-sm.dropdown-toggle(type="button" data-bs-toggle="dropdown")
@@ -39,3 +41,6 @@ table.table
               li = link_to admin_course_event_report_path(event.course, event, nav_scope: "events"), class: "dropdown-item" do
                 i.fa-solid.fa-chart-line.me-2
                 = "Statistik"
+              li = link_to admin_course_event_certification_path(event.course, event, nav_scope: "events"), class: "dropdown-item" do
+                i.fa-solid.fa-certificate.me-2
+                = "Zertifizierung"

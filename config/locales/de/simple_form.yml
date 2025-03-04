@@ -23,6 +23,9 @@ de:
         field_of_interest: "Fachgebiet"
         user_notes: "Notizen des Nutzers"
         internal_notes: "Interne Notizen"
+      certification:
+        learning_results: "Lernergebnisse"
+        signature: "Unterschrift"
       report:
         lecturer: "Dozent(en)"
         presence_types: "Format"

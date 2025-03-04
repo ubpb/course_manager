@@ -42,4 +42,11 @@ module ContextHelpers
     add_breadcrumb "Statistik", admin_course_event_report_path(@course, @event)
   end
 
+  def prepare_course_event_certification_context
+    prepare_course_event_context
+
+    @certification = @event.certification
+    add_breadcrumb "Zertifizierung", admin_course_event_report_path(@course, @event)
+  end
+
 end
