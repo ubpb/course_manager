@@ -41,6 +41,10 @@ Rails.application.routes.draw do
     resources :target_groups, path: "target-groups", except: [:show] do
       patch :reorder, on: :member
     end
+
+    resources :topics, except: [:show] do
+      patch :reorder, on: :member
+    end
   end
 
   # Dev Tools

@@ -1,8 +1,8 @@
 - card = ->(return_path) do
-  - simple_form_for [:admin, @target_group] do |form|
+  - simple_form_for [:admin, @topic] do |form|
     .card.card-shadowed.mb-3
       .card-header.d-flex.align-items-center.gap-2
-        h5.mb-0 = "Neue Zielgruppe erstellen"
+        h5.mb-0 = "Neues Thema erstellen"
         .ms-auto
         = link_to return_path, class: "btn btn-link btn-sm" do
           i.fa-solid.fa-times
@@ -14,9 +14,9 @@
           = link_to t("admin.application.btn_cancel"), return_path, class: "btn btn-outline-secondary"
 
 - if turbo_frame_request?
-  - return_path = admin_target_groups_path(anchor: dom_id(@target_group))
-  = turbo_frame_tag(@target_group) do
+  - return_path = admin_topics_path(anchor: dom_id(@topic))
+  = turbo_frame_tag(@topic) do
     = card.(return_path)
 - else
-  - return_path = admin_target_groups_path
+  - return_path = admin_topics_path
   = card.(return_path)

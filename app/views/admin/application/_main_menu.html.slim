@@ -26,6 +26,9 @@
         = link_to admin_target_groups_path, class: "list-group-item list-group-item-action" do
           i.fa-solid.fa-users-viewfinder.me-2
           = "Zielgruppen"
+        = link_to admin_topics_path, class: "list-group-item list-group-item-action" do
+          i.fa-solid.fa-tags.me-2
+          = "Themen"
 
       - if [color_mode_enabled?, locale_switching_enabled?].any?
         h5.text-muted = t("application.main_menu.settings")

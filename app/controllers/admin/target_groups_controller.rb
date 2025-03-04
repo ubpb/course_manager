@@ -4,7 +4,7 @@ module Admin
     before_action -> { add_breadcrumb "Zielgruppen", admin_target_groups_path }
 
     def index
-      @target_groups = TargetGroup.order(:position)
+      @target_groups = TargetGroup.order(position: :asc)
     end
 
     def new
@@ -15,14 +15,15 @@ module Admin
       @target_group = TargetGroup.new(target_group_params)
 
       if @target_group.save
-        respond_to do |format|
-          format.html { redirect_to admin_target_groups_path }
-          format.turbo_stream do
-            render turbo_stream: turbo_stream.refresh(request_id: nil)
-          end
+        @target_group.move_to_bottom
+
+        if turbo_frame_request? && request.format == :turbo_stream
+          render turbo_stream: turbo_stream.refresh(request_id: nil)
+        else
+          redirect_to admin_target_groups_path
         end
       else
-        render :new
+        render :new, status: :unprocessable_entity
       end
     end
 
@@ -36,7 +37,7 @@ module Admin
       if @target_group.update(target_group_params)
         redirect_to admin_target_groups_path
       else
-        render :edit
+        render :edit, status: :unprocessable_entity
       end
     end
 
