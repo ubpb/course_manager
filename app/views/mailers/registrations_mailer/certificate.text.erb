@@ -1,0 +1,7 @@
+<%= render "mailers/application/salutation" -%>
+
+anbei erhalten Sie Ihre Teilnahmebescheinigung für die Schulungsveranstaltung "<%= @course.title %>" am <%= l(@event.date_and_time.to_date) %>.
+
+Sollten Sie Fragen haben, können Sie uns kontaktieren, indem Sie einfach auf diese E-Mail antworten.
+
+<%= render "mailers/application/footer" -%>

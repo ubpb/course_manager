@@ -33,7 +33,7 @@ class MigrateData < ActiveRecord::Migration[8.0]
     OldRegistration.find_each do |old_registration|
       event = Event.find(old_registration.training_course_id)
 
-      Registration.new do |registration|
+      registration = Registration.new do |registration|
         registration.id = old_registration.id
         registration.event = event
         registration.first_name = old_registration.firstname
@@ -47,7 +47,13 @@ class MigrateData < ActiveRecord::Migration[8.0]
         registration.certificate_sent_at = old_registration.certificate_sent_at
         registration.created_at = old_registration.created_at
         registration.updated_at = old_registration.updated_at
-      end.save!(validate: false) # We need to disable validation as old data might not be valid
+      end
+
+      # Because of the `validate: false` on the save operation we need to strip attributes manually
+      StripAttributes.strip(registration, collapse_spaces: true)
+
+      # We need to disable validation as old data might not be valid
+      registration.save!(validate: false)
     end
 
     #

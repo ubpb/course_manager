@@ -9,7 +9,14 @@ module Admin
           @registrations = @event.registrations.order(last_name: :asc, first_name: :asc)
 
           respond_to do |format|
-            format.html
+            format.html do
+              @bulk_process_actions = []
+
+              if @registrations.any? && @event.certification.present?
+                @bulk_process_actions << ["Zertifikat per Mail senden", "send_cert_email"]
+              end
+            end
+
             format.xlsx do
               filename = [
                 I18n.l(@event.date_and_time.to_date, format: "%Y-%m-%d").parameterize,
@@ -53,12 +60,65 @@ module Admin
           redirect_to admin_course_event_registrations_path(@course, @event), notice: t("admin.application.form.destroy_success")
         end
 
+        def bulk_process
+          registrations = @event.registrations.where(id: params[:bulk_process_ids])
+          action = params[:bulk_process_action]
+
+          case action
+          when "send_cert_email" then bulk_process_send_certificate(registrations)
+          end
+
+          redirect_to admin_course_event_registrations_path(@course, @event)
+        end
+
+        def download_certificate
+          if @event.certification.present?
+            registration = @event.registrations.includes(event: [:course, :certification]).find(params[:id])
+
+            send_data(
+              Certificate.generate(registration),
+              filename: Certificate.filename(registration),
+              type: "application/pdf",
+              disposition: "attachment"
+            )
+          else
+            head :ok
+          end
+        end
+
+        def email_certificate
+          registration = @event.registrations.includes(event: [:course, :certification]).find(params[:id])
+          send_certificate(registration)
+
+          flash[:success] = "Zertifikat wurde versendet"
+          redirect_to admin_course_event_registrations_path(@course, @event)
+        end
+
         private
 
         def registration_params
           params.require(:registration).permit(
             :first_name, :last_name, :email, :field_of_interest, :user_notes, :internal_notes
           )
+        end
+
+        def send_certificate(registration)
+          return if @event.certification.blank?
+
+          Mailers::RegistrationsMailer.certificate(
+            registration,
+            Certificate.generate(registration),
+            Certificate.filename(registration),
+          ).deliver_later
+
+          registration.update(certificate_sent_at: Time.zone.now)
+        end
+
+        def bulk_process_send_certificate(registrations)
+          # binding.b
+          registrations.each do |registration|
+            # Send certificate
+          end
         end
 
       end

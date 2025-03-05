@@ -15,3 +15,7 @@ application.register("color-mode-switcher", ColorModeSwitcher)
 // Register Sortable controller
 import Sortable from "@stimulus-components/sortable"
 application.register("sortable", Sortable)
+
+// Register CheckboxSelectAll controller
+import CheckboxSelectAll from "@stimulus-components/checkbox-select-all"
+application.register("checkbox-select-all", CheckboxSelectAll)

@@ -21,7 +21,7 @@ gem "solid_cache"
 gem "solid_queue"
 gem "sqlite3", ">= 2.1"
 gem "stimulus-rails"
-gem "strip_attributes", "~> 1.13"
+gem "strip_attributes", "~> 2.0"
 gem "turbo-rails"
 gem "view_component", "~> 3.0"
 

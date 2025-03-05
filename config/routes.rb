@@ -29,7 +29,11 @@ Rails.application.routes.draw do
     resources :courses, except: [:show] do
       resources :events, except: [:show], module: :courses do
         get :duplicate, on: :member
-        resources :registrations, except: [:show], module: :events
+        resources :registrations, except: [:show], module: :events do
+          get :download_certificate, on: :member, path: "certificate/download"
+          get :email_certificate, on: :member, path: "certificate/email"
+          patch :bulk_process, path: "bulk-process", on: :collection
+        end
         resource :report, except: [:destroy], module: :events
         resource :certification, except: [:destroy], module: :events
       end
