@@ -56,7 +56,7 @@ de:
           Als Standard wird schulungen@ub.uni-paderborn.de verwendet.
         reminder_message: >
           Mailvorlage für den Versand einer Erinnerungsmail an die angemeldeten Teilnehmer der Veranstaltung. Sie können
-          <code>###ANREDE###</code>, <code>###DATUM###</code>, <code>###UHRZEIT###</code>, <code>###DAUER###</code>,
+          <code>###NAME###</code>, <code>###ANREDE###</code>, <code>###DATUM###</code>, <code>###UHRZEIT###</code>, <code>###DAUER###</code>,
           <code>###TREFFPUNKT###</code> und <code>###TITEL###</code> in der Nachricht als Platzhalter verwenden. Die Nachricht wird automatisch
           an die Teilnehmer versendet.
         max_no_of_participants: >

@@ -26,15 +26,16 @@ module Mailers
 
     def certificate(registration, certificate, certificate_filename)
       @registration = registration
-      @event = registration.event
+      return if @registration.anonymized?
+
+      @event = @registration.event
+      return if @event.certification.blank?
+
       @course = @event.course
 
-      from_address = @event.email_from.presence || @course.email_from.presence || "schulung@ub.uni-paderborn.de"
-
       attachments[certificate_filename] = certificate
-
       mail(
-        reply_to: from_address,
+        reply_to: @event.effective_email_from || "schulung@ub.uni-paderborn.de",
         to: @registration.email,
         subject: "[UB Paderborn] Ihre Teilnahmebescheinigung"
       )

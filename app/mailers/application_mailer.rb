@@ -5,6 +5,6 @@ class ApplicationMailer < ActionMailer::Base
 
   layout "mailer"
 
-  # helper MailerHelper
+  helper MailerHelper
 
 end

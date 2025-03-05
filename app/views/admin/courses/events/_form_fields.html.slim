@@ -20,16 +20,36 @@ hr.mt-1.mb-3
     = form.input :registration_required, as: :boolean
     = form.input :max_no_of_participants
 
-h5.mt-4.mb-0 Adminstrative Angaben
+h5.mt-4.mb-0 Administrative Angaben
 hr.mt-1.mb-3
-= form.label :reminder_message
-- if course.reminder_message.present?
-    div.badge.text-bg-light.d-block.mb-1
-      = "Wird von der Veranstaltung übernommen oder hier überschrieben"
-= form.input :reminder_message, label: false
+ul.nav.nav-tabs.mb-3
+  li.nav-item
+    button#reminder-message-tab.nav-link.active(data-bs-toggle="tab" data-bs-target="#reminder-message-pane" type="button") = "E-Mail Erinnerung"
+  li.nav-item
+    button#reminder-message-preview-tab.nav-link(data-bs-toggle="tab" data-bs-target="#reminder-message-preview-pane" type="button") = "Vorschau"
 
-= form.label :email_from
-- if course.email_from.present?
-    div.badge.text-bg-light.d-block.mb-1
-      = "Wird von der Veranstaltung übernommen oder hier überschrieben"
-= form.input :email_from, label: false
+.tab-content
+  #reminder-message-pane.tab-pane.fade.show.active
+    - if course.reminder_message.present? && event.reminder_message.blank?
+        div.badge.text-bg-light.d-block.mb-1
+          = "Wird von der Veranstaltung übernommen"
+    = form.input :reminder_message, as: :text, input_html: { rows: 8 }, label: false
+
+    = form.label :email_from
+    - if course.email_from.present? && event.email_from.blank?
+        div.badge.text-bg-light.d-block.mb-1
+          = "Wird von der Veranstaltung übernommen"
+    = form.input :email_from, label: false
+  #reminder-message-preview-pane.tab-pane.fade.show
+    = turbo_frame_tag "reminder-message-preview", src: preview_reminder_message_admin_course_event_path(course, event)
+
+/javascript:
+  const previewTab = document.querySelector("#reminder-message-preview-tab")
+  previewTab.addEventListener("show.bs.tab", event => {
+    const previewFrame = document.querySelector("#reminder-message-preview")
+    previewFrame.reload()
+  })
+
+
+
+

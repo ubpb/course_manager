@@ -27,14 +27,21 @@ Rails.application.routes.draw do
     resource :session, only: [:new, :create, :destroy]
 
     resources :courses, except: [:show] do
+      get :preview_reminder_message, path: "preview-reminder-message", on: :member
+
       resources :events, except: [:show], module: :courses do
         get :duplicate, on: :member
+        get :preview_reminder_message, path: "preview-reminder-message", on: :member
+
         resources :registrations, except: [:show], module: :events do
           get :download_certificate, on: :member, path: "certificate/download"
-          get :email_certificate, on: :member, path: "certificate/email"
+          patch :send_certificate, on: :member, path: "certificate/send"
+          patch :send_reminder_message, on: :member, path: "reminder/send"
           patch :bulk_process, path: "bulk-process", on: :collection
         end
+
         resource :report, except: [:destroy], module: :events
+
         resource :certification, except: [:destroy], module: :events
       end
     end

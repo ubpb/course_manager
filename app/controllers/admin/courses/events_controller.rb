@@ -26,7 +26,19 @@ module Admin
       def edit; end
 
       def update
-        if @event.update(event_params)
+        @event.assign_attributes(event_params)
+
+        if @event.valid?
+          if @event.upcoming? && (@event.date_and_time_changed? || @event.location_changed?)
+            @event.registrations.each do |registration|
+              # Must be send with #deliver and not #deliver_later, because the event is saved afterwards
+              # ans we need the changes to be present in the email
+              Mailers::EventsMailer.changed_notification(@event, registration).deliver
+            end
+          end
+
+          @event.save
+
           redirect_to edit_admin_course_event_path(@course, @event), notice: t("admin.application.form.success")
         else
           render :edit, status: :unprocessable_entity
@@ -54,6 +66,20 @@ module Admin
 
         flash[:notice] = "Das Event wurde dupliziert und gespeichert. Datum und Uhrzeit wurden auf die aktuelle Zeit eingestellt. Bitte bearbeite die Details."
         redirect_to edit_admin_course_event_path(@course, event)
+      end
+
+      def preview_reminder_message
+        event = @course.events.find(params[:id])
+
+        registration = Registration.new(
+          event: event,
+          first_name: "Max",
+          last_name: "Mustermann",
+          email: "schulung@ub.uni-paderborn.de"
+        )
+
+        mail = Mailers::EventsMailer.reminder_message(registration, skip_if_sent: false)
+        @preview = mail.body.to_s
       end
 
       private

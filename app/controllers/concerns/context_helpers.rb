@@ -10,7 +10,7 @@ module ContextHelpers
     course_id = params[:course_id] || params[:id] || return
     @course = Course.includes(:events).find(course_id)
 
-    add_breadcrumb @course.title, admin_courses_path(anchor: helpers.dom_id(@course))
+    add_breadcrumb @course.title, edit_admin_course_path(@course)
   end
 
   def prepare_course_event_context

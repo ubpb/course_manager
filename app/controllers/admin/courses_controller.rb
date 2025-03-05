@@ -55,6 +55,27 @@ module Admin
       redirect_to admin_courses_path, notice: t("admin.application.form.destroy_success")
     end
 
+    def preview_reminder_message
+      course = Course.find(params[:id])
+
+      event = Event.new(
+        course: course,
+        date_and_time: Time.zone.now,
+        duration: 60,
+        location: "Raum 123"
+      )
+
+      registration = Registration.new(
+        event: event,
+        first_name: "Max",
+        last_name: "Mustermann",
+        email: "schulung@ub.uni-paderborn.de"
+      )
+
+      mail = Mailers::EventsMailer.reminder_message(registration, skip_if_sent: false)
+      @preview = mail.body.to_s
+    end
+
     private
 
     def course_params

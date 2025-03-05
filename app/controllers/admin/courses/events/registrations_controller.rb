@@ -10,11 +10,7 @@ module Admin
 
           respond_to do |format|
             format.html do
-              @bulk_process_actions = []
-
-              if @registrations.any? && @event.certification.present?
-                @bulk_process_actions << ["Zertifikat per Mail senden", "send_cert_email"]
-              end
+              setup_bulk_process_actions(@registrations)
             end
 
             format.xlsx do
@@ -60,19 +56,6 @@ module Admin
           redirect_to admin_course_event_registrations_path(@course, @event), notice: t("admin.application.form.destroy_success")
         end
 
-        def bulk_process
-          registrations = @event.registrations.where(id: params[:bulk_process_ids])
-          action = params[:bulk_process_action]
-
-          case action
-          when "send_cert_email"
-            flash[:success] = "Zertifikat(e) wurde versendet"
-            bulk_process_send_certificate(registrations)
-          end
-
-          redirect_to admin_course_event_registrations_path(@course, @event)
-        end
-
         def download_certificate
           if @event.certification.present?
             registration = @event.registrations.includes(event: [:course, :certification]).find(params[:id])
@@ -88,15 +71,56 @@ module Admin
           end
         end
 
-        def email_certificate
+        def send_certificate
           registration = @event.registrations.includes(event: [:course, :certification]).find(params[:id])
-          send_certificate(registration)
+          send_certificate!(registration)
 
           flash[:success] = "Zertifikat wurde versendet"
           redirect_to admin_course_event_registrations_path(@course, @event)
         end
 
+        def send_reminder_message
+          registration = @event.registrations.includes(event: [:course]).find(params[:id])
+          send_reminder_message!(registration, skip_if_sent: false)
+
+          flash[:success] = "Erinnerungsmail wurde versendet"
+          redirect_to admin_course_event_registrations_path(@course, @event)
+        end
+
+        def bulk_process
+          registrations = @event.registrations.includes(event: [:course, :certification]).where(id: params[:bulk_process_ids])
+          action = params[:bulk_process_action]
+
+          case action
+          when "send_certificates"
+            send_certificates!(registrations)
+            flash[:success] = "Zertifikat(e) wurde versendet"
+          when "send_reminder_messages"
+            send_reminder_messages!(registrations)
+            flash[:success] = "Erinnerungsmail(s) wurde versendet"
+          when "force_send_reminder_messages"
+            send_reminder_messages!(registrations, skip_if_sent: false)
+            flash[:success] = "Erinnerungsmail(s) wurde versendet"
+          end
+
+          redirect_to admin_course_event_registrations_path(@course, @event)
+        end
+
         private
+
+        def setup_bulk_process_actions(registrations)
+          @bulk_process_actions = []
+          return if registrations.empty?
+
+          if @event.certification.present?
+            @bulk_process_actions << ["Zertifikat per Mail senden", "send_certificates"]
+          end
+
+          if @event.effective_reminder_message.present?
+            @bulk_process_actions << ["Erinnerungsmail senden", "send_reminder_messages"]
+            @bulk_process_actions << ["Erinnerungsmail ERNEUT senden", "force_send_reminder_messages"]
+          end
+        end
 
         def registration_params
           params.require(:registration).permit(
@@ -104,21 +128,36 @@ module Admin
           )
         end
 
-        def send_certificate(registration)
-          return if @event.certification.blank?
-
+        def send_certificate!(registration)
           Mailers::RegistrationsMailer.certificate(
             registration,
             Certificate.generate(registration),
-            Certificate.filename(registration),
+            Certificate.filename(registration)
           ).deliver_later
 
           registration.update(certificate_sent_at: Time.zone.now)
         end
 
-        def bulk_process_send_certificate(registrations)
+        def send_certificates!(registrations)
           registrations.each do |registration|
-            send_certificate(registration)
+            send_certificate!(registration)
+          end
+        end
+
+        def send_reminder_message!(registration, skip_if_sent: true)
+          return if registration.reminder_message_sent_at.present? && skip_if_sent
+
+          Mailers::EventsMailer.reminder_message(
+            registration,
+            skip_if_sent: skip_if_sent
+          ).deliver_later
+
+          registration.update(reminder_message_sent_at: Time.zone.now)
+        end
+
+        def send_reminder_messages!(registrations, skip_if_sent: true)
+          registrations.each do |registration|
+            send_reminder_message!(registration, skip_if_sent: skip_if_sent)
           end
         end
 

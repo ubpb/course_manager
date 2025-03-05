@@ -18,4 +18,8 @@ class Registration < ApplicationRecord
     [last_name, first_name].map(&:presence).compact.join(", ")
   end
 
+  def anonymized?
+    first_name == "Gelöscht" || last_name == "Gelöscht" || email == "Gelöscht"
+  end
+
 end
