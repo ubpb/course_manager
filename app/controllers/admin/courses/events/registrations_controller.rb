@@ -65,7 +65,9 @@ module Admin
           action = params[:bulk_process_action]
 
           case action
-          when "send_cert_email" then bulk_process_send_certificate(registrations)
+          when "send_cert_email"
+            flash[:success] = "Zertifikat(e) wurde versendet"
+            bulk_process_send_certificate(registrations)
           end
 
           redirect_to admin_course_event_registrations_path(@course, @event)
@@ -115,9 +117,8 @@ module Admin
         end
 
         def bulk_process_send_certificate(registrations)
-          # binding.b
           registrations.each do |registration|
-            # Send certificate
+            send_certificate(registration)
           end
         end
 
