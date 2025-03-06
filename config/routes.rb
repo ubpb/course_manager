@@ -38,6 +38,7 @@ Rails.application.routes.draw do
           patch :send_certificate, on: :member, path: "certificate/send"
           patch :send_reminder_message, on: :member, path: "reminder/send"
           patch :bulk_process, path: "bulk-process", on: :collection
+          post :send_message, path: "message/send", on: :collection
         end
 
         resource :report, except: [:destroy], module: :events

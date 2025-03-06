@@ -1,0 +1,7 @@
+<%= render "mailers/application/salutation" -%>
+
+Hinweis: Sie erhalten die E-Mail im Zusammenhang mit Ihrer Anmeldung bei der Schulungsveranstaltung "<%= @course.title %>" am <%= l(@event.date_and_time.to_date) %>.
+
+<%= @message.body %>
+
+<%= render "mailers/application/footer" -%>

@@ -88,7 +88,9 @@ module Admin
         end
 
         def bulk_process
-          registrations = @event.registrations.includes(event: [:course, :certification]).where(id: params[:bulk_process_ids])
+          registrations = @event.registrations
+                                .includes(event: [:course, :certification])
+                                .where(id: params[:bulk_process_ids])
           action = params[:bulk_process_action]
 
           case action
@@ -101,9 +103,50 @@ module Admin
           when "force_send_reminder_messages"
             send_reminder_messages!(registrations, skip_if_sent: false)
             flash[:success] = "Erinnerungsmail(s) wurde versendet"
+          when "send_message"
+            render turbo_stream: turbo_stream.replace(
+              "bulk-action-form",
+              partial: "bulk_action_new_message",
+              locals: {
+                course: @course,
+                event: @event,
+                registrations: registrations,
+                message: Message.new
+              }
+            )
+            return
           end
 
           redirect_to admin_course_event_registrations_path(@course, @event)
+        end
+
+        def send_message
+          registrations = @event.registrations
+                                .includes(event: [:course, :certification])
+                                .where(id: params[:registration_ids])
+
+          message_params = params.require(:message).permit(:subject, :body)
+          message = Message.new(message_params)
+
+          if message.valid?
+            registrations.each do |registration|
+              Mailers::RegistrationsMailer.user_message(registration, message).deliver
+            end
+
+            flash[:success] = "Nachricht gesendet"
+            redirect_to admin_course_event_registrations_path(@course, @event)
+          else
+            render turbo_stream: turbo_stream.replace(
+              "bulk-action-form",
+              partial: "bulk_action_new_message",
+              locals: {
+                course: @course,
+                event: @event,
+                registrations: registrations,
+                message: message
+              }
+            )
+          end
         end
 
         private
@@ -120,6 +163,8 @@ module Admin
             @bulk_process_actions << ["Erinnerungsmail senden", "send_reminder_messages"]
             @bulk_process_actions << ["Erinnerungsmail ERNEUT senden", "force_send_reminder_messages"]
           end
+
+          @bulk_process_actions << ["Nachricht schreiben", "send_message"]
         end
 
         def registration_params
