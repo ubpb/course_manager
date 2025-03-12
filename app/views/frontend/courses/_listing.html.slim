@@ -1,0 +1,7 @@
+/ <%# locals: (courses:) -%>
+
+- courses.each do |course|
+  div = link_to frontend_course_path(course) do
+    = course.title
+    - if course.category.present?
+      span.badge.text-bg-light.ms-2 = course.category.title

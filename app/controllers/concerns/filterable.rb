@@ -65,26 +65,47 @@ module Filterable
       @context = filter_context
 
       @context.filters.each do |k, v|
-        self.class.attribute(k, v[:cast_type], default: v[:default], **v[:options])
+        if v[:options][:array]
+          self.class.attribute(k, default: v[:default].presence || [], **v[:options])
+        else
+          self.class.attribute(k, v[:cast_type], default: v[:default], **v[:options])
+        end
       end
 
       super() # important to make ActiveModel::Attributes work
 
+      # Set the values from the given filter attributes
       @context.filters.each do |k, v|
         filter_value = filter_attributes[k]
-        filter_value = filter_value.presence if v[:cast_type] == :string
 
+        # If the value is an array, cast each element to the correct type
+        # and remove nil values.
+        if filter_value.is_a?(Array)
+          filter_value = filter_value.map(&:presence).compact.map do |fv|
+            case v[:cast_type]
+            when :string  then fv.to_s
+            when :integer then fv.to_i
+            when :float   then fv.to_f
+            when :boolean then fv == "true"
+            else fv
+            end
+          end
+        end
+
+        # Set the value if the attribute exists
         send("#{k}=", filter_value) if respond_to?("#{k}=")
       end
     end
 
     def active?
-      @context.filters.keys.any? { |k| !send(k).nil? }
+      @context.filters.keys.any? do |k|
+        !filter_value(k).nil?
+      end
     end
 
     def filter(arel)
       @context.filters.each do |k, v|
-        filter_value = send(k)
+        filter_value = filter_value(k)
         next if filter_value.nil?
 
         callable = v[:block]
@@ -95,6 +116,13 @@ module Filterable
       end
 
       arel
+    end
+
+    private
+
+    def filter_value(name)
+      v = send(name)
+      v&.in?([true, false]) ? v : v.presence
     end
 
   end

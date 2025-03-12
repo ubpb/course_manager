@@ -5,7 +5,7 @@ module Admin
       before_action :prepare_course_event_context
 
       def index
-        @upcoming_events = @course.events.upcoming.order(date_and_time: :desc)
+        @upcoming_events = @course.events.upcoming.order(date_and_time: :asc)
         @past_events = @course.events.past.order(date_and_time: :desc)
       end
 

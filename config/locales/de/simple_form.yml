@@ -45,6 +45,7 @@ de:
         with_report: "Statistik erfasst?"
         from_date: "Datum von"
         to_date: "Datum bis"
+        date_range: "Datum"
     hints:
       defaults:
         description: >
@@ -67,3 +68,9 @@ de:
           Notizen, die für den Nutzer sichtbar sind
         internal_notes: >
           Interne Notizen, die nur für Mitarbeiter sichtbar sind
+    options:
+      filter:
+        date_range:
+          week: "... in der nächsten 7 Tagen"
+          month: "... in den nächsten 4 Wochen"
+          quarter: "... in den nächsten 3 Monaten"

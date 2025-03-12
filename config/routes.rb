@@ -16,7 +16,20 @@ Rails.application.routes.draw do
   get "/locale/:locale", to: "locales#switch", as: :locale
 
   # Defines the root path route ("/")
-  root "pages#home"
+  root "frontend/pages#home"
+
+  #
+  # Frontend
+  #
+  namespace :frontend, path: "/" do
+    root "pages#home"
+
+    # redirect old event URLs to new ones
+    get "/:id", to: redirect("/termine/%{id}"), constraints: {id: /\d{1,4}.+/}
+
+    resources :courses, only: [:index, :show], path: "kurse"
+    resources :events, only: [:index, :show], path: "termine"
+  end
 
   #
   # Admin

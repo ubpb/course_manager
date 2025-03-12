@@ -1,0 +1,23 @@
+.row
+  .col-md-8
+    .card.card-shadowed
+      .card-header.d-flex.align-items-center.gap-2
+        h5.mb-0 = "Anstehenden Schulungstermine"
+      .card-body
+        - if @upcoming_events.present?
+          - if @filter&.active?
+            .alert.alert-info
+              i.fa-solid.fa-filter.fa-fw.me-2
+              = "Es werden nur Termine angezeigt, die den Filterkriterien entsprechen."
+              .mt-3 = link_to "Filter zurücksetzen", frontend_events_path(reset_filter: true), class: "alert-link"
+          = render "listing", events: @upcoming_events
+        - else
+          - if @filter&.active?
+            .alert.alert-warning.mb-0
+              i.fa-solid.fa-exclamation-triangle.fa-fw.me-2
+              = "Es wurden keine Schulungstermine gefunden, die den Filterkriterien entsprechen."
+              .mt-3 = link_to "Filter zurücksetzen", frontend_events_path(reset_filter: true), class: "alert-link"
+          - else
+            .p-2.text-muted = "Aktuell sind keine anstehenden Schulungstermine vorhanden."
+  .col-md-4
+    = render "filters"

@@ -30,4 +30,14 @@ module ApplicationHelper
     end
   end
 
+  def render_markdown(text)
+    Commonmarker.to_html(
+      text,
+      options: {
+        parse: {smart: true},
+        render: {hardbreaks: false}
+      }
+    )
+  end
+
 end

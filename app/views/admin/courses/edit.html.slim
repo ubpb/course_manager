@@ -9,6 +9,7 @@
       = link_to admin_courses_path(anchor: dom_id(@course)), class: "btn btn-link btn-sm" do
         i.fa-solid.fa-times
     .card-body
+      - binding.b
       = render "form_fields", form: form, course: @course
     .card-footer
       .d-flex.gap-2.flex-column.flex-md-row

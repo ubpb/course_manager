@@ -1,0 +1,57 @@
+.card.card-shadowed
+  .card-header.d-flex.align-items-center.gap-2
+    h5.mb-0 = @course.title
+  .card-body
+    - if @course.description.present?
+      h5 = "Kursbeschreibung"
+      == render_markdown(@course.description)
+
+    - if @course.learning_targets.present?
+      h5 = "Lernziele"
+      == render_markdown(@course.learning_targets)
+
+    - if @course.category.present?
+      h5 = "Kategorie"
+      .mb-3 = @course.category.title
+
+    - if @course.target_groups.present?
+      h5 = "Zielgruppen"
+      .mb-3
+        - @course.target_groups.each do |tg|
+          span.badge.text-bg-light.me-2 = tg.title
+
+    - if @course.topics.present?
+      h5 = "Themen"
+      .mb-3
+        - @course.topics.each do |t|
+          span.badge.text-bg-light.me-2 = t.title
+
+    h5 = "Kommende Termine"
+    - if @upcoming_events.present?
+      .list-group
+        - @upcoming_events.each do |event|
+          .list-group-item.d-flex.justify-content-between.align-items-center
+            div
+              div
+                i.fa-solid.fa-calendar-alt.fa-fw.me-2
+                span.fw-bold = l(event.date_and_time)
+
+              - if event.duration.present?
+                div
+                  i.fa-solid.fa-clock.fa-fw.me-2
+                  span = "#{event.duration} Minuten"
+
+              div
+                i.fa-solid.fa-person-chalkboard.fa-fw.me-2
+                span = event.online? ? 'Online' : 'Präsenz'
+
+              - if event.registration_required?
+                div
+                  i.fa-solid.fa-info-circle.fa-fw.me-2
+                  span = "Anmeldung erforderlich"
+
+            div
+              = link_to frontend_event_path(event), class: "btn btn-primary" do
+                = "Zum Termin"
+    - else
+      .p-2.text-muted = "Keine Termine vorhanden"

@@ -1,0 +1,39 @@
+/ <%# locals: (events:) -%>
+
+- events.each do |event|
+  - course = event.course
+
+  div = link_to frontend_event_path(event) do
+    h5 = course.title
+
+  div
+    i.fa-solid.fa-calendar-alt.fa-fw.me-2
+    span.fw-bold = l(event.date_and_time)
+
+  - if event.duration.present?
+    div
+      i.fa-solid.fa-clock.fa-fw.me-2
+      span = "#{event.duration} Minuten"
+
+  div
+    i.fa-solid.fa-person-chalkboard.fa-fw.me-2
+    span = event.online? ? 'Online' : 'Präsenz'
+
+  - if event.registration_required?
+    div
+      i.fa-solid.fa-info-circle.fa-fw.me-2
+      span = "Anmeldung erforderlich"
+
+  - if course.target_groups.present?
+    div
+      i.fa-solid.fa-bullseye.fa-fw.me-2
+      - course.target_groups.each do |tg|
+        span.badge.text-bg-light.me-1 = tg.title
+
+  - if course.topics.present?
+    div
+      i.fa-solid.fa-tags.fa-fw.me-2
+      - course.topics.each do |t|
+        span.badge.text-bg-light.me-1 = t.title
+
+  hr
