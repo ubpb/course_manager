@@ -3,10 +3,19 @@ module Frontend
 
     private
 
+    def prepare_course_context
+      add_breadcrumb "Kurse", frontend_courses_path
+
+      course_id = params[:course_id] || params[:id] || return
+      @course = Course.includes(:events, :category).find(course_id)
+
+      add_breadcrumb @course.title, frontend_course_path(@course)
+    end
+
     def prepare_event_context
       add_breadcrumb "Termine", frontend_events_path
 
-      event_id = params[:id] || params[:event_id] || return
+      event_id = params[:event_id] || params[:id] || return
       @event = Event.published.includes(:course).find(event_id)
 
       add_breadcrumb I18n.l(@event.date_and_time), frontend_event_path(@event)

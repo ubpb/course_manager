@@ -1,8 +1,13 @@
 / <%# locals: (courses:) -%>
 
 - courses.each do |course|
-  .d-flex.justify-content-between.gap-2
-    = link_to frontend_course_path(course) do
-      = course.title
-    - if course.category.present?
-      .badge.text-bg-light.ms-2 = course.category.title
+  .d-flex.justify-content-between.align-items-center
+    div
+      = link_to frontend_course_path(course) do
+        h4.mb-2 = course.title
+      = render "frontend/courses/badges", course: course
+    div
+      = link_to frontend_course_path(course), class: "btn btn-outline-primary btn-sm" do
+        i.fa-solid.fa-chevron-right.fa-fw.me-1
+
+  hr

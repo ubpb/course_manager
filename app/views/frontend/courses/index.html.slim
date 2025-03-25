@@ -4,6 +4,8 @@
       .card-header.d-flex.align-items-center.gap-2
         h5.mb-0 = "Unser Schulungsangebot"
       .card-body
+        - if @filter&.active?
+          = render "filter_reset_panel", message: "Es werden nur Kurse angezeigt, die den Filterkriterien entsprechen.", reset_path: frontend_courses_path(reset_filter: true)
         - if @courses.present?
           = render "listing", courses: @courses
         - else

@@ -1,19 +1,30 @@
-h4 = @course.title
+.d-flex.justify-content-between.align-items-center.gap-2.mb-3
+  h4.m-0
+    = @course.title
+  div
+    = link_to frontend_courses_path, class: "btn btn-primary btn-sm" do
+      i.fa-solid.fa-arrows-turn-right.fa-flip-horizontal.fa-fw.me-1
+      span = "Alle Kurse"
 
-.card.card-shadowed
-  .card-body
-    .mb-3 = render "details", course: @course
+.row
+  .col-md-7.col-lg-8
+    .card.card-shadowed.mb-3
+      .card-body
+        = render "details", course: @course
+  .col-md-5.col-lg-4
+    .card.card-shadowed
+      .card-header
+        h5.mb-0 = "Kommende Termine"
 
-    h5 = "Kommende Termine"
-    - if @upcoming_events.present?
-      .list-group
-        - @upcoming_events.each do |event|
-          .list-group-item.d-flex.justify-content-between.align-items-center
-            div
-              = render "frontend/events/details", event: event
-            div
-              = link_to frontend_event_path(event), class: "btn btn-primary" do
-                i.fa-solid.fa-arrow-right.fa-fw.me-1
-                = "Termindetails"
-    - else
-      .p-2.text-muted = "Keine Termine vorhanden"
+      - if @upcoming_events.present?
+        .list-group.list-group-flush
+          - @upcoming_events.each do |event|
+            .list-group-item.d-flex.justify-content-between.align-items-center
+              div
+                = render "frontend/events/details", event: event
+              div
+                = link_to frontend_event_path(event), class: "btn btn-outline-primary btn-sm" do
+                  i.fa-solid.fa-chevron-right.fa-fw.me-1
+      - else
+        .card-body
+          .p-2.text-muted = "Aktuell keine Termine für diesen Kurs vorhanden."

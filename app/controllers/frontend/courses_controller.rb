@@ -3,11 +3,23 @@ module Frontend
 
     include Filterable
 
-    before_action :prepare_context
+    before_action :prepare_course_context
 
     define_filter :courses do
       filter_by :title, :string do |arel, title|
         arel.where("title like ?", "%#{ApplicationRecord.sanitize_sql_like(title)}%")
+      end
+
+      filter_by :category, :integer do |arel, category_id|
+        arel.where(category_id: category_id)
+      end
+
+      filter_by :target_groups, :integer, array: true do |arel, target_group_ids|
+        arel.joins(:target_groups).where("target_groups.id IN (?)", target_group_ids)
+      end
+
+      filter_by :topics, :integer, array: true do |arel, topic_ids|
+        arel.joins(:topics).where("topics.id IN (?)", topic_ids)
       end
     end
 
@@ -21,17 +33,6 @@ module Frontend
     def show
       @course = Course.find(params[:id])
       @upcoming_events = @course.events.upcoming.published.order(date_and_time: :asc)
-    end
-
-    private
-
-    def prepare_context
-      add_breadcrumb "Kurse", frontend_courses_path
-
-      course_id = params[:id] || return
-      @course = Course.includes(:events, :category).find(course_id)
-
-      add_breadcrumb @course.title, frontend_course_path(@course)
     end
 
   end

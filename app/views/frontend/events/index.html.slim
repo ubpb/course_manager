@@ -5,11 +5,7 @@
         h5.mb-0 = "Anstehenden Schulungstermine"
       .card-body
         - if @filter&.active?
-          .alert.alert-info
-            i.fa-solid.fa-filter.fa-fw.me-2
-            = "Es werden nur Termine angezeigt, die den Filterkriterien entsprechen."
-            .mt-3 = link_to "Filter zurücksetzen", frontend_events_path(reset_filter: true), class: "alert-link"
-
+          = render "filter_reset_panel", message: "Es werden nur Termine angezeigt, die den Filterkriterien entsprechen.", reset_path: frontend_events_path(reset_filter: true)
         - if @upcoming_events.present?
           = render "listing", events: @upcoming_events
         - else
