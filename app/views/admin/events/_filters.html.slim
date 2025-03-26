@@ -1,10 +1,11 @@
 = simple_form_for :filter, url: admin_events_path, method: :get do |form|
-  .card.rounded
+  .card
     .card-header
       h5.mb-0.card-title Filter
     .card-body
+      = form.input :upcoming_and_3_months, as: :boolean, label: "Nur kommende Termine + letzten drei Monate", required: false
       = form.input :published, as: :select, collection: [["Ja", "true"], ["Nein", "false"]], include_blank: true, required: false
-      = form.input :upcoming_or_past, as: :select, collection: [["Kommende Termine", "upcoming"], ["Vergangene Termine", "past"]], include_blank: true, required: false
+      = form.input :upcoming_or_past, as: :select, collection: [["Nur kommende Termine", "upcoming"], ["Nur vergangene Termine", "past"]], include_blank: true, required: false
       = form.input :online, as: :select, collection: [["Ja", "true"], ["Nein", "false"]], include_blank: true, required: false
       = form.input :with_report, as: :select, collection: [["Ja", "true"], ["Nein", "false"]], include_blank: true, required: false
       = form.input :title, required: false

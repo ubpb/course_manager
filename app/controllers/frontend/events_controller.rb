@@ -26,11 +26,11 @@ module Frontend
         arel.joins(course: :category).where("categories.id = ?", category_id)
       end
 
-      filter_by :target_groups, :integer, array: true do |arel, target_group_ids|
+      filter_by :target_groups, :integer do |arel, target_group_ids|
         arel.joins(course: :target_groups).where("target_groups.id IN (?)", target_group_ids)
       end
 
-      filter_by :topics, :integer, array: true do |arel, topic_ids|
+      filter_by :topics, :integer do |arel, topic_ids|
         arel.joins(course: :topics).where("topics.id IN (?)", topic_ids)
       end
     end

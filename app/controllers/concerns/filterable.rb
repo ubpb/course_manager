@@ -2,8 +2,10 @@ module Filterable
 
   extend ActiveSupport::Concern
 
-  def apply_filter(context_name, filter_param: :filter,
-                   reset_filter_param: :reset_filter, path: request.path)
+  def apply_filter(context_name,
+                   filter_param: :filter,
+                   reset_filter_param: :reset_filter,
+                   path: request.path)
     session_key = "#{controller_path}/filter"
 
     if params[reset_filter_param].present?
@@ -20,13 +22,12 @@ module Filterable
     return unless filter_context
 
     filter_params = session[session_key] || {}
-    Filter.new(filter_context, filter_params)
+
+    Filter.new(filter_context: filter_context, filter_params: filter_params)
   end
 
   class_methods do
     def define_filter(name, &block)
-      name = name.to_s
-
       filter_context = FilterContext.new
       filter_contexts[name] = filter_context
 
@@ -40,13 +41,10 @@ module Filterable
 
   class FilterContext
 
-    def filter_by(name, cast_type = :string, default: nil, **options, &block)
-      name = name.to_s
-
+    def filter_by(name, type = :string, default: nil, &block)
       filters[name] = {
-        cast_type: cast_type,
+        type: type,
         default: default,
-        options: options,
         block: block
       }
     end
@@ -59,56 +57,55 @@ module Filterable
 
   class Filter
 
-    include ActiveModel::Attributes
+    include ActiveModel::Model
 
-    def initialize(filter_context, filter_attributes = {})
-      @context = filter_context
+    def initialize(filter_context:, filter_params: {})
+      # Store the filter context and params
+      @context  = filter_context
+      @params   = filter_params.with_indifferent_access
 
-      @context.filters.each do |k, v|
-        if v[:options][:array]
-          self.class.attribute(k, default: v[:default].presence || [], **v[:options])
-        else
-          self.class.attribute(k, v[:cast_type], default: v[:default], **v[:options])
-        end
+      # Create accessors for each filter
+      @context.filters.each_key do |k|
+        self.class.attr_accessor(k)
       end
 
-      super() # important to make ActiveModel::Attributes work
+      # Call super
+      super()
 
-      # Set the values from the given filter attributes
-      @context.filters.each do |k, v|
-        filter_value = filter_attributes[k]
-
-        # If the value is an array, cast each element to the correct type
-        # and remove nil values.
-        if filter_value.is_a?(Array)
-          filter_value = filter_value.map(&:presence).compact.map do |fv|
-            case v[:cast_type]
-            when :string  then fv.to_s
-            when :integer then fv.to_i
-            when :float   then fv.to_f
-            when :boolean then fv == "true"
-            else fv
-            end
-          end
+      # For each filter configuration in the context set the filter value
+      @context.filters.each do |name, filter|
+        filter_value = if @params[name].is_a?(Array)
+          @params[name].map do |value|
+            cast_filter_value(value, type: filter[:type])
+          end.compact
+        else
+          cast_filter_value(@params[name], type: filter[:type])
         end
 
-        # Set the value if the attribute exists
-        send("#{k}=", filter_value) if respond_to?("#{k}=")
+        # Set the filter value to the default if it is nil
+        default_value = filter[:default].presence
+        filter_value = default_value if filter_value.nil?
+
+        # Store the filter value
+        send("#{name}=", filter_value)
       end
     end
 
     def active?
-      @context.filters.keys.any? do |k|
-        !filter_value(k).nil?
+      @context.filters.any? do |name, filter|
+        filter_value = send(name)
+        default_value = filter[:default].presence
+
+        filter_value.present? && filter_value != default_value
       end
     end
 
     def filter(arel)
-      @context.filters.each do |k, v|
-        filter_value = filter_value(k)
-        next if filter_value.nil?
+      @context.filters.each do |name, filter|
+        filter_value = send(name)
+        next if filter_value.blank?
 
-        callable = v[:block]
+        callable = filter[:block]
         next unless callable
 
         result = callable.call(arel, filter_value)
@@ -120,9 +117,24 @@ module Filterable
 
     private
 
-    def filter_value(name)
-      v = send(name)
-      v&.in?([true, false]) ? v : v.presence
+    def cast_filter_value(value, type:)
+      value = value.presence
+      return if value.nil?
+
+      case type
+      when :string
+        value.to_s
+      when :integer
+        value.to_i
+      when :float
+        value.to_f
+      when :date
+        Date.parse(value)
+      when :boolean
+        ActiveModel::Type::Boolean.new.cast(value)
+      else
+        value
+      end
     end
 
   end

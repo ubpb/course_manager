@@ -7,24 +7,24 @@ module Frontend
 
     define_filter :courses do
       filter_by :title, :string do |arel, title|
-        arel.where("title like ?", "%#{ApplicationRecord.sanitize_sql_like(title)}%")
+        arel.where("courses.title like ?", "%#{ApplicationRecord.sanitize_sql_like(title)}%")
       end
 
       filter_by :category, :integer do |arel, category_id|
         arel.where(category_id: category_id)
       end
 
-      filter_by :target_groups, :integer, array: true do |arel, target_group_ids|
+      filter_by :target_groups, :integer do |arel, target_group_ids|
         arel.joins(:target_groups).where("target_groups.id IN (?)", target_group_ids)
       end
 
-      filter_by :topics, :integer, array: true do |arel, topic_ids|
+      filter_by :topics, :integer do |arel, topic_ids|
         arel.joins(:topics).where("topics.id IN (?)", topic_ids)
       end
     end
 
     def index
-      @courses = Course.published.order(title: :asc)
+      @courses = Course.published.order(title: :asc).distinct
 
       @filter = apply_filter(:courses) or return
       @courses = @filter.filter(@courses)

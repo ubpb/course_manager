@@ -6,14 +6,19 @@ module Admin
     before_action -> { add_breadcrumb "Termine", admin_events_path }
 
     define_filter :events do
+      filter_by :upcoming_and_3_months, :boolean, default: true do |arel, upcoming_and_3_months|
+        arel.upcoming_and_last_3_months if upcoming_and_3_months
+      end
+
       filter_by :published, :boolean, default: nil do |arel, published|
         arel.where(published: published)
       end
 
       filter_by :upcoming_or_past, :string do |arel, upcoming_or_past|
-        if upcoming_or_past == "upcoming"
+        case upcoming_or_past
+        when "upcoming"
           arel.upcoming
-        elsif upcoming_or_past == "past"
+        when "past"
           arel.past
         end
       end

@@ -17,6 +17,7 @@ class Event < ApplicationRecord
   scope :with_report, -> { includes(:report).where.not(reports: {id: nil}) }
   scope :without_report, -> { includes(:report).where(reports: {id: nil}) }
   scope :upcoming, -> { where("date_and_time >= ?", Time.zone.today.beginning_of_day) }
+  scope :upcoming_and_last_3_months, -> { where("date_and_time >= ?", 3.months.ago) }
   scope :past, -> { where("date_and_time < ?", Time.zone.today.beginning_of_day) }
   scope :online, -> { where(online: true) }
 

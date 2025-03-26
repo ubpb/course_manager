@@ -64,8 +64,6 @@ class MigrateData < ActiveRecord::Migration[8.0]
       next if old_course.statistics_duration.blank? || old_course.statistics_duration.zero? || old_course.statistics_lecturer.blank?
 
       Report.create! do |report|
-        # binding.b if old_course.id == 1184
-
         report.event = event
         report.duration = old_course.statistics_duration
         report.number_of_participants = old_course.number_of_participants

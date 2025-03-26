@@ -7,7 +7,7 @@ module Frontend
       add_breadcrumb "Kurse", frontend_courses_path
 
       course_id = params[:course_id] || params[:id] || return
-      @course = Course.includes(:events, :category).find(course_id)
+      @course = Course.published.includes(:events, :category).find(course_id)
 
       add_breadcrumb @course.title, frontend_course_path(@course)
     end
