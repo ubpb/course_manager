@@ -1,0 +1,11 @@
+= simple_form_for :filter, url: admin_consultings_path, method: :get do |form|
+  .card
+    .card-header
+      h5.mb-0.card-title Filter
+    .card-body
+      = form.input :title, required: false
+    .card-footer
+      .btn-toolbar.justify-content-between.flex-nowrap
+        = form.submit t("admin.application.btn_filter"), class: "btn btn-primary"
+        - if @filter&.active?
+          = form.submit t("admin.application.btn_filter_reset"), name: "reset_filter", class: "btn btn-secondary ms-2"

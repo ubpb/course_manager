@@ -27,9 +27,15 @@ Rails.application.routes.draw do
     # redirect old event URLs to new ones
     get "/:id", to: redirect("/termine/%{id}"), constraints: {id: /\d{1,4}.+/}
 
-    resources :courses, only: [:index, :show], path: "kurse"
-    resources :events, only: [:index, :show], path: "termine" do
-      resources :registrations, only: [:index, :new, :create], path: "anmeldung", module: :events
+    scope "schulungen" do
+      resources :courses, only: [:index, :show], path: "kurse"
+      resources :events, only: [:index, :show], path: "termine" do
+        resources :registrations, only: [:index, :new, :create], path: "anmeldung", module: :events
+      end
+    end
+
+    scope "beratungen" do
+      resources :consultings, only: [:index, :show], path: "/"
     end
   end
 
@@ -77,6 +83,8 @@ Rails.application.routes.draw do
     resources :topics, except: [:show] do
       patch :reorder, on: :member
     end
+
+    resources :consultings, except: [:show]
   end
 
   # Dev Tools

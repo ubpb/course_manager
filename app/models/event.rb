@@ -10,7 +10,7 @@ class Event < ApplicationRecord
   validates :date_and_time, presence: true
   validates :duration, numericality: {only_integer: true, greater_than_or_equal_to: 0}, allow_nil: true
   validates :max_no_of_participants, numericality: {only_integer: true, greater_than_or_equal_to: 0}
-  validates :email_from, format: {with: Course::EMAIL_REGEX}
+  validates :email_from, format: {with: Course::UPB_EMAIL_REGEXP}
 
   # Scopes
   scope :published, -> { joins(:course).where("courses.published": true).where("events.published": true) }

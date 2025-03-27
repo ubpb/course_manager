@@ -17,7 +17,8 @@
     div
       = link_to frontend_event_path(event) do
         h4.mb-2 = course.title
-      = render "frontend/courses/badges", course: course
+      = render "categorisation_badges", object: course
+
     div
       = link_to frontend_event_path(event), class: "btn btn-outline-primary btn-sm" do
         i.fa-solid.fa-chevron-right.fa-fw.me-1

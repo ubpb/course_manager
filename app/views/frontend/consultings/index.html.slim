@@ -1,6 +1,6 @@
 .d-flex.justify-content-between.align-items-center.gap-2.mb-3
   h3.m-0.fw-bold
-    = "Anstehenden Schulungstermine"
+    = "Unser Beratungsangebot"
 
 .row
   .col-md-8
@@ -8,10 +8,11 @@
       .card-body
         - if @filter&.active?
           = render "filter_reset_panel"
-        - if @upcoming_events.present?
-          = render "listing", events: @upcoming_events
+        - if @consultings.present?
+          = render "listing", consultings: @consultings
         - else
-          .p-2.text-muted = "Aktuell sind keine anstehenden Schulungstermine vorhanden."
+          .p-2.text-muted = "Keine Angebote vorhanden"
   .col-md-4
     .mb-3 = render "filters"
     .mb-0 = render "contact_help_card"
+

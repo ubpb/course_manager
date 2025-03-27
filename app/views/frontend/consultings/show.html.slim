@@ -1,0 +1,27 @@
+.d-flex.justify-content-between.align-items-center.gap-2.mb-3
+  h3.m-0.fw-bold
+    = @consulting.title
+  div
+    = link_to frontend_consultings_path, class: "btn btn-primary btn-sm" do
+      i.fa-solid.fa-arrows-turn-right.fa-flip-horizontal.fa-fw.me-1
+      span = "Alle Beratungen"
+
+.row
+  .col-md-7.col-lg-8
+    .card.card-shadowed.mb-3
+      .card-body
+        = render "details", consulting: @consulting
+  .col-md-5.col-lg-4
+    .card.card-shadowed
+      .card-header
+        h5.mb-0 = "Kontakt"
+      .card-body
+        div
+          i.fa-solid.fa-person.fa-fw.me-2
+          span = @consulting.contact_name
+        div
+          i.fa-regular.fa-envelope.fa-fw.me-2
+          span = @consulting.contact_email
+        div
+          i.fa-solid.fa-phone.fa-fw.me-2
+          span = @consulting.contact_phone

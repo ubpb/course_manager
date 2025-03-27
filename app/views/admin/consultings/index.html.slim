@@ -1,0 +1,17 @@
+.row
+  .col-md-9
+    .card.card-shadowed
+      .card-header.d-flex.align-items-center.gap-2
+        h5.mb-0 = "Beratungen"
+        .ms-auto
+        = link_to new_admin_consulting_path, class: "btn btn-primary btn-sm" do
+          i.fa-solid.fa-plus.me-2
+          = "Neue Beratung anlegen"
+      .card-body
+        - if @consultings.present?
+          = render "listing", consultings: @consultings
+        - else
+          .p-2.text-muted = "Keine Beratungen vorhanden"
+
+  .col-md-3
+    = render "filters"

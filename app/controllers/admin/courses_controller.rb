@@ -11,7 +11,7 @@ module Admin
       end
 
       filter_by :title, :string do |arel, title|
-        arel.where("title like ?", "%#{title}%")
+        arel.where("title like ?", "%#{ApplicationRecord.sanitize_sql_like(title)}%")
       end
 
       filter_by :category, :integer do |arel, id|

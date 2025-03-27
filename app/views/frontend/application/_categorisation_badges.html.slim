@@ -1,0 +1,25 @@
+/ <%# locals: (object:) -%>
+
+div
+  i.fa-solid.fa-list.fa-fw.me-2
+  .badge.text-bg-light
+    - if object.respond_to?(:category) && object.category.present?
+      = object.category.title
+    - else
+      span = "–"
+
+div
+  i.fa-solid.fa-users-viewfinder.fa-fw.me-2
+  - if object.respond_to?(:target_groups) && object.target_groups.present?
+    - object.target_groups.each do |tg|
+      span.badge.text-bg-light.me-2 = tg.title
+  - else
+    span = "–"
+
+div
+  i.fa-solid.fa-tags.fa-fw.me-2
+  - if object.respond_to?(:topics) && object.topics.present?
+    - object.topics.each do |t|
+      span.badge.text-bg-light.me-2 = t.title
+  - else
+    span = "–"

@@ -1,8 +1,12 @@
+.d-flex.justify-content-between.align-items-center.gap-2.mb-3
+  h3.m-0.fw-bold
+    = "Anmeldung zu einer Schulung"
+  div
+    = link_to frontend_event_path(@event), class: "btn btn-primary btn-sm" do
+      i.fa-solid.fa-arrows-turn-right.fa-flip-horizontal.fa-fw.me-1
+      span = "Zum Termin"
+
 .card.card-shadowed
-  .card-header.d-flex.align-items-center.justify-content-between.gap-2
-    h5.mb-0 = "Anmeldung zu einer Schulung"
-    = link_to frontend_event_path(@event), class: "btn btn-link btn-sm" do
-      i.fa-solid.fa-times
   .card-body
      h4.mb-4 = @event.course.title
      .row

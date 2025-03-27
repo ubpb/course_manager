@@ -6,6 +6,7 @@ module Admin
     private
 
     def prepare_course_context
+      add_breadcrumb "Schulungen", admin_root_path
       add_breadcrumb "Kurse", admin_courses_path
 
       course_id = params[:course_id] || params[:id] || return
@@ -48,6 +49,15 @@ module Admin
 
       @certification = @event.certification
       add_breadcrumb "Zertifizierung", admin_course_event_report_path(@course, @event)
+    end
+
+    def prepare_consulting_context
+      add_breadcrumb "Beratungen", admin_consultings_path
+
+      consulting_id = params[:consulting_id] || params[:id] || return
+      @consulting = Consulting.find(consulting_id)
+
+      add_breadcrumb @consulting.title, edit_admin_consulting_path(@consulting)
     end
 
   end

@@ -49,6 +49,10 @@ de:
       registration:
         user_notes: "Anmerkungen"
         gdrp_consent: "Einwilligungserklärung"
+      consulting:
+        contact_name: "Kontakt"
+        contact_email: "E-Mail"
+        contact_phone: "Telefon"
     hints:
       defaults:
         description: >

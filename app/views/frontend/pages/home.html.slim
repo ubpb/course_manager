@@ -1,19 +1,31 @@
-.card.card-shadowed
-  .card-header
-    h5.card-title.mb-0 = "Willkommen in unserem Schulungsportal"
-  .card-body
-    p
-      | TODO: Hier finden Sie unser aktuelles Schulungsangebot. Sie können sich für die Schulungen anmelden und erhalten alle Informationen zu den Schulungen.
-    p
-      | TODO: Wenn Sie Fragen haben, können Sie uns gerne kontaktieren.
-    p
-      | TODO: Wir wünschen Ihnen viel Erfolg bei der Teilnahme an unseren Schulungen.
+h4.mb-3 = "Willkommen in unserem Schulungs- & Beratungsportal"
 
-    .d-flex.gap-2.justify-content-center
-      = link_to frontend_courses_path, class: "btn btn-primary" do
-        i.fa-solid.fa-graduation-cap.me-2
-        = "Zur Kursübersicht"
+.row
+  .col-md-6
+    .card.card-shadowed
+      .card-header
+        h5.card-title.mb-0 = "Schulungen"
+      .card-body
+        p
+          | TODO: Hier finden Sie unser aktuelles Schulungsangebot.
 
-      = link_to frontend_events_path, class: "btn btn-primary" do
-        i.fa-solid.fa-calendar-alt.me-2
-        = "Zur Terminübersicht"
+        .d-flex.gap-2.justify-content-center
+          = link_to frontend_courses_path, class: "btn btn-primary" do
+            i.fa-solid.fa-graduation-cap.me-2
+            = "Zur Kursübersicht"
+
+          = link_to frontend_events_path, class: "btn btn-primary" do
+            i.fa-solid.fa-calendar-alt.me-2
+            = "Zur Terminübersicht"
+  .col-md-6
+    .card.card-shadowed.mt-3.mt-md-0
+      .card-header
+        h5.card-title.mb-0 = "Beratungen"
+      .card-body
+        p
+          | TODO: Hier finden Sie unser aktuelles Beratungsangebot.
+
+        .d-flex.gap-2.justify-content-center
+          = link_to frontend_consultings_path, class: "btn btn-primary" do
+            i.fa-solid.fa-people-arrows.me-2
+            = "Zum Beratungsangebot"

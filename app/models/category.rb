@@ -2,6 +2,7 @@ class Category < ApplicationRecord
 
   # Relations
   has_many :courses, dependent: :nullify
+  has_many :consultings, dependent: :nullify
 
   # Validations
   validates :title, presence: true

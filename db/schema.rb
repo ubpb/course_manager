@@ -39,7 +39,36 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_10_160423) do
     t.index ["event_id"], name: "index_certifications_on_event_id", unique: true
   end
 
+  create_table "consultings", charset: "utf8mb3", collation: "utf8mb3_uca1400_ai_ci", force: :cascade do |t|
+    t.bigint "category_id"
+    t.string "title", null: false
+    t.boolean "published", default: false, null: false
+    t.text "description"
+    t.string "contact_name"
+    t.string "contact_email"
+    t.string "contact_phone"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category_id"], name: "index_consultings_on_category_id"
+    t.index ["published"], name: "index_consultings_on_published"
+  end
+
+  create_table "consultings_target_groups", id: false, charset: "utf8mb3", collation: "utf8mb3_uca1400_ai_ci", force: :cascade do |t|
+    t.bigint "consulting_id", null: false
+    t.bigint "target_group_id", null: false
+    t.index ["consulting_id"], name: "fk_rails_1066feeb42"
+    t.index ["target_group_id"], name: "fk_rails_1ff2a90d06"
+  end
+
+  create_table "consultings_topics", id: false, charset: "utf8mb3", collation: "utf8mb3_uca1400_ai_ci", force: :cascade do |t|
+    t.bigint "consulting_id", null: false
+    t.bigint "topic_id", null: false
+    t.index ["consulting_id"], name: "fk_rails_c462aeade9"
+    t.index ["topic_id"], name: "fk_rails_e568752df1"
+  end
+
   create_table "courses", charset: "utf8mb3", collation: "utf8mb3_uca1400_ai_ci", force: :cascade do |t|
+    t.bigint "category_id"
     t.string "title", null: false
     t.boolean "published", default: false, null: false
     t.text "description"
@@ -48,7 +77,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_10_160423) do
     t.string "email_from"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "category_id"
     t.index ["category_id"], name: "index_courses_on_category_id"
     t.index ["published"], name: "index_courses_on_published"
   end
@@ -141,6 +169,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_10_160423) do
 
   add_foreign_key "certificates", "registrations"
   add_foreign_key "certifications", "events"
+  add_foreign_key "consultings", "categories"
+  add_foreign_key "consultings_target_groups", "consultings"
+  add_foreign_key "consultings_target_groups", "target_groups"
+  add_foreign_key "consultings_topics", "consultings"
+  add_foreign_key "consultings_topics", "topics"
   add_foreign_key "courses", "categories"
   add_foreign_key "courses_target_groups", "courses"
   add_foreign_key "courses_target_groups", "target_groups"

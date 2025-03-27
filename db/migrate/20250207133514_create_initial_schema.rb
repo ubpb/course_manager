@@ -2,9 +2,38 @@ class CreateInitialSchema < ActiveRecord::Migration[8.0]
 
   def change
     #
+    # Course categories
+    #
+    create_table :categories do |t|
+      t.string :title, null: false, index: {unique: true}
+      t.string :color_code, null: false
+      t.integer :position, index: true
+      t.timestamps
+    end
+
+    #
+    # Course topics
+    #
+    create_table :topics do |t|
+      t.string :title, null: false, index: {unique: true}
+      t.integer :position, index: true
+      t.timestamps
+    end
+
+    #
+    # Target groups
+    #
+    create_table :target_groups do |t|
+      t.string :title, null: false, index: {unique: true}
+      t.integer :position, index: true
+      t.timestamps
+    end
+
+    #
     # Courses
     #
     create_table :courses do |t|
+      t.references :category, null: true, foreign_key: true
       t.string :title, null: false
       t.boolean :published, null: false, default: false, index: true
       t.text :description
@@ -13,6 +42,9 @@ class CreateInitialSchema < ActiveRecord::Migration[8.0]
       t.string :email_from
       t.timestamps
     end
+
+    create_join_table :courses, :topics, column_options: {null: false, foreign_key: true}
+    create_join_table :courses, :target_groups, column_options: {null: false, foreign_key: true}
 
     #
     # Events
@@ -91,38 +123,21 @@ class CreateInitialSchema < ActiveRecord::Migration[8.0]
     end
 
     #
-    # Course categories
+    # Consultings
     #
-    create_table :categories do |t|
-      t.string :title, null: false, index: {unique: true}
-      t.string :color_code, null: false
-      t.integer :position, index: true
+    create_table :consultings do |t|
+      t.references :category, null: true, foreign_key: true
+      t.string :title, null: false
+      t.boolean :published, null: false, default: false, index: true
+      t.text :description
+      t.string :contact_name
+      t.string :contact_email
+      t.string :contact_phone
       t.timestamps
     end
 
-    add_reference :courses, :category, null: true, foreign_key: true
-
-    #
-    # Course topics
-    #
-    create_table :topics do |t|
-      t.string :title, null: false, index: {unique: true}
-      t.integer :position, index: true
-      t.timestamps
-    end
-
-    create_join_table :courses, :topics, column_options: {null: false, foreign_key: true}
-
-    #
-    # Target groups
-    #
-    create_table :target_groups do |t|
-      t.string :title, null: false, index: {unique: true}
-      t.integer :position, index: true
-      t.timestamps
-    end
-
-    create_join_table :courses, :target_groups, column_options: {null: false, foreign_key: true}
+    create_join_table :consultings, :topics, column_options: {null: false, foreign_key: true}
+    create_join_table :consultings, :target_groups, column_options: {null: false, foreign_key: true}
   end
 
 end

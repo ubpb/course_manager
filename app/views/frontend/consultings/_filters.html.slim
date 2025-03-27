@@ -1,0 +1,23 @@
+- categories = Category.order(:position)
+- target_groups = TargetGroup.order(:position)
+- topics = Topic.order(:position)
+
+= simple_form_for @filter, as: :filter, url: frontend_consultings_path, method: :get do |form|
+  .card
+    .card-header
+      h5.mb-0.card-title Filter
+    .card-body
+      = form.input :title, required: false
+      - if categories.present?
+        = form.input :category, as: :select, collection: categories, required: false
+      - if target_groups.present?
+        = form.input :target_groups, as: :check_boxes, collection: target_groups, required: false
+      - if topics.present?
+        = form.input :topics, as: :check_boxes, collection: topics, required: false
+    .card-footer
+      .btn-toolbar.justify-content-between.flex-nowrap
+        = form.submit t("admin.application.btn_filter"), class: "btn btn-primary"
+        - if @filter&.active?
+          = form.submit t("admin.application.btn_filter_reset"), name: "reset_filter", class: "btn btn-secondary ms-2"
+
+
