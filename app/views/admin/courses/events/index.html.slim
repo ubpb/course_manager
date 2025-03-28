@@ -1,6 +1,6 @@
 .card.card-shadowed
   .card-header.d-flex.align-items-center.gap-2
-    h5.mb-0 = "Termine für '#{@course.title}'"
+    h5.card-title.mb-0 = "Termine für '#{@course.title}'"
     .ms-auto
     = link_to new_admin_course_event_path, class: "btn btn-primary btn-sm" do
       i.fa-solid.fa-plus.me-2

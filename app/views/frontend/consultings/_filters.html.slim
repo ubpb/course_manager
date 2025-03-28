@@ -5,7 +5,7 @@
 = simple_form_for @filter, as: :filter, url: frontend_consultings_path, method: :get do |form|
   .card
     .card-header
-      h5.mb-0.card-title Filter
+      h5.card-title.mb-0.card-title Filter
     .card-body
       = form.input :title, required: false
       - if categories.present?

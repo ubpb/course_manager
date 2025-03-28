@@ -1,7 +1,7 @@
 = simple_form_for :filter, url: admin_events_path, method: :get do |form|
   .card
     .card-header
-      h5.mb-0.card-title Filter
+      h5.card-title.mb-0 Filter
     .card-body
       = form.input :upcoming_and_3_months, as: :boolean, label: "Nur kommende Termine + letzten drei Monate", required: false
       = form.input :published, as: :select, collection: [["Ja", "true"], ["Nein", "false"]], include_blank: true, required: false

@@ -1,4 +1,12 @@
-h3.mb-3.fw-bold = "Willkommen in unserem Schulungs- & Beratungsportal"
+.d-flex.justify-content-between.align-items-center.gap-2.mb-4
+  h3.mb-0.fw-bold
+    = "Willkommen in unserem Schulungs- & Beratungsportal"
+
+.mb-4.lead.text-center
+ ' Die Universitätsbibliothek unterstützt Sie umfassend bei Ihrem Studium und Ihrer Forschung.
+ ' Dieses Portal bündelt alle unsere Schulungs- und Beratungsdienste: Von Einführungen in die
+ ' Bibliotheksnutzung über Workshops zu Citavi und Co. bis hin zu individuellen Beratungen zu
+ ' Recherchestrategien oder Forschungsdatenmanagement. Nutzen Sie unsere Expertise für Ihren Erfolg!
 
 .row
   .col-md-6
@@ -7,7 +15,8 @@ h3.mb-3.fw-bold = "Willkommen in unserem Schulungs- & Beratungsportal"
         h5.card-title.mb-0 = "Schulungen"
       .card-body
         p
-          | TODO: Hier finden Sie unser aktuelles Schulungsangebot.
+          ' Hier finden Sie unser aktuelles Schulungsangebot. Schulungen finden in
+          ' Gruppen in Präsenz oder als Online-Veranstaltung statt.
 
         .d-flex.gap-2.justify-content-center.flex-column
           = link_to frontend_courses_path, class: "btn btn-primary" do
@@ -22,7 +31,8 @@ h3.mb-3.fw-bold = "Willkommen in unserem Schulungs- & Beratungsportal"
         h5.card-title.mb-0 = "Beratungen"
       .card-body
         p
-          | TODO: Hier finden Sie unser aktuelles Beratungsangebot.
+          ' Hier finden Sie unser Beratungsangebot für individuelle
+          ' Einzelberatungen zu unseren Dienstleistungen und Angeboten.
 
         .d-flex.gap-2.justify-content-center.flex-column
           = link_to frontend_consultings_path, class: "btn btn-primary" do

@@ -3,7 +3,7 @@
 = simple_form_for @event, url: admin_course_event_path(@course, @event) do |form|
   .card.card-shadowed
     .card-header.d-flex.align-items-center.gap-2
-      h5.mb-0 = "Event bearbeiten"
+      h5.card-title.mb-0 = "Event bearbeiten"
       .ms-auto
       = link_to return_path, class: "btn btn-link btn-sm" do
         i.fa-solid.fa-times

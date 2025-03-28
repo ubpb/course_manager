@@ -50,20 +50,51 @@ footer
 
   .upb-footer.d-print-none
     div(class=container_class)
-      .d-flex.flex-column.flex-md-row.justify-content-center.justify-content-md-between.align-items-center.align-items-md-end
+      .mb-4
         = link_to "https://www.uni-paderborn.de/", target: "_blank", title: "Universität Paderborn" do
           = image_tag "upb-logo-negativ-de.svg", alt: "Universität Paderborn", class: "img-fluid", width: 230
 
-        ul.nav.social-nav.mt-5.mt-md-0
-          li.nav-item
-            = link_to "https://www.instagram.com/uni_paderborn/?hl=de", class: "nav-link", target: "_blank", title: "Instagram" do
-              i.fa-brands.fa-instagram
-          li.nav-item
-            = link_to "https://www.facebook.com/unipaderborn/?locale=de_DE", class: "nav-link", target: "_blank", title: "Facebook" do
-              i.fa-brands.fa-facebook
-          li.nav-item
-            = link_to "https://de.linkedin.com/school/uni-paderborn/", class: "nav-link", target: "_blank", title: "LinkedIn" do
-              i.fa-brands.fa-linkedin
-          li.nav-item
-            = link_to "https://www.youtube.com/user/upbvideo", class: "nav-link", target: "_blank", title: "Youtube" do
-              i.fa-brands.fa-youtube
+      .row
+        .col-md-4.mb-3
+            address
+              = "Universität Paderborn"
+              br/
+              = "Warburger Str. 100"
+              br/
+              = "33098 Paderborn"
+
+            div
+              = "Telefon Universität"
+              br/
+              = link_to "+49 5251 60-0", "tel:+495251600"
+
+        .col-md-4.mb-3
+            h4 = t("application.footer.legal_notices")
+
+            ul.nav.flex-column
+              li.nav-item
+                = link_to "http://www.ub.uni-paderborn.de/ueber-uns/impressum", target: "_blank", class: "nav-link" do
+                  i.icon.fa-solid.fa-arrow-right
+                  = t("application.footer.impressum")
+
+              li.nav-item
+                = link_to "https://ub.uni-paderborn.de/datenschutz", target: "_blank" , class: "nav-link"do
+                  i.icon.fa-solid.fa-arrow-right
+                  = t("application.footer.privacy_policy")
+
+        .col-md-4
+          h4 = "Soziale Netzwerke"
+
+          ul.nav.social-nav
+            li.nav-item
+              = link_to "https://www.instagram.com/uni_paderborn/?hl=de", class: "nav-link", target: "_blank", title: "Instagram" do
+                i.fa-brands.fa-instagram
+            li.nav-item
+              = link_to "https://www.facebook.com/unipaderborn/?locale=de_DE", class: "nav-link", target: "_blank", title: "Facebook" do
+                i.fa-brands.fa-facebook
+            li.nav-item
+              = link_to "https://de.linkedin.com/school/uni-paderborn/", class: "nav-link", target: "_blank", title: "LinkedIn" do
+                i.fa-brands.fa-linkedin
+            li.nav-item
+              = link_to "https://www.youtube.com/user/upbvideo", class: "nav-link", target: "_blank", title: "Youtube" do
+                i.fa-brands.fa-youtube

@@ -1,8 +1,8 @@
-.d-flex.justify-content-between.align-items-center.gap-2.mb-3
-  h3.m-0.fw-bold
+.d-flex.justify-content-between.align-items-center.gap-2.mb-4
+  h3.mb-0.fw-bold
     = @consulting.title
   div
-    = link_to frontend_consultings_path, class: "btn btn-primary btn-sm" do
+    = link_to frontend_consultings_path, class: "btn btn-outline-primary btn-sm" do
       i.fa-solid.fa-arrows-turn-right.fa-flip-horizontal.fa-fw.me-1
       span = "Alle Beratungen"
 
@@ -14,7 +14,7 @@
   .col-md-5.col-lg-4
     .card.card-shadowed
       .card-header
-        h5.mb-0 = "Kontakt"
+        h5.card-title.mb-0 = "Kontakt"
       .card-body
         div
           i.fa-solid.fa-person.fa-fw.me-2

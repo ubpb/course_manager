@@ -2,7 +2,7 @@
 
 .card.card-shadowed
   .card-header.d-flex.align-items-center.gap-2
-    h5.mb-0 = "Themen"
+    h5.card-title.mb-0 = "Themen"
     .ms-auto
     = link_to new_admin_topic_path, class: "btn btn-primary btn-sm", data: {turbo_frame: new_topic_turbo_frame_name} do
       i.fa-solid.fa-plus

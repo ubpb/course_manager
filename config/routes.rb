@@ -23,6 +23,7 @@ Rails.application.routes.draw do
   #
   namespace :frontend, path: "/" do
     root "pages#home"
+    get  "kontakt", to: "pages#contact", as: :contact
 
     # redirect old event URLs to new ones
     get "/:id", to: redirect("/termine/%{id}"), constraints: {id: /\d{1,4}.+/}

@@ -1,9 +1,9 @@
 / <%# locals: (consulting:) -%>
 
 - if consulting.description.present?
-  h5 = "Beschreibung"
+  h4 = "Beschreibung"
   == render_markdown(consulting.description)
 
 - if (categorisation = render("categorisation_badges", object: consulting)).present?
-  h5 = "Kategorisierung"
+  h4 = "Kategorisierung"
   = categorisation

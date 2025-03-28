@@ -1,7 +1,7 @@
 = simple_form_for :filter, url: admin_courses_path, method: :get do |form|
   .card
     .card-header
-      h5.mb-0.card-title Filter
+      h5.card-title.mb-0 Filter
     .card-body
       = form.input :published, as: :select, collection: [["Ja", "true"], ["Nein", "false"]], include_blank: true, required: false
       = form.input :title, required: false

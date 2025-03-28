@@ -1,55 +1,34 @@
-#main-menu
-  button.btn.btn-outline-primary(type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-main-menu")
-    i.fa-solid.fa-bars.fa-lg
-    span.ms-2.d-none.d-sm-inline = "Admin Menü"
+- content_for :main_menu
+  nav.list-group.mb-4
+    = link_to admin_root_path, class: "list-group-item list-group-item-action" do
+      i.fa-solid.fa-home.me-2
+      = t("application.main_menu.home")
 
-  .offcanvas.offcanvas-end(tabindex="-1" id="offcanvas-main-menu")
-    .offcanvas-header.border-bottom
-      h5.offcanvas-title = "Admin Menü"
-      button.btn-close(type="button" data-bs-dismiss="offcanvas" data-bs-target="#offcanvas-main-menu")
+  h5.text-muted = "Schulungen"
+  nav.list-group.mb-4
+    = link_to admin_courses_path, class: "list-group-item list-group-item-action" do
+      i.fa-solid.fa-chalkboard-teacher.me-2
+      = "Kurse"
+    = link_to admin_events_path, class: "list-group-item list-group-item-action" do
+      i.fa-solid.fa-calendar-days.me-2
+      = "Termine"
 
-    .offcanvas-body
-      nav.list-group.mb-4
-        = link_to admin_root_path, class: "list-group-item list-group-item-action" do
-          i.fa-solid.fa-home.me-2
-          = t("application.main_menu.home")
+  h5.text-muted = "Beratungen"
+  nav.list-group.mb-4
+    = link_to admin_consultings_path, class: "list-group-item list-group-item-action" do
+      i.fa-solid.fa-people-arrows.me-2
+      = "Beratungen"
 
-      h5.text-muted = "Schulungen"
-      nav.list-group.mb-4
-        = link_to admin_courses_path, class: "list-group-item list-group-item-action" do
-          i.fa-solid.fa-chalkboard-teacher.me-2
-          = "Kurse"
-        = link_to admin_events_path, class: "list-group-item list-group-item-action" do
-          i.fa-solid.fa-calendar-days.me-2
-          = "Termine"
+  h5.text-muted = "Kategorisierung"
+  nav.list-group.mb-4
+    = link_to admin_categories_path, class: "list-group-item list-group-item-action" do
+      i.fa-solid.fa-list.me-2
+      = "Kategorien"
+    = link_to admin_target_groups_path, class: "list-group-item list-group-item-action" do
+      i.fa-solid.fa-users-viewfinder.me-2
+      = "Zielgruppen"
+    = link_to admin_topics_path, class: "list-group-item list-group-item-action" do
+      i.fa-solid.fa-tags.me-2
+      = "Themen"
 
-      h5.text-muted = "Beratungen"
-      nav.list-group.mb-4
-        = link_to admin_consultings_path, class: "list-group-item list-group-item-action" do
-          i.fa-solid.fa-people-arrows.me-2
-          = "Beratungen"
-
-      h5.text-muted = "Kategorisierung"
-      nav.list-group.mb-4
-        = link_to admin_categories_path, class: "list-group-item list-group-item-action" do
-          i.fa-solid.fa-list.me-2
-          = "Kategorien"
-        = link_to admin_target_groups_path, class: "list-group-item list-group-item-action" do
-          i.fa-solid.fa-users-viewfinder.me-2
-          = "Zielgruppen"
-        = link_to admin_topics_path, class: "list-group-item list-group-item-action" do
-          i.fa-solid.fa-tags.me-2
-          = "Themen"
-
-      - if [color_mode_enabled?, locale_switching_enabled?].any?
-        h5.text-muted = t("application.main_menu.settings")
-        nav.list-group
-          - if locale_switching_enabled?
-            .list-group-item.d-flex.justify-content-between.align-items-center
-              = t("application.main_menu.language")
-              = render("application/locale_switcher")
-          - if color_mode_enabled?
-            .list-group-item.d-flex.justify-content-between.align-items-center
-              = t("application.main_menu.color_mode")
-              = render("application/color_mode_switcher")
-
+= render "application/main_menu"

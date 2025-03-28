@@ -4,8 +4,8 @@
   .card.card-shadowed
     .card-header.d-flex.align-items-center.gap-2
       div
-        h5.mb-0 = "Statistik anlegen für '#{@course.title}'"
-        h6.mb-0.text-muted = "am #{l(@event.date_and_time)}"
+        h5.card-title.mb-0 = "Statistik anlegen für '#{@course.title}'"
+        h6.card-title.mb-0.text-muted = "am #{l(@event.date_and_time)}"
       .ms-auto
       = link_to return_path, class: "btn btn-link btn-sm" do
         i.fa-solid.fa-times

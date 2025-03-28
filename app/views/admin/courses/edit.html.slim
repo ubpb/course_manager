@@ -1,7 +1,7 @@
 = simple_form_for [:admin, @course] do |form|
   .card.card-shadowed
     .card-header.d-flex.align-items-center.gap-2
-      h5.mb-0 = "Kurs bearbeiten"
+      h5.card-title.mb-0 = "Kurs bearbeiten"
       .ms-auto
       = link_to admin_course_events_path(@course), class: "btn btn-primary btn-sm" do
         i.fa-solid.fa-calendar-alt.me-2

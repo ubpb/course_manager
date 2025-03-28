@@ -83,7 +83,7 @@ module Filterable
         end
 
         # Set the filter value to the default if it is nil
-        default_value = filter[:default].presence
+        default_value = cast_filter_value(filter[:default], type: filter[:type])
         filter_value = default_value if filter_value.nil?
 
         # Store the filter value
@@ -94,9 +94,9 @@ module Filterable
     def active?
       @context.filters.any? do |name, filter|
         filter_value = send(name)
-        default_value = filter[:default].presence
+        default_value = cast_filter_value(filter[:default], type: filter[:type])
 
-        filter_value.present? && filter_value != default_value
+        !filter_value.nil? && filter_value != default_value
       end
     end
 

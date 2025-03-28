@@ -238,11 +238,18 @@ $danger: $upb-fuchsiarot;
 $font-family-sans-serif: Karla, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
                          Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji",
                          "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-$font-size-base: 0.95rem;
+//$font-size-base: 0.95rem;
 
 // -------------------------------------------------------------------------------------------
 // Tweak globals, text, links, components, ...
 // -------------------------------------------------------------------------------------------
+
+// Set border radius to 0 for all elements
+$border-radius: 0;
+$border-radius-sm: 0;
+
+// Lead
+$lead-font-weight: 400;
 
 // Tweak links
 $link-color: $upb-ultrablau;

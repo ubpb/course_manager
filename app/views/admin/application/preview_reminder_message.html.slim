@@ -1,6 +1,6 @@
 .card.card-shadowed
   .card-header.d-flex.align-items-center.gap-2
-    h5.mb-0 = "Vorschau: E-Mail Erinnerung"
+    h5.card-title.mb-0 = "Vorschau: E-Mail Erinnerung"
   .card-body
     = turbo_frame_tag "reminder-message-preview" do
       pre.mb-0 = @preview

@@ -11,7 +11,7 @@
   = simple_form_for [:admin, @target_group] do |form|
     .card.card-shadowed
       .card-header.d-flex.align-items-center.gap-2
-        h5.mb-0 = "Zielgruppe bearbeiten"
+        h5.card-title.mb-0 = "Zielgruppe bearbeiten"
         .ms-auto
         = link_to return_path, class: "btn btn-link btn-sm" do
           i.fa-solid.fa-times

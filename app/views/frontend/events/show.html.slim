@@ -1,12 +1,12 @@
-.d-flex.justify-content-between.align-items-center.gap-2.mb-3
-  h3.m-0.fw-bold
+.d-flex.justify-content-between.align-items-center.gap-2.mb-4
+  h3.mb-0.fw-bold
     = @event.course.title
     =< "am #{l(@event.date_and_time.to_date)}"
   .d-flex.gap-2
-    = link_to frontend_course_path(@event.course), class: "btn btn-primary btn-sm" do
+    = link_to frontend_course_path(@event.course), class: "btn btn-outline-primary btn-sm" do
       i.fa-solid.fa-arrows-turn-right.fa-flip-horizontal.fa-fw.me-1
       span = "Weitere Termine dieses Kurses"
-    = link_to frontend_events_path, class: "btn btn-primary btn-sm" do
+    = link_to frontend_events_path, class: "btn btn-outline-primary btn-sm" do
       i.fa-solid.fa-arrows-turn-right.fa-flip-horizontal.fa-fw.me-1
       span = "Alle Termine"
 
@@ -19,13 +19,13 @@
   .col-md-5.col-lg-4
     .card.card-shadowed.mb-3
       .card-header.d-flex.align-items-center.justify-content-between.gap-2
-        h5.mb-0 = "Termindetails"
+        h5.card-title.mb-0 = "Termindetails"
       .card-body
         = render "details", event: @event, show_location: true, show_registration_info: true
 
     .card.card-shadowed
       .card-header
-        h5.mb-0 = "Anmeldung"
+        h5.card-title.mb-0 = "Anmeldung"
       .card-body
         - if @event.registration_required?
           - if @event.full?

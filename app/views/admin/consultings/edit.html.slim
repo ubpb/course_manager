@@ -1,7 +1,7 @@
 = simple_form_for [:admin, @consulting] do |form|
   .card.card-shadowed
     .card-header.d-flex.align-items-center.gap-2
-      h5.mb-0 = "Beratung bearbeiten"
+      h5.card-title.mb-0 = "Beratung bearbeiten"
       .ms-auto
       = link_to admin_consultings_path(anchor: dom_id(@consulting)), class: "btn btn-link btn-sm" do
         i.fa-solid.fa-times

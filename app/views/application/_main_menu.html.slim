@@ -9,10 +9,13 @@
       button.btn-close(type="button" data-bs-dismiss="offcanvas" data-bs-target="#offcanvas-main-menu")
 
     .offcanvas-body
-      nav.list-group.mb-4
-        = link_to root_path, class: "list-group-item list-group-item-action" do
-          i.fas.fa-home.me-2
-          = t("application.main_menu.home")
+      - if content_for?(:main_menu)
+        = content_for(:main_menu)
+      - else
+        nav.list-group.mb-4
+          = link_to root_path, class: "list-group-item list-group-item-action" do
+            i.fas.fa-home.me-2
+            = t("application.main_menu.home")
 
       - if [color_mode_enabled?, locale_switching_enabled?].any?
         h5.text-muted = t("application.main_menu.settings")
