@@ -1,6 +1,8 @@
 module Frontend
   class ApplicationController < ::ApplicationController
 
+    layout "frontend"
+
     private
 
     def prepare_course_context

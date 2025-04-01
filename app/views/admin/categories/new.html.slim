@@ -15,9 +15,9 @@
           = link_to t("admin.application.btn_cancel"), return_path, class: "btn btn-outline-secondary"
 
 - if turbo_frame_request?
-  - return_path = admin_target_groups_path(anchor: dom_id(@category))
+  - return_path = admin_categories_path(anchor: dom_id(@category))
   = turbo_frame_tag(@category) do
     = card.(return_path)
 - else
-  - return_path = admin_target_groups_path
+  - return_path = admin_categories_path
   = card.(return_path)

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="ub-logo" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 1220.4 446">
+  <!-- Generator: Adobe Illustrator 29.3.1, SVG Export Plug-In . SVG Version: 2.1.0 Build 151)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill-rule: evenodd;
+      }
+
+      .st0, .st1, .st2 {
+        fill: #fff;
+      }
+
+      .st1, .st3 {
+        isolation: isolate;
+      }
+
+      .st1, .st2 {
+        font-family: Karla-Regular, Karla;
+        font-size: 116px;
+      }
+    </style>
+  </defs>
+  <g id="Variante_3_einfarbig_">
+    <g id="Logo_Kopie_Kopie">
+      <polygon class="st0" points="251 22.2 301 22.2 301 411.3 251 411.3 251 22.2 251 22.2"/>
+      <polygon class="st0" points="168 22.2 217 22.2 217 411.3 168 411.3 168 22.2 168 22.2"/>
+      <polygon class="st0" points="84 22.2 134 22.2 134 411.3 84 411.3 84 22.2 84 22.2"/>
+      <polygon class="st0" points="0 22.2 50 22.2 50 411.3 0 411.3 0 22.2 0 22.2"/>
+      <path class="st0" d="M335,22.2h50v333.3c-15.9-7.2-34.1-7.2-50,0V22.2Z"/>
+      <path class="st0" d="M325.1,410.5c.4-19.2,16.3-34.5,35.5-34.2,19.3.4,34.6,16.2,34.3,35.5-.4,19-15.9,34.2-34.9,34.2-19.4,0-35-15.8-34.9-35.1v-.3Z"/>
+    </g>
+    <g id="Schrift_Kopie_Kopie">
+      <g class="st3">
+        <text class="st1" transform="translate(445 95.1)"><tspan x="0" y="0">UNIVERSI</tspan></text>
+        <text class="st2" transform="translate(936.7 95.1)"><tspan x="0" y="0"> </tspan></text>
+        <text class="st1" transform="translate(936.7 95.1)"><tspan x="0" y="0">TÄ</tspan></text>
+        <text class="st2" transform="translate(1056.6 95.1)"><tspan x="0" y="0"> </tspan></text>
+        <text class="st1" transform="translate(1051.8 95.1)"><tspan x="0" y="0">TS-</tspan></text>
+        <text class="st2" transform="translate(1220.4 95.1)"><tspan x="0" y="0"> </tspan></text>
+        <text class="st1" transform="translate(445 195.1)"><tspan x="0" y="0">BIBLIOTHEK</tspan></text>
+        <text class="st2" transform="translate(1054.5 195.1)"><tspan x="0" y="0"> </tspan></text>
+        <text class="st1" transform="translate(445 295.1)"><tspan x="0" y="0">P</tspan></text>
+        <text class="st2" transform="translate(509.2 295.1)"><tspan x="0" y="0"> </tspan></text>
+        <text class="st1" transform="translate(504.7 295.1)"><tspan x="0" y="0">ADERBORN</tspan></text>
+      </g>
+    </g>
+  </g>
+</svg>

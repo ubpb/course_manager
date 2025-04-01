@@ -7,7 +7,10 @@ footer
   .app-footer.d-print-none
     div(class=container_class)
       .row
-        h2.mb-3.fw-lighter = "Universitätsbibliothek (UB)"
+        /h2.mb-3.fw-lighter = "Universitätsbibliothek (UB)"
+        .mb-4
+          = link_to "https://ub.uni-paderborn.de/", target: "_blank", title: "Universitätsbibliothek Paderborn" do
+            = image_tag "ub-logo-negativ.svg", alt: "Universitätsbibliothek Paderborn", class: "img-fluid", width: 210
 
         .col-md-4.mb-3
           address
@@ -22,19 +25,6 @@ footer
             = mail_to "bibliothek@ub.uni-paderborn.de"
 
         .col-md-4.mb-3
-          h4 = t("application.footer.quicklinks")
-
-          ul.nav.flex-column
-            li.nav-item
-              = link_to "https://www.ub.uni-paderborn.de/ueber-uns/anschrift", target: "_blank", class: "nav-link" do
-                i.icon.fa-solid.fa-arrow-right
-                = t("application.footer.address")
-            li.nav-item
-              = link_to "https://www.ub.uni-paderborn.de/ueber-uns/oeffnungszeiten", target: "_blank", class: "nav-link" do
-                i.icon.fa-solid.fa-arrow-right
-                = t("application.footer.opening_hours")
-
-        .col-md-4
           h4 = t("application.footer.legal_notices")
 
           ul.nav.flex-column
@@ -47,6 +37,25 @@ footer
               = link_to "https://ub.uni-paderborn.de/datenschutz", target: "_blank" , class: "nav-link"do
                 i.icon.fa-solid.fa-arrow-right
                 = t("application.footer.privacy_policy")
+
+        .col-md-4
+          h4 = t("application.footer.quicklinks")
+
+          ul.nav.flex-column
+            li.nav-item
+              = link_to "https://www.ub.uni-paderborn.de/kontakt", target: "_blank", class: "nav-link" do
+                i.icon.fa-solid.fa-arrow-right
+                = t("application.footer.contact")
+            li.nav-item
+              = link_to "https://www.ub.uni-paderborn.de/ueber-uns/anschrift", target: "_blank", class: "nav-link" do
+                i.icon.fa-solid.fa-arrow-right
+                = t("application.footer.address")
+            li.nav-item
+              = link_to "https://www.ub.uni-paderborn.de/ueber-uns/oeffnungszeiten", target: "_blank", class: "nav-link" do
+                i.icon.fa-solid.fa-arrow-right
+                = t("application.footer.opening_hours")
+
+
 
   .upb-footer.d-print-none
     div(class=container_class)

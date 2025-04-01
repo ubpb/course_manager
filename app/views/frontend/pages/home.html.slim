@@ -1,8 +1,11 @@
+- content_for(:header_image) do
+  = image_tag "homepage_head.jpg", class: "img-fluid"
+
 .d-flex.justify-content-between.align-items-center.gap-2.mb-4
   h3.mb-0.fw-bold
     = "Willkommen in unserem Schulungs- & Beratungsportal"
 
-.mb-4.lead.text-center
+.lead.text-center
  ' Die Universitätsbibliothek unterstützt Sie umfassend bei Ihrem Studium und Ihrer Forschung.
  ' Dieses Portal bündelt alle unsere Schulungs- und Beratungsdienste: Von Einführungen in die
  ' Bibliotheksnutzung über Workshops zu Citavi und Co. bis hin zu individuellen Beratungen zu
@@ -23,7 +26,6 @@
             i.fa-solid.fa-graduation-cap.me-2
             = "Zur Kursübersicht"
           = link_to frontend_events_path, class: "btn btn-link" do
-            /i.fa-solid.fa-calendar-alt.me-2
             = "... oder zeig mir alle kommenden Termine"
   .col-md-6
     .card.card-shadowed.mt-3.mt-md-0.h-100

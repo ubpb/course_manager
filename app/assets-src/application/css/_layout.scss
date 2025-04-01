@@ -24,28 +24,36 @@ html {
 #header {
   padding: 1.5rem 0;
 
-  #ub-logo {
-    height: 54px;
-
-    @include media-breakpoint-up(md) {
-      height: 72px;
-    }
+  #upb-logo {
+    height: 62px;
   }
 
-  #app-name {
-    text-align: right;
-    font-size: 1.0rem;
-    text-transform: uppercase;
-    color: $upb-ultrablau;
-    margin-bottom: $spacer;
+  .ub-name {
+    font-size: 1.25rem;
+    color: var(--upb-ultrablau);
+    line-height: normal;
+  }
 
-    @include media-breakpoint-up(md) {
-      font-size: 1.2rem;
+  .app-name {
+    font-size: 1.1rem;
+    color: var(--upb-irisviolett);
+    line-height: normal;
+  }
+}
+
+@include media-breakpoint-down(md) {
+  #header {
+    #upb-logo {
+      height: 52px;
     }
 
-    // @include media-breakpoint-down(sm) {
-    //   display: none;
-    // }
+    .ub-name {
+      font-size: 0.9rem;
+    }
+
+    .app-name {
+      font-size: 0.7rem;
+    }
   }
 }
 
@@ -55,7 +63,7 @@ html {
   }
 
   #header {
-    #ub-logo {
+    #upb-logo {
       * {
         fill: var(--bs-light);
       }
@@ -67,38 +75,19 @@ html {
       }
     }
 
-    #app-name {
+    .ub-name {
       color: var(--bs-light);
-    }
-  }
-}
 
-@include media-breakpoint-up(md) {
-  #header {
-    position: relative;
-
-    .container {
-      position: relative;
-      z-index: 1;
+      @media print {
+        color: var(--bs-dark);
+      }
     }
 
-    > ::after {
-      position: absolute;
-      content: "";
-      display: block;
-      background-repeat: no-repeat;
-      background-size: contain;
-      z-index: 0;
-    }
-
-    > ::after {
-      $image-height: 230px;
-
-      background-image: url("../images/decor/header-area.svg");
-      height: $image-height;
-      width: calc($image-height * 0.51357783);
-      top: 94px;
-      right: 0;
+    .app-name {
+      //color: var(--bs-light);
+      @media print {
+        color: var(--bs-dark);
+      }
     }
   }
 }
@@ -106,6 +95,13 @@ html {
 #breadcrumb {
   background-color: $upb-arktisblau-20p;
   padding: calc($spacer * 2) 0;
+
+  position: relative;
+
+  .container {
+    position: relative;
+    z-index: 1;
+  }
 }
 
 @include color-mode(dark) {
@@ -114,12 +110,27 @@ html {
   }
 }
 
+@include media-breakpoint-up(md) {
+  #breadcrumb::after {
+    position: absolute;
+    content: "";
+    display: block;
+    background-repeat: no-repeat;
+    background-size: contain;
+    z-index: 0;
+
+    $image-height: 230px;
+    background-image: url("../images/decor/header-area.svg");
+    height: $image-height;
+    width: calc($image-height * 0.51357783);
+    top: -23px;
+    right: 0;
+  }
+}
+
 #page {
   padding: calc($spacer * 4) 0;
   padding-bottom: calc($spacer * 5);
-
-  position: relative;
-  z-index: 0;
 
   .container {
     position: relative;
@@ -219,14 +230,13 @@ html {
 @include media-breakpoint-up(md) {
   #footer {
     position: relative;
-    z-index: 0;
 
     .container {
       position: relative;
       z-index: 1;
     }
 
-    > ::before, ::after {
+    &::before, &::after {
       position: absolute;
       content: "";
       display: block;
@@ -234,7 +244,7 @@ html {
       background-size: contain;
     }
 
-    > ::before {
+    &::before {
       $image-height: 220px;
 
       background-image: url("../images/decor/footer-area-top.svg");
@@ -244,7 +254,7 @@ html {
       left: 0;
     }
 
-    > ::after {
+    &::after {
       $image-height: 300px;
 
       background-image: url("../images/decor/footer-area-bottom.svg");
@@ -273,7 +283,10 @@ html {
       }
     }
   }
+}
 
+.lead {
+  margin-bottom: calc($spacer * 4);
 }
 
 

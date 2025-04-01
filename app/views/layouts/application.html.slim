@@ -23,6 +23,9 @@ html
     #header
       = render "header"
 
+    - if content_for?(:header_image)
+      #header-image = yield(:header_image)
+
     #breadcrumb: .container
       = render "breadcrumb"
 
