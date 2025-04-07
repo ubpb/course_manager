@@ -1,15 +1,11 @@
 header
   .container.d-flex.flex-row.align-items-center.justify-content-between
     .d-flex.align-items-end
-      .pe-3.border-end
-        = link_to "https://www.uni-paderborn.de" do
-          = inline_svg_tag "upb-logo-designmark.svg", id: "upb-logo", alt: "Universität Paderborn"
-      .d-flex.flex-column.ms-3.align-items-end.text-end
-        = link_to root_path, style: "text-decoration: none !important;" do
-          .ub-name = "Universitätsbibliothek"
-          .app-name = t("application.app_name")
-          - if request.path =~ /admin/
-            .app-name = "Administration"
+      = link_to "https://www.uni-paderborn.de" do
+        = inline_svg_tag "upb-logo.svg", class: "upb-logo", alt: "Universität Paderborn"
+      = inline_svg_tag "logo-separator.svg", class: "logo-separator", alt: "Separator"
+      = link_to root_path do
+        = inline_svg_tag "ub-logo.svg", class: "ub-logo", alt: "Universitätsbibliothek Paderborn"
 
     .d-flex.gap-3.d-print-none
       .ms-auto

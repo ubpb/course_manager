@@ -32,7 +32,10 @@ ul.nav.nav-tabs.mb-3
     = form.input :reminder_message, as: :text, input_html: { rows: 8 }, label: false
     = form.input :email_from
   #reminder-message-preview-pane.tab-pane.fade.show
-    = turbo_frame_tag "reminder-message-preview", src: preview_reminder_message_admin_course_path(course)
+    - if course.persisted?
+      = turbo_frame_tag "reminder-message-preview", src: preview_reminder_message_admin_course_path(course)
+    - else
+      = "Bitte speichern Sie den Kurs, um eine Vorschau der E-Mail zu sehen."
 
 /javascript:
   const previewTab = document.querySelector("#reminder-message-preview-tab")

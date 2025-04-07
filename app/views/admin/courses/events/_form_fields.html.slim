@@ -41,7 +41,10 @@ ul.nav.nav-tabs.mb-3
           = "Wird von der Veranstaltung übernommen"
     = form.input :email_from, label: false
   #reminder-message-preview-pane.tab-pane.fade.show
-    = turbo_frame_tag "reminder-message-preview", src: preview_reminder_message_admin_course_event_path(course, event)
+    - if event.persisted?
+      = turbo_frame_tag "reminder-message-preview", src: preview_reminder_message_admin_course_event_path(course, event)
+    - else
+      = "Bitte speichern Sie die Veranstaltung, um eine Vorschau der E-Mail zu sehen."
 
 /javascript:
   const previewTab = document.querySelector("#reminder-message-preview-tab")

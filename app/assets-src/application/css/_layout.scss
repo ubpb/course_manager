@@ -24,35 +24,31 @@ html {
 #header {
   padding: 1.5rem 0;
 
-  #upb-logo {
+  .upb-logo, .logo-separator {
     height: 62px;
   }
 
-  .ub-name {
-    font-size: 1.25rem;
-    color: var(--upb-ultrablau);
-    line-height: normal;
+  .logo-separator {
+    margin: 0 1rem;
   }
 
-  .app-name {
-    font-size: 1.1rem;
-    color: var(--upb-irisviolett);
-    line-height: normal;
+  .ub-logo {
+    height: 38px;
   }
 }
 
 @include media-breakpoint-down(md) {
   #header {
-    #upb-logo {
-      height: 52px;
+    .upb-logo, .logo-separator {
+      height: 48px;
     }
 
-    .ub-name {
-      font-size: 0.9rem;
+    .logo-separator {
+      margin: 0 0.5rem;
     }
 
-    .app-name {
-      font-size: 0.7rem;
+    .ub-logo {
+      height: 30px;
     }
   }
 }
@@ -63,14 +59,14 @@ html {
   }
 
   #header {
-    #upb-logo {
+    #upb-logo, #ub-logo {
       * {
-        fill: var(--bs-light);
+        fill: var(--bs-light) !important;
       }
 
       @media print {
         * {
-          fill: var(--bs-dark);
+          fill: var(--bs-dark) !important;
         }
       }
     }
@@ -94,13 +90,25 @@ html {
 
 #breadcrumb {
   background-color: $upb-arktisblau-20p;
-  padding: calc($spacer * 2) 0;
+  padding: calc($spacer * 1.5) 0;
 
   position: relative;
 
   .container {
     position: relative;
     z-index: 1;
+  }
+
+  .app-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    line-height: normal;
+    background-color: $upb-arktisblau-20p;
+    margin-left: $spacer;
+
+    &, a {
+      color: var(--upb-irisviolett);
+    }
   }
 }
 
@@ -165,6 +173,20 @@ html {
     color: var(--bs-dark);
     a {
       color: var(--bs-dark);
+    }
+  }
+
+  .upb-logo, .ub-logo {
+    height: 62px;
+
+    * {
+      fill: var(--bs-light) !important;
+    }
+
+    @media print {
+      * {
+        fill: var(--bs-dark) !important;
+      }
     }
   }
 
