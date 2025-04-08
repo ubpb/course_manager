@@ -3,6 +3,9 @@
     = link_to root_path, class: "list-group-item list-group-item-action" do
       i.fas.fa-home.me-2
       = t("application.main_menu.home")
+    = link_to frontend_contact_path, class: "list-group-item list-group-item-action" do
+      i.fa-solid.fa-circle-info.me-2
+      = "Kontakt"
 
   h5.text-muted = "Schulungen"
   nav.list-group.mb-4
@@ -18,10 +21,5 @@
     = link_to frontend_consultings_path, class: "list-group-item list-group-item-action" do
       i.fa-solid.fa-people-arrows.me-2
       = "Beratungen"
-
-  nav.list-group.mb-4
-    = link_to frontend_contact_path, class: "list-group-item list-group-item-action" do
-      i.fa-solid.fa-circle-info.me-2
-      = "Kontakt"
 
 = render "application/main_menu"

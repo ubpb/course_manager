@@ -4,7 +4,7 @@
   div
     i.fa-solid.fa-calendar-alt.fa-fw.me-2
     span = l(event.date_and_time)
-    span.ms-1.badge.text-bg-dark =< date_in_words(event.date_and_time.to_date)
+    span.ms-1.fst-italic = "(#{date_in_words(event.date_and_time.to_date)})"
 
 - if show_duration && event.duration.present?
   div

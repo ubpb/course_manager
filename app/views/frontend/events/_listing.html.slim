@@ -8,7 +8,7 @@
       .mb-3.d-flex.justify-content-between.align-items-center
         div
           span.fw-bold = l(event.date_and_time)
-          span.ms-1.badge.text-bg-dark =< date_in_words(event.date_and_time.to_date)
+          span.ms-1.fst-italic = "(#{date_in_words(event.date_and_time.to_date)})"
         div
           - if event.online?
             span.badge.text-bg-light

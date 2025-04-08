@@ -59,7 +59,7 @@ html {
   }
 
   #header {
-    #upb-logo, #ub-logo {
+    .upb-logo, .ub-logo {
       * {
         fill: var(--bs-light) !important;
       }
@@ -80,7 +80,6 @@ html {
     }
 
     .app-name {
-      //color: var(--bs-light);
       @media print {
         color: var(--bs-dark);
       }
@@ -115,6 +114,13 @@ html {
 @include color-mode(dark) {
   #breadcrumb {
     background-color: var(--bs-light-bg-subtle);
+
+    .app-name {
+      background-color: transparent;
+      &, a {
+        color: var(--bs-light);
+      }
+    }
   }
 }
 
