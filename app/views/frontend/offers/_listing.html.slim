@@ -1,0 +1,27 @@
+/ <%# locals: (offers:) -%>
+
+- offers.each.with_index do |offer, i|
+  - margin_class = i == 0 ? "mt-0" : "mt-3"
+  .card(class=margin_class)
+    .card-body
+      .d-flex.justify-content-between.align-items-center
+        - if offer.is_a?(Course)
+          - course = offer
+          div
+            = "Schulung"
+            = link_to frontend_course_path(course) do
+              h4.mb-2 = course.title
+            = render "categorisation_badges", object: course
+          div
+            = link_to frontend_course_path(course), class: "btn btn-outline-primary btn-sm" do
+              i.fa-solid.fa-chevron-right.fa-fw.me-1
+        - elsif offer.is_a?(Consulting)
+          - consulting = offer
+          div
+            = "Beratung"
+            = link_to frontend_consulting_path(consulting) do
+              h4.mb-2 = consulting.title
+            = render "categorisation_badges", object: consulting
+          div
+            = link_to frontend_consulting_path(consulting), class: "btn btn-outline-primary btn-sm" do
+              i.fa-solid.fa-chevron-right.fa-fw.me-1

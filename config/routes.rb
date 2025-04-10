@@ -28,6 +28,8 @@ Rails.application.routes.draw do
     # redirect old event URLs to new ones
     get "/:id", to: redirect("/termine/%{id}"), constraints: {id: /\d{1,4}.+/}
 
+    resources :offers, only: [:index], path: "angebote"
+
     scope "schulungen" do
       resources :courses, only: [:index, :show], path: "kurse"
       resources :events, only: [:index, :show], path: "termine" do
