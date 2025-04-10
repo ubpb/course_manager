@@ -24,31 +24,23 @@ html {
 #header {
   padding: 1.5rem 0;
 
-  .upb-logo, .logo-separator {
+  .upb-logo, .logo-separator, .ub-logo {
     height: 62px;
   }
 
   .logo-separator {
     margin: 0 1rem;
   }
-
-  .ub-logo {
-    height: 38px;
-  }
 }
 
 @include media-breakpoint-down(md) {
   #header {
-    .upb-logo, .logo-separator {
+    .upb-logo, .logo-separator, .ub-logo {
       height: 48px;
     }
 
     .logo-separator {
       margin: 0 0.5rem;
-    }
-
-    .ub-logo {
-      height: 30px;
     }
   }
 }
