@@ -2,7 +2,7 @@ module Filterable
 
   extend ActiveSupport::Concern
 
-  def apply_filter(context_name,
+  def create_filter(context_name,
                    filter_param: :filter,
                    reset_filter_param: :reset_filter,
                    path: request.path)
@@ -94,13 +94,15 @@ module Filterable
     def active?
       @context.filters.any? do |name, filter|
         filter_value = send(name)
+        filter_value = nil if filter_value.is_a?(Array) && filter_value.empty?
+
         default_value = cast_filter_value(filter[:default], type: filter[:type])
 
         !filter_value.nil? && filter_value != default_value
       end
     end
 
-    def filter(arel)
+    def filter(arel, **options)
       @context.filters.each do |name, filter|
         filter_value = send(name)
         next if filter_value.blank?
@@ -108,7 +110,7 @@ module Filterable
         callable = filter[:block]
         next unless callable
 
-        result = callable.call(arel, filter_value)
+        result = callable.call(arel, filter_value, options)
         arel = result if result
       end
 

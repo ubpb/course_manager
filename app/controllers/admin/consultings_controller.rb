@@ -14,7 +14,7 @@ module Admin
     def index
       @consultings = Consulting.includes(:category).order("title")
 
-      @filter = apply_filter(:consultings) or return
+      @filter = create_filter(:consultings) or return
       @consultings = @filter.filter(@consultings)
     end
 

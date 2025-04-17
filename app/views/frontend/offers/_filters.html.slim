@@ -1,1 +1,26 @@
-' TODO FILTER
+- scopes = [["Alle", "all"], ["Kurse", "courses"], ["Beratungen", "consultings"]]
+- categories = Category.order(:position)
+- topics = Topic.order(:position)
+- target_groups = TargetGroup.order(:position)
+
+= simple_form_for @filter, as: :filter, url: frontend_offers_path, method: :get do |form|
+  .card
+    .card-header
+      h5.card-title.mb-0.card-title Filter
+    .card-body
+      = form.input :scope, as: :select, collection: scopes, required: false, prompt: false
+      = form.input :title, required: false
+      - if categories.present?
+        = form.input :category, as: :select, collection: categories, required: false
+      - if topics.present?
+        = form.input :topics, as: :check_boxes, collection: topics, required: false
+      - if target_groups.present?
+        = form.input :target_groups, as: :check_boxes, collection: target_groups, required: false
+    .card-footer
+      .btn-toolbar.justify-content-between.flex-nowrap
+        = form.submit t("admin.application.btn_filter"), class: "btn btn-primary"
+        - if @filter&.active?
+          = form.submit t("admin.application.btn_filter_reset"), name: "reset_filter", class: "btn btn-secondary ms-2"
+
+
+

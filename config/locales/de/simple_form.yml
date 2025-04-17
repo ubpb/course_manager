@@ -46,6 +46,7 @@ de:
         from_date: "Datum von"
         to_date: "Datum bis"
         date_range: "Datum"
+        scope: "Angebote"
       registration:
         user_notes: "Anmerkungen"
         gdrp_consent: "Einwilligungserklärung"

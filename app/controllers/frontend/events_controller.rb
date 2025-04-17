@@ -38,7 +38,7 @@ module Frontend
     def index
       @upcoming_events = Event.published.upcoming.order(date_and_time: :asc)
 
-      @filter = apply_filter(:events) or return
+      @filter = create_filter(:events) or return
       @upcoming_events = @filter.filter(@upcoming_events)
     end
 

@@ -1,25 +1,24 @@
 / <%# locals: (object:) -%>
 
-div
-  i.fa-solid.fa-list.fa-fw.me-2
-  .badge.text-bg-light
-    - if object.respond_to?(:category) && object.category.present?
-      = object.category.title
-    - else
-      span = "–"
+- if object.respond_to?(:category) && object.category.present?
+  div
+    i.fa-solid.fa-list.fa-fw.me-2
+    = link_to frontend_offers_path(filter: { category: object.category.id }) do
+      span.badge.me-2.text-light.border-0(style="background-color: var(--upb-irisviolett-60p)")
+        = object.category.title
 
-div
-  i.fa-solid.fa-users-viewfinder.fa-fw.me-2
-  - if object.respond_to?(:target_groups) && object.target_groups.present?
-    - object.target_groups.each do |tg|
-      span.badge.text-bg-light.me-2 = tg.title
-  - else
-    span = "–"
-
-div
-  i.fa-solid.fa-tags.fa-fw.me-2
-  - if object.respond_to?(:topics) && object.topics.present?
+- if object.respond_to?(:topics) && object.topics.present?
+  div
+    i.fa-solid.fa-tags.fa-fw.me-2
     - object.topics.each do |t|
-      span.badge.text-bg-light.me-2 = t.title
-  - else
-    span = "–"
+      = link_to frontend_offers_path(filter: { topics: [t.id] }) do
+        span.badge.me-2.text-light.border-0(style="background-color: var(--upb-irisviolett-60p)")
+          = t.title
+
+- if object.respond_to?(:target_groups) && object.target_groups.present?
+  div
+    i.fa-solid.fa-users-viewfinder.fa-fw.me-2
+    - object.target_groups.each do |tg|
+      = link_to frontend_offers_path(filter: { target_groups: [tg.id] }) do
+        span.badge.me-2.text-light.border-0(style="background-color: var(--upb-irisviolett-60p)")
+          = tg.title

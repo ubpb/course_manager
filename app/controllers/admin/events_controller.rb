@@ -80,7 +80,7 @@ module Admin
     def load_events
       @events = Event.includes(:course, :report).order(date_and_time: :desc)
 
-      @filter = apply_filter(:events) or return
+      @filter = create_filter(:events) or return
       @events = @filter.filter(@events)
     end
 

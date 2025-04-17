@@ -22,7 +22,7 @@ module Admin
     def index
       @courses = Course.order("title").includes(:category)
 
-      @filter = apply_filter(:courses) or return
+      @filter = create_filter(:courses) or return
       @courses = @filter.filter(@courses)
     end
 
