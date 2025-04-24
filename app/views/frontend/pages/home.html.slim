@@ -44,6 +44,6 @@
 - topics = Topic.order(:position)
 - if topics.present?
   .mt-4.text-center
-    h4.mb-4 = "... oder steigen Sie über ein Thema ein"
+    h5.mb-4 = "... oder steigen Sie über ein Thema ein"
     - topics&.each do |topic|
       = link_to topic.title, frontend_offers_path(filter: {topics: [topic.id]}), class: "btn btn-outline-primary me-2 mb-2"

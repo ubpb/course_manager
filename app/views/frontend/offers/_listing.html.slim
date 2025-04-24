@@ -10,12 +10,14 @@
         div
           .fw-bold
             - if offer.is_a?(Course)
+              i.fa-solid.fa-graduation-cap.me-1
               = "Schulung"
             - elsif offer.is_a?(Consulting)
+              i.fa-solid.fa-people-arrows.me-1
               = "Beratung"
 
           = link_to details_path do
-            h4.mb-2 = offer.title
+            h4.mb-3 = offer.title
           = render "categorisation_badges", object: offer
         div
           = link_to details_path, class: "btn btn-outline-primary btn-sm" do
