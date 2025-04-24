@@ -23,7 +23,7 @@ gem "sqlite3", ">= 2.1"
 gem "stimulus-rails"
 gem "strip_attributes", "~> 2.0"
 gem "turbo-rails"
-gem "view_component", "~> 3.0"
+gem "view_component", "~> 3.22"
 
 gem "inline_svg", "~> 1.10" # Must be after propshaft
 
