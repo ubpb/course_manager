@@ -1,25 +1,22 @@
 - content_for :main_menu
   nav.list-group.mb-4
     = link_to root_path, class: "list-group-item list-group-item-action" do
-      i.fas.fa-home.me-2
+      i.fas.fa-home.fa-fw.me-2
       = t("application.main_menu.home")
-    = link_to frontend_contact_path, class: "list-group-item list-group-item-action" do
-      i.fa-solid.fa-circle-info.me-2
+    /= link_to frontend_contact_path, class: "list-group-item list-group-item-action" do
+      i.fa-solid.fa-circle-info.fa-fw.me-2
       = "Kontakt"
-
-  h5.text-muted = "Schulungen"
-  nav.list-group.mb-4
     = link_to frontend_courses_path, class: "list-group-item list-group-item-action" do
-      i.fa-solid.fa-chalkboard-teacher.me-2
+      i.fa-solid.fa-chalkboard-teacher.fa-fw.me-2
       = "Kurse"
-    = link_to frontend_events_path, class: "list-group-item list-group-item-action" do
-      i.fa-solid.fa-calendar-days.me-2
+    /= link_to frontend_events_path, class: "list-group-item list-group-item-action" do
+      i.fa-solid.fa-calendar-days.fa-fw.me-2
       = "Termine"
-
-  h5.text-muted = "Beratungen"
-  nav.list-group.mb-4
     = link_to frontend_consultings_path, class: "list-group-item list-group-item-action" do
-      i.fa-solid.fa-people-arrows.me-2
+      i.fa-solid.fa-people-arrows.fa-fw.me-2
       = "Beratungen"
+    = link_to frontend_offers_path(reset_filter: true), class: "list-group-item list-group-item-action" do
+      i.fa-solid.fa-ellipsis.fa-fw.me-2
+      = "Alle Angebote"
 
 = render "application/main_menu"
