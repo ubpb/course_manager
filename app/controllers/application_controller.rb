@@ -26,7 +26,7 @@ class ApplicationController < ActionController::Base
   def current_locale
     cookie_locale = cookies["#{application_cookie_prefix}_locale"]&.to_sym
 
-    browser_locale = request.env["HTTP_ACCEPT_LANGUAGE"].scan(/^[a-z]{2}/).first&.to_sym
+    browser_locale = request.env["HTTP_ACCEPT_LANGUAGE"]&.scan(/^[a-z]{2}/)&.first&.to_sym
     browser_locale = :en if browser_locale != I18n.default_locale
 
     I18n.available_locales.find { |l| l == cookie_locale } ||
