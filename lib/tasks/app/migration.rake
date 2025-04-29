@@ -3,9 +3,14 @@ namespace :app do
 
     desc "Migrate the data from the old database to the new one"
     task migrate_data: :environment do
+      $stdout.puts "Are you sure? ALL EXISTING DATA WILL BE DELETED!! (y/n)"
+      input = $stdin.gets.strip
+      next unless input == "y"
+
       #
       # Migrate courses
       #
+      Course.destroy_all
       OldCourse.find_each do |old_course|
         course = Course.find_or_create_by!(title: old_course.title) do |course|
           course.id = old_course.id
@@ -32,6 +37,7 @@ namespace :app do
       #
       # Migrate registrations
       #
+      Registration.destroy_all
       OldRegistration.find_each do |old_registration|
         event = Event.find(old_registration.training_course_id)
 
@@ -61,7 +67,8 @@ namespace :app do
       #
       # Migrate reports
       #
-      OldCourse.find_each do |old_course| # rubocop:disable Style/CombinableLoops
+      Report.destroy_all
+      OldCourse.find_each do |old_course|
         event = Event.find(old_course.id)
         next if old_course.statistics_duration.blank? || old_course.statistics_duration.zero? || old_course.statistics_lecturer.blank?
 
@@ -86,7 +93,8 @@ namespace :app do
       #
       # Migrate certifications
       #
-      OldCourse.find_each do |old_course| # rubocop:disable Style/CombinableLoops
+      Certification.destroy_all
+      OldCourse.find_each do |old_course|
         event = Event.find(old_course.id)
         next if old_course.certificate_learning_results.blank?
 
@@ -100,6 +108,7 @@ namespace :app do
       #
       # Migrate certificates
       #
+      Certificate.destroy_all
       OldCertificationDigest.find_each do |old_certification_digest|
         registration = Registration.find(old_certification_digest.registration_id)
 
@@ -115,6 +124,7 @@ namespace :app do
       #
       # Migrate topics
       #
+      Topic.destroy_all
       OldTopic.order(:position, :asc).find_each.with_index(1) do |old_topic, i|
         Topic.create! do |topic|
           topic.id = old_topic.id
@@ -133,6 +143,7 @@ namespace :app do
       #
       # Migrate target groups
       #
+      TargetGroup.destroy_all
       OldTargetGroup.order(:position, :asc).find_each.with_index(1) do |old_target_group, i|
         TargetGroup.create! do |target_group|
           target_group.id = old_target_group.id
@@ -151,6 +162,7 @@ namespace :app do
       #
       # Create categories
       #
+      Category.destroy_all
       Category.create!(title: "Orientieren", color_code: "#000000", position: 1)
       Category.create!(title: "Literatur suchen", color_code: "#000000", position: 2)
       Category.create!(title: "Literatur verwalten", color_code: "#000000", position: 3)
