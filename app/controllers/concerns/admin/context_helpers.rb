@@ -6,8 +6,7 @@ module Admin
     private
 
     def prepare_course_context
-      add_breadcrumb "Schulungen", admin_root_path
-      add_breadcrumb "Kurse", admin_courses_path
+      add_breadcrumb "Schulungen", admin_courses_path
 
       course_id = params[:course_id] || params[:id] || return
       @course = Course.includes(:events).find(course_id)

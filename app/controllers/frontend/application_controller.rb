@@ -11,7 +11,7 @@ module Frontend
 
     def prepare_course_context
       add_breadcrumb "Angebote", frontend_offers_path
-      add_breadcrumb "Kurse", frontend_courses_path
+      add_breadcrumb "Schulungen", frontend_courses_path
 
       course_id = params[:course_id] || params[:id] || return
       @course = Course.published.includes(:events, :category).find(course_id)
