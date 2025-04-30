@@ -1,4 +1,3 @@
-- categories = Category.order(:position)
 - target_groups = TargetGroup.order(:position)
 - topics = Topic.order(:position)
 
@@ -10,8 +9,6 @@
       = form.input :title, required: false
       = form.input :date_range, as: :select, collection: [:week, :month, :quarter], required: false
       = form.input :online, as: :select, collection: [["Ja", "true"], ["Nein", "false"]], include_blank: true, required: false
-      - if categories.present?
-        = form.input :category, as: :select, collection: categories, required: false
       - if target_groups.present?
         = form.input :target_groups, as: :check_boxes, collection: target_groups, required: false
       - if topics.present?

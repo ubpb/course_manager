@@ -13,6 +13,7 @@ namespace :app do
       Course.destroy_all
       OldCourse.order(date_and_time: :desc).each do |old_course|
         course = Course.find_or_create_by!(title: old_course.title) do |course|
+          course.id = old_course.id # Important for topic mapping below
           course.published = false
           course.description = old_course.description
           course.learning_targets = old_course.learning_targets
@@ -127,7 +128,7 @@ namespace :app do
       # Migrate topics
       #
       Topic.destroy_all
-      OldTopic.order(:position, :asc).find_each.with_index(1) do |old_topic, i|
+      OldTopic.order(position: :asc).each.with_index(1) do |old_topic, i|
         Topic.create! do |topic|
           topic.id = old_topic.id
           topic.title = old_topic.title
@@ -146,7 +147,7 @@ namespace :app do
       # Migrate target groups
       #
       TargetGroup.destroy_all
-      OldTargetGroup.order(:position, :asc).find_each.with_index(1) do |old_target_group, i|
+      OldTargetGroup.order(position: :asc).each.with_index(1) do |old_target_group, i|
         TargetGroup.create! do |target_group|
           target_group.id = old_target_group.id
           target_group.title = old_target_group.title
