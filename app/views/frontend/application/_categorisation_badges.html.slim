@@ -1,24 +1,35 @@
 / <%# locals: (object:) -%>
 
-- if object.respond_to?(:category) && object.category.present?
+/- if object.respond_to?(:category) && object.category.present?
   div
     i.fa-solid.fa-list.fa-fw.me-2
     = link_to frontend_offers_path(filter: { category: object.category.id }) do
       span.badge.me-2.text-light.border-0(style="background-color: var(--upb-irisviolett-60p)")
         = object.category.title
 
+- if object.is_a?(Course)
+  div
+    i.fa-solid.fa-chalkboard-teacher.fa-fw.me-2
+    = link_to frontend_offers_path(filter: { scope: :courses }) do
+      = "Schulung"
+- elsif offer.is_a?(Consulting)
+  div
+    i.fa-solid.fa-people-arrows.fa-fw.me-2
+    = link_to frontend_offers_path(filter: { scope: :consultings }) do
+      = "Beratung"
+
 - if object.respond_to?(:topics) && object.topics.present?
   div
     i.fa-solid.fa-tags.fa-fw.me-2
-    - object.topics.each do |t|
-      = link_to frontend_offers_path(filter: { topics: [t.id] }) do
-        span.badge.me-2.text-light.border-0(style="background-color: var(--upb-irisviolett-60p)")
-          = t.title
+    - items = object.topics.map do |t|
+      - link_to frontend_offers_path(filter: { topics: [t.id] }) do
+        - t.title
+    = items.join(", ").html_safe
 
 - if object.respond_to?(:target_groups) && object.target_groups.present?
   div
     i.fa-solid.fa-users-viewfinder.fa-fw.me-2
-    - object.target_groups.each do |tg|
-      = link_to frontend_offers_path(filter: { target_groups: [tg.id] }) do
-        span.badge.me-2.text-light.border-0(style="background-color: var(--upb-irisviolett-60p)")
-          = tg.title
+    - items = object.target_groups.map do |tg|
+      - link_to frontend_offers_path(filter: { target_groups: [tg.id] }) do
+        - tg.title
+    = items.join(", ").html_safe

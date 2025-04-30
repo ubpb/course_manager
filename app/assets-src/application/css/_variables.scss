@@ -258,6 +258,10 @@ $link-decoration: none;
 $link-hover-color: $upb-himmelblau;
 $link-hover-decoration: underline;
 
+// Tweak list-group
+$list-group-color: var(--bs-body-color);
+$list-group-action-color: var(--bs-body-color);
+
 // Tweak card component
 $card-border-color: $upb-meerblau-40p;
 $card-border-radius: 0;

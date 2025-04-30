@@ -5,7 +5,6 @@
     .card-body
       = form.input :published, as: :select, collection: [["Ja", "true"], ["Nein", "false"]], include_blank: true, required: false
       = form.input :title, required: false
-      = form.input :category, collection: Category.all, required: false
     .card-footer
       .btn-toolbar.justify-content-between.flex-nowrap
         = form.submit t("admin.application.btn_filter"), class: "btn btn-primary"

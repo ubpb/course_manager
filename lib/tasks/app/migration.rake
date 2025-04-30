@@ -11,9 +11,8 @@ namespace :app do
       # Migrate courses
       #
       Course.destroy_all
-      OldCourse.find_each do |old_course|
+      OldCourse.order(date_and_time: :desc).each do |old_course|
         course = Course.find_or_create_by!(title: old_course.title) do |course|
-          course.id = old_course.id
           course.published = false
           course.description = old_course.description
           course.learning_targets = old_course.learning_targets
@@ -32,6 +31,9 @@ namespace :app do
           event.registration_required = old_course.registration_required
           event.max_no_of_participants = old_course.max_no_of_participants
         end
+
+        # Publish the course if any of the upcoming events are published
+        course.update(published: true) if course.events.upcoming.any?(&:published)
       end
 
       #

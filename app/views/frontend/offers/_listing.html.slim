@@ -8,14 +8,6 @@
     .card-body
       .d-flex.justify-content-between.align-items-center
         div
-          .fw-bold
-            - if offer.is_a?(Course)
-              i.fa-solid.fa-chalkboard-teacher.me-1
-              = "Schulung"
-            - elsif offer.is_a?(Consulting)
-              i.fa-solid.fa-people-arrows.me-1
-              = "Beratung"
-
           = link_to details_path do
             h4.mb-3 = offer.title
           = render "categorisation_badges", object: offer
