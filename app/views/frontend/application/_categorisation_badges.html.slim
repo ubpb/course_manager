@@ -12,7 +12,7 @@
     i.fa-solid.fa-chalkboard-teacher.fa-fw.me-2
     = link_to frontend_offers_path(filter: { scope: :courses }) do
       = "Schulung"
-- elsif offer.is_a?(Consulting)
+- elsif object.is_a?(Consulting)
   div
     i.fa-solid.fa-people-arrows.fa-fw.me-2
     = link_to frontend_offers_path(filter: { scope: :consultings }) do
