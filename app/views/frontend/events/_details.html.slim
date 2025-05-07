@@ -18,8 +18,12 @@
 
 - if show_online
   div
-    i.fa-solid.fa-person-chalkboard.fa-fw.me-2
-    span = event.online? ? 'Online' : 'Präsenz'
+    - if event.online?
+      i.fa-solid.fa-globe.fa-fw.me-2
+      span = "Online"
+    - else
+      i.fa-solid.fa-person-chalkboard.fa-fw.me-2
+      span = "Präsenz"
 
 - if show_registration_info && event.registration_required?
   div
