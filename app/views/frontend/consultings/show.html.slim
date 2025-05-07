@@ -21,7 +21,7 @@
           span = @consulting.contact_name
         div
           i.fa-regular.fa-envelope.fa-fw.me-2
-          span = @consulting.contact_email
+          span = mail_to @consulting.contact_email
         div
           i.fa-solid.fa-phone.fa-fw.me-2
-          span = @consulting.contact_phone
+          span = link_to @consulting.contact_phone, "tel:#{@consulting.contact_phone}"
