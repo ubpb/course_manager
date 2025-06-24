@@ -58,10 +58,13 @@ module Admin
       end
 
       def duplicate
+        new_date_and_time = Time.zone.now
+        new_date_and_time = new_date_and_time.change(sec: 0, usec: 0)
+
         event = @course.events.find(params[:id]).dup
         event.registrations_count = 0
         event.published = false
-        event.date_and_time = Time.zone.now
+        event.date_and_time = new_date_and_time
         event.save
 
         flash[:notice] = "Das Event wurde dupliziert und gespeichert. Datum und Uhrzeit wurden auf die aktuelle Zeit eingestellt. Bitte bearbeite die Details."
