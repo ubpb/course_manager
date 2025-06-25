@@ -1,6 +1,6 @@
 <%= render "application/mailers/salutation" -%>
 
-vielen Dank für Ihre Anmeldung zu unserer Schulungsveranstaltung "<%= @course.title %>" am <%= l(@event.date_and_time.to_date) %>, die wir hiermit bestätigen. Die Veranstaltung beginnt um <%= l(@event.date_and_time.to_time, format: :short) %>.<% if @event.location.present? -%> Als Ort der Veranstaltung bzw. als Treffpunkt wurde angegeben: "<%= @event.location %>".<% end -%>
+vielen Dank für Ihre Anmeldung zu unserer Schulungsveranstaltung "<%= @course.title %>" am <%= l(@event.date_and_time.to_date) %>, die wir hiermit bestätigen. Die Veranstaltung beginnt um <%= l(@event.date_and_time.to_time, format: "%H:%M Uhr") %>. <% if @event.online? -%>Die Veranstaltung findet online statt. Zugangsdaten erhalten Sie vor der Veranstaltung in einer separaten E-Mail.<% elsif @event.location.present? -%>Als Ort der Veranstaltung bzw. als Treffpunkt wurde angegeben: "<%= @event.location %>".<% end -%>
 
 Sollten Sie Fragen haben, können Sie uns kontaktieren, indem Sie einfach auf diese E-Mail antworten.
 
