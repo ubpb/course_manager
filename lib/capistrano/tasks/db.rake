@@ -13,7 +13,7 @@ namespace :app do
 
       # Dump db on remote server
       on(server) do |_|
-        db_config = YAML.load(capture("cat #{shared_path}/config/database.yml"), aliases: true)[fetch(:rails_env)]
+        db_config = YAML.load(capture("cat #{shared_path}/config/database.yml"), aliases: true)[fetch(:rails_env)]["primary"]
 
         host     = db_config["host"]
         database = db_config["database"]
@@ -30,7 +30,7 @@ namespace :app do
 
       # Restore dump locally
       run_locally do
-        db_config = YAML.load(capture(:cat, "config/database.yml"), aliases: true)["development"]
+        db_config = YAML.load(capture(:cat, "config/database.yml"), aliases: true)["development"]["primary"]
 
         host     = db_config["host"] || "localhost"
         database = db_config["database"]
