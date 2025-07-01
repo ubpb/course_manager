@@ -9,7 +9,6 @@ class Consulting < ApplicationRecord
   validates :title, presence: true
   validates :contact_name, presence: true
   validates :contact_email, format: {with: /\A[^@\s]+@[^@\s]+\z/}, presence: true
-  validates :contact_phone, presence: true
 
   # Scopes
   scope :published, -> { where(published: true) }
