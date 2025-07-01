@@ -4,7 +4,7 @@ shared:
     enabled: true
 
   locale_switching:
-    enabled: true
+    enabled: false
 
 # Values for the development environment
 development:
