@@ -1,20 +1,52 @@
 namespace :app do
   namespace :migration do
 
-    desc "Migrate the data from the old database to the new one"
+    desc "Migrate the data from the old production database to the new one"
     task migrate_data: :environment do
+      unless ENV["MIGRATION_PRODUCTION_DATABASE_PASSWORD"]
+        $stderr.puts "MIGRATION_PRODUCTION_DATABASE_PASSWORD is not set"
+        next
+      end
+
+      unless ENV["MIGRATION_TESTING_DATABASE_PASSWORD"]
+        $stderr.puts "MIGRATION_TESTING_DATABASE_PASSWORD is not set"
+        next
+      end
+
       $stdout.puts "Are you sure? ALL EXISTING DATA WILL BE DELETED!! (y/n)"
       input = $stdin.gets.strip
       next unless input == "y"
 
+      # Simulate progress
+      puts "Migration started. This may take a while..."
+      # Ractor.new do
+      #   loop do
+      #     print "."
+      #     sleep 1
+      #   end
+      # end
+
+      #
+      # Delete all existing data
+      #
+      Report.destroy_all
+      Registration.destroy_all
+      Event.destroy_all
+      Course.destroy_all
+      Consulting.destroy_all
+      Topic.destroy_all
+      TargetGroup.destroy_all
+      Certification.destroy_all
+      Certificate.destroy_all
+      Category.destroy_all
+
       #
       # Migrate courses
       #
-      Course.destroy_all
-      OldCourse.order(date_and_time: :desc).each do |old_course|
+      Migration::Production::Course.order(date_and_time: :desc).each do |old_course|
         course = Course.find_or_create_by!(title: old_course.title) do |course|
           course.id = old_course.id # Important for topic mapping below
-          course.published = false
+          course.published = false  # Courses are not published by default
           course.description = old_course.description
           course.learning_targets = old_course.learning_targets
         end
@@ -40,8 +72,7 @@ namespace :app do
       #
       # Migrate registrations
       #
-      Registration.destroy_all
-      OldRegistration.find_each do |old_registration|
+      Migration::Production::Registration.find_each do |old_registration|
         event = Event.find(old_registration.training_course_id)
 
         registration = Registration.new do |registration|
@@ -70,8 +101,7 @@ namespace :app do
       #
       # Migrate reports
       #
-      Report.destroy_all
-      OldCourse.find_each do |old_course|
+      Migration::Production::Course.find_each do |old_course|
         event = Event.find(old_course.id)
         next if old_course.statistics_duration.blank? || old_course.statistics_duration.zero? || old_course.statistics_lecturer.blank?
 
@@ -96,8 +126,7 @@ namespace :app do
       #
       # Migrate certifications
       #
-      Certification.destroy_all
-      OldCourse.find_each do |old_course|
+      Migration::Production::Course.find_each do |old_course|
         event = Event.find(old_course.id)
         next if old_course.certificate_learning_results.blank?
 
@@ -111,8 +140,7 @@ namespace :app do
       #
       # Migrate certificates
       #
-      Certificate.destroy_all
-      OldCertificationDigest.find_each do |old_certification_digest|
+      Migration::Production::CertificationDigest.find_each do |old_certification_digest|
         registration = Registration.find(old_certification_digest.registration_id)
 
         Certificate.create! do |certificate|
@@ -127,18 +155,35 @@ namespace :app do
       #
       # Migrate topics
       #
-      Topic.destroy_all
-      OldTopic.order(position: :asc).each.with_index(1) do |old_topic, i|
-        Topic.create! do |topic|
-          topic.id = old_topic.id
-          topic.title = old_topic.title
-          topic.position = i
-        end
-      end
+      Topic.create!(id: 1, title: "Orientieren", position: 1) # Was ID 10, "Räumliche Orientierung"
+      Topic.create!(id: 2, title: "Literatur suchen", position: 2) # Was ID 30 "Katalogbenutzung" AND ID 16 "Literaturrecherche"
+      Topic.create!(id: 3, title: "Literatur verwalten", position: 3) # Was ID 14 "Literaturverwaltung"
+      Topic.create!(id: 4, title: "Literatur bewerten", position: 4) # Was ID 33 "Literaturbewertung"
+      Topic.create!(id: 5, title: "Schreiben", position: 5) # Is new (no mappings exists yet)
+      Topic.create!(id: 6, title: "Veröffentlichen / Open Access", position: 6) # Was ID 35 "Open Access"
 
-      OldTopicMapping.all.each do |old_topic_mapping| # rubocop:disable Rails/FindEach
-        course = Course.find_by(id: old_topic_mapping.training_course_id)
-        topic = Topic.find_by(id: old_topic_mapping.category_id)
+      map_production_topic_id = lambda { |production_topic_id|
+        case production_topic_id
+        when 10 # Räumliche Orientierung
+          1 # Orientieren
+        when 30, 16 # Katalogbenutzung or Literaturrecherche
+          2 # Literatur suchen
+        when 14 # Literaturverwaltung
+          3 # Literatur verwalten
+        when 33 # Literaturbewertung
+          4 # Literatur bewerten
+        when 35 # Open Access
+          6 # Veröffentlichen / Open Access
+        else
+          raise "Unknown topic mapping detected!"
+        end
+      }
+
+      Migration::Production::TopicMapping.all.each do |production_topic_mapping| # rubocop:disable Rails/FindEach
+        next if production_topic_mapping.category_id == 32 # Skip the "Fernleihe" topic, as it is not used anymore
+
+        course = Course.find_by(id: production_topic_mapping.training_course_id)
+        topic = Topic.find_by(id: map_production_topic_id.call(production_topic_mapping.category_id))
 
         course.topics << topic if course && topic
       end
@@ -146,32 +191,102 @@ namespace :app do
       #
       # Migrate target groups
       #
-      TargetGroup.destroy_all
-      OldTargetGroup.order(position: :asc).each.with_index(1) do |old_target_group, i|
-        TargetGroup.create! do |target_group|
-          target_group.id = old_target_group.id
-          target_group.title = old_target_group.title
-          target_group.position = i
-        end
-      end
+      TargetGroup.create!(id: 1, title: "Studierende", position: 1) # Was ID 2 "Studierende"
+      TargetGroup.create!(id: 2, title: "International students", position: 2) # Was ID 8 "International students"
+      TargetGroup.create!(id: 3, title: "Promovierende", position: 3) # Was ID 12 "Doktorandinnen und Doktoranden"
+      TargetGroup.create!(id: 4, title: "Forschende und Lehrende", position: 4) # Was ID 14 "Forschende und Lehrende"
+      TargetGroup.create!(id: 5, title: "Mitarbeitende der Universität", position: 5) # Was ID 18 "Beschäftigte der Universität"
+      TargetGroup.create!(id: 6, title: "Interessierte aus Stadt und Region", position: 6) # Was ID 10 "Nutzerinnen und Nutzer aus Stadt und Umland Paderborn"
+      TargetGroup.create!(id: 7, title: "Schulen", position: 7) # Was ID 6 "Schulen"
 
-      OldTargetGroupMapping.all.each do |old_target_group_mapping| # rubocop:disable Rails/FindEach
-        course = Course.find_by(id: old_target_group_mapping.training_course_id)
-        target_group = TargetGroup.find_by(id: old_target_group_mapping.target_audience_id)
+      map_production_target_group_id = lambda { |production_target_group_id|
+        case production_target_group_id
+        when 2 # Studierende
+          1 # Studierende
+        when 8 # International students
+          2 # International students
+        when 12 # Doktorandinnen und Doktoranden
+          3 # Promovierende
+        when 14 # Forschende und Lehrende
+          4 # Forschende und Lehrende
+        when 18 # Beschäftigte der Universität
+          5 # Mitarbeitende der Universität
+        when 10 # Nutzerinnen und Nutzer aus Stadt und Umland Paderborn
+          6 # Interessierte aus Stadt und Region
+        when 6 # Schulen
+          7 # Schulen
+        else
+          raise "Unknown topic mapping detected!"
+        end
+      }
+
+      Migration::Production::TargetGroupMapping.all.each do |production_target_group_mapping| # rubocop:disable Rails/FindEach
+        next if production_target_group_mapping.target_audience_id == 16 # Skip the "Teamer" target group, as it is not used anymore
+        next if production_target_group_mapping.target_audience_id == 4 # Skip the "Teilnehmende des Studiums für Ältere" target group, as it is not used anymore
+
+        course = Course.find_by(id: production_target_group_mapping.training_course_id)
+        target_group = TargetGroup.find_by(id: map_production_target_group_id.call(production_target_group_mapping.target_audience_id))
 
         course.target_groups << target_group if course && target_group
       end
 
       #
-      # Create categories
+      # Migrate consultings from the current testing database
       #
-      Category.destroy_all
-      Category.create!(title: "Orientieren", color_code: "#000000", position: 1)
-      Category.create!(title: "Literatur suchen", color_code: "#000000", position: 2)
-      Category.create!(title: "Literatur verwalten", color_code: "#000000", position: 3)
-      Category.create!(title: "Literatur bewerten", color_code: "#000000", position: 4)
-      Category.create!(title: "Schreiben", color_code: "#000000", position: 5)
-      Category.create!(title: "Veröffentlichen", color_code: "#000000", position: 6)
+      map_testing_target_group_id = lambda { |testing_target_group_id|
+        case testing_target_group_id
+        when 2 then 1 # Studierende
+        when 8 then 2 # International students
+        when 12 then 3 # Promovierende
+        when 14 then 4 # Forschende und Lehrende
+        when 18 then 5 # Mitarbeitende der Universität
+        when 10 then 6 # Interessierte aus Stadt und Region
+        when 6 then 7 # Schulen
+        else
+          raise "Unknown topic mapping detected!"
+        end
+      }
+
+      map_testing_topic_id = lambda { |testing_topic_id|
+        case testing_topic_id
+        when 10 then 1 # Räumliche Orientierung
+        when 16 then 2 # Literatur suchen
+        when 35 then 3 # Literatur verwalten
+        when 33 then 4 # Literatur bewerten
+        when 14 then 5 # Schreiben
+        when 36 then 6 # Veröffentlichen / Open Access
+        else
+          raise "Unknown topic mapping detected!"
+        end
+      }
+
+      Migration::Testing::Consulting.find_each do |testing_consulting|
+        consulting = Consulting.create! do |consulting|
+          consulting.id = testing_consulting.id
+          consulting.title = testing_consulting.title
+          consulting.published = testing_consulting.published
+          consulting.description = testing_consulting.description
+          consulting.contact_name = testing_consulting.contact_name
+          consulting.contact_email = testing_consulting.contact_email
+          consulting.contact_phone = testing_consulting.contact_phone
+          consulting.created_at = testing_consulting.created_at
+          consulting.updated_at = testing_consulting.updated_at
+        end
+
+        testing_consulting.target_groups.each do |testing_target_group|
+          target_group_id = map_testing_target_group_id.call(testing_target_group.id)
+          target_group = TargetGroup.find(target_group_id)
+
+          consulting.target_groups << target_group
+        end
+
+        testing_consulting.topics.each do |testing_topic|
+          topic_id = map_testing_topic_id.call(testing_topic.id)
+          topic = Topic.find(topic_id)
+
+          consulting.topics << topic
+        end
+      end
     end
   end
 end

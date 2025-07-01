@@ -1,4 +1,4 @@
-class OldCourse < MigrationRecord
+class Migration::Production::Course < Migration::Production::ApplicationRecord
   self.table_name = "training_courses"
 
   # Flags
