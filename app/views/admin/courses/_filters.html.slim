@@ -6,7 +6,7 @@
       = form.input :published, as: :select, collection: [["Ja", "true"], ["Nein", "false"]], include_blank: true, required: false
       = form.input :title, required: false
     .card-footer
-      .btn-toolbar.justify-content-between.flex-nowrap
+      .d-grid.gap-2
         = form.submit t("admin.application.btn_filter"), class: "btn btn-primary"
         - if @filter&.active?
-          = form.submit t("admin.application.btn_filter_reset"), name: "reset_filter", class: "btn btn-secondary ms-2"
+          = form.submit t("admin.application.btn_filter_reset"), name: "reset_filter", class: "btn btn-link"
