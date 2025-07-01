@@ -1,5 +1,7 @@
 class Frontend::CertChecksController < Frontend::ApplicationController
 
+  before_action -> { add_breadcrumb "Zertifikate validieren", frontend_cert_checks_path }
+
   def index
     redirect_to new_frontend_cert_check_path
   end
