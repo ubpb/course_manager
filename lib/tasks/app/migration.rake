@@ -19,12 +19,6 @@ namespace :app do
 
       # Simulate progress
       puts "Migration started. This may take a while..."
-      # Ractor.new do
-      #   loop do
-      #     print "."
-      #     sleep 1
-      #   end
-      # end
 
       #
       # Delete all existing data
