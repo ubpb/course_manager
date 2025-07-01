@@ -22,6 +22,7 @@
         div
           i.fa-regular.fa-envelope.fa-fw.me-2
           span = mail_to @consulting.contact_email
-        div
-          i.fa-solid.fa-phone.fa-fw.me-2
-          span = link_to @consulting.contact_phone, "tel:#{@consulting.contact_phone}"
+        - if @consulting.contact_phone.present?
+          div
+            i.fa-solid.fa-phone.fa-fw.me-2
+            span = link_to @consulting.contact_phone, "tel:#{@consulting.contact_phone}"
