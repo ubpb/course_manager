@@ -4,10 +4,10 @@ table.table
   thead
     tr
       th(colspan="2") = "Datum / Uhrzeit"
-      th = "Teilnehmer"
-      th = "Online?"
-      th = "Statistik erfasst?"
-      th = "Zertifikat erstellt?"
+      th.text-center = "Teilnehmer"
+      th.text-center = "Online?"
+      th.text-center = "Statistik erfasst?"
+      th.text-center = "Zertifikat erstellt?"
       th.actions = "Aktionen"
   tbody
     - events.each do |event|
@@ -17,15 +17,21 @@ table.table
           span = l(event.date_and_time)
           span.ms-1.text-muted = "... #{date_in_words(event.date_and_time.to_date)}" if event.upcoming?
           div = link_to event.course.title, admin_course_events_path(event.course)
-        td
+        td.text-center
           = event.registrations_count
           - if event.max_no_of_participants.positive?
             = " / #{event.max_no_of_participants}"
           - else
             = " / ∞"
-        td = event.online? ? "Ja" : "Nein"
-        td = event.report.present? ? "Ja" : "Nein"
-        td = event.certification.present? ? "Ja" : "Nein"
+        td.text-center
+          - if event.online?
+            i.fa-solid.fa-check
+        td.text-center
+          -if event.report.present?
+            i.fa-solid.fa-check
+        td.text-center
+          - if event.certification.present?
+            i.fa-solid.fa-check
         td.actions
           .dropdown
             button.btn.btn-outline-primary.btn-sm.dropdown-toggle(type="button" data-bs-toggle="dropdown")

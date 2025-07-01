@@ -11,6 +11,6 @@
      h4.mb-4 = @event.course.title
      .row
       .col-md-4
-        = render "frontend/events/details", event: @event
+        = render "frontend/events/details", event: @event, show_location: true
       .col-md-8
         = render "frontend/events/registrations/form", event: @event, registration: @registration
