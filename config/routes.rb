@@ -36,6 +36,8 @@ Rails.application.routes.draw do
       end
       resources :consultings, only: [:index, :show], path: "beratungen"
     end
+
+    resources :cert_checks, path: "validate", only: [:index, :new, :create, :show]
   end
 
   #

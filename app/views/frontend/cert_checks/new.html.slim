@@ -1,0 +1,14 @@
+= simple_form_for :cert_check, url: frontend_cert_checks_path, method: :post do |f|
+  .card.card-cutoff-corner.card-primary
+    .card-header
+      h5.card-title.mb-0 = "Teilnahmebescheinigung prüfen"
+    .card-body
+      = render "application/alerts"
+
+      p
+        ' Hier können Sie eine von unserem System ausgestellte Teilnahmebescheinigung hochladen, um zu überprüfen,
+        ' ob sie gültig ist. Laden Sie dazu einfach die PDF-Datei der Teilnahmebescheinigung über das untenstehende
+        ' Formular hoch und klicken Sie auf "Bescheinigung jetzt prüfen".
+      = f.input :file, as: :file, label: "Datei"
+    .card-footer
+      = f.submit "Bescheinigung jetzt prüfen", class: "btn btn-primary"

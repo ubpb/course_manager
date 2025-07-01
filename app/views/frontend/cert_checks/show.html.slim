@@ -1,0 +1,23 @@
+.card.card-cutoff-corner.card-primary
+  .card-header
+    h5.card-title.mb-0 = "Teilnahmebescheinigung prüfen"
+  .card-body
+    .mb-3 = "Prüfsumme: #{@digest}"
+    - if @registration.present?
+      .alert.alert-success.mb-0
+        = "Die Teilnahmebescheinigung ist gültig."
+    - else
+      .alert.alert-danger.mb-0
+        p = "Die Teilnahmebescheinigung ist ungültig."
+        p
+          ' D.h. wir konnten in unserer Datenbank keine Teilnahmebescheinigung mit der ermittelten Prüfsumme
+          ' finden. Das bedeutet, dass die hochgeladene Datei nicht von uns erstellt wurde, oder
+          ' dass die Datei nachträglich geändert wurde.
+        p.mb-0
+          ' Wichtig: Dieses muss nicht zwingend auf eine absichtliche
+          ' Manipulation hindeuten, sondern kann z.B. auch durch eine fehlerhafte Übertragung oder Speicherung
+          ' der Datei entstanden sein. Im Zweifelsfall wenden Sie sich bitte an unser Schulungs-Team
+          ' unter der E-Mail
+          ' <a href="mailto:schulung@ub.uni-paderborn.de" class="alert-link">schulung@ub.uni-paderborn.de</a>.
+  .card-footer
+    = link_to "Neue Prüfung starten", frontend_cert_checks_path, class: "btn btn-primary"
