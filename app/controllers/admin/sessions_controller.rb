@@ -38,7 +38,7 @@ module Admin
 
     def alma_client
       @alma_client ||= AlmaApi::Client.configure do |config|
-        config.api_key = Rails.application.credentials[:alma_api_key]
+        config.api_key = ApplicationConfig[:alma_api, :api_key]
       end
     end
 

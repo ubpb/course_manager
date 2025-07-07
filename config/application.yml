@@ -8,6 +8,10 @@ shared:
 
 # Values for the development environment
 development:
+  alma_api:
+    api_key: <%= Rails.application.credentials.dig("alma_api", "testing", "api_key") %>
 
 # Values for the production environment
 production:
+  alma_api:
+    api_key: <%= Rails.application.credentials.dig("alma_api", "production", "api_key") %>
