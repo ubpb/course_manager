@@ -4,7 +4,7 @@ gem "active_flag", "~> 2.0"
 gem "acts_as_list", "~> 1.1"
 gem "alma_api", "~> 2.0"
 gem "bootsnap", require: false
-gem "caxlsx_rails", "~> 0.6.2"
+gem "caxlsx_rails", "~> 0.7.2"
 gem "commonmarker", "~> 2.0"
 gem "github-markup", "~> 5.0", require: "github/markup"
 gem "hexapdf", "~> 1.1"
