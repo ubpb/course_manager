@@ -5,52 +5,12 @@ default: &default
   collation: utf8mb4_general_ci
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
-# Defaults for all database connections that are used for
-# migrating data from existing databases into the new production
-# database.
-migration_default: &migration_default
-  <<: *default
-  host: mariadbmaster-ub
-  replica: true # make sure the database is read-only
-  database_tasks: false # disable database tasks like migrations, schema dumps, etc.
-
-# This is the old production database. We use this
-# to migrate the existing data into the new production database.
-migration_production_database: &migration_production_database
-  <<: *migration_default
-  database: ubschulungen
-  username: ubschulungen
-  password: "<%= ENV['MIGRATION_PRODUCTION_DATABASE_PASSWORD'] %>"
-
-# As part of the migration, we have another database
-# in our testing environment that has some new data
-# that we want to migrate into the new production database as well.
-migration_testing_database: &migration_testing_database
-  <<: *migration_default
-  database: course_manager_test
-  username: course_manager_test
-  password: "<%= ENV['MIGRATION_TESTING_DATABASE_PASSWORD'] %>"
-
-
 # Settings for the local development environment.
 development:
   primary:
     <<: *default
     socket: /tmp/mysql.sock
     database: course_manager_development
-  migration_production_database:
-    <<: *migration_production_database
-    # We need a local ssh tunnel to access the production database.
-    # ssh -K -L 3316:127.0.0.1:3306 user@mariadbmaster-ub
-    host: 127.0.0.1
-    port: 3316
-
-  migration_testing_database:
-    <<: *migration_testing_database
-    # We need a local ssh tunnel to access the testing database.
-    # ssh -K -L 3316:127.0.0.1:3306 user@mariadbmaster-ub
-    host: 127.0.0.1
-    port: 3316
 
 # Settings for the local testing environment.
 # Warning: The database defined as "test" will be erased and
