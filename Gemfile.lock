@@ -138,9 +138,9 @@ GEM
       marcel (~> 1.0)
       nokogiri (~> 1.10, >= 1.10.4)
       rubyzip (>= 2.4, < 4)
-    caxlsx_rails (0.6.4)
-      actionpack (>= 3.1)
-      caxlsx (>= 3.0)
+    caxlsx_rails (0.7.2)
+      actionpack (>= 6.1)
+      caxlsx (>= 4.0)
     childprocess (5.1.0)
       logger (~> 1.5)
     cmdparse (3.0.7)
@@ -485,7 +485,7 @@ DEPENDENCIES
   capistrano-rails
   capistrano-rvm
   capybara
-  caxlsx_rails (~> 0.6.2)
+  caxlsx_rails (~> 0.7.2)
   commonmarker (~> 2.0)
   debug
   dotenv
