@@ -23,5 +23,5 @@ set :keep_assets, 3
 #
 
 # Hooks
-before "deploy:assets:precompile", "app:yarn:install"
-before "deploy:assets:precompile", "app:parcel:build"
+before "deploy:assets:precompile", "app:bun:install"
+before "deploy:assets:precompile", "app:bun:build"

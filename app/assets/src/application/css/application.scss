@@ -1,5 +1,9 @@
 // Use SASS math module
 @use "sass:math";
+// Customize FontAwesome font path
+@use '@fortawesome/fontawesome-free/scss/variables' with (
+  $font-path: "../../../../../node_modules/@fortawesome/fontawesome-free/webfonts",
+);
 
 //
 // Local fonts
@@ -9,7 +13,6 @@
 //
 // Import FontAwesome
 //
-$fa-font-path: "~node_modules/@fortawesome/fontawesome-free/webfonts";
 @import "@fortawesome/fontawesome-free/scss/fontawesome.scss";
 @import "@fortawesome/fontawesome-free/scss/regular.scss";
 @import "@fortawesome/fontawesome-free/scss/solid.scss";
@@ -76,7 +79,7 @@ $fa-font-path: "~node_modules/@fortawesome/fontawesome-free/webfonts";
 //
 // Import other libs
 //
-@import "~node_modules/animate.css/animate.css";
+@import "animate.css/animate.css";
 
 //
 // Import our stuff

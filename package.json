@@ -14,30 +14,11 @@
     "sortablejs": "^1.15.6"
   },
   "scripts": {
-    "parcel:clobber": "rm -fr ./app/assets/builds/*",
-    "parcel:watch": "PARCEL_COMMAND=watch yarn parcel:exec --no-hmr",
-    "parcel:build": "PARCEL_COMMAND=build yarn parcel:exec --no-cache",
-    "parcel:exec": "parcel $PARCEL_COMMAND --no-content-hash"
+    "build": "bun run bun.build.js",
+    "build:watch": "bun run bun.build.js --watch",
+    "build:clobber": "rm -fr ./app/assets/builds/*"
   },
-  "targets": {
-    "global": {
-      "source": [
-        "./app/assets-src/application.js"
-      ],
-      "distDir": "./app/assets/builds",
-      "context": "browser",
-      "outputFormat": "global"
-    }
-  },
-  "browserslist": "> 0.35%, not dead",
   "devDependencies": {
-    "@parcel/transformer-sass": "^2.13.2",
-    "autoprefixer": "^10.4.15",
-    "buffer": "^5.5.0||^6.0.0",
-    "eslint": "^9.0.0",
-    "parcel": "^2.13.2",
-    "postcss": "^8.4.31",
-    "process": "^0.11.10",
-    "svgo": "^3"
+    "sass": "^1.99.0"
   }
 }

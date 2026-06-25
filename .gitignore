@@ -34,8 +34,7 @@
 /config/master.key
 /config/credentials/*.key
 
-# Ignore build files from parcel
-/.parcel-cache
+# Ignore assets builds
 /app/assets/builds
 
 # Ignore node_modules

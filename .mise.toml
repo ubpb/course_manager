@@ -2,5 +2,5 @@
 idiomatic_version_file_enable_tools = ["ruby"]
 
 [tools]
-node = "lts"
+bun = "1.3"
 
