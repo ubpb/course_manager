@@ -10,44 +10,44 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_07_133514) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_25_081356) do
   create_table "categories", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
-    t.string "title", null: false
     t.string "color_code", null: false
-    t.integer "position"
     t.datetime "created_at", null: false
+    t.integer "position"
+    t.string "title", null: false
     t.datetime "updated_at", null: false
     t.index ["position"], name: "index_categories_on_position"
     t.index ["title"], name: "index_categories_on_title", unique: true
   end
 
   create_table "certificates", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
-    t.bigint "registration_id"
+    t.datetime "created_at", null: false
     t.string "digest", null: false
     t.string "initials", null: false
-    t.datetime "created_at", null: false
+    t.bigint "registration_id"
     t.datetime "updated_at", null: false
     t.index ["registration_id"], name: "index_certificates_on_registration_id"
   end
 
   create_table "certifications", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.datetime "created_at", null: false
     t.bigint "event_id", null: false
     t.text "learning_results"
     t.string "signature"
-    t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["event_id"], name: "index_certifications_on_event_id", unique: true
   end
 
   create_table "consultings", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.bigint "category_id"
-    t.string "title", null: false
-    t.boolean "published", default: false, null: false
-    t.text "description"
-    t.string "contact_name"
     t.string "contact_email"
+    t.string "contact_name"
     t.string "contact_phone"
     t.datetime "created_at", null: false
+    t.text "description"
+    t.boolean "published", default: false, null: false
+    t.string "title", null: false
     t.datetime "updated_at", null: false
     t.index ["category_id"], name: "index_consultings_on_category_id"
     t.index ["published"], name: "index_consultings_on_published"
@@ -69,13 +69,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_07_133514) do
 
   create_table "courses", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.bigint "category_id"
-    t.string "title", null: false
-    t.boolean "published", default: false, null: false
-    t.text "description"
-    t.text "learning_targets"
-    t.text "reminder_message"
-    t.string "email_from"
     t.datetime "created_at", null: false
+    t.text "description"
+    t.string "email_from"
+    t.text "learning_targets"
+    t.boolean "published", default: false, null: false
+    t.text "reminder_message"
+    t.string "title", null: false
     t.datetime "updated_at", null: false
     t.index ["category_id"], name: "index_courses_on_category_id"
     t.index ["published"], name: "index_courses_on_published"
@@ -97,71 +97,71 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_07_133514) do
 
   create_table "events", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.bigint "course_id", null: false
-    t.integer "registrations_count", default: 0, null: false
+    t.datetime "created_at", null: false
     t.datetime "date_and_time", null: false
     t.integer "duration"
-    t.string "location"
-    t.text "reminder_message"
     t.string "email_from"
+    t.string "location"
+    t.integer "max_no_of_participants", default: 0, null: false
     t.boolean "online", default: false, null: false
     t.boolean "published", default: false, null: false
     t.boolean "registration_required", default: false, null: false
-    t.integer "max_no_of_participants", default: 0, null: false
-    t.datetime "created_at", null: false
+    t.integer "registrations_count", default: 0, null: false
+    t.text "reminder_message"
     t.datetime "updated_at", null: false
     t.index ["course_id"], name: "index_events_on_course_id"
     t.index ["published"], name: "index_events_on_published"
   end
 
   create_table "registrations", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
-    t.bigint "event_id", null: false
-    t.string "first_name", null: false
-    t.string "last_name", null: false
-    t.string "email", null: false
-    t.string "field_of_interest"
-    t.text "user_notes"
-    t.text "internal_notes"
-    t.boolean "gdrp_consent", default: false, null: false
-    t.timestamp "reminder_message_sent_at"
     t.timestamp "certificate_sent_at"
     t.datetime "created_at", null: false
+    t.string "email", null: false
+    t.bigint "event_id", null: false
+    t.string "field_of_interest"
+    t.string "first_name", null: false
+    t.boolean "gdrp_consent", default: false, null: false
+    t.text "internal_notes"
+    t.string "last_name", null: false
+    t.timestamp "reminder_message_sent_at"
     t.datetime "updated_at", null: false
+    t.text "user_notes"
     t.index ["event_id"], name: "index_registrations_on_event_id"
   end
 
   create_table "reports", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
-    t.bigint "event_id", null: false
+    t.integer "audiences", default: 0
+    t.integer "categories", default: 0
+    t.datetime "created_at", null: false
     t.integer "duration", null: false
-    t.integer "number_of_participants", null: false
+    t.bigint "event_id", null: false
+    t.integer "focus", default: 0
+    t.integer "forms", default: 0
     t.string "lecturer", null: false
-    t.integer "lecturer_md", default: 0
     t.integer "lecturer_gd", default: 0
     t.integer "lecturer_hd", default: 0
-    t.integer "presence_types", default: 0
-    t.integer "organization_types", default: 0
-    t.integer "forms", default: 0
+    t.integer "lecturer_md", default: 0
     t.integer "levels", default: 0
-    t.integer "categories", default: 0
-    t.integer "audiences", default: 0
-    t.integer "focus", default: 0
-    t.datetime "created_at", null: false
+    t.integer "number_of_participants", null: false
+    t.integer "organization_types", default: 0
+    t.integer "presence_types", default: 0
     t.datetime "updated_at", null: false
     t.index ["event_id"], name: "index_reports_on_event_id", unique: true
   end
 
   create_table "target_groups", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
-    t.string "title", null: false
-    t.integer "position"
     t.datetime "created_at", null: false
+    t.integer "position"
+    t.string "title", null: false
     t.datetime "updated_at", null: false
     t.index ["position"], name: "index_target_groups_on_position"
     t.index ["title"], name: "index_target_groups_on_title", unique: true
   end
 
   create_table "topics", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
-    t.string "title", null: false
-    t.integer "position"
     t.datetime "created_at", null: false
+    t.integer "position"
+    t.string "title", null: false
     t.datetime "updated_at", null: false
     t.index ["position"], name: "index_topics_on_position"
     t.index ["title"], name: "index_topics_on_title", unique: true
