@@ -54,19 +54,16 @@ class Certificate < ApplicationRecord
           align: :center,
           font_size: 8
         )
+
+        # Secure the PDF, allowing only printing
+        pdf.document.encrypt(
+          owner_password: SecureRandom.hex(10),
+          permissions: HexaPDF::Encryption::StandardSecurityHandler::Permissions::PRINT
+        )
       end
 
-      # Secure the PDF, allowing only printing
-      doc = HexaPDF::Document.new(io: io)
-      out_io = StringIO.new("".b)
-      doc.encrypt(
-        owner_password: SecureRandom.hex(10),
-        permissions: HexaPDF::Encryption::StandardSecurityHandler::Permissions::PRINT
-      )
-      doc.write(out_io)
-
       # Get the PDF content
-      cert = out_io.string
+      cert = io.string
 
       # Store certificate for later verification
       registration.certificates.create!(
