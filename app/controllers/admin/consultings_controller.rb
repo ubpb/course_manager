@@ -12,7 +12,7 @@ module Admin
     end
 
     def index
-      @consultings = Consulting.includes(:category).order("title")
+      @consultings = Consulting.order("title")
 
       @filter = create_filter(:consultings) or return
       @consultings = @filter.filter(@consultings)
@@ -57,7 +57,6 @@ module Admin
         :contact_name,
         :contact_email,
         :contact_phone,
-        :category_id,
         topic_ids: [],
         target_group_ids: []
       )

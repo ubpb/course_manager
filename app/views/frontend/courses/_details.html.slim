@@ -8,5 +8,6 @@
   h4 = "Lernziele"
   == render_markdown(course.learning_targets)
 
-h4 = "Kategorisierung"
-= render "categorisation_badges", object: course
+- if (categorisation = render("categorisation_badges", object: course)).present?
+  h4 = "Kategorisierung"
+  = categorisation

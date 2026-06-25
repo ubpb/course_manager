@@ -4,14 +4,12 @@ table.table
   thead
     tr
       th(colspan="2") = "Name"
-      th = "Kategorie"
       th.actions = "Aktionen"
   tbody
     - consultings.each do |consulting|
       tr(id=dom_id(consulting))
         td(width="1" class="#{consulting.published? ? "table-success" : "table-danger"}") = ""
         td = consulting.title
-        td = consulting.category&.title || "–"
         td.actions
           .dropdown
             button.btn.btn-outline-primary.btn-sm.dropdown-toggle(type="button" data-bs-toggle="dropdown")

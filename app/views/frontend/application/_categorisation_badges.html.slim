@@ -1,12 +1,5 @@
 / <%# locals: (object:) -%>
 
-/- if object.respond_to?(:category) && object.category.present?
-  div
-    i.fa-solid.fa-list.fa-fw.me-2
-    = link_to frontend_offers_path(filter: { category: object.category.id }) do
-      span.badge.me-2.text-light.border-0(style="background-color: var(--upb-irisviolett-60p)")
-        = object.category.title
-
 - if object.is_a?(Course)
   div
     i.fa-solid.fa-chalkboard-teacher.fa-fw.me-2

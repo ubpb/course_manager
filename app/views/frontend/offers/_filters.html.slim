@@ -1,5 +1,4 @@
 - scopes = [["Alle", nil], ["Kurse", "courses"], ["Beratungen", "consultings"]]
-/- categories = Category.order(:position)
 - topics = Topic.order(:position)
 - target_groups = TargetGroup.order(:position)
 
@@ -10,8 +9,6 @@
     .card-body
       = form.input :scope, as: :select, collection: scopes, required: false, prompt: false
       = form.input :title, required: false
-      /- if categories.present?
-        = form.input :category, as: :select, collection: categories, required: false
       - if topics.present?
         = form.input :topics, as: :check_boxes, collection: topics, required: false
       - if target_groups.present?

@@ -19,10 +19,6 @@ module Frontend
         end
       end
 
-      filter_by :category, :integer do |arel, category_id|
-        arel.where(category_id: category_id)
-      end
-
       filter_by :target_groups, :integer do |arel, target_group_ids|
         arel.joins(:target_groups).where("target_groups.id IN (?)", target_group_ids)
       end

@@ -73,10 +73,6 @@ Rails.application.routes.draw do
       get :reports, on: :collection, constraints: {format: :xlsx}
     end
 
-    resources :categories, except: [:show] do
-      patch :reorder, on: :member
-    end
-
     resources :target_groups, path: "target-groups", except: [:show] do
       patch :reorder, on: :member
     end

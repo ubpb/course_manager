@@ -10,7 +10,6 @@ de:
         email_from: "E-Mail Antwortadresse"
         topics: "Themen"
         target_groups: "Zielgruppen"
-        category: "Kategorie"
         location: "Ort / Treffpunkt"
         date_and_time: "Datum und Uhrzeit"
         duration: "Dauer"

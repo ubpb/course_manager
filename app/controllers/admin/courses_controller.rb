@@ -13,14 +13,10 @@ module Admin
       filter_by :title, :string do |arel, title|
         arel.where("title like ?", "%#{ApplicationRecord.sanitize_sql_like(title)}%")
       end
-
-      filter_by :category, :integer do |arel, id|
-        arel.where(category: id)
-      end
     end
 
     def index
-      @courses = Course.order("title").includes(:category)
+      @courses = Course.order("title")
 
       @filter = create_filter(:courses) or return
       @courses = @filter.filter(@courses)
@@ -81,7 +77,7 @@ module Admin
     def course_params
       params.require(:course).permit(
         :title, :description, :learning_targets, :reminder_message,
-        :email_from, :published, :category_id, topic_ids: [], target_group_ids: []
+        :email_from, :published, topic_ids: [], target_group_ids: []
       )
     end
 
