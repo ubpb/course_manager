@@ -114,7 +114,7 @@ module Filterable
         arel = result if result
       end
 
-      arel
+      arel.distinct # Ensure distinct results to avoid duplicates
     end
 
     private
