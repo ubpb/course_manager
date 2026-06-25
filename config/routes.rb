@@ -44,7 +44,7 @@ Rails.application.routes.draw do
   # Admin
   #
   namespace :admin do
-    root to: redirect("/admin/courses")
+    root to: redirect("/admin/events")
 
     resource :session, only: [:new, :create, :destroy]
 
