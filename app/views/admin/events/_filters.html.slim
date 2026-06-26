@@ -3,9 +3,8 @@
     .card-header
       h5.card-title.mb-0 Filter
     .card-body
-      = form.input :upcoming_and_3_months, as: :boolean, label: "Nur kommende Termine + letzten drei Monate", required: false
+      = form.input :upcoming_or_past, as: :select, collection: [["Nur kommende Termine", "upcoming"], ["Nur kommende Termine + letzten drei Monate", "upcoming_and_3_months"], ["Nur vergangene Termine", "past"], ["Alle Termine", "all"]], include_blank: false, required: false
       = form.input :published, as: :select, collection: [["Ja", "true"], ["Nein", "false"]], include_blank: true, required: false
-      = form.input :upcoming_or_past, as: :select, collection: [["Nur kommende Termine", "upcoming"], ["Nur vergangene Termine", "past"]], include_blank: true, required: false
       = form.input :online, as: :select, collection: [["Ja", "true"], ["Nein", "false"]], include_blank: true, required: false
       = form.input :with_report, as: :select, collection: [["Ja", "true"], ["Nein", "false"]], include_blank: true, required: false
       = form.input :title, required: false
