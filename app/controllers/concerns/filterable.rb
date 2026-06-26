@@ -59,6 +59,8 @@ module Filterable
 
     include ActiveModel::Model
 
+    attr_reader :context, :params
+
     def initialize(filter_context:, filter_params: {})
       # Store the filter context and params
       @context  = filter_context
