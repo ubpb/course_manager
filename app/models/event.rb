@@ -51,11 +51,11 @@ class Event < ApplicationRecord
   end
 
   def effective_reminder_message
-    reminder_message.presence || course.reminder_message.presence
+    reminder_message.presence || offer.reminder_message.presence
   end
 
   def effective_email_from
-    email_from.presence || course.email_from.presence
+    email_from.presence || offer.email_from.presence
   end
 
 end
