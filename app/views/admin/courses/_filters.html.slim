@@ -1,4 +1,4 @@
-= simple_form_for :filter, url: admin_courses_path, method: :get do |form|
+= simple_form_for :filter, url: admin_courses_path, method: :get, html: { data: { controller: "filter-form" } } do |form|
   .card
     .card-header
       h5.card-title.mb-0 Filter

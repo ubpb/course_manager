@@ -19,3 +19,7 @@ application.register("sortable", Sortable)
 // Register CheckboxSelectAll controller
 import CheckboxSelectAll from "@stimulus-components/checkbox-select-all"
 application.register("checkbox-select-all", CheckboxSelectAll)
+
+// Register FilterForm controller
+import FilterForm from "./filter_form_controller.js"
+application.register("filter-form", FilterForm)
