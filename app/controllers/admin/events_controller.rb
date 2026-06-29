@@ -40,7 +40,7 @@ module Admin
       end
 
       filter_by :title, :string do |arel, title|
-        arel.joins(:course).where("courses.title like ?", "%#{ApplicationRecord.sanitize_sql_like(title)}%")
+        arel.joins(:offer).where("offers.title like ?", "%#{ApplicationRecord.sanitize_sql_like(title)}%")
       end
 
       filter_by :from_date, :date do |arel, from_date|
@@ -74,7 +74,7 @@ module Admin
 
           response.headers["Content-Disposition"] = "attachment; filename=\"#{filename}.xlsx\""
 
-          render "admin/courses/events/reports/show"
+          render "admin/offers/events/reports/show"
         end
       end
     end
@@ -82,7 +82,7 @@ module Admin
     private
 
     def load_events
-      @events = Event.includes(:course, :report).order(date_and_time: :desc)
+      @events = Event.includes(:offer, :report).order(date_and_time: :desc)
 
       @filter = create_filter(:events) or return
       @events = @filter.filter(@events)
