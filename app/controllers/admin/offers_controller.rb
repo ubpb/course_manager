@@ -63,10 +63,8 @@ module Admin
     end
 
     def preview_reminder_message
-      offer = Offer.find(params[:id])
-
       event = Event.new(
-        offer: offer,
+        offer: @offer,
         date_and_time: Time.zone.now,
         duration: 60,
         location: "Raum 123"
