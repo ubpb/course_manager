@@ -1,0 +1,30 @@
+class Offer < ApplicationRecord
+
+  TYPES = %w[course consulting].freeze
+
+  # `type` is a reserved word in Rails for Single Table Inheritance (STI).
+  # We want type as a normal attribute, so we disable STI by setting the inheritance_column to nil.
+  self.inheritance_column = nil
+
+  # Relations
+  has_and_belongs_to_many :topics, -> { order("position") } # rubocop:disable Rails/HasAndBelongsToMany
+  has_and_belongs_to_many :target_groups, -> { order("position") } # rubocop:disable Rails/HasAndBelongsToMany
+  has_many :events, dependent: :destroy
+
+  # Validations
+  validates :title, presence: true
+  validates :type, inclusion: {in: TYPES}
+  validates :email_from, format: {with: UPB_EMAIL_REGEXP}
+  validates :contact_email, format: {with: UPB_EMAIL_REGEXP}
+
+  # Scopes
+  scope :published, -> { where(published: true) }
+  scope :unpublished, -> { where(published: false) }
+  scope :courses, -> { where(type: "course") }
+  scope :consultings, -> { where(type: "consulting") }
+
+  def course? = type == "course"
+
+  def consulting? = type == "consulting"
+
+end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_25_131856) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_26_120000) do
   create_table "categories", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "color_code", null: false
     t.datetime "created_at", null: false
@@ -103,6 +103,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_25_131856) do
     t.string "email_from"
     t.string "location"
     t.integer "max_no_of_participants", default: 0, null: false
+    t.bigint "offer_id"
     t.boolean "online", default: false, null: false
     t.boolean "published", default: false, null: false
     t.boolean "registration_required", default: false, null: false
@@ -110,7 +111,41 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_25_131856) do
     t.text "reminder_message"
     t.datetime "updated_at", null: false
     t.index ["course_id"], name: "index_events_on_course_id"
+    t.index ["offer_id"], name: "index_events_on_offer_id"
     t.index ["published"], name: "index_events_on_published"
+  end
+
+  create_table "offers", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.string "contact_email"
+    t.string "contact_name"
+    t.string "contact_phone"
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.string "email_from"
+    t.text "learning_targets"
+    t.bigint "old_id"
+    t.boolean "published", default: false, null: false
+    t.text "reminder_message"
+    t.string "title", null: false
+    t.string "type", null: false
+    t.datetime "updated_at", null: false
+    t.index ["old_id"], name: "index_offers_on_old_id"
+    t.index ["published"], name: "index_offers_on_published"
+    t.index ["type"], name: "index_offers_on_type"
+  end
+
+  create_table "offers_target_groups", id: false, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.bigint "offer_id", null: false
+    t.bigint "target_group_id", null: false
+    t.index ["offer_id"], name: "fk_rails_80434b760c"
+    t.index ["target_group_id"], name: "fk_rails_8878a00c07"
+  end
+
+  create_table "offers_topics", id: false, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.bigint "offer_id", null: false
+    t.bigint "topic_id", null: false
+    t.index ["offer_id"], name: "fk_rails_9eb23d3825"
+    t.index ["topic_id"], name: "fk_rails_1191bd8f67"
   end
 
   create_table "registrations", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
@@ -180,6 +215,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_25_131856) do
   add_foreign_key "courses_topics", "courses"
   add_foreign_key "courses_topics", "topics"
   add_foreign_key "events", "courses"
+  add_foreign_key "events", "offers"
+  add_foreign_key "offers_target_groups", "offers"
+  add_foreign_key "offers_target_groups", "target_groups"
+  add_foreign_key "offers_topics", "offers"
+  add_foreign_key "offers_topics", "topics"
   add_foreign_key "registrations", "events"
   add_foreign_key "reports", "events"
 end
