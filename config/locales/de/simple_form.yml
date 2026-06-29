@@ -50,10 +50,11 @@ de:
       registration:
         user_notes: "Anmerkungen"
         gdrp_consent: "Einwilligungserklärung"
-      consulting:
+      offer:
         contact_name: "Kontakt"
         contact_email: "E-Mail"
         contact_phone: "Telefon"
+        type: "Art"
     hints:
       defaults:
         description: >
