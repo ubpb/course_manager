@@ -1,0 +1,26 @@
+/ <%# locals: (offers:) -%>
+
+table.table
+  thead
+    tr
+      th(colspan="2") = "Name"
+      th = "Termine"
+      th.actions = "Aktionen"
+  tbody
+    - offers.each do |offer|
+      tr(id=dom_id(offer))
+        td(width="1" class="#{offer.published? ? "table-success" : "table-danger"}") = ""
+        td = offer.title
+        td = "#{offer.events.upcoming.count} / #{offer.events.past.count}"
+        td.actions
+          .dropdown
+            button.btn.btn-outline-primary.btn-sm.dropdown-toggle(type="button" data-bs-toggle="dropdown")
+              i.fas.fa-cog
+            ul.dropdown-menu.dropdown-menu-end
+              li = link_to edit_admin_offer_path(offer), class: "dropdown-item" do
+                i.fa-solid.fa-edit.me-2
+                = "Bearbeiten"
+              hr.dropdown-divider
+              li = link_to admin_offer_events_path(offer), class: "dropdown-item" do
+                i.fa-solid.fa-calendar-alt.me-2
+                = "Termine"

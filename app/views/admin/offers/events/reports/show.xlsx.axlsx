@@ -1,0 +1,18 @@
+wb = xlsx_package.workbook
+
+date_format = wb.styles.add_style(format_code: "yyyy-mm-dd")
+
+wb.add_worksheet(name: "Schulungen") do |sheet|
+  render "admin/offers/events/reports/report_header", workbook: wb, sheet: sheet, date_format: date_format, from: @from_date, to: @to_date
+
+  if @report.present?
+    render "admin/offers/events/reports/report", workbook: wb, sheet: sheet, date_format: date_format, offer: @report.event.offer, event: @report.event, report: @report
+  elsif @reports.present?
+    @reports.each do |report|
+      render "admin/offers/events/reports/report", workbook: wb, sheet: sheet, date_format: date_format, offer: report.event.offer, event: report.event, report: report
+    end
+  end
+end
+
+# To make it work in Numbers
+xlsx_package.use_shared_strings = true

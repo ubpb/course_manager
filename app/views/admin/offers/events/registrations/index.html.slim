@@ -1,0 +1,26 @@
+- return_path = (nav_scope == "events") ? admin_events_path(anchor: dom_id(@event), nav_scope: nil) : admin_offer_events_path(anchor: dom_id(@event), nav_scope: nil)
+
+.card.card-shadowed
+  .card-header.d-flex.align-items-center.gap-2
+    div
+      h5.card-title.mb-0 = "Teilnehmer für '#{@offer.title}'"
+      h6.card-title.mb-0.text-muted = "am #{l(@event.date_and_time)}"
+    .ms-auto
+    = link_to new_admin_offer_event_registration_path(@offer, @event), class: "btn btn-primary btn-sm" do
+      i.fa-solid.fa-plus.me-2
+      = "Neuen Teilnehmer anlegen"
+    .dropdown
+      button.btn.btn-outline-primary.btn-sm.dropdown-toggle(type="button" data-bs-toggle="dropdown")
+        i.fas.fa-cog
+      ul.dropdown-menu.dropdown-menu-end
+        li
+          = link_to admin_offer_event_registrations_path(@offer, @event, format: :xlsx), class: "dropdown-item" do
+            i.fa-solid.fa-download.me-2
+            = "Excel Export"
+    = link_to return_path, class: "btn btn-link btn-sm" do
+      i.fa-solid.fa-times
+  .card-body
+    - if @registrations.present?
+      = render "listing", offer: @offer, event: @event, registrations: @registrations
+    - else
+      .p-2.text-muted = "Keine Anmeldungen vorhanden"
