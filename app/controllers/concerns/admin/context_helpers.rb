@@ -47,7 +47,7 @@ module Admin
       prepare_offer_event_context
 
       @certification = @event.certification
-      add_breadcrumb "Zertifizierung", admin_offer_event_report_path(@offer, @event)
+      add_breadcrumb "Zertifizierung", admin_offer_event_certification_path(@offer, @event)
     end
 
   end
