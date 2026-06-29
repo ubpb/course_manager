@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_26_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_29_140943) do
   create_table "categories", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "color_code", null: false
     t.datetime "created_at", null: false
@@ -39,78 +39,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_26_120000) do
     t.index ["event_id"], name: "index_certifications_on_event_id", unique: true
   end
 
-  create_table "consultings", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
-    t.bigint "category_id"
-    t.string "contact_email"
-    t.string "contact_name"
-    t.string "contact_phone"
-    t.datetime "created_at", null: false
-    t.text "description"
-    t.boolean "published", default: false, null: false
-    t.string "title", null: false
-    t.datetime "updated_at", null: false
-    t.index ["category_id"], name: "index_consultings_on_category_id"
-    t.index ["published"], name: "index_consultings_on_published"
-  end
-
-  create_table "consultings_target_groups", id: false, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
-    t.bigint "consulting_id", null: false
-    t.bigint "target_group_id", null: false
-    t.index ["consulting_id"], name: "fk_rails_1066feeb42"
-    t.index ["target_group_id"], name: "fk_rails_1ff2a90d06"
-  end
-
-  create_table "consultings_topics", id: false, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
-    t.bigint "consulting_id", null: false
-    t.bigint "topic_id", null: false
-    t.index ["consulting_id"], name: "fk_rails_c462aeade9"
-    t.index ["topic_id"], name: "fk_rails_e568752df1"
-  end
-
-  create_table "courses", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
-    t.bigint "category_id"
-    t.datetime "created_at", null: false
-    t.text "description"
-    t.string "email_from"
-    t.text "learning_targets"
-    t.boolean "published", default: false, null: false
-    t.text "reminder_message"
-    t.string "title", null: false
-    t.datetime "updated_at", null: false
-    t.index ["category_id"], name: "index_courses_on_category_id"
-    t.index ["published"], name: "index_courses_on_published"
-  end
-
-  create_table "courses_target_groups", id: false, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
-    t.bigint "course_id", null: false
-    t.bigint "target_group_id", null: false
-    t.index ["course_id"], name: "fk_rails_26bff39dfc"
-    t.index ["target_group_id"], name: "fk_rails_2fafdf950e"
-  end
-
-  create_table "courses_topics", id: false, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
-    t.bigint "course_id", null: false
-    t.bigint "topic_id", null: false
-    t.index ["course_id"], name: "fk_rails_0f23d0d39a"
-    t.index ["topic_id"], name: "fk_rails_da38b9ed46"
-  end
-
   create_table "events", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
-    t.bigint "course_id", null: false
     t.datetime "created_at", null: false
     t.datetime "date_and_time", null: false
     t.integer "duration"
     t.string "email_from"
     t.string "location"
     t.integer "max_no_of_participants", default: 0, null: false
-    t.bigint "offer_id"
+    t.bigint "offer_id", null: false
     t.boolean "online", default: false, null: false
     t.boolean "published", default: false, null: false
     t.boolean "registration_required", default: false, null: false
     t.integer "registrations_count", default: 0, null: false
     t.text "reminder_message"
     t.datetime "updated_at", null: false
-    t.index ["course_id"], name: "index_events_on_course_id"
     t.index ["offer_id"], name: "index_events_on_offer_id"
     t.index ["published"], name: "index_events_on_published"
   end
@@ -204,17 +146,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_26_120000) do
 
   add_foreign_key "certificates", "registrations"
   add_foreign_key "certifications", "events"
-  add_foreign_key "consultings", "categories"
-  add_foreign_key "consultings_target_groups", "consultings"
-  add_foreign_key "consultings_target_groups", "target_groups"
-  add_foreign_key "consultings_topics", "consultings"
-  add_foreign_key "consultings_topics", "topics"
-  add_foreign_key "courses", "categories"
-  add_foreign_key "courses_target_groups", "courses"
-  add_foreign_key "courses_target_groups", "target_groups"
-  add_foreign_key "courses_topics", "courses"
-  add_foreign_key "courses_topics", "topics"
-  add_foreign_key "events", "courses"
   add_foreign_key "events", "offers"
   add_foreign_key "offers_target_groups", "offers"
   add_foreign_key "offers_target_groups", "target_groups"
