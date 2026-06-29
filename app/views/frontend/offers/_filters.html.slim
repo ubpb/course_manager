@@ -8,6 +8,8 @@
       h5.card-title.mb-0.card-title Filter
     .card-body
       = form.input :scope, as: :select, collection: scopes, required: false, prompt: false
+      - if @filter&.scope == "courses"
+        = form.input :with_upcoming_events, as: :boolean, required: false
       = form.input :title, required: false
       - if topics.present?
         = form.input :topics, as: :check_boxes, collection: topics, required: false

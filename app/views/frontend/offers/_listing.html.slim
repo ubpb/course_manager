@@ -11,6 +11,17 @@
           = link_to details_path do
             h4.mb-3 = offer.title
           = render "categorisation_badges", object: offer
+          - if offer.course?
+            .mt-3
+              .fw-bold = "Nächste Termine"
+              - if offer.upcoming_events.any?
+                ul.list-inline.mb-0
+                  - offer.upcoming_events.each do |event|
+                    li.list-inline-item
+                      i.fa-regular.fa-calendar.fa-fw.me-1
+                      = link_to l(event.date_and_time), frontend_event_path(event)
+              - else
+                span.text-muted = "Aktuell keine Termine verfügbar"
         div
           = link_to details_path, class: "btn btn-outline-primary btn-sm" do
             i.fa-solid.fa-chevron-right.fa-fw.me-1

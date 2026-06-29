@@ -15,7 +15,7 @@
     - if @offer.course?
       .card.card-shadowed
         .card-header
-          h5.card-title.mb-0 = "Kommende Termine"
+          h5.card-title.mb-0 = "Nächste Termine"
 
         - if @upcoming_events.present?
           .list-group.list-group-flush
@@ -28,7 +28,7 @@
                     i.fa-solid.fa-chevron-right.fa-fw.me-1
         - else
           .card-body
-            .p-2.text-muted = "Aktuell keine Termine für diesen Kurs vorhanden."
+            .p-2.text-muted = "Aktuell keine Termine verfügbar"
     - elsif @offer.consulting?
       .card.card-shadowed
         .card-header

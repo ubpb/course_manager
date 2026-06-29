@@ -18,6 +18,10 @@ module Frontend
         end
       end
 
+      filter_by :with_upcoming_events, :boolean do |arel, _with_upcoming_events|
+        arel.where(id: Event.published.upcoming.select(:offer_id))
+      end
+
       filter_by :title, :string do |arel, title|
         arel.where("offers.title like ?", "%#{ApplicationRecord.sanitize_sql_like(title)}%")
       end
@@ -32,7 +36,7 @@ module Frontend
     end
 
     def index
-      @offers = Offer.published.order(title: :asc)
+      @offers = Offer.published.includes(:upcoming_events).order(title: :asc)
 
       @filter = create_filter(:offers)
       return unless @filter
