@@ -1,7 +1,7 @@
 / <%# locals: (offers:) -%>
 
 - offers.each.with_index do |offer, i|
-  - details_path = polymorphic_path([:frontend, offer])
+  - details_path = frontend_offer_path(offer)
   - margin_class = i == 0 ? "mt-0" : "mt-3"
 
   .card(class=margin_class)

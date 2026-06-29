@@ -4,19 +4,22 @@ module Frontend
     include Filterable
 
     before_action :prepare_offers_context
+    before_action :prepare_offer_context, only: [:show]
 
     define_filter :offers do
       filter_by :scope, :string do |arel, scope|
-        arel
+        case scope
+        when "courses"
+          arel.courses
+        when "consultings"
+          arel.consultings
+        else
+          arel
+        end
       end
 
-      filter_by :title, :string do |arel, title, options|
-        case options[:scope]
-        when "courses"
-          arel.where("courses.title like ?", "%#{ApplicationRecord.sanitize_sql_like(title)}%")
-        when "consultings"
-          arel.where("consultings.title like ?", "%#{ApplicationRecord.sanitize_sql_like(title)}%")
-        end
+      filter_by :title, :string do |arel, title|
+        arel.where("offers.title like ?", "%#{ApplicationRecord.sanitize_sql_like(title)}%")
       end
 
       filter_by :target_groups, :integer do |arel, target_group_ids|
@@ -29,22 +32,17 @@ module Frontend
     end
 
     def index
-      courses = Course.published.order(title: :asc)
-      consultings = Consulting.published.order(title: :asc)
+      @offers = Offer.published.order(title: :asc)
 
-      if (@filter = create_filter(:offers))
-        courses = @filter.filter(courses, scope: "courses")
-        consultings = @filter.filter(consultings, scope: "consultings")
-      end
+      @filter = create_filter(:offers)
+      return unless @filter
 
-      @offers = case @filter&.scope
-                when "courses"
-                  @offers = courses.to_a
-                when "consultings"
-                  @offers = consultings.to_a
-                else
-                  courses.to_a + consultings.to_a
-      end
+      @offers = @filter.filter(@offers)
+    end
+
+    def show
+      # The @offer instance variable is set in the prepare_offer_context before_action.
+      @upcoming_events = @offer.events.published.upcoming.order(date_and_time: :asc)
     end
 
   end

@@ -1,7 +1,7 @@
 class Event < ApplicationRecord
 
   # Relations
-  belongs_to :course
+  belongs_to :offer
   has_many :registrations, dependent: :destroy
   has_one :report, dependent: :destroy
   has_one :certification, dependent: :destroy
@@ -10,10 +10,10 @@ class Event < ApplicationRecord
   validates :date_and_time, presence: true
   validates :duration, numericality: {only_integer: true, greater_than_or_equal_to: 0}, allow_nil: true
   validates :max_no_of_participants, numericality: {only_integer: true, greater_than_or_equal_to: 0}
-  validates :email_from, format: {with: Course::UPB_EMAIL_REGEXP}
+  validates :email_from, format: {with: UPB_EMAIL_REGEXP}
 
   # Scopes
-  scope :published, -> { joins(:course).where("courses.published": true).where("events.published": true) }
+  scope :published, -> { joins(:offer).where("offers.published": true).where("events.published": true) }
   scope :with_report, -> { includes(:report).where.not(reports: {id: nil}) }
   scope :without_report, -> { includes(:report).where(reports: {id: nil}) }
   scope :upcoming, -> { where("date_and_time >= ?", Time.zone.today.beginning_of_day) }

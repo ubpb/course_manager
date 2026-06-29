@@ -1,7 +1,7 @@
 / <%# locals: (events:) -%>
 
 - events.each.with_index do |event, i|
-  - course = event.course
+  - offer = event.offer
   - margin_class = i == 0 ? "mt-0" : "mt-3"
   .card(class=margin_class)
     .card-body
@@ -18,8 +18,8 @@
       .d-flex.justify-content-between.align-items-center
         div
           = link_to frontend_event_path(event) do
-            h4.mb-2 = course.title
-          = render "categorisation_badges", object: course
+            h4.mb-2 = offer.title
+          = render "categorisation_badges", object: offer
 
         div
           = link_to frontend_event_path(event), class: "btn btn-outline-primary btn-sm" do

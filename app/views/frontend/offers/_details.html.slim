@@ -1,0 +1,13 @@
+/ <%# locals: (offer:) -%>
+
+- if offer.description.present?
+  h4 = "Beschreibung"
+  == render_markdown(offer.description)
+
+- if offer.course? && offer.learning_targets.present?
+  h4 = "Lernziele"
+  == render_markdown(offer.learning_targets)
+
+- if (categorisation = render("categorisation_badges", object: offer)).present?
+  h4 = "Kategorisierung"
+  = categorisation

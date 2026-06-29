@@ -25,16 +25,17 @@ Rails.application.routes.draw do
     root "pages#home"
     get  "kontakt", to: "pages#contact", as: :contact
 
-    # redirect old event URLs to new ones
-    get "/:id", to: redirect("/termine/%{id}"), constraints: {id: /\d{1,4}.+/}
-
     scope "angebote" do
       resources :offers, only: [:index], path: "/"
-      resources :courses, only: [:index, :show], path: "kurse"
+      resources :offers, only: [:show], path: "/", constraints: {id: /\d+/}
+
       resources :events, only: [:index, :show], path: "termine" do
         resources :registrations, only: [:index, :new, :create], path: "anmeldung", module: :events
       end
+
+      # Redirect old consulting and course URLs to the new offer URLs
       resources :consultings, only: [:index, :show], path: "beratungen"
+      resources :courses, only: [:index, :show], path: "kurse"
     end
 
     resources :cert_checks, path: "validate", only: [:index, :new, :create, :show]
