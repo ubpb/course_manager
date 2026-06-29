@@ -49,10 +49,10 @@ Rails.application.routes.draw do
 
     resource :session, only: [:new, :create, :destroy]
 
-    resources :courses, except: [:show] do
+    resources :offers, except: [:show] do
       get :preview_reminder_message, path: "preview-reminder-message", on: :member
 
-      resources :events, except: [:show], module: :courses do
+      resources :events, except: [:show], module: :offers do
         get :duplicate, on: :member
         get :preview_reminder_message, path: "preview-reminder-message", on: :member
 
@@ -81,8 +81,6 @@ Rails.application.routes.draw do
     resources :topics, except: [:show] do
       patch :reorder, on: :member
     end
-
-    resources :consultings, except: [:show]
   end
 
   # Dev Tools
