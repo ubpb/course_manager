@@ -3,6 +3,7 @@
     .card-header
       h5.card-title.mb-0 Filter
     .card-body
+      = form.input :scope, as: :select, collection: [["Kurse", "courses"], ["Beratungen", "consultings"]], include_blank: "Alle", required: false
       = form.input :published, as: :select, collection: [["Ja", "true"], ["Nein", "false"]], include_blank: true, required: false
       = form.input :title, required: false
     .card-footer

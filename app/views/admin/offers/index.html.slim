@@ -2,16 +2,16 @@
   .col-md-9
     .card.card-shadowed
       .card-header.d-flex.align-items-center.gap-2
-        h5.card-title.mb-0 = "Kurse"
+        h5.card-title.mb-0 = "Angebote"
         .ms-auto
         = link_to new_admin_offer_path, class: "btn btn-primary btn-sm" do
           i.fa-solid.fa-plus.me-2
-          = "Neuen Kurs anlegen"
+          = "Neues Angebot anlegen"
       .card-body
         - if @offers.present?
           = render "listing", offers: @offers
         - else
-          .p-2.text-muted = "Keine Kurse vorhanden"
+          .p-2.text-muted = "Keine Angebote vorhanden"
 
   .col-md-3
     = render "filters"

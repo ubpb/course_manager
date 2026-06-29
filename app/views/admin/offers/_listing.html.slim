@@ -4,6 +4,7 @@ table.table
   thead
     tr
       th(colspan="2") = "Name"
+      th = "Art"
       th = "Termine"
       th.actions = "Aktionen"
   tbody
@@ -11,6 +12,7 @@ table.table
       tr(id=dom_id(offer))
         td(width="1" class="#{offer.published? ? "table-success" : "table-danger"}") = ""
         td = offer.title
+        td = offer.course? ? "Kurs" : "Beratung"
         td = "#{offer.events.upcoming.count} / #{offer.events.past.count}"
         td.actions
           .dropdown
