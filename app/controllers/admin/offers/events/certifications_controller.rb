@@ -1,21 +1,21 @@
 module Admin
-  module Courses
+  module Offers
     module Events
       class CertificationsController < ApplicationController
 
-        before_action :prepare_course_event_certification_context
+        before_action :prepare_offer_event_certification_context
 
         def show
           if @certification
-            redirect_to edit_admin_course_event_certification_path(@course, @event)
+            redirect_to edit_admin_offer_event_certification_path(@offer, @event)
           else
-            redirect_to new_admin_course_event_certification_path(@course, @event)
+            redirect_to new_admin_offer_event_certification_path(@offer, @event)
           end
         end
 
         def new
           if @certification
-            redirect_to edit_admin_course_event_certification_path(@course, @event)
+            redirect_to edit_admin_offer_event_certification_path(@offer, @event)
           else
             @certification = @event.build_certification
           end
@@ -25,7 +25,7 @@ module Admin
           @certification = @event.build_certification(certification_params)
 
           if @certification.save
-            redirect_to edit_admin_course_event_certification_path(@course, @event, @certification), notice: t("admin.application.form.success")
+            redirect_to edit_admin_offer_event_certification_path(@offer, @event, @certification), notice: t("admin.application.form.success")
           else
             render :new, status: :unprocessable_entity
           end
@@ -35,7 +35,7 @@ module Admin
 
         def update
           if @certification.update(certification_params)
-            redirect_to edit_admin_course_event_certification_path(@course, @event, @certification), notice: t("admin.application.form.success")
+            redirect_to edit_admin_offer_event_certification_path(@offer, @event, @certification), notice: t("admin.application.form.success")
           else
             render :edit, status: :unprocessable_entity
           end

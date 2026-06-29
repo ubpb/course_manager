@@ -1,22 +1,22 @@
 module Admin
-  module Courses
+  module Offers
     module Events
       class ReportsController < ApplicationController
 
-        before_action :prepare_course_event_report_context
+        before_action :prepare_offer_event_report_context
 
         def show
           if @report
             respond_to do |format|
               format.html do
-                redirect_to edit_admin_course_event_report_path(@course, @event)
+                redirect_to edit_admin_offer_event_report_path(@offer, @event)
               end
 
               format.xlsx do
                 filename = [
                   I18n.l(@event.date_and_time.to_date, format: "%Y-%m-%d").parameterize,
                   I18n.l(@event.date_and_time.to_time, format: "%H-%M").parameterize,
-                  @course.title.parameterize,
+                  @offer.title.parameterize,
                   "report"
                 ].join("_")
 
@@ -24,13 +24,13 @@ module Admin
               end
             end
           else
-            redirect_to new_admin_course_event_report_path(@course, @event)
+            redirect_to new_admin_offer_event_report_path(@offer, @event)
           end
         end
 
         def new
           if @report
-            redirect_to edit_admin_course_event_report_path(@course, @event)
+            redirect_to edit_admin_offer_event_report_path(@offer, @event)
           else
             @report = @event.build_report
           end
@@ -40,7 +40,7 @@ module Admin
           @report = @event.build_report(report_params)
 
           if @report.save
-            redirect_to edit_admin_course_event_report_path(@course, @event, @report), notice: t("admin.application.form.success")
+            redirect_to edit_admin_offer_event_report_path(@offer, @event, @report), notice: t("admin.application.form.success")
           else
             render :new, status: :unprocessable_entity
           end
@@ -50,7 +50,7 @@ module Admin
 
         def update
           if @report.update(report_params)
-            redirect_to edit_admin_course_event_report_path(@course, @event, @report), notice: t("admin.application.form.success")
+            redirect_to edit_admin_offer_event_report_path(@offer, @event, @report), notice: t("admin.application.form.success")
           else
             render :edit, status: :unprocessable_entity
           end

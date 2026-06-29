@@ -1,9 +1,9 @@
 module Admin
-  module Courses
+  module Offers
     module Events
       class RegistrationsController < ApplicationController
 
-        before_action :prepare_course_event_registration_context
+        before_action :prepare_offer_event_registration_context
 
         def index
           @registrations = @event.registrations.order(last_name: :asc, first_name: :asc)
@@ -17,7 +17,7 @@ module Admin
               filename = [
                 I18n.l(@event.date_and_time.to_date, format: "%Y-%m-%d").parameterize,
                 I18n.l(@event.date_and_time.to_time, format: "%H-%M").parameterize,
-                @course.title.parameterize
+                @offer.title.parameterize
               ].join("_")
 
               response.headers["Content-Disposition"] = "attachment; filename=\"#{filename}.xlsx\""
@@ -33,7 +33,7 @@ module Admin
           @registration = @event.registrations.build(registration_params)
 
           if @registration.save
-            redirect_to edit_admin_course_event_registration_path(@course, @event, @registration), notice: t("admin.application.form.success")
+            redirect_to edit_admin_offer_event_registration_path(@offer, @event, @registration), notice: t("admin.application.form.success")
           else
             render :new, status: :unprocessable_entity
           end
@@ -45,7 +45,7 @@ module Admin
 
         def update
           if @registration.update(registration_params)
-            redirect_to edit_admin_course_event_registration_path(@course, @event, @registration), notice: t("admin.application.form.success")
+            redirect_to edit_admin_offer_event_registration_path(@offer, @event, @registration), notice: t("admin.application.form.success")
           else
             render :edit, status: :unprocessable_entity
           end
@@ -53,12 +53,12 @@ module Admin
 
         def destroy
           @registration.destroy
-          redirect_to admin_course_event_registrations_path(@course, @event), notice: t("admin.application.form.destroy_success")
+          redirect_to admin_offer_event_registrations_path(@offer, @event), notice: t("admin.application.form.destroy_success")
         end
 
         def download_certificate
           if @event.certification.present?
-            registration = @event.registrations.includes(event: [:course, :certification]).find(params[:id])
+            registration = @event.registrations.includes(event: [:offer, :certification]).find(params[:id])
 
             send_data(
               Certificate.generate(registration),
@@ -72,24 +72,24 @@ module Admin
         end
 
         def send_certificate
-          registration = @event.registrations.includes(event: [:course, :certification]).find(params[:id])
+          registration = @event.registrations.includes(event: [:offer, :certification]).find(params[:id])
           send_certificate!(registration)
 
           flash[:success] = "Zertifikat wurde versendet"
-          redirect_to admin_course_event_registrations_path(@course, @event)
+          redirect_to admin_offer_event_registrations_path(@offer, @event)
         end
 
         def send_reminder_message
-          registration = @event.registrations.includes(event: [:course]).find(params[:id])
+          registration = @event.registrations.includes(event: [:offer]).find(params[:id])
           send_reminder_message!(registration, skip_if_sent: false)
 
           flash[:success] = "Erinnerungsmail wurde versendet"
-          redirect_to admin_course_event_registrations_path(@course, @event)
+          redirect_to admin_offer_event_registrations_path(@offer, @event)
         end
 
         def bulk_process
           registrations = @event.registrations
-                                .includes(event: [:course, :certification])
+                                .includes(event: [:offer, :certification])
                                 .where(id: params[:bulk_process_ids])
           action = params[:bulk_process_action]
 
@@ -108,7 +108,7 @@ module Admin
               "bulk-action-form",
               partial: "bulk_action_new_message",
               locals: {
-                course: @course,
+                offer: @offer,
                 event: @event,
                 registrations: registrations,
                 message: Message.new
@@ -117,12 +117,12 @@ module Admin
             return
           end
 
-          redirect_to admin_course_event_registrations_path(@course, @event)
+          redirect_to admin_offer_event_registrations_path(@offer, @event)
         end
 
         def send_message
           registrations = @event.registrations
-                                .includes(event: [:course, :certification])
+                                .includes(event: [:offer, :certification])
                                 .where(id: params[:registration_ids])
 
           message_params = params.require(:message).permit(:subject, :body)
@@ -134,13 +134,13 @@ module Admin
             end
 
             flash[:success] = "Nachricht gesendet"
-            redirect_to admin_course_event_registrations_path(@course, @event)
+            redirect_to admin_offer_event_registrations_path(@offer, @event)
           else
             render turbo_stream: turbo_stream.replace(
               "bulk-action-form",
               partial: "bulk_action_new_message",
               locals: {
-                course: @course,
+                offer: @offer,
                 event: @event,
                 registrations: registrations,
                 message: message

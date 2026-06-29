@@ -1,23 +1,23 @@
 module Admin
-  module Courses
+  module Offers
     class EventsController < ApplicationController
 
-      before_action :prepare_course_event_context
+      before_action :prepare_offer_event_context
 
       def index
-        @upcoming_events = @course.events.upcoming.order(date_and_time: :asc)
-        @past_events = @course.events.past.order(date_and_time: :desc)
+        @upcoming_events = @offer.events.upcoming.order(date_and_time: :asc)
+        @past_events = @offer.events.past.order(date_and_time: :desc)
       end
 
       def new
-        @event = @course.events.build
+        @event = @offer.events.build
       end
 
       def create
-        @event = @course.events.build(event_params)
+        @event = @offer.events.build(event_params)
 
         if @event.save
-          redirect_to edit_admin_course_event_path(@course, @event), notice: t("admin.application.form.success")
+          redirect_to edit_admin_offer_event_path(@offer, @event), notice: t("admin.application.form.success")
         else
           render :new, status: :unprocessable_entity
         end
@@ -39,7 +39,7 @@ module Admin
 
           @event.save
 
-          redirect_to edit_admin_course_event_path(@course, @event), notice: t("admin.application.form.success")
+          redirect_to edit_admin_offer_event_path(@offer, @event), notice: t("admin.application.form.success")
         else
           render :edit, status: :unprocessable_entity
         end
@@ -53,7 +53,7 @@ module Admin
         if nav_scope == "events"
           redirect_to admin_events_path(nav_scope: nil)
         else
-          redirect_to admin_course_events_path(@course)
+          redirect_to admin_offer_events_path(@offer)
         end
       end
 
@@ -61,18 +61,18 @@ module Admin
         new_date_and_time = Time.zone.now
         new_date_and_time = new_date_and_time.change(sec: 0, usec: 0)
 
-        event = @course.events.find(params[:id]).dup
+        event = @offer.events.find(params[:id]).dup
         event.registrations_count = 0
         event.published = false
         event.date_and_time = new_date_and_time
         event.save
 
         flash[:notice] = "Das Event wurde dupliziert und gespeichert. Datum und Uhrzeit wurden auf die aktuelle Zeit eingestellt. Bitte bearbeite die Details."
-        redirect_to edit_admin_course_event_path(@course, event)
+        redirect_to edit_admin_offer_event_path(@offer, event)
       end
 
       def preview_reminder_message
-        event = @course.events.find(params[:id])
+        event = @offer.events.find(params[:id])
 
         registration = Registration.new(
           event: event,
