@@ -1,6 +1,8 @@
 class DropCoursesAndConsultings < ActiveRecord::Migration[8.1]
 
   def up
+    raise "events with NULL offer_id exist — backfill before migrating" if Event.where(offer_id: nil).exists?
+
     # events.offer_id is backfilled; drop the legacy course_id and require offer_id.
     remove_reference :events, :course, foreign_key: true
     change_column_null :events, :offer_id, false
