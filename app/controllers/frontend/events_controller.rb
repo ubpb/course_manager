@@ -7,7 +7,7 @@ module Frontend
 
     define_filter :events do
       filter_by :title, :string do |arel, title|
-        arel.joins(:course).where("courses.title like ?", "%#{ApplicationRecord.sanitize_sql_like(title)}%")
+        arel.joins(:offer).where("offers.title like ?", "%#{ApplicationRecord.sanitize_sql_like(title)}%")
       end
 
       filter_by :online, :boolean, default: nil do |arel, online|
@@ -23,11 +23,11 @@ module Frontend
       end
 
       filter_by :target_groups, :integer do |arel, target_group_ids|
-        arel.joins(course: :target_groups).where("target_groups.id IN (?)", target_group_ids)
+        arel.joins(offer: :target_groups).where("target_groups.id IN (?)", target_group_ids)
       end
 
       filter_by :topics, :integer do |arel, topic_ids|
-        arel.joins(course: :topics).where("topics.id IN (?)", topic_ids)
+        arel.joins(offer: :topics).where("topics.id IN (?)", topic_ids)
       end
     end
 

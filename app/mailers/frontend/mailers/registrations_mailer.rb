@@ -26,7 +26,7 @@ module Frontend
       def prepare_context(registration)
         @registration = registration
         @event = registration.event
-        @course = registration.event.course
+        @offer = registration.event.offer
       end
 
     end

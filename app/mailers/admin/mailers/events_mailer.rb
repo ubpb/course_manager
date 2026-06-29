@@ -8,7 +8,7 @@ module Admin
         return if skip_if_sent && @registration.reminder_message_sent_at.present?
 
         @event = @registration.event
-        @course = @event.course
+        @offer = @event.offer
 
         @reminder_message = @event.effective_reminder_message
         return if @reminder_message.blank?
@@ -24,7 +24,7 @@ module Admin
         @registration = registration
 
         @event = event
-        @course = @event.course
+        @offer = @event.offer
         return unless @event.changes.any?
 
         mail(

@@ -41,7 +41,7 @@ module MailerHelper
   end
 
   def render_title(registration)
-    registration.event.course.title
+    registration.event.offer.title
   end
 
 end

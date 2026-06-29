@@ -1,6 +1,6 @@
 / <%# locals: (object:) -%>
 
-- offer_type = object.respond_to?(:type) ? object.type : (object.is_a?(Course) ? "course" : "consulting")
+- offer_type = object.type
 - if offer_type == "course"
   div
     i.fa-solid.fa-chalkboard-teacher.fa-fw.me-2
