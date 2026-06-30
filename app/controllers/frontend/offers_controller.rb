@@ -40,7 +40,10 @@ module Frontend
     end
 
     def index
-      @offers = Offer.published.includes(:upcoming_events).order(title: :asc)
+      @offers = Offer.published
+                     .not_archived
+                     .includes(:upcoming_events)
+                     .order(title: :asc)
 
       @filter = create_filter(:offers)
       return unless @filter

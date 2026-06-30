@@ -50,6 +50,7 @@ Rails.application.routes.draw do
     resource :session, only: [:new, :create, :destroy]
 
     resources :offers, except: [:show] do
+      patch :bulk_process, path: "bulk-process", on: :collection
       get :preview_reminder_message, path: "preview-reminder-message", on: :member
 
       resources :events, except: [:show], module: :offers do

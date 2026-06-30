@@ -24,6 +24,8 @@ class Offer < ApplicationRecord
   scope :unpublished, -> { where(published: false) }
   scope :courses, -> { where(type: "course") }
   scope :consultings, -> { where(type: "consulting") }
+  scope :archived, -> { where(archived: true) }
+  scope :not_archived, -> { where(archived: false) }
 
   def course? = type == "course"
 

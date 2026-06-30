@@ -24,6 +24,8 @@ module Admin
       filter_by :title, :string do |arel, title|
         arel.where("title like ?", "%#{ApplicationRecord.sanitize_sql_like(title)}%")
       end
+
+      filter_by :include_archived, :boolean, default: false
     end
 
     def index
@@ -31,6 +33,22 @@ module Admin
 
       @filter = create_filter(:offers) or return
       @offers = @filter.filter(@offers)
+      @offers = @offers.not_archived unless @filter.include_archived
+
+      setup_bulk_process_actions(@offers)
+    end
+
+    def bulk_process
+      offers = Offer.where(id: params[:bulk_process_ids])
+      action = params[:bulk_process_action]
+
+      case action
+      when "archive"
+        offers.update_all(archived: true)
+        flash[:success] = "Angebot(e) wurde archiviert"
+      end
+
+      redirect_to admin_offers_path
     end
 
     def new
@@ -82,6 +100,13 @@ module Admin
     end
 
     private
+
+    def setup_bulk_process_actions(offers)
+      @bulk_process_actions = []
+      return if offers.empty?
+
+      @bulk_process_actions << ["Archivieren", "archive"]
+    end
 
     def offer_params
       params.require(:offer).permit(

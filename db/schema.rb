@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_29_140943) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_30_120000) do
   create_table "categories", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "color_code", null: false
     t.datetime "created_at", null: false
@@ -58,6 +58,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_29_140943) do
   end
 
   create_table "offers", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.boolean "archived", default: false, null: false
     t.string "contact_email"
     t.string "contact_name"
     t.string "contact_phone"
@@ -71,6 +72,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_29_140943) do
     t.string "title", null: false
     t.string "type", null: false
     t.datetime "updated_at", null: false
+    t.index ["archived"], name: "index_offers_on_archived"
     t.index ["old_id"], name: "index_offers_on_old_id"
     t.index ["published"], name: "index_offers_on_published"
     t.index ["type"], name: "index_offers_on_type"

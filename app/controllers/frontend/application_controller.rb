@@ -11,7 +11,7 @@ module Frontend
 
     def prepare_offer_context
       offer_id = params[:offer_id] || params[:id] || return
-      @offer = Offer.published.find(offer_id)
+      @offer = Offer.published.not_archived.find(offer_id)
 
       if @offer.course?
         add_breadcrumb "Schulungen", frontend_offers_path(filter: {scope: "courses"})
