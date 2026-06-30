@@ -4,14 +4,13 @@
       i.fa-solid.fa-home.me-2
       = t("application.main_menu.home")
 
-  h5.text-muted = "Angebote"
   nav.list-group.mb-4
+    = link_to admin_offers_path, class: "list-group-item list-group-item-action" do
+      i.fa-solid.fa-ellipsis.me-2
+      = "Alle Angebote"
     = link_to admin_events_path, class: "list-group-item list-group-item-action" do
       i.fa-solid.fa-calendar-days.me-2
       = "Termine"
-    = link_to admin_offers_path, class: "list-group-item list-group-item-action" do
-      i.fa-solid.fa-box-open.me-2
-      = "Angebote"
 
   h5.text-muted = "Kategorisierung"
   nav.list-group.mb-4
