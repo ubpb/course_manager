@@ -18,8 +18,12 @@ module Frontend
         end
       end
 
-      filter_by :with_upcoming_events, :boolean do |arel, _with_upcoming_events|
-        arel.where(id: Event.published.upcoming.select(:offer_id))
+      filter_by :with_upcoming_events, :boolean do |arel, _with_upcoming_events, options|
+        if options[:should_filter_by_upcoming_events]
+          arel.where(id: Event.published.upcoming.select(:offer_id))
+        else
+          arel
+        end
       end
 
       filter_by :title, :string do |arel, title|
@@ -41,7 +45,11 @@ module Frontend
       @filter = create_filter(:offers)
       return unless @filter
 
-      @offers = @filter.filter(@offers)
+      @offers = @filter.filter(
+        @offers,
+        # The filter for upcoming events should only be applied if the offer type is "course"
+        should_filter_by_upcoming_events: @filter.params[:scope] == "courses"
+      )
     end
 
     def show
