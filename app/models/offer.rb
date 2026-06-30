@@ -10,7 +10,8 @@ class Offer < ApplicationRecord
   has_and_belongs_to_many :topics, -> { order("position") } # rubocop:disable Rails/HasAndBelongsToMany
   has_and_belongs_to_many :target_groups, -> { order("position") } # rubocop:disable Rails/HasAndBelongsToMany
   has_many :events, dependent: :destroy
-  has_many :upcoming_events, -> { upcoming.order(date_and_time: :asc) }, class_name: "Event"
+  has_many :upcoming_events, -> { upcoming.order(date_and_time: :asc) }, class_name: "Event", dependent: :destroy, inverse_of: :offer
+  has_many :past_events, -> { past.order(date_and_time: :desc) }, class_name: "Event", dependent: :destroy, inverse_of: :offer
 
   # Validations
   validates :title, presence: true
