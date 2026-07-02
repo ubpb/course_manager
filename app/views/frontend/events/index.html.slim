@@ -12,5 +12,5 @@
       .card: .card-body
         .text-muted = "Aktuell sind keine anstehenden Schulungstermine vorhanden."
   .col-md-4
-    .mb-3 = render "filters"
+    .mb-3 = render "filters", filter: @filter
     .mb-0 = render "contact_help_card"
