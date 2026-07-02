@@ -3,14 +3,16 @@
     = "Anstehenden Schulungstermine"
 
 .row
-  .col-md-8
-    - if @filter&.active?
-      = render "filter_reset_panel"
+  .col-lg-8
+    = render "frontend/application/filter_bar", filter: @filter, chips: frontend_event_filter_chips(@filter)
     - if @upcoming_events.present?
       = render "listing", events: @upcoming_events
     - else
       .card: .card-body
         .text-muted = "Aktuell sind keine anstehenden Schulungstermine vorhanden."
-  .col-md-4
-    .mb-3 = render "filters", filter: @filter
-    .mb-0 = render "contact_help_card"
+  .col-lg-4
+    .card
+      .card-header
+        h5.card-title.mb-0.card-title Filter
+      .card-body
+        = render "frontend/application/filter_offcanvas", filter: @filter, filters_partial: "frontend/events/filter_form"

@@ -46,7 +46,7 @@ de:
         to_date: "Datum bis"
         date_range: "Datum"
         scope: "Angebote"
-        with_upcoming_events: "... mit Terminen"
+        with_upcoming_events: "... mit anstehenden Terminen"
       registration:
         user_notes: "Anmerkungen"
         gdrp_consent: "Einwilligungserklärung"

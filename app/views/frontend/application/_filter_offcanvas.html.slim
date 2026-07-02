@@ -1,0 +1,12 @@
+/ <%# locals: (filter:, filters_partial:) -%>
+
+/ Filter panel: inline right-column sidebar at >=lg, right-side offcanvas at <lg
+/ (triggered by _filter_toggle). `filters_partial` is the controller-specific
+/ filter form, e.g. "frontend/offers/filters".
+.offcanvas-lg.offcanvas-end#offcanvas-filters(tabindex="-1" aria-labelledby="offcanvas-filters-label")
+  .offcanvas-header.d-lg-none.border-bottom
+    h5#offcanvas-filters-label.offcanvas-title = "Filter"
+    button.btn-close(type="button" data-bs-dismiss="offcanvas" data-bs-target="#offcanvas-filters")
+  .offcanvas-body.d-block
+    .mb-3 = render filters_partial, filter: filter
+.mb-0.mt-3.mt-lg-0 = render "frontend/application/contact_help_card"
