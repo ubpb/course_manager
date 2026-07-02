@@ -27,11 +27,20 @@ Rails.application.routes.draw do
 
     scope "angebote" do
       resources :offers, only: [:index], path: "/"
-      resources :offers, only: [:show], path: "/", constraints: {id: /\d+/}
 
-      resources :events, only: [:index, :show], path: "termine" do
-        resources :registrations, only: [:index, :new, :create], path: "anmeldung", module: :events
+      resources :offers, only: [:show], path: "/", constraints: {id: /\d+/} do
+        resources :events, only: [:show], path: "termine" do
+          resources :registrations, only: [:index, :new, :create], path: "anmeldung", module: :events
+        end
       end
+
+      # Global, cross-offer listing of upcoming events
+      resources :events, only: [:index], path: "termine"
+
+      # Redirect old, non-nested event URLs to the new nested URLs
+      get "termine/:id",               to: "events#legacy_show", constraints: {id: /\d+/}
+      get "termine/:id/anmeldung",     to: "events#legacy_register", constraints: {id: /\d+/}
+      get "termine/:id/anmeldung/new", to: "events#legacy_register", constraints: {id: /\d+/}
 
       # Redirect old consulting and course URLs to the new offer URLs
       resources :consultings, only: [:index, :show], path: "beratungen"

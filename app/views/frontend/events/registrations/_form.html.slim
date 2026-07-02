@@ -1,6 +1,6 @@
 / <%# locals: (event:, registration:) -%>
 
-= simple_form_for [:frontend, event, registration] do |f|
+= simple_form_for [:frontend, event.offer, event, registration] do |f|
   .row
     .col-xl-6 = f.input :first_name
     .col-xl-6 = f.input :last_name
@@ -15,5 +15,5 @@
     .col-12 = f.input :gdrp_consent
 
   = f.submit "Jetzt anmelden", class: "btn btn-primary"
-  =< link_to "Abbrechen", frontend_event_path(event), class: "btn btn-link"
+  =< link_to "Abbrechen", frontend_offer_event_path(event.offer, event), class: "btn btn-link"
 

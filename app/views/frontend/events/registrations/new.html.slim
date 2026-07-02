@@ -2,7 +2,7 @@
   h3.mb-0.fw-bold
     = "Anmeldung zu einer Schulung"
   div
-    = link_to frontend_event_path(@event), class: "btn btn-outline-primary btn-sm" do
+    = link_to frontend_offer_event_path(@offer, @event), class: "btn btn-outline-primary btn-sm" do
       i.fa-solid.fa-arrows-turn-right.fa-flip-horizontal.fa-fw.me-1
       span = "Zum Termin"
 

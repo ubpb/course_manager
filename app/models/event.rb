@@ -13,7 +13,9 @@ class Event < ApplicationRecord
   validates :email_from, format: {with: UPB_EMAIL_REGEXP}
 
   # Scopes
-  scope :published, -> { joins(:offer).where("offers.published": true).where("events.published": true) }
+  scope :published, -> { where("events.published": true) }
+  scope :from_published_offers, -> { joins(:offer).where("offers.published": true) }
+  scope :from_non_archived_offers, -> { joins(:offer).where("offers.archived": false) }
   scope :with_report, -> { includes(:report).where.not(reports: {id: nil}) }
   scope :without_report, -> { includes(:report).where(reports: {id: nil}) }
   scope :upcoming, -> { where("date_and_time >= ?", Time.zone.today.beginning_of_day) }

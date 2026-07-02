@@ -3,8 +3,7 @@ module Frontend
 
     include Filterable
 
-    before_action :prepare_offers_context
-    before_action :prepare_offer_context, only: [:show]
+    before_action :prepare_offer_context
 
     define_filter :offers do
       filter_by :scope, :string do |arel, scope|
@@ -19,11 +18,7 @@ module Frontend
       end
 
       filter_by :with_upcoming_events, :boolean do |arel, _with_upcoming_events, options|
-        if options[:should_filter_by_upcoming_events]
-          arel.where(id: Event.published.upcoming.select(:offer_id))
-        else
-          arel
-        end
+        arel.where(id: Event.published.upcoming.select(:offer_id))
       end
 
       filter_by :title, :string do |arel, title|
@@ -45,14 +40,14 @@ module Frontend
                      .includes(:upcoming_events)
                      .order(title: :asc)
 
+      # If the scope filter is not "courses", we ignore the with_upcoming_events filter
+      # because events are only relevant for courses.
+      params[:filter][:with_upcoming_events] = nil if params[:filter] && params[:filter][:scope] != "courses"
+
       @filter = create_filter(:offers)
       return unless @filter
 
-      @offers = @filter.filter(
-        @offers,
-        # The filter for upcoming events should only be applied if the offer type is "course"
-        should_filter_by_upcoming_events: @filter.params[:scope] == "courses"
-      )
+      @offers = @filter.filter(@offers)
     end
 
     def show

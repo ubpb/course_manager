@@ -3,10 +3,10 @@ module Frontend
     class RegistrationsController < ApplicationController
 
       before_action :prepare_event_context
-      before_action -> { add_breadcrumb "Anmeldung", frontend_event_registrations_path(@event) }
+      before_action -> { add_breadcrumb "Anmeldung", frontend_offer_event_registrations_path(@offer, @event) }
 
       def index
-        redirect_to new_frontend_event_registration_path(@event)
+        redirect_to new_frontend_offer_event_registration_path(@offer, @event)
       end
 
       def new
@@ -24,7 +24,7 @@ module Frontend
           # Send notification to Schulungs-Team
           Frontend::Mailers::RegistrationsMailer.notification(@registration).deliver_later
 
-          redirect_to frontend_event_path(@event), notice: "Anmeldung erfolgreich. Wir haben Ihnen eine Bestätigung per E-Mail gesendet."
+          redirect_to frontend_offer_event_path(@offer, @event), notice: "Anmeldung erfolgreich. Wir haben Ihnen eine Bestätigung per E-Mail gesendet."
         else
           render :new, status: :unprocessable_entity
         end
@@ -39,13 +39,13 @@ module Frontend
       def ensure_registration_is_possible
         # Abort if registration is not needed
         unless @event.registration_required?
-          redirect_to frontend_event_path(@event), alert: "Anmeldung nicht erforderlich"
+          redirect_to frontend_offer_event_path(@offer, @event), alert: "Anmeldung nicht erforderlich"
           return false
         end
 
         # Abort if registration is closed
         if @event.registration_closed?
-          redirect_to frontend_event_path(@event), alert: "Die Anmeldung ist geschlossen"
+          redirect_to frontend_offer_event_path(@offer, @event), alert: "Die Anmeldung ist geschlossen"
           return false
         end
 
