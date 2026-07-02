@@ -32,8 +32,8 @@ Rails.application.routes.draw do
       # Show offer details
       get "/:id", to: "offers#show", as: :offer, constraints: {id: /\d+.*/}
       # Redirects for legacy/filter URLs
-      get "/kurse", to: "offers#redirect_courses", as: :redirect_courses
-      get "/beratungen", to: "offers#redirect_consultings", as: :redirect_consultings
+      get "/kurse(/:id)", to: "offers#redirect_courses", as: :redirect_courses
+      get "/beratungen(/:id)", to: "offers#redirect_consultings", as: :redirect_consultings
     end
 
     # Events & Registrations

@@ -56,11 +56,23 @@ module Frontend
     end
 
     def redirect_courses
-      redirect_to frontend_offers_path(filter: {scope: "courses"})
+      course = Offer.courses.find_by(old_id: params[:id])
+
+      if course
+        redirect_to frontend_offer_path(course), status: :moved_permanently
+      else
+        redirect_to frontend_offers_path(filter: {scope: "courses"}), status: :moved_permanently
+      end
     end
 
     def redirect_consultings
-      redirect_to frontend_offers_path(filter: {scope: "consultings"})
+      consulting = Offer.consultings.find_by(old_id: params[:id])
+
+      if consulting
+        redirect_to frontend_offer_path(consulting), status: :moved_permanently
+      else
+        redirect_to frontend_offers_path(filter: {scope: "consultings"}), status: :moved_permanently
+      end
     end
 
   end
