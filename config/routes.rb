@@ -26,9 +26,9 @@ Rails.application.routes.draw do
     get  "kontakt", to: "pages#contact", as: :contact
 
     scope "angebote" do
-      resources :offers, only: [:index], path: "/"
-
-      resources :offers, only: [:show], path: "/", constraints: {id: /\d+/} do
+      # Offers & Events are nested, so that the offer context is always available when viewing an
+      # event or registering for it.
+      resources :offers, only: [:index, :show], path: "/" do
         resources :events, only: [:show], path: "termine" do
           resources :registrations, only: [:index, :new, :create], path: "anmeldung", module: :events
         end
