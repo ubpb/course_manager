@@ -25,26 +25,20 @@ Rails.application.routes.draw do
     root "pages#home"
     get  "kontakt", to: "pages#contact", as: :contact
 
-    scope "angebote" do
-      # Offers & Events are nested, so that the offer context is always available when viewing an
-      # event or registering for it.
-      resources :offers, only: [:index, :show], path: "/" do
-        resources :events, only: [:show], path: "termine" do
-          resources :registrations, only: [:index, :new, :create], path: "anmeldung", module: :events
-        end
-      end
+    # Offers
+    scope "angebote", path: "angebote" do
+      # List offers
+      get "/", to: "offers#index", as: :offers
+      # Show offer details
+      get "/:id", to: "offers#show", as: :offer, constraints: {id: /\d+.*/}
+      # Redirects for legacy/filter URLs
+      get "/kurse", to: "offers#redirect_courses", as: :redirect_courses
+      get "/beratungen", to: "offers#redirect_consultings", as: :redirect_consultings
+    end
 
-      # Global, cross-offer listing of upcoming events
-      resources :events, only: [:index], path: "termine"
-
-      # Redirect old, non-nested event URLs to the new nested URLs
-      get "termine/:id",               to: "events#legacy_show", constraints: {id: /\d+/}
-      get "termine/:id/anmeldung",     to: "events#legacy_register", constraints: {id: /\d+/}
-      get "termine/:id/anmeldung/new", to: "events#legacy_register", constraints: {id: /\d+/}
-
-      # Redirect old consulting and course URLs to the new offer URLs
-      resources :consultings, only: [:index, :show], path: "beratungen"
-      resources :courses, only: [:index, :show], path: "kurse"
+    # Events & Registrations
+    resources :events, only: [:index, :show], path: "termine" do
+      resources :registrations, only: [:index, :new, :create], path: "anmeldung", module: :events
     end
 
     resources :cert_checks, path: "validate", only: [:index, :new, :create, :show]

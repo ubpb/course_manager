@@ -3,7 +3,7 @@ module Frontend
 
     include Filterable
 
-    before_action :prepare_event_context, except: [:legacy_show, :legacy_register]
+    before_action :prepare_event_context
 
     define_filter :events do
       filter_by :title, :string do |arel, title|
@@ -40,18 +40,6 @@ module Frontend
 
     def show
       # @event and @offer are set in the prepare_event_context before_action.
-    end
-
-    # Redirect old, non-nested event URL to the new nested URL.
-    def legacy_show
-      event = Event.published.find(params[:id])
-      redirect_to frontend_offer_event_path(event.offer, event), status: :moved_permanently
-    end
-
-    # Redirect old, non-nested registration URL to the new nested URL.
-    def legacy_register
-      event = Event.published.find(params[:id])
-      redirect_to new_frontend_offer_event_registration_path(event.offer, event), status: :moved_permanently
     end
 
   end

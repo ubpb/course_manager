@@ -22,7 +22,7 @@
           ' Gruppen in Präsenz oder als Online-Veranstaltung statt.
 
         .d-flex.gap-2.justify-content-center.flex-column
-          = link_to frontend_courses_path, class: "btn btn-primary" do
+          = link_to frontend_redirect_courses_path, class: "btn btn-primary" do
             i.fa-solid.fa-chalkboard-teacher.me-2
             = "Zum Schulungsangebot"
           = link_to frontend_events_path, class: "btn btn-link" do
@@ -37,7 +37,7 @@
           ' Einzelberatungen zu unseren Dienstleistungen und Angeboten.
 
         .d-flex.gap-2.justify-content-center.flex-column
-          = link_to frontend_consultings_path, class: "btn btn-primary" do
+          = link_to frontend_redirect_consultings_path, class: "btn btn-primary" do
             i.fa-solid.fa-people-arrows.me-2
             = "Zum Beratungsangebot"
 

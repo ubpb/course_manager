@@ -3,7 +3,7 @@ module Frontend
 
     include Filterable
 
-    before_action :prepare_offer_context
+    before_action :prepare_offer_context, except: [:redirect_courses, :redirect_consultings]
 
     define_filter :offers do
       filter_by :scope, :string do |arel, scope|
@@ -53,6 +53,14 @@ module Frontend
     def show
       # The @offer instance variable is set in the prepare_offer_context before_action.
       @upcoming_events = @offer.events.published.upcoming.order(date_and_time: :asc)
+    end
+
+    def redirect_courses
+      redirect_to frontend_offers_path(filter: {scope: "courses"})
+    end
+
+    def redirect_consultings
+      redirect_to frontend_offers_path(filter: {scope: "consultings"})
     end
 
   end
