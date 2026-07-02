@@ -19,7 +19,7 @@
                   - offer.upcoming_events.each do |event|
                     li.list-inline-item
                       i.fa-regular.fa-calendar.fa-fw.me-1
-                      = link_to l(event.date_and_time), frontend_event_path(event)
+                      = l(event.date_and_time)
               - else
                 span.text-muted = "Aktuell keine Termine verfügbar"
         div

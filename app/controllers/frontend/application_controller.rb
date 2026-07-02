@@ -1,6 +1,8 @@
 module Frontend
   class ApplicationController < ::ApplicationController
 
+    include ActionView::RecordIdentifier
+
     layout "frontend"
 
     private
@@ -38,7 +40,7 @@ module Frontend
       @offer = @event.offer
 
       add_breadcrumb @offer.title, frontend_offer_path(@offer)
-      add_breadcrumb I18n.l(@event.date_and_time), frontend_event_path(@event)
+      add_breadcrumb I18n.l(@event.date_and_time), frontend_offer_path(@offer, anchor: dom_id(@event))
     end
 
   end

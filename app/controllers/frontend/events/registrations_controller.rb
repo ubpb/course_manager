@@ -11,7 +11,7 @@ module Frontend
 
       def new
         @registration = @event.registrations.build
-        ensure_registration_is_possible or return
+        ensure_registration_is_possible
       end
 
       def create

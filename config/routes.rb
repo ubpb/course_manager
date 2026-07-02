@@ -34,11 +34,11 @@ Rails.application.routes.draw do
       # Redirects for legacy/filter URLs
       get "/kurse(/:id)", to: "offers#redirect_courses", as: :redirect_courses
       get "/beratungen(/:id)", to: "offers#redirect_consultings", as: :redirect_consultings
-    end
 
-    # Events & Registrations
-    resources :events, only: [:index, :show], path: "termine" do
-      resources :registrations, only: [:index, :new, :create], path: "anmeldung", module: :events
+      # Events & Registrations
+      resources :events, only: [:index, :show], path: "termine" do
+        resources :registrations, only: [:index, :new, :create], path: "anmeldung", module: :events
+      end
     end
 
     resources :cert_checks, path: "validate", only: [:index, :new, :create, :show]

@@ -1,6 +1,6 @@
 / <%# locals: (event:, registration:) -%>
 
-= simple_form_for [:frontend, event.offer, event, registration] do |f|
+= simple_form_for [:frontend, event, registration] do |f|
   .row
     .col-xl-6 = f.input :first_name
     .col-xl-6 = f.input :last_name

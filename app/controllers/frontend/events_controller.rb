@@ -39,7 +39,10 @@ module Frontend
     end
 
     def show
-      # @event and @offer are set in the prepare_event_context before_action.
+      # @offer and @event are set in the prepare_event_context before_action
+      # We redirect to offer page as events are now displayed on the offer page
+      # and there is no separate event page anymore.
+      redirect_to frontend_offer_path(@offer)
     end
 
   end
