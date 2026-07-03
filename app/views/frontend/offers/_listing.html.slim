@@ -10,7 +10,9 @@
         div
           = link_to details_path do
             h4.mb-3 = offer.title
-          = render "categorisation_badges", object: offer
+
+          = render "topic_and_target_group_badges", object: offer
+
           - if offer.course?
             .mt-3
               .fw-bold = "Nächste Termine"
@@ -20,6 +22,22 @@
                     li.list-inline-item
                       i.fa-regular.fa-calendar.fa-fw.me-1
                       = l(event.date_and_time)
+                      - if event.online?
+                        span.badge.text-bg-light(
+                          data-controller="tooltip"
+                          data-bs-toggle="tooltip"
+                          data-bs-title="Online-Veranstaltung"
+                        )
+                          i.fa-solid.fa-globe.fa-fw.me-1
+                          = "Online"
+                      - else
+                        span.badge.text-bg-light(
+                          data-controller="tooltip"
+                          data-bs-toggle="tooltip"
+                          data-bs-title="Präsenzveranstaltung"
+                        )
+                          i.fa-solid.fa-person-chalkboard.fa-fw.me-1
+                          = "Präsenz"
               - else
                 span.text-muted = "Aktuell keine Termine verfügbar"
         div

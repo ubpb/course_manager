@@ -28,7 +28,7 @@ module Frontend
     def prepare_event_context
       add_breadcrumb "Angebote", frontend_offers_path
       add_breadcrumb "Schulungen", frontend_offers_path(filter: {scope: "courses"})
-      add_breadcrumb "Termine", frontend_events_path
+      add_breadcrumb "Termine", frontend_redirect_events_path
 
       event_id = params[:event_id] || params[:id] || return
       @event = Event.published                 # only published events

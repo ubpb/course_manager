@@ -11,8 +11,15 @@
       .card: .card-body
         .text-muted = "Keine Angebote vorhanden"
   .col-lg-4
-    .card
-      .card-header
-        h5.card-title.mb-0.card-title Filter
-      .card-body
-        = render "frontend/application/filter_offcanvas", filter: @filter, filters_partial: "frontend/offers/filter_form"
+    / Filters as offcanvas on small screens,
+    .d-lg-none
+      = render "frontend/application/filter_offcanvas", filter: @filter, filters_partial: "frontend/offers/filter_form"
+    / ... as sidebar inside a card on large screens
+    .d-none.d-lg-block
+      .card
+        .card-header
+          h5.card-title.mb-0.card-title Filter
+        .card-body
+          = render "frontend/offers/filter_form", filter: @filter
+    / Contact and help info
+    .mb-0.mt-3 = render "frontend/application/contact_help_card"

@@ -8,5 +8,4 @@
     h5#offcanvas-filters-label.offcanvas-title = "Filter"
     button.btn-close(type="button" data-bs-dismiss="offcanvas" data-bs-target="#offcanvas-filters")
   .offcanvas-body.d-block
-    .mb-3 = render filters_partial, filter: filter
-.mb-0.mt-3.mt-lg-0 = render "frontend/application/contact_help_card"
+    = render filters_partial, filter: filter

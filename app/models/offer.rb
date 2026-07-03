@@ -31,4 +31,8 @@ class Offer < ApplicationRecord
 
   def consulting? = type == "consulting"
 
+  def contact_info?
+    contact_name.present? || contact_email.present? || contact_phone.present?
+  end
+
 end

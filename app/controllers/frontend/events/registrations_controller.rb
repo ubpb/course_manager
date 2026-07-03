@@ -24,7 +24,7 @@ module Frontend
           # Send notification to Schulungs-Team
           Frontend::Mailers::RegistrationsMailer.notification(@registration).deliver_later
 
-          redirect_to frontend_event_path(@event), notice: "Anmeldung erfolgreich. Wir haben Ihnen eine Bestätigung per E-Mail gesendet."
+          redirect_to frontend_offer_path(@event.offer), notice: "Anmeldung erfolgreich. Wir haben Ihnen eine Bestätigung per E-Mail gesendet."
         else
           render :new, status: :unprocessable_entity
         end
@@ -39,13 +39,13 @@ module Frontend
       def ensure_registration_is_possible
         # Abort if registration is not needed
         unless @event.registration_required?
-          redirect_to frontend_event_path(@event), alert: "Anmeldung nicht erforderlich"
+          redirect_to frontend_offer_path(@event.offer), alert: "Anmeldung nicht erforderlich"
           return false
         end
 
         # Abort if registration is closed
         if @event.registration_closed?
-          redirect_to frontend_event_path(@event), alert: "Die Anmeldung ist geschlossen"
+          redirect_to frontend_offer_path(@event.offer), alert: "Die Anmeldung ist geschlossen"
           return false
         end
 

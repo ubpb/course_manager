@@ -27,3 +27,8 @@ application.register("filter-form", FilterForm)
 // Register OfferForm controller
 import OfferForm from "./offer_form_controller.js"
 application.register("offer-form", OfferForm)
+
+// Register Tooltip controller
+import TooltipController from "./tooltip_controller.js"
+application.register("tooltip", TooltipController)
+

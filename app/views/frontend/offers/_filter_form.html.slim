@@ -6,11 +6,20 @@
 
 = simple_form_for filter, as: :filter, url: frontend_offers_path, method: :get, html: { data: { controller: "filter-form" } } do |form|
   = form.input :scope, as: :select, collection: scopes, required: false, prompt: false
+
   - if filter&.scope == "courses"
     = form.input :with_upcoming_events, as: :boolean, required: false
   = form.input :title, required: false
+
   - if topics.present?
-    = form.input :topics, as: :check_boxes, collection: topics, required: false
+    - topic_label = capture do
+      i.fa-solid.fa-tags.fa-fw.me-1
+      = "Themen"
+    = form.input :topics, as: :check_boxes, collection: topics, required: false, label: topic_label
+
   - if target_groups.present?
-    = form.input :target_groups, as: :check_boxes, collection: target_groups, required: false
+    - target_group_label = capture do
+      i.fa-solid.fa-users-viewfinder.fa-fw.me-1
+      = "Zielgruppen"
+    = form.input :target_groups, as: :check_boxes, collection: target_groups, required: false, label: target_group_label
 

@@ -26,17 +26,18 @@ Rails.application.routes.draw do
     get  "kontakt", to: "pages#contact", as: :contact
 
     # Offers
-    scope "angebote", path: "angebote" do
-      # List offers
-      get "/", to: "offers#index", as: :offers
-      # Show offer details
-      get "/:id", to: "offers#show", as: :offer, constraints: {id: /\d+.*/}
-      # Redirects for legacy/filter URLs
+    scope "angebote" do
+      # Redirects for legacy/filter URLs. Must be defined before the resources :offers route,
+      # as "kurse" etc. will wrongfully match the :id parameter of the show route.
       get "/kurse(/:id)", to: "offers#redirect_courses", as: :redirect_courses
       get "/beratungen(/:id)", to: "offers#redirect_consultings", as: :redirect_consultings
+      get "/termine(/:id)", to: "offers#redirect_events", as: :redirect_events
 
-      # Events & Registrations
-      resources :events, only: [:index, :show], path: "termine" do
+      # Offers
+      resources :offers, only: [:index, :show], path: "/"
+
+      # Event registrations
+      resources :events, only: [], path: "termine" do
         resources :registrations, only: [:index, :new, :create], path: "anmeldung", module: :events
       end
     end

@@ -6,34 +6,34 @@
       i.fa-solid.fa-arrows-turn-right.fa-flip-horizontal.fa-fw.me-1
       span = "Alle Angebote"
 
+- if (tatg = render("topic_and_target_group_badges", object: @offer)).present?
+  .mb-3 = tatg
+
+- has_sidebar_content = @offer.contact_info?
 .row
-  .col-md-7.col-lg-8
+  div(class=(has_sidebar_content ? "col-lg-8" : "col-12"))
     .card.mb-3
       .card-body
         = render "details", offer: @offer
-  .col-md-5.col-lg-4
-    .card
-      .card-body
-        - if (categorisation = render("categorisation_badges", object: @offer)).present?
-          h4 = "Kategorisierung"
-          = categorisation
-
-    - if @offer.contact_name.present? || @offer.contact_email.present? || @offer.contact_phone.present?
-      .card.mt-3
-        .card-header
-          h5.card-title.mb-0 = "Kontakt"
-        .card-body
-          div
-            i.fa-solid.fa-person.fa-fw.me-2
-            span = @offer.contact_name
-          div
-            i.fa-regular.fa-envelope.fa-fw.me-2
-            span = mail_to @offer.contact_email
-          - if @offer.contact_phone.present?
-            div
-              i.fa-solid.fa-phone.fa-fw.me-2
-              span = link_to @offer.contact_phone, "tel:#{@offer.contact_phone}"
-
+  - if has_sidebar_content
+    .col-lg-4
+      - if @offer.contact_info?
+        .card.mb-3
+          .card-header
+            h5.card-title.mb-0 = "Kontakt"
+          .card-body
+            - if @offer.contact_name.present?
+              div
+                i.fa-solid.fa-person.fa-fw.me-2
+                span = @offer.contact_name
+            - if @offer.contact_email.present?
+              div
+                i.fa-regular.fa-envelope.fa-fw.me-2
+                span = mail_to @offer.contact_email
+            - if @offer.contact_phone.present?
+              div
+                i.fa-solid.fa-phone.fa-fw.me-2
+                span = link_to @offer.contact_phone, "tel:#{@offer.contact_phone}"
 
 - if @offer.course?
   .row
@@ -64,44 +64,3 @@
         - else
           .card-body
             .p-2.text-muted = "Aktuell keine Termine verfügbar"
-
-/ .row
-/   .col-md-7.col-lg-8
-/     .card.card-shadowed.mb-3
-/       .card-body
-/         = render "details", offer: @offer
-/   .col-md-5.col-lg-4
-
-/     - if @offer.course?
-/       .card.card-shadowed
-/         .card-header
-/           h5.card-title.mb-0 = "Nächste Termine"
-
-/         - if @upcoming_events.present?
-/           .list-group.list-group-flush
-/             - @upcoming_events.each do |event|
-/               .list-group-item.d-flex.justify-content-between.align-items-center
-/                 div
-/                   = render "frontend/events/details", event: event
-/                 div
-/                   = link_to frontend_offer_path(@offer), class: "btn btn-outline-primary btn-sm" do
-/                     i.fa-solid.fa-chevron-right.fa-fw.me-1
-/         - else
-/           .card-body
-/             .p-2.text-muted = "Aktuell keine Termine verfügbar"
-
-/     - elsif @offer.consulting?
-/       .card.card-shadowed
-/         .card-header
-/           h5.card-title.mb-0 = "Kontakt"
-/         .card-body
-/           div
-/             i.fa-solid.fa-person.fa-fw.me-2
-/             span = @offer.contact_name
-/           div
-/             i.fa-regular.fa-envelope.fa-fw.me-2
-/             span = mail_to @offer.contact_email
-/           - if @offer.contact_phone.present?
-/             div
-/               i.fa-solid.fa-phone.fa-fw.me-2
-/               span = link_to @offer.contact_phone, "tel:#{@offer.contact_phone}"

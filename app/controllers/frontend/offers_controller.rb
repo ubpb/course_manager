@@ -3,7 +3,7 @@ module Frontend
 
     include Filterable
 
-    before_action :prepare_offer_context, except: [:redirect_courses, :redirect_consultings]
+    before_action :prepare_offer_context, except: [:redirect_courses, :redirect_consultings, :redirect_events]
 
     define_filter :offers do
       filter_by :scope, :string do |arel, scope|
@@ -56,7 +56,7 @@ module Frontend
     end
 
     def redirect_courses
-      course = Offer.courses.find_by(old_id: params[:id])
+      course = Offer.courses.find_by(old_id: params[:id]) if params[:id].present?
 
       if course
         redirect_to frontend_offer_path(course), status: :moved_permanently
@@ -66,12 +66,22 @@ module Frontend
     end
 
     def redirect_consultings
-      consulting = Offer.consultings.find_by(old_id: params[:id])
+      consulting = Offer.consultings.find_by(old_id: params[:id]) if params[:id].present?
 
       if consulting
         redirect_to frontend_offer_path(consulting), status: :moved_permanently
       else
         redirect_to frontend_offers_path(filter: {scope: "consultings"}), status: :moved_permanently
+      end
+    end
+
+    def redirect_events
+      event = Event.find_by(id: params[:id]) if params[:id].present?
+
+      if event
+        redirect_to frontend_offer_path(event.offer), status: :moved_permanently
+      else
+        redirect_to frontend_offers_path(filter: {scope: "courses", with_upcoming_events: true}), status: :moved_permanently
       end
     end
 
