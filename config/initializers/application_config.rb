@@ -13,7 +13,10 @@ class ApplicationConfig
     end
 
     def [](*params, default: nil)
-      @config&.dig(*params).presence || default
+      env_value = ENV[params.join("_").upcase].presence
+      value = @config&.dig(*params).presence
+
+      env_value || value || default
     end
 
   end
