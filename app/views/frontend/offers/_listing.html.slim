@@ -13,6 +13,11 @@
 
           = render "topic_and_target_group_badges", object: offer
 
+          - events_on_request_message = capture do
+            div
+              i.fa-solid.fa-circle-info.me-1
+              == t("frontend.events.on_request_message")
+
           - if offer.course?
             .mt-3
               .fw-bold = "Nächste Termine"
@@ -38,8 +43,13 @@
                         )
                           i.fa-solid.fa-person-chalkboard.fa-fw.me-1
                           = "Präsenz"
+                - if offer.events_on_request?
+                  .fst-italic = events_on_request_message
               - else
-                span.text-muted = "Aktuell keine Termine verfügbar"
+                i.fa-regular.fa-calendar.me-1
+                = t("frontend.events.no_events_message")
+                - if offer.events_on_request?
+                  .fst-italic = events_on_request_message
         div
           = link_to details_path, class: "btn btn-outline-primary btn-sm" do
             i.fa-solid.fa-chevron-right.fa-fw.me-1

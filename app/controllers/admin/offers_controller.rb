@@ -92,7 +92,7 @@ module Admin
     def offer_params
       params.require(:offer).permit(
         :type, :title, :description, :learning_targets,
-        :published, :contact_name, :contact_email, :contact_phone,
+        :published, :events_on_request, :contact_name, :contact_email, :contact_phone,
         topic_ids: [], target_group_ids: []
       )
     end

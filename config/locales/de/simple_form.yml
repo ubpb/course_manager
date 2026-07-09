@@ -51,6 +51,7 @@ de:
         user_notes: "Anmerkungen"
         gdrp_consent: "Einwilligungserklärung"
       offer:
+        events_on_request: "Termine auf Anfrage?"
         contact_name: "Kontakt"
         contact_email: "E-Mail"
         contact_phone: "Telefon"

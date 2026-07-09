@@ -17,6 +17,7 @@ div data-controller="offer-form"
     = form.input :type, as: :radio_buttons, collection: [["Kurs", "course"], ["Beratung", "consulting"]], label: "Art", item_wrapper_class: "form-check-inline", input_html: { data: { action: "change->offer-form#toggle", "offer-form-target": "type" } }
 
   = form.input :published, as: :boolean
+  = form.input :events_on_request, as: :boolean
   = form.input :title
   .row
     .col
