@@ -6,7 +6,7 @@
   .col-lg-8
     - chips = frontend_offer_filter_chips(@filter)
     - margin_bottom_class = chips.present? ? "mb-3" : "mb-3 mb-lg-0"
-    div(class=margin_bottom_class) = render "filter_bar", filter: @filter, chips: chips
+    div(class=margin_bottom_class) = render "filter_bar", filter: @filter, chips: chips, button_end: true
 
     - if @offers.present?
       = render "listing", offers: @offers
