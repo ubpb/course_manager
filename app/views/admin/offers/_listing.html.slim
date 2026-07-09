@@ -41,10 +41,11 @@
                 li = link_to edit_admin_offer_path(offer), class: "dropdown-item" do
                   i.fa-solid.fa-edit.me-2
                   = "Bearbeiten"
-                hr.dropdown-divider
-                li = link_to admin_offer_events_path(offer), class: "dropdown-item" do
-                  i.fa-solid.fa-calendar-alt.me-2
-                  = "Termine"
+                - if offer.course?
+                  hr.dropdown-divider
+                  li = link_to admin_offer_events_path(offer), class: "dropdown-item" do
+                    i.fa-solid.fa-calendar-alt.me-2
+                    = "Termine"
 
 / Fix to reset indeterminate state of checkbox on turbo:load
 javascript:

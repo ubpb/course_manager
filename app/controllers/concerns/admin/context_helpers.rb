@@ -17,6 +17,11 @@ module Admin
     def prepare_offer_event_context
       prepare_offer_context
 
+      unless @offer.course?
+        redirect_back(fallback_location: admin_offers_path, alert: "Nur Kurse können Termine haben.")
+        return
+      end
+
       add_breadcrumb "Termine", admin_offer_events_path(@offer)
 
       event_id = params[:event_id] || params[:id] || return
