@@ -1,23 +1,9 @@
 module FrontendFilterHelper
 
   # Path that removes one filter key, or a single value from an array filter.
+  # Delegates to the shared ApplicationHelper#filter_remove_path.
   def frontend_filter_remove_path(filter, key, value = nil)
-    params = filter.params.deep_dup
-
-    if value && params[key].is_a?(Array)
-      params[key] = params[key].reject { |v| v.to_s == value.to_s }
-      params.delete(key) if params[key].blank?
-    else
-      params.delete(key)
-    end
-
-    # Drop blank/nil-valued keys (e.g. the controller injects
-    # `with_upcoming_events => nil`) so removing the last real filter falls
-    # back to a clean reset. String "false" is not blank, so an active
-    # `online=false` filter is preserved.
-    params = params.reject { |_, v| v.blank? }
-
-    params.present? ? url_for(filter: params) : url_for(reset_filter: true)
+    filter_remove_path(filter, key, value)
   end
 
   # Active filters for the offers index as a list of chip hashes

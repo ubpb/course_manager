@@ -1,8 +1,9 @@
-/ <%# locals: (filter:, chips:) -%>
+/ <%# locals: (filter:, chips:, always: false, button_end: false) -%>
 
-- margin_bottom_class = chips.present? ? "mb-3" : "mb-3 mb-lg-0"
-.d-flex.flex-wrap.align-items-center.gap-2(class=margin_bottom_class)
-  button.btn.btn-primary.d-lg-none(type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-filters")
+- button_visibility_class = always ? "" : "d-lg-none"
+- button_position_class = button_end ? "ms-auto order-last" : ""
+.d-flex.flex-wrap.align-items-center.gap-2
+  button.btn.btn-primary(type="button" class=[button_visibility_class, button_position_class] data-bs-toggle="offcanvas" data-bs-target="#offcanvas-filters")
     i.fa-solid.fa-filter.me-2
     = "Filter"
 

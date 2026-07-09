@@ -1,5 +1,5 @@
 .row
-  .col-md-9
+  .col-12
     .card.card-shadowed
       .card-header.d-flex.align-items-center.gap-2
         h5.card-title.mb-0 = "Termine"
@@ -13,10 +13,10 @@
                 i.fa-solid.fa-download.me-2
                 = "Statistik (Excel Export)"
       .card-body
+        .mb-3 = render "application/filter_bar", filter: @filter, chips: admin_event_filter_chips(@filter), always: true, button_end: true
         - if @events.present?
           = render "listing", events: @events
         - else
           .p-2.text-muted = "Keine Termine vorhanden"
 
-  .col-md-3
-    = render "filters"
+= render "application/filter_offcanvas", filter: @filter, filters_partial: "admin/events/filter_form", always: true

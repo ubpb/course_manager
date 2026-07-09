@@ -4,7 +4,10 @@
 
 .row
   .col-lg-8
-    = render "filter_bar", filter: @filter, chips: frontend_offer_filter_chips(@filter)
+    - chips = frontend_offer_filter_chips(@filter)
+    - margin_bottom_class = chips.present? ? "mb-3" : "mb-3 mb-lg-0"
+    div(class=margin_bottom_class) = render "filter_bar", filter: @filter, chips: chips
+
     - if @offers.present?
       = render "listing", offers: @offers
     - else

@@ -1,0 +1,13 @@
+/ <%# locals: (filter:) -%>
+
+= simple_form_for filter, as: :filter, url: admin_events_path, method: :get, html: { data: { controller: "filter-form" } } do |form|
+  = form.input :upcoming_or_past, as: :select, collection: [["Alle Termine", "all"], ["Nur kommende Termine", "upcoming"], ["Nur kommende Termine + letzten drei Monate", "upcoming_and_last_3_months"], ["Nur vergangene Termine", "past"]], include_blank: false, required: false
+  = form.input :published, as: :select, collection: [["Ja", "true"], ["Nein", "false"]], include_blank: true, required: false
+  = form.input :online, as: :select, collection: [["Ja", "true"], ["Nein", "false"]], include_blank: true, required: false
+  = form.input :with_report, as: :select, collection: [["Ja", "true"], ["Nein", "false"]], include_blank: true, required: false
+  = form.input :title, required: false
+  .row
+    .col-6
+      = form.input :from_date, as: :date, required: false, html5: true
+    .col-6
+      = form.input :to_date, as: :date, required: false, html5: true

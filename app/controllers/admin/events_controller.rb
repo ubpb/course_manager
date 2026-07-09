@@ -6,13 +6,13 @@ module Admin
     before_action -> { add_breadcrumb "Termine", admin_events_path }
 
     define_filter :events do
-      filter_by :upcoming_or_past, :string, default: "upcoming" do |arel, value|
+      filter_by :upcoming_or_past, :string, default: "all" do |arel, value|
         case value
         when "all"
           arel
         when "upcoming"
           arel.upcoming.reorder(date_and_time: :asc)
-        when "upcoming_and_3_months"
+        when "upcoming_and_last_3_months"
           arel.upcoming_and_last_3_months.reorder(date_and_time: :asc)
         when "past"
           arel.past

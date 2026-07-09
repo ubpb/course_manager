@@ -1,5 +1,5 @@
 .row
-  .col-md-9
+  .col-12
     .card.card-shadowed
       .card-header.d-flex.align-items-center.gap-2
         h5.card-title.mb-0 = "Angebote"
@@ -8,10 +8,10 @@
           i.fa-solid.fa-plus.me-2
           = "Neues Angebot anlegen"
       .card-body
+        .mb-3 = render "application/filter_bar", filter: @filter, chips: admin_offer_filter_chips(@filter), always: true, button_end: true
         - if @offers.present?
           = render "listing", offers: @offers
         - else
           .p-2.text-muted = "Keine Angebote vorhanden"
 
-  .col-md-3
-    = render "filters"
+= render "application/filter_offcanvas", filter: @filter, filters_partial: "admin/offers/filter_form", always: true
