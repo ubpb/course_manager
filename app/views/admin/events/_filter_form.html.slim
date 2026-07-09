@@ -6,8 +6,11 @@
   = form.input :online, as: :select, collection: [["Ja", "true"], ["Nein", "false"]], include_blank: true, required: false
   = form.input :with_report, as: :select, collection: [["Ja", "true"], ["Nein", "false"]], include_blank: true, required: false
   = form.input :title, required: false
-  .row
+  .row.align-items-end
     .col-6
       = form.input :from_date, as: :date, required: false, html5: true
     .col-6
       = form.input :to_date, as: :date, required: false, html5: true
+    .col
+      .d-grid.gap-2
+        = form.button :submit, "Zeitraum anwenden", class: "btn btn-sm btn-outline-secondary mb-3"

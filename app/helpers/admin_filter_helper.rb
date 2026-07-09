@@ -29,9 +29,8 @@ module AdminFilterHelper
     return [] unless filter&.active?
 
     chips = []
-    if filter.upcoming_or_past.present?
+    if filter.upcoming_or_past.present? && filter.upcoming_or_past != "all"
       labels = {
-        "all" => "Alle Termine",
         "upcoming" => "Kommende Termine",
         "upcoming_and_last_3_months" => "Kommende + letzte 3 Monate",
         "past" => "Vergangene Termine"
