@@ -3,9 +3,6 @@
     .card-header.d-flex.align-items-center.gap-2
       h5.card-title.mb-0 = "Angebot bearbeiten"
       .ms-auto
-      = link_to admin_offer_events_path(@offer), class: "btn btn-primary btn-sm" do
-        i.fa-solid.fa-calendar-alt.me-2
-        = "Termine"
       = link_to admin_offers_path(anchor: dom_id(@offer)), class: "btn btn-link btn-sm" do
         i.fa-solid.fa-times
     .card-body
