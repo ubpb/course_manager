@@ -5,34 +5,29 @@
     i.fa-solid.fa-exclamation-triangle.me-2
     = t("admin.application.form.error", count: form.object.errors.count)
 
-div data-controller="offer-form"
-  h5.m-0 Allgemeine Angaben
-  hr.mt-1.mb-3
+h5.m-0 Allgemeine Angaben
+hr.mt-1.mb-3
 
-  - if offer.persisted?
-    .mb-3
-      label.form-label.d-block = "Art"
-      = offer.course? ? "Kurs" : "Beratung"
-  - else
-    = form.input :type, as: :radio_buttons, collection: [["Kurs", "course"], ["Beratung", "consulting"]], label: "Art", item_wrapper_class: "form-check-inline", input_html: { data: { action: "change->offer-form#toggle", "offer-form-target": "type" } }
+- if offer.persisted?
+  .mb-3
+    label.form-label.d-block = "Art"
+    = offer.course? ? "Kurs" : "Beratung"
+- else
+  = form.input :type, as: :radio_buttons, collection: [["Kurs", "course"], ["Beratung", "consulting"]], label: "Art", item_wrapper_class: "form-check-inline", input_html: { data: { action: "change->offer-form#toggle", "offer-form-target": "type" } }
 
-  = form.input :published, as: :boolean
-  = form.input :events_on_request, as: :boolean
-  = form.input :title
-  .row
-    .col
-      = form.association :topics, as: :check_boxes
-    .col
-      = form.association :target_groups, as: :check_boxes
-  = form.input :description, as: :text, input_html: { rows: 8 }
+= form.input :published, as: :boolean
+= form.input :events_on_request, as: :boolean
+= form.input :title
+.row
+  .col
+    = form.association :topics, as: :check_boxes
+  .col
+    = form.association :target_groups, as: :check_boxes
+= form.input :description, as: :text, input_html: { rows: 8 }
 
-  / Kurs-spezifisch
-  div data-offer-form-target="course" hidden=(offer.persisted? && offer.consulting?)
-    = form.input :learning_targets, as: :text, input_html: { rows: 8 }
+= form.input :learning_targets, as: :text, input_html: { rows: 8 }
 
-  / Beratung-spezifisch
-  div data-offer-form-target="consulting" hidden=(!offer.persisted? || offer.course?)
-    = form.input :contact_name
-    .row
-      .col = form.input :contact_email
-      .col = form.input :contact_phone
+= form.input :contact_name
+.row
+  .col = form.input :contact_email
+  .col = form.input :contact_phone
