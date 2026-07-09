@@ -27,7 +27,7 @@ hr.mt-1.mb-3
 
 = form.input :learning_targets, as: :text, input_html: { rows: 8 }
 
-= form.input :contact_name
+= form.input :contact_name, input_html: { value: offer[:contact_name] }, placeholder: offer.default_contact_name
 .row
-  .col = form.input :contact_email
-  .col = form.input :contact_phone
+  .col = form.input :contact_email, input_html: { value: offer[:contact_email] }, placeholder: offer.default_contact_email
+  .col = form.input :contact_phone, input_html: { value: offer[:contact_phone] }, placeholder: offer.default_contact_phone

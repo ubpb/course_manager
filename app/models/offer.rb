@@ -18,6 +18,9 @@ class Offer < ApplicationRecord
   validates :type, inclusion: {in: TYPES}
   validates :contact_email, format: {with: UPB_EMAIL_REGEXP}
 
+  # Callbacks
+  before_save :nullify_default_contact_info
+
   # Scopes
   scope :published, -> { where(published: true) }
   scope :unpublished, -> { where(published: false) }
@@ -35,15 +38,31 @@ class Offer < ApplicationRecord
   end
 
   def contact_name
-    super.presence || ApplicationConfig[:default_contact, :name, default: "Schulungsteam"]
+    super.presence || default_contact_name
   end
 
   def contact_email
-    super.presence || ApplicationConfig[:default_contact, :email, default: "schulung@ub.uni-paderborn.de"]
+    super.presence || default_contact_email
   end
 
   def contact_phone
-    super.presence || ApplicationConfig[:default_contact, :phone, default: "05251 60-2017"]
+    super.presence || default_contact_phone
+  end
+
+  def default_contact_name = ApplicationConfig[:default_contact, :name, default: "Schulungsteam"]
+
+  def default_contact_email = ApplicationConfig[:default_contact, :email, default: "schulung@ub.uni-paderborn.de"]
+
+  def default_contact_phone = ApplicationConfig[:default_contact, :phone, default: "05251 60-2017"]
+
+  private
+
+  # Only persist contact info that differs from the current default, so the DB holds
+  # genuine overrides and defaults keep flowing live from config.
+  def nullify_default_contact_info
+    self[:contact_name] = nil if self[:contact_name].to_s == default_contact_name
+    self[:contact_email] = nil if self[:contact_email].to_s == default_contact_email
+    self[:contact_phone] = nil if self[:contact_phone].to_s == default_contact_phone
   end
 
 end
