@@ -80,25 +80,6 @@ module Admin
       redirect_to admin_offers_path, notice: t("admin.application.form.destroy_success")
     end
 
-    def preview_reminder_message
-      event = Event.new(
-        offer: @offer,
-        date_and_time: Time.zone.now,
-        duration: 60,
-        location: "Raum 123"
-      )
-
-      registration = Registration.new(
-        event: event,
-        first_name: "Max",
-        last_name: "Mustermann",
-        email: "schulung@ub.uni-paderborn.de"
-      )
-
-      mail = Admin::Mailers::EventsMailer.reminder_message(registration, skip_if_sent: false)
-      @preview = mail.body.to_s
-    end
-
     private
 
     def setup_bulk_process_actions(offers)
@@ -110,8 +91,8 @@ module Admin
 
     def offer_params
       params.require(:offer).permit(
-        :type, :title, :description, :learning_targets, :reminder_message,
-        :email_from, :published, :contact_name, :contact_email, :contact_phone,
+        :type, :title, :description, :learning_targets,
+        :published, :contact_name, :contact_email, :contact_phone,
         topic_ids: [], target_group_ids: []
       )
     end

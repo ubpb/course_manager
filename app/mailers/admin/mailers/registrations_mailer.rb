@@ -9,7 +9,7 @@ module Admin
         @message = message
 
         mail(
-          reply_to: @event.effective_email_from || "schulung@ub.uni-paderborn.de",
+          reply_to: @event.email_from || "schulung@ub.uni-paderborn.de",
           to: @registration.email,
           subject: "[UB Paderborn] #{@message.subject}"
         )
@@ -26,7 +26,7 @@ module Admin
 
         attachments[certificate_filename] = certificate
         mail(
-          reply_to: @event.effective_email_from || "schulung@ub.uni-paderborn.de",
+          reply_to: @event.email_from || "schulung@ub.uni-paderborn.de",
           to: @registration.email,
           subject: "[UB Paderborn] Ihre Teilnahmebescheinigung"
         )

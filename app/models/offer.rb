@@ -16,7 +16,6 @@ class Offer < ApplicationRecord
   # Validations
   validates :title, presence: true
   validates :type, inclusion: {in: TYPES}
-  validates :email_from, format: {with: UPB_EMAIL_REGEXP}
   validates :contact_email, format: {with: UPB_EMAIL_REGEXP}
 
   # Scopes

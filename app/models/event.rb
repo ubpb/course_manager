@@ -52,12 +52,4 @@ class Event < ApplicationRecord
     full? || date_and_time.today?
   end
 
-  def effective_reminder_message
-    reminder_message.presence || offer.reminder_message.presence
-  end
-
-  def effective_email_from
-    email_from.presence || offer.email_from.presence
-  end
-
 end

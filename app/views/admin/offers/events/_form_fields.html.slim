@@ -30,15 +30,9 @@ ul.nav.nav-tabs.mb-3
 
 .tab-content
   #reminder-message-pane.tab-pane.fade.show.active
-    - if offer.reminder_message.present? && event.reminder_message.blank?
-        div.badge.text-bg-light.d-block.mb-1
-          = "Wird von der Veranstaltung übernommen"
     = form.input :reminder_message, as: :text, input_html: { rows: 8 }, label: false
 
     = form.label :email_from
-    - if offer.email_from.present? && event.email_from.blank?
-        div.badge.text-bg-light.d-block.mb-1
-          = "Wird von der Veranstaltung übernommen"
     = form.input :email_from, label: false
   #reminder-message-preview-pane.tab-pane.fade.show
     - if event.persisted?

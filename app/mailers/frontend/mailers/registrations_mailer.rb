@@ -6,7 +6,7 @@ module Frontend
         prepare_context(registration)
 
         mail(
-          reply_to: @event.effective_email_from || "schulung@ub.uni-paderborn.de",
+          reply_to: @event.email_from || "schulung@ub.uni-paderborn.de",
           to: @registration.email,
           subject: "[UB Paderborn] Ihre Schulungsanmeldung"
         )
