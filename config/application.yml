@@ -6,6 +6,12 @@ shared:
   locale_switching:
     enabled: false
 
+  default_contact:
+    name: "Schulungsteam"
+    email: "schulung@ub.uni-paderborn.de"
+    phone: "05251 60-2017"
+
+
 # Values for the development environment
 development:
   alma_api:

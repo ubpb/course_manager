@@ -31,7 +31,19 @@ class Offer < ApplicationRecord
   def consulting? = type == "consulting"
 
   def contact_info?
-    contact_name.present? || contact_email.present? || contact_phone.present?
+    true # always true, because we always have a contact (either the default or a custom one)
+  end
+
+  def contact_name
+    super.presence || ApplicationConfig[:default_contact, :name, default: "Schulungsteam"]
+  end
+
+  def contact_email
+    super.presence || ApplicationConfig[:default_contact, :email, default: "schulung@ub.uni-paderborn.de"]
+  end
+
+  def contact_phone
+    super.presence || ApplicationConfig[:default_contact, :phone, default: "05251 60-2017"]
   end
 
 end
