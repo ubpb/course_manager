@@ -11,6 +11,8 @@ shared:
     email: "schulung@ub.uni-paderborn.de"
     phone: "05251 60-2017"
 
+  default_call_to_action:
+    text: "Selbstlernkurs öffnen"
 
 # Values for the development environment
 development:

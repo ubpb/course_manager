@@ -13,7 +13,13 @@ module FrontendFilterHelper
 
     chips = []
     if filter.scope.present?
-      chips << { label: (filter.scope == "courses" ? "Schulungen" : "Beratungen"),
+      label = case filter.scope
+              when "courses" then "Schulungen"
+              when "consultings" then "Beratungen"
+              when "self_study_courses" then "Selbstlernkurse"
+              else filter.scope
+              end
+      chips << { label: label,
                  remove_path: frontend_filter_remove_path(filter, :scope) }
     end
     if filter.with_upcoming_events

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_09_120001) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_10_063717) do
   create_table "categories", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "color_code", null: false
     t.datetime "created_at", null: false
@@ -59,6 +59,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_09_120001) do
 
   create_table "offers", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.boolean "archived", default: false, null: false
+    t.string "call_to_action_text"
+    t.string "call_to_action_url"
     t.string "contact_email"
     t.string "contact_name"
     t.string "contact_phone"

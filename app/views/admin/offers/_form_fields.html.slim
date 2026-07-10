@@ -7,14 +7,7 @@
 
 h5.m-0 Allgemeine Angaben
 hr.mt-1.mb-3
-
-- if offer.persisted?
-  .mb-3
-    label.form-label.d-block = "Art"
-    = offer.course? ? "Kurs" : "Beratung"
-- else
-  = form.input :type, as: :radio_buttons, collection: [["Kurs", "course"], ["Beratung", "consulting"]], label: "Art", item_wrapper_class: "form-check-inline", input_html: { data: { action: "change->offer-form#toggle", "offer-form-target": "type" } }
-
+= form.input :type, as: :select, collection: [["Kurs", "course"], ["Beratung", "consulting"], ["Selbstlernkurs", "self_study_course"]], label: "Art", include_blank: false
 = form.input :published, as: :boolean
 = form.input :events_on_request, as: :boolean
 = form.input :title
@@ -23,10 +16,20 @@ hr.mt-1.mb-3
     = form.association :topics, as: :check_boxes
   .col
     = form.association :target_groups, as: :check_boxes
-= form.input :description, as: :text, input_html: { rows: 8 }
 
+h5.m-0 Beschreibungen
+hr.mt-1.mb-3
+= form.input :description, as: :text, input_html: { rows: 8 }
 = form.input :learning_targets, as: :text, input_html: { rows: 8 }
 
+h5.m-0 Call to Action (Selbstlernkurse)
+hr.mt-1.mb-3
+.row
+  .col = form.input :call_to_action_url
+  .col = form.input :call_to_action_text, input_html: { value: offer[:call_to_action_text] }, placeholder: offer.default_call_to_action_text
+
+h5.m-0 Kontaktinformationen
+hr.mt-1.mb-3
 = form.input :contact_name, input_html: { value: offer[:contact_name] }, placeholder: offer.default_contact_name
 .row
   .col = form.input :contact_email, input_html: { value: offer[:contact_email] }, placeholder: offer.default_contact_email
