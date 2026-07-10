@@ -107,7 +107,8 @@ module Filterable
     def filter(arel, **options)
       @context.filters.each do |name, filter|
         filter_value = send(name)
-        next if filter_value.blank?
+        filter_value = nil if filter_value.is_a?(Array) && filter_value.empty?
+        next if filter_value.nil?
 
         callable = filter[:block]
         next unless callable
