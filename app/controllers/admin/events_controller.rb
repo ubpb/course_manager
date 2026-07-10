@@ -54,6 +54,22 @@ module Admin
 
     def index
       load_events
+      setup_bulk_process_actions(@events)
+    end
+
+    def bulk_process
+      events = Event.where(id: params[:bulk_process_ids])
+
+      case params[:bulk_process_action]
+      when "publish"
+        events.update_all(published: true)
+        flash[:success] = "Termin(e) wurde(n) veröffentlicht"
+      when "unpublish"
+        events.update_all(published: false)
+        flash[:success] = "Veröffentlichung von Termin(en) wurde zurückgezogen"
+      end
+
+      redirect_to admin_events_path
     end
 
     def reports
@@ -80,6 +96,14 @@ module Admin
     end
 
     private
+
+    def setup_bulk_process_actions(events)
+      @bulk_process_actions = []
+      return if events.empty?
+
+      @bulk_process_actions << ["Veröffentlichen", "publish"]
+      @bulk_process_actions << ["Veröffentlichung zurückziehen", "unpublish"]
+    end
 
     def load_events
       @events = Event.includes(:offer, :report).order(date_and_time: :desc)

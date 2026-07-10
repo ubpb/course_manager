@@ -7,6 +7,23 @@ module Admin
       def index
         @upcoming_events = @offer.events.upcoming.order(date_and_time: :asc)
         @past_events = @offer.events.past.order(date_and_time: :desc)
+
+        setup_bulk_process_actions(@offer.events)
+      end
+
+      def bulk_process
+        events = @offer.events.where(id: params[:bulk_process_ids])
+
+        case params[:bulk_process_action]
+        when "publish"
+          events.update_all(published: true)
+          flash[:success] = "Termin(e) wurde(n) veröffentlicht"
+        when "unpublish"
+          events.update_all(published: false)
+          flash[:success] = "Veröffentlichung von Termin(en) wurde zurückgezogen"
+        end
+
+        redirect_to admin_offer_events_path(@offer)
       end
 
       def new
@@ -86,6 +103,14 @@ module Admin
       end
 
       private
+
+      def setup_bulk_process_actions(events)
+        @bulk_process_actions = []
+        return if events.empty?
+
+        @bulk_process_actions << ["Veröffentlichen", "publish"]
+        @bulk_process_actions << ["Veröffentlichung zurückziehen", "unpublish"]
+      end
 
       def event_params
         params.require(:event).permit(

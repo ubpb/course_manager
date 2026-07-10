@@ -11,7 +11,7 @@
     h5.m-0.p-2.d-block.bg-body-tertiary.bg-gradient.border-bottom
       = "Kommende Termine"
     - if @upcoming_events.present?
-      = render "listing", offer: @offer, events: @upcoming_events
+      = render "listing", offer: @offer, events: @upcoming_events, scope: "upcoming"
     - else
       .p-2.text-muted = "Keine Termine vorhanden"
 
@@ -19,6 +19,14 @@
     h5.m-0.p-2.d-block.bg-body-tertiary.bg-gradient.border-bottom
       = "Vergangene Termine"
     - if @past_events.present?
-      = render "listing", offer: @offer, events: @past_events
+      = render "listing", offer: @offer, events: @past_events, scope: "past"
     - else
       .p-2.text-muted = "Keine Termine vorhanden"
+
+/ Fix to reset indeterminate state of select-all checkboxes on turbo:load
+javascript:
+  document.addEventListener("turbo:load", function() {
+    document.querySelectorAll("input[data-checkbox-select-all-target='checkboxAll']").forEach(function(cb) {
+      cb.indeterminate = false;
+    });
+  })

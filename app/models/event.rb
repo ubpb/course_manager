@@ -14,6 +14,7 @@ class Event < ApplicationRecord
 
   # Scopes
   scope :published, -> { where("events.published": true) }
+  scope :unpublished, -> { where("events.published": false) }
   scope :from_published_offers, -> { joins(:offer).where("offers.published": true) }
   scope :from_non_archived_offers, -> { joins(:offer).where("offers.archived": false) }
   scope :with_report, -> { includes(:report).where.not(reports: {id: nil}) }

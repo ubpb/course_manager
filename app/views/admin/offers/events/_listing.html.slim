@@ -1,46 +1,62 @@
-/ <%# locals: (offer:, events:) -%>
+/ <%# locals: (offer:, events:, scope:) -%>
 
-table.table
-  thead
-    tr
-      th(colspan="2") = "Datum / Uhrzeit"
-      th = "Teilnehmer"
-      th = "Online?"
-      th = "Statistik erfasst?"
-      th = "Zertifikat erstellt?"
-      th.actions = "Aktionen"
-  tbody
-    - events.each do |event|
-      tr(id=dom_id(event))
-        td(width="1" class="#{event.published? ? "table-success" : "table-danger"}") = ""
-        td = l(event.date_and_time)
-        td
-          = event.registrations_count
-          - if event.max_no_of_participants.positive?
-            = " / #{event.max_no_of_participants}"
-          - else
-            = " / ∞"
-        td = event.online? ? "Ja" : "Nein"
-        td = event.report.present? ? "Ja" : "Nein"
-        td = event.certification.present? ? "Ja" : "Nein"
-        td.actions
-          .dropdown
-            button.btn.btn-outline-primary.btn-sm.dropdown-toggle(type="button" data-bs-toggle="dropdown")
-              i.fas.fa-cog
-            ul.dropdown-menu.dropdown-menu-end
-              li = link_to edit_admin_offer_event_path(offer, event), class: "dropdown-item" do
-                i.fa-solid.fa-edit.me-2
-                = "Bearbeiten"
-              li = link_to duplicate_admin_offer_event_path(offer, event), data: {turbo_method: :get, turbo_confirm: "Termin duplizieren? Datum und Uhrzeit wird auf JETZT voreingestellt und muss geändert werden."}, class: "dropdown-item" do
-                i.fa-solid.fa-clone.me-2
-                = "Duplizieren"
-              hr.dropdown-divider
-              li = link_to admin_offer_event_registrations_path(offer, event), class: "dropdown-item" do
-                i.fa-solid.fa-users.me-2
-                = "Teilnehmer"
-              li = link_to admin_offer_event_report_path(offer, event), class: "dropdown-item" do
-                i.fa-solid.fa-chart-line.me-2
-                = "Statistik"
-              li = link_to admin_offer_event_certification_path(event.offer, event), class: "dropdown-item" do
-                i.fa-solid.fa-certificate.me-2
-                = "Zertifizierung"
+div id="bulk-action-form-#{scope}"
+
+= form_tag bulk_process_admin_offer_events_path(offer), method: :patch
+  table.table(
+    data-controller="checkbox-select-all"
+  )
+    thead
+      - if @bulk_process_actions.any?
+        tr
+          th.table-light(colspan="8")
+            .btn-toolbar.justify-content-start.flex-nowrap.align-items-center
+              .ms-0 = check_box_tag "bulk_process_select_all_#{scope}", 0, false, "data-checkbox-select-all-target": "checkboxAll"
+              .ms-2 = select_tag(:bulk_process_action, options_for_select(@bulk_process_actions), class: "form-control form-control-sm", prompt: "Aktion wählen")
+              .ms-2 = submit_tag("Ausführen", class: "btn btn-primary btn-sm")
+      tr
+        - if @bulk_process_actions.any?
+          th.table-light(width="10")
+        th(colspan="2") = "Datum / Uhrzeit"
+        th = "Teilnehmer"
+        th = "Online?"
+        th = "Statistik erfasst?"
+        th = "Zertifikat erstellt?"
+        th.actions = "Aktionen"
+    tbody
+      - events.each do |event|
+        tr(id=dom_id(event))
+          - if @bulk_process_actions.any?
+            td.table-light = check_box_tag "bulk_process_ids[]", event.id, false, id: nil, "data-checkbox-select-all-target": "checkbox"
+          td(width="1" class="#{event.published? ? "table-success" : "table-danger"}") = ""
+          td = l(event.date_and_time)
+          td
+            = event.registrations_count
+            - if event.max_no_of_participants.positive?
+              = " / #{event.max_no_of_participants}"
+            - else
+              = " / ∞"
+          td = event.online? ? "Ja" : "Nein"
+          td = event.report.present? ? "Ja" : "Nein"
+          td = event.certification.present? ? "Ja" : "Nein"
+          td.actions
+            .dropdown
+              button.btn.btn-outline-primary.btn-sm.dropdown-toggle(type="button" data-bs-toggle="dropdown")
+                i.fas.fa-cog
+              ul.dropdown-menu.dropdown-menu-end
+                li = link_to edit_admin_offer_event_path(offer, event), class: "dropdown-item" do
+                  i.fa-solid.fa-edit.me-2
+                  = "Bearbeiten"
+                li = link_to duplicate_admin_offer_event_path(offer, event), data: {turbo_method: :get, turbo_confirm: "Termin duplizieren? Datum und Uhrzeit wird auf JETZT voreingestellt und muss geändert werden."}, class: "dropdown-item" do
+                  i.fa-solid.fa-clone.me-2
+                  = "Duplizieren"
+                hr.dropdown-divider
+                li = link_to admin_offer_event_registrations_path(offer, event), class: "dropdown-item" do
+                  i.fa-solid.fa-users.me-2
+                  = "Teilnehmer"
+                li = link_to admin_offer_event_report_path(offer, event), class: "dropdown-item" do
+                  i.fa-solid.fa-chart-line.me-2
+                  = "Statistik"
+                li = link_to admin_offer_event_certification_path(event.offer, event), class: "dropdown-item" do
+                  i.fa-solid.fa-certificate.me-2
+                  = "Zertifizierung"
