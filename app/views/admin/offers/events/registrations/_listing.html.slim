@@ -17,6 +17,7 @@
       tr
         - if @bulk_process_actions.any?
           th.table-light(width="10")
+        th = "Nummer"
         th = "Nachname"
         th = "Vorname"
         th = "E-Mail"
@@ -24,10 +25,11 @@
         th = "Zertifikat gesendet?"
         th.actions = "Aktionen"
     tbody
-      - registrations.each do |registration|
+      - registrations.each.with_index(1) do |registration, index|
         tr(id=dom_id(registration))
           - if @bulk_process_actions.any?
             td.table-light = check_box_tag "bulk_process_ids[]", registration.id, false, id: nil, "data-checkbox-select-all-target": "checkbox"
+          td = index
           td = registration.last_name
           td = registration.first_name
           td = registration.email

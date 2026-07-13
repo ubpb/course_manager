@@ -4,6 +4,7 @@
 
 # Static headers
 headers = [
+  "Nummer",
   "Vorname",
   "Nachname",
   "E-Mail",
@@ -19,8 +20,9 @@ sheet.add_row(headers)
 #
 # Values
 #
-registrations.each do |r|
+registrations.each.with_index(1) do |r, index|
   values = [
+    index,
     r.first_name,
     r.last_name,
     r.email,
