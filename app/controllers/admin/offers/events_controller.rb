@@ -34,7 +34,6 @@ module Admin
                 events: events.includes(:offer),
                 offers: Offer.courses.where.not(id: @offer.id).order(:title),
                 url: bulk_move_admin_offer_events_path(@offer),
-                cancel_url: admin_offer_events_path(@offer),
                 container_id: "bulk-action-form-#{scope}"
               }
             )

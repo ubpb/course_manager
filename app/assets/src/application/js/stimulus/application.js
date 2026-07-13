@@ -28,6 +28,10 @@ application.register("filter-form", FilterForm)
 import SelectFilter from "./select_filter_controller.js"
 application.register("select-filter", SelectFilter)
 
+// Register Modal controller
+import ModalController from "./modal_controller.js"
+application.register("modal", ModalController)
+
 // Register Tooltip controller
 import TooltipController from "./tooltip_controller.js"
 application.register("tooltip", TooltipController)

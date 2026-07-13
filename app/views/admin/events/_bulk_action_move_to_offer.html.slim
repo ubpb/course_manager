@@ -1,33 +1,33 @@
-/ <%# locals: (events:, offers:, url:, cancel_url:, container_id:) -%>
+/ <%# locals: (events:, offers:, url:, container_id:) -%>
 
-div id=container_id class="mb-3"
-  = form_tag url, method: :patch
-    - events.each do |event|
-      = hidden_field_tag "event_ids[]", event.id, id: nil
-
-    .card.card-shadowed
-      .card-header.d-flex.align-items-center.gap-2
-        h5.card-title.mb-0 = "Termine in anderes Angebot verschieben"
-        .ms-auto
-        = link_to cancel_url, class: "btn btn-link btn-sm" do
-          i.fa-solid.fa-times
-      .card-body
-        p = "Ausgewählte Termine:"
-        ul
+div id=container_id
+  .modal.fade(tabindex="-1" aria-hidden="true" data-controller="modal")
+    .modal-dialog.modal-lg.modal-dialog-centered.modal-dialog-scrollable
+      .modal-content
+        = form_tag url, method: :patch
           - events.each do |event|
-            li
-              = l(event.date_and_time)
-              span.text-muted.ms-1 = "(#{event.offer.title})"
-        div data-controller="select-filter"
-          label.form-label(for="target_offer_id") = "Ziel-Angebot"
-          input.form-control.mb-2(
-            type="search"
-            placeholder="Nach Titel filtern …"
-            data-select-filter-target="input"
-            data-action="input->select-filter#filter"
-          )
-          = select_tag :target_offer_id, options_for_select(offers.map { |offer| [offer.title, offer.id] }), class: "form-select", size: 8, required: true, "data-select-filter-target": "select"
-      .card-footer
-        .d-flex.gap-2.flex-column.flex-md-row
-          = submit_tag "Verschieben", class: "btn btn-primary"
-          = link_to "Abbrechen", cancel_url, class: "btn btn-outline-secondary"
+            = hidden_field_tag "event_ids[]", event.id, id: nil
+
+          .modal-header
+            h5.modal-title = "Termine in anderes Angebot verschieben"
+            button.btn-close(type="button" data-bs-dismiss="modal" aria-label="Schließen")
+          .modal-body
+            p = "Ausgewählte Termine:"
+            ul
+              - events.each do |event|
+                li
+                  = l(event.date_and_time)
+                  span.text-muted.ms-1 = "(#{event.offer.title})"
+            div data-controller="select-filter"
+              label.form-label(for="target_offer_id") = "Ziel-Angebot"
+              input.form-control.mb-2(
+                type="search"
+                placeholder="Nach Titel filtern …"
+                autofocus=true
+                data-select-filter-target="input"
+                data-action="input->select-filter#filter"
+              )
+              = select_tag :target_offer_id, options_for_select(offers.map { |offer| [offer.title, offer.id] }), class: "form-select", size: 8, required: true, "data-select-filter-target": "select"
+          .modal-footer
+            button.btn.btn-outline-secondary(type="button" data-bs-dismiss="modal") = "Abbrechen"
+            = submit_tag "Verschieben", class: "btn btn-primary"

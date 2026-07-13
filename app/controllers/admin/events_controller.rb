@@ -78,7 +78,6 @@ module Admin
               events: events.includes(:offer),
               offers: Offer.courses.order(:title),
               url: bulk_move_admin_events_path,
-              cancel_url: admin_events_path,
               container_id: "bulk-action-form"
             }
           )

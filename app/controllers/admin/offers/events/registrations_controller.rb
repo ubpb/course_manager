@@ -136,9 +136,11 @@ module Admin
             flash[:success] = "Nachricht gesendet"
             redirect_to admin_offer_event_registrations_path(@offer, @event)
           else
+            # Only swap the content of the already open modal — replacing the
+            # whole container would spawn a second modal on top of it.
             render turbo_stream: turbo_stream.replace(
-              "bulk-action-form",
-              partial: "bulk_action_new_message",
+              "bulk-action-message-form",
+              partial: "bulk_action_new_message_form",
               locals: {
                 offer: @offer,
                 event: @event,
