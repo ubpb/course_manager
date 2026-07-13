@@ -26,7 +26,7 @@ div id=container_id class="mb-3"
             data-select-filter-target="input"
             data-action="input->select-filter#filter"
           )
-          = select_tag :target_offer_id, options_for_select(offers.map { |offer| [offer.archived? ? "#{offer.title} (archiviert)" : offer.title, offer.id] }), class: "form-select", size: 8, required: true, "data-select-filter-target": "select"
+          = select_tag :target_offer_id, options_for_select(offers.map { |offer| [offer.title, offer.id] }), class: "form-select", size: 8, required: true, "data-select-filter-target": "select"
       .card-footer
         .d-flex.gap-2.flex-column.flex-md-row
           = submit_tag "Verschieben", class: "btn btn-primary"
