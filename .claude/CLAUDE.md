@@ -29,23 +29,23 @@ Propshaft + **Bun as the bundler** (not importmap or jsbundling). `bun.build.js`
 ## Architecture
 
 **Domain model** (`app/models/`):
-- `Offer` — central entity, `type` is `"course"` or `"consulting"`. STI is disabled (`self.inheritance_column = nil`) so `type` is a plain column; use `course?`/`consulting?` and the `courses`/`consultings` scopes. Has many `events`, `topics`, `target_groups`.
-- `Event` (termin) — belongs to an offer; has many `registrations`, one `report`, one `certification`. Rich scopes (`upcoming`/`past`/`published`/`from_published_offers`) and predicates (`full?`, `no_of_free_spaces`, `registration_closed?`). `effective_*` methods fall back from event to parent offer.
+- `Offer` — central entity, `type` is one of `Offer::TYPES`: `"course"`, `"consulting"`, `"self_study_course"`. STI is disabled (`self.inheritance_column = nil`) so `type` is a plain column; use the `course?`/`consulting?`/`self_study_course?` predicates and matching plural scopes. **Only `course` offers can have events** (enforced in admin `ContextHelpers` and frontend `prepare_event_context`); non-scheduled offers can instead set the `events_on_request` flag. Contact info and call-to-action text fall back to `ApplicationConfig` defaults (`default_contact`, `default_call_to_action`); a `before_save` nullifies attributes equal to the current default so the DB only stores genuine overrides. Archived offers get an `[ARCHIVIERT]` title prefix via the `title` getter. Has many `events`, `topics`, `target_groups`.
+- `Event` (termin) — belongs to an offer; has many `registrations`, one `report`, one `certification`. Rich scopes (`upcoming`/`past`/`published`/`from_published_offers`/`from_non_archived_offers`/`with_report`) and predicates (`full?`, `no_of_free_spaces`, `registration_closed?`). Reminder-mail fields (`email_from`, message) live on the event itself — the old `effective_*` fallback to the offer was removed.
 - `Registration`, `Certification`/`Certificate`, `Report`, `Message`, `Topic`, `TargetGroup` (last two use `acts_as_list` with `reorder` routes).
 - Email fields are validated against `ApplicationRecord::UPB_EMAIL_REGEXP` (must be `@ub.uni-paderborn.de` or blank).
 
 **Controllers split into two namespaces:**
-- `Frontend::` (`layout "frontend"`) — public site. **No user auth** (`current_user` is a `nil` TODO). The event show page was intentionally removed; events are rendered on the offer show page (`Frontend::OffersController#show`), and legacy `/kurse` `/beratungen` URLs 301-redirect via `old_id`.
+- `Frontend::` (`layout "frontend"`) — public site. **No user auth** (`current_user` is a `nil` TODO). The event show page was intentionally removed; events are rendered on the offer show page (`Frontend::OffersController#show`), and legacy `/kurse`, `/beratungen`, and `/termine` URLs 301-redirect via `old_id`.
 - `Admin::` (`layout "admin"`) — staff area behind `authenticate!`. Login is via the **Alma API** (`alma_api` gem, `Admin::SessionsController`): validates user_id/password against Alma, only allows `STAFF` + `ACTIVE` users, stores `session[:current_admin_user_id]`. API key comes from `ApplicationConfig[:alma_api, :api_key]`.
 
-**Routes are deeply nested** (`config/routes.rb`): `admin/offers → events → registrations`, plus per-event `report` and `certification` singular resources. Frontend nests `events` (and their `registrations`) under `angebote`.
+**Routes are deeply nested** (`config/routes.rb`): `admin/offers → events → registrations`, plus per-event `report` and `certification` singular resources. Offers, events, and registrations have `bulk_process` collection actions (batch publish/unpublish etc.); events also have `bulk_move` (move between offers) — both driven from modals. A flat `admin/events` index exists across all offers (with XLSX `reports`). Frontend nests `events` (and their `registrations`) under `angebote`.
 
 **Key shared concerns** (`app/controllers/concerns/`):
 - `Filterable` — a `define_filter`/`filter_by` DSL for index pages. Filters are **persisted in `session`** per controller path; `?filter=...` sets them, `?reset_filter=...` clears them (both redirect). Instantiate with `create_filter(:name)`, then `@records = @filter.filter(scope)`. Used by both admin and frontend offer/event indexes.
 - `NavScope` — threads a `nav_scope` param through all generated URLs (via `default_url_options`) to preserve list context in the admin.
 - `Admin::ContextHelpers` — `prepare_offer_context` / `prepare_offer_event_context` / `..._registration_context` load `@offer`/`@event`/`@registration` and build breadcrumbs; called as `before_action`s. `Frontend::ApplicationController` has its own `prepare_offer_context`/`prepare_event_context` that scope to published + non-archived records.
 
-**Config access:** `ApplicationConfig[:key, :subkey, default: ...]` reads `config/application.yml` (loaded via `config_for(:application)`), which supports `shared`/`development`/`production` sections and ERB (e.g. pulls Alma keys from Rails credentials). Feature flags live here (`color_mode`, `locale_switching`).
+**Config access:** `ApplicationConfig[:key, :subkey, default: ...]` reads `config/application.yml` (loaded via `config_for(:application)`), which supports `shared`/`development`/`production` sections and ERB (e.g. pulls Alma keys from Rails credentials). An env var named after the upcased, underscore-joined keys (e.g. `ENV["ALMA_API_API_KEY"]`) **overrides the file value**. Feature flags and defaults live here (`color_mode`, `locale_switching`, `default_contact`, `default_call_to_action`).
 
 **Reports/documents:** `caxlsx_rails` for XLSX exports (admin event reports), `hexapdf` for certificate PDFs, `commonmarker`/`github-markup` for rendering markdown content.
 
