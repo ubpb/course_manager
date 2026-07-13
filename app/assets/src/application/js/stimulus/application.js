@@ -24,6 +24,10 @@ application.register("checkbox-select-all", CheckboxSelectAll)
 import FilterForm from "./filter_form_controller.js"
 application.register("filter-form", FilterForm)
 
+// Register SelectFilter controller
+import SelectFilter from "./select_filter_controller.js"
+application.register("select-filter", SelectFilter)
+
 // Register Tooltip controller
 import TooltipController from "./tooltip_controller.js"
 application.register("tooltip", TooltipController)

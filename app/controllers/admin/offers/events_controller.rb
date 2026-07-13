@@ -21,6 +21,39 @@ module Admin
         when "unpublish"
           events.update_all(published: false)
           flash[:success] = "Veröffentlichung von Termin(en) wurde zurückgezogen"
+        when "move_to_offer"
+          if events.none?
+            flash[:alert] = "Bitte mindestens einen Termin auswählen"
+          else
+            scope = params[:bulk_process_scope].presence_in(%w[upcoming past]) || "upcoming"
+
+            render turbo_stream: turbo_stream.replace(
+              "bulk-action-form-#{scope}",
+              partial: "admin/events/bulk_action_move_to_offer",
+              locals: {
+                events: events.includes(:offer),
+                offers: Offer.courses.where.not(id: @offer.id).order(:title),
+                url: bulk_move_admin_offer_events_path(@offer),
+                cancel_url: admin_offer_events_path(@offer),
+                container_id: "bulk-action-form-#{scope}"
+              }
+            )
+            return
+          end
+        end
+
+        redirect_to admin_offer_events_path(@offer)
+      end
+
+      def bulk_move
+        events = @offer.events.where(id: params[:event_ids])
+        offer = Offer.courses.where.not(id: @offer.id).find_by(id: params[:target_offer_id])
+
+        if offer.nil? || events.none?
+          flash[:alert] = "Bitte Termine und Ziel-Angebot auswählen"
+        else
+          events.update_all(offer_id: offer.id)
+          flash[:success] = "Termin(e) wurde(n) nach \"#{offer.title}\" verschoben"
         end
 
         redirect_to admin_offer_events_path(@offer)
@@ -110,6 +143,7 @@ module Admin
 
         @bulk_process_actions << ["Veröffentlichen", "publish"]
         @bulk_process_actions << ["Veröffentlichung zurückziehen", "unpublish"]
+        @bulk_process_actions << ["In anderes Angebot verschieben", "move_to_offer"]
       end
 
       def event_params

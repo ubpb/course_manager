@@ -60,6 +60,7 @@ Rails.application.routes.draw do
         get :duplicate, on: :member
         get :preview_reminder_message, path: "preview-reminder-message", on: :member
         patch :bulk_process, path: "bulk-process", on: :collection
+        patch :bulk_move, path: "bulk-move", on: :collection
 
         resources :registrations, except: [:show], module: :events do
           get :download_certificate, on: :member, path: "certificate/download"
@@ -78,6 +79,7 @@ Rails.application.routes.draw do
     resources :events, only: [:index] do
       get :reports, on: :collection, constraints: {format: :xlsx}
       patch :bulk_process, path: "bulk-process", on: :collection
+      patch :bulk_move, path: "bulk-move", on: :collection
     end
 
     resources :target_groups, path: "target-groups", except: [:show] do

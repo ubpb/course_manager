@@ -3,6 +3,7 @@
 div id="bulk-action-form-#{scope}"
 
 = form_tag bulk_process_admin_offer_events_path(offer), method: :patch
+  = hidden_field_tag :bulk_process_scope, scope, id: nil
   table.table(
     data-controller="checkbox-select-all"
   )
