@@ -21,6 +21,12 @@ module Frontend
 
       filter_by :with_upcoming_events, :boolean do |arel, _with_upcoming_events, options|
         arel.where(id: Event.published.upcoming.select(:offer_id))
+        # ... reorder offers by event date and time instead of title
+        # arel.joins(:events)
+        #     .merge(Event.published.upcoming)
+        #     .select("offers.*", "MIN(events.date_and_time) AS next_event_at")
+        #     .group("offers.id")
+        #     .reorder("next_event_at ASC", "offers.title ASC")
       end
 
       filter_by :title, :string do |arel, title|
