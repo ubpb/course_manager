@@ -20,6 +20,15 @@
       i.fa-solid.fa-people-arrows.fa-fw
       = link_to frontend_offers_path(filter: { scope: :consultings }), class: "text-decoration-none" do
         = "Beratung"
+  - elsif offer_type == "self_study_course"
+    span.badge.rounded-pill.text-bg-light.border.d-inline-flex.align-items-center.gap-2.py-2.px-2(
+      data-controller="tooltip"
+      data-bs-toggle="tooltip"
+      data-bs-title="Art des Angebots"
+    )
+      i.fa-solid.fa-user-graduate.fa-fw
+      = link_to frontend_offers_path(filter: { scope: :self_study_courses }), class: "text-decoration-none" do
+        = "Selbstlernkurs"
 
   - if object.respond_to?(:topics) && object.topics.present?
     - object.topics.each do |t|
