@@ -12,5 +12,8 @@
     = link_to frontend_offers_path(reset_filter: true), class: "list-group-item list-group-item-action" do
       i.fa-solid.fa-ellipsis.fa-fw.me-2
       = "Alle Angebote"
+    = link_to frontend_contact_path, class: "list-group-item list-group-item-action" do
+      i.fa-solid.fa-info.fa-fw.me-2
+      = "Kontakt"
 
 = render "application/main_menu"
