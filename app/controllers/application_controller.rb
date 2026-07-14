@@ -8,11 +8,31 @@ class ApplicationController < ActionController::Base
   # --------------------------------------------------------------------------
 
   def current_user
-    # TODO: Implement current_user
-    nil
+    @current_user ||= User.from_session(session[:current_user])
   end
 
   helper_method :current_user
+
+  def sign_in(user)
+    session[:current_user] = user.to_session
+    @current_user = nil
+  end
+
+  def sign_out
+    session.delete(:current_user)
+    @current_user = nil
+  end
+
+  def authenticate_user!
+    return true if current_user
+
+    # Only remember GET requests as return target, the path is relative so
+    # there is no open redirect risk.
+    session[:return_to] = request.fullpath if request.get?
+
+    redirect_to new_session_path, alert: t("application.authentication.login_required")
+    false
+  end
 
   # --------------------------------------------------------------------------
   # Locale

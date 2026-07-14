@@ -7,6 +7,8 @@ en:
       logout_msg: Really log out?
       my_account: My account
     app_name: "Schulungen"
+    authentication:
+      login_required: Please log in to continue.
     color_modes:
       auto: Auto
       dark: Dark

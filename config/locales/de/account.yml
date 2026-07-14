@@ -1,0 +1,19 @@
+---
+de:
+  account:
+    title: Mein Konto
+    registrations:
+      index:
+        title: Meine Anmeldungen
+        empty: Sie sind derzeit für keine Schulungen angemeldet
+        empty_past: Keine Termine verfügbar
+        upcoming: Anstehende Termine
+        past: Vergangene Termine
+        past_info: >
+          Termine von Schulungen für die Sie angemeldet waren, werden 10 Tage nach dem Termin
+          aus Datenschutzgründen gelöscht.
+        cancel: Abmelden
+        cancel_confirm: Möchten Sie Ihre Anmeldung wirklich stornieren?
+      destroy:
+        success: Ihre Anmeldung wurde storniert. Wir haben Ihnen eine Bestätigung per E-Mail gesendet.
+        not_allowed: Anmeldungen zu vergangenen Terminen können nicht storniert werden.

@@ -15,6 +15,12 @@ Rails.application.routes.draw do
   # Locale switching
   get "/locale/:locale", to: "locales#switch", as: :locale
 
+  # User account
+  namespace :account do
+    root "registrations#index"
+    resources :registrations, only: [:destroy], path: "anmeldungen"
+  end
+
   # Defines the root path route ("/")
   root "frontend/pages#home"
 

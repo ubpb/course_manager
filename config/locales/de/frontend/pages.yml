@@ -1,0 +1,8 @@
+---
+de:
+  frontend:
+    pages:
+      home:
+        title: Startseite
+      contact:
+        title: Kontakt

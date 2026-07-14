@@ -1,0 +1,15 @@
+---
+en:
+  account:
+    title: My account
+    registrations:
+      index:
+        title: My registrations
+        empty: You currently have no registrations.
+        upcoming: Upcoming events
+        past: Past events
+        cancel: Cancel registration
+        cancel_confirm: Do you really want to cancel your registration?
+      destroy:
+        success: Your registration has been cancelled. We have sent you a confirmation email.
+        not_allowed: Registrations for past events cannot be cancelled.
