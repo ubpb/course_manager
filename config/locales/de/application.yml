@@ -7,6 +7,8 @@ de:
       logout_msg: Wirklich abmelden?
       my_account: Mein Konto
     app_name: "Schulung & Beratung"
+    authentication:
+      login_required: Bitte melden Sie sich an, um fortzufahren.
     color_modes:
       auto: Automatisch
       dark: Dunkel

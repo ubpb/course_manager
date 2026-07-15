@@ -1,6 +1,8 @@
 module Admin
   class SessionsController < ApplicationController
 
+    include AlmaAuthentication
+
     before_action { add_breadcrumb "Login", new_admin_session_path }
 
     skip_before_action :authenticate!, only: [:new, :create]
@@ -36,21 +38,9 @@ module Admin
 
     private
 
-    def alma_client
-      @alma_client ||= AlmaApi::Client.configure do |config|
-        config.api_key = ApplicationConfig[:alma_api, :api_key]
-      end
-    end
-
-    def authenticate_against_alma(user_id, password)
-      alma_client.post("users/#{CGI.escape(user_id)}", params: {password: password})
-      true
-    rescue AlmaApi::LogicalError
-      false
-    end
-
     def get_alma_user(user_id)
-      alma_user = alma_client.get("users/#{CGI.escape(user_id)}")
+      alma_user = fetch_alma_user(user_id)
+      return nil if alma_user.nil?
 
       # Make sure only staff users can log in
       return nil unless alma_user.dig("record_type", "value") == "STAFF"
@@ -58,8 +48,6 @@ module Admin
       return nil unless alma_user.dig("status", "value") == "ACTIVE"
 
       alma_user
-    rescue AlmaApi::LogicalError
-      nil
     end
 
   end

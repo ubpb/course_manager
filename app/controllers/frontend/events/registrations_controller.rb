@@ -2,6 +2,7 @@ module Frontend
   module Events
     class RegistrationsController < ApplicationController
 
+      before_action :authenticate_user!
       before_action :prepare_event_context
       before_action -> { add_breadcrumb "Anmeldung", frontend_event_registrations_path(@event) }
 
@@ -10,12 +11,18 @@ module Frontend
       end
 
       def new
-        @registration = @event.registrations.build
-        ensure_registration_is_possible or return
+        @registration = @event.registrations.build(
+          first_name: current_user.first_name,
+          last_name: current_user.last_name,
+          email: current_user.email
+        )
+        ensure_registration_is_possible
       end
 
       def create
         @registration = @event.registrations.build(registration_params)
+        # Never taken from the params, so a user cannot register on behalf of someone else
+        @registration.ils_primary_id = current_user.ils_primary_id
         ensure_registration_is_possible or return
 
         if @registration.save(context: :user_registration)
@@ -24,7 +31,7 @@ module Frontend
           # Send notification to Schulungs-Team
           Frontend::Mailers::RegistrationsMailer.notification(@registration).deliver_later
 
-          redirect_to frontend_event_path(@event), notice: "Anmeldung erfolgreich. Wir haben Ihnen eine Bestätigung per E-Mail gesendet."
+          redirect_to frontend_offer_path(@event.offer), notice: "Anmeldung erfolgreich. Wir haben Ihnen eine Bestätigung per E-Mail gesendet."
         else
           render :new, status: :unprocessable_entity
         end
@@ -39,13 +46,19 @@ module Frontend
       def ensure_registration_is_possible
         # Abort if registration is not needed
         unless @event.registration_required?
-          redirect_to frontend_event_path(@event), alert: "Anmeldung nicht erforderlich"
+          redirect_to frontend_offer_path(@event.offer), alert: "Anmeldung nicht erforderlich"
           return false
         end
 
         # Abort if registration is closed
         if @event.registration_closed?
-          redirect_to frontend_event_path(@event), alert: "Die Anmeldung ist geschlossen"
+          redirect_to frontend_offer_path(@event.offer), alert: "Die Anmeldung ist geschlossen"
+          return false
+        end
+
+        # Abort if the user is already registered for this event
+        if @event.registrations.exists?(ils_primary_id: current_user.ils_primary_id)
+          redirect_to frontend_offer_path(@event.offer), alert: "Sie sind bereits für diesen Termin angemeldet."
           return false
         end
 

@@ -15,6 +15,12 @@ Rails.application.routes.draw do
   # Locale switching
   get "/locale/:locale", to: "locales#switch", as: :locale
 
+  # User account
+  namespace :account do
+    root "registrations#index"
+    resources :registrations, only: [:destroy], path: "anmeldungen"
+  end
+
   # Defines the root path route ("/")
   root "frontend/pages#home"
 
@@ -25,16 +31,21 @@ Rails.application.routes.draw do
     root "pages#home"
     get  "kontakt", to: "pages#contact", as: :contact
 
-    # redirect old event URLs to new ones
-    get "/:id", to: redirect("/termine/%{id}"), constraints: {id: /\d{1,4}.+/}
-
+    # Offers
     scope "angebote" do
-      resources :offers, only: [:index], path: "/"
-      resources :courses, only: [:index, :show], path: "kurse"
-      resources :events, only: [:index, :show], path: "termine" do
+      # Redirects for legacy/filter URLs. Must be defined before the resources :offers route,
+      # as "kurse" etc. will wrongfully match the :id parameter of the show route.
+      get "/kurse(/:id)", to: "offers#redirect_courses", as: :redirect_courses
+      get "/beratungen(/:id)", to: "offers#redirect_consultings", as: :redirect_consultings
+      get "/termine(/:id)", to: "offers#redirect_events", as: :redirect_events
+
+      # Offers
+      resources :offers, only: [:index, :show], path: "/"
+
+      # Event registrations
+      resources :events, only: [], path: "termine" do
         resources :registrations, only: [:index, :new, :create], path: "anmeldung", module: :events
       end
-      resources :consultings, only: [:index, :show], path: "beratungen"
     end
 
     resources :cert_checks, path: "validate", only: [:index, :new, :create, :show]
@@ -48,12 +59,14 @@ Rails.application.routes.draw do
 
     resource :session, only: [:new, :create, :destroy]
 
-    resources :courses, except: [:show] do
-      get :preview_reminder_message, path: "preview-reminder-message", on: :member
+    resources :offers, except: [:show] do
+      patch :bulk_process, path: "bulk-process", on: :collection
 
-      resources :events, except: [:show], module: :courses do
+      resources :events, except: [:show], module: :offers do
         get :duplicate, on: :member
         get :preview_reminder_message, path: "preview-reminder-message", on: :member
+        patch :bulk_process, path: "bulk-process", on: :collection
+        patch :bulk_move, path: "bulk-move", on: :collection
 
         resources :registrations, except: [:show], module: :events do
           get :download_certificate, on: :member, path: "certificate/download"
@@ -71,6 +84,8 @@ Rails.application.routes.draw do
 
     resources :events, only: [:index] do
       get :reports, on: :collection, constraints: {format: :xlsx}
+      patch :bulk_process, path: "bulk-process", on: :collection
+      patch :bulk_move, path: "bulk-move", on: :collection
     end
 
     resources :target_groups, path: "target-groups", except: [:show] do
@@ -80,8 +95,6 @@ Rails.application.routes.draw do
     resources :topics, except: [:show] do
       patch :reorder, on: :member
     end
-
-    resources :consultings, except: [:show]
   end
 
   # Dev Tools

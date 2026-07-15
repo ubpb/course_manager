@@ -3,15 +3,26 @@
     = "Unsere Schulungs- & Beratungsangebote"
 
 .row
-  .col-md-8
-    - if @filter&.active?
-      = render "filter_reset_panel"
+  .col-lg-8
+    - chips = frontend_offer_filter_chips(@filter)
+    - margin_bottom_class = chips.present? ? "mb-3" : "mb-3 mb-lg-0"
+    div(class=margin_bottom_class) = render "filter_bar", filter: @filter, chips: chips, button_end: true
+
     - if @offers.present?
       = render "listing", offers: @offers
     - else
       .card: .card-body
         .text-muted = "Keine Angebote vorhanden"
-  .col-md-4
-    .mb-3 = render "filters"
-    .mb-0 = render "contact_help_card"
-
+  .col-lg-4
+    / Filters as offcanvas on small screens,
+    .d-lg-none
+      = render "filter_offcanvas", filter: @filter, filters_partial: "frontend/offers/filter_form"
+    / ... as sidebar inside a card on large screens
+    .d-none.d-lg-block
+      .card
+        .card-header
+          h5.card-title.mb-0.card-title Filter
+        .card-body
+          = render "frontend/offers/filter_form", filter: @filter
+    / Contact and help info
+    .mb-0.mt-3 = render "frontend/application/contact_help_card"

@@ -1,0 +1,36 @@
+/ <%# locals: (form:, offer:) -%>
+
+- if form.object.errors.any?
+  .alert.alert-danger.mb-3.text-center
+    i.fa-solid.fa-exclamation-triangle.me-2
+    = t("admin.application.form.error", count: form.object.errors.count)
+
+h5.m-0 Allgemeine Angaben
+hr.mt-1.mb-3
+= form.input :type, as: :select, collection: [["Kurs", "course"], ["Beratung", "consulting"], ["Selbstlernkurs", "self_study_course"]], label: "Art", include_blank: false
+= form.input :published, as: :boolean
+= form.input :events_on_request, as: :boolean
+= form.input :title
+.row
+  .col
+    = form.association :topics, as: :check_boxes
+  .col
+    = form.association :target_groups, as: :check_boxes
+
+h5.m-0 Beschreibungen
+hr.mt-1.mb-3
+= form.input :description, as: :text, input_html: { rows: 8 }
+= form.input :learning_targets, as: :text, input_html: { rows: 8 }
+
+h5.m-0 Call to Action (Selbstlernkurse)
+hr.mt-1.mb-3
+.row
+  .col = form.input :call_to_action_url
+  .col = form.input :call_to_action_text, input_html: { value: offer[:call_to_action_text] }, placeholder: offer.default_call_to_action_text
+
+h5.m-0 Kontaktinformationen
+hr.mt-1.mb-3
+= form.input :contact_name, input_html: { value: offer[:contact_name] }, placeholder: offer.default_contact_name
+.row
+  .col = form.input :contact_email, input_html: { value: offer[:contact_email] }, placeholder: offer.default_contact_email
+  .col = form.input :contact_phone, input_html: { value: offer[:contact_phone] }, placeholder: offer.default_contact_phone

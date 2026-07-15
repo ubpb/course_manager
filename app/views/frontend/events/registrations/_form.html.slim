@@ -15,5 +15,5 @@
     .col-12 = f.input :gdrp_consent
 
   = f.submit "Jetzt anmelden", class: "btn btn-primary"
-  =< link_to "Abbrechen", frontend_event_path(event), class: "btn btn-link"
+  =< link_to "Abbrechen", frontend_offer_path(event.offer), class: "btn btn-link"
 

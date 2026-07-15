@@ -1,0 +1,17 @@
+- return_path = (nav_scope == "events") ? admin_events_path(anchor: dom_id(@event), nav_scope: nil) : admin_offer_events_path(anchor: dom_id(@event), nav_scope: nil)
+
+= simple_form_for @certification, url: admin_offer_event_certification_path(@offer, @event, @certification) do |form|
+  .card.card-shadowed
+    .card-header.d-flex.align-items-center.gap-2
+      div
+        h5.card-title.mb-0 = "Zertifikat anlegen für '#{@offer.title}'"
+        h6.card-title.mb-0.text-muted = "am #{l(@event.date_and_time)}"
+      .ms-auto
+      = link_to return_path, class: "btn btn-link btn-sm" do
+        i.fa-solid.fa-times
+    .card-body
+      = render "form_fields", form: form, offer: @offer, event: @event, certification: @certification
+    .card-footer
+      .d-flex.gap-2.flex-column.flex-md-row
+        = form.submit t("admin.application.btn_save"), class: "btn btn-primary"
+        = link_to t("admin.application.btn_cancel"), return_path, class: "btn btn-outline-secondary"

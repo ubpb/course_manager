@@ -1,0 +1,19 @@
+/ <%# locals: (filter:, chips:, always: false, button_end: false) -%>
+
+- button_visibility_class = always ? "" : "d-lg-none"
+- button_position_class = button_end ? "ms-auto order-last" : ""
+.d-flex.flex-wrap.align-items-center.gap-2
+  button.btn.btn-primary(type="button" class=[button_visibility_class, button_position_class] data-bs-toggle="offcanvas" data-bs-target="#offcanvas-filters")
+    i.fa-solid.fa-filter.me-2
+    = "Filter"
+
+  - if chips.present?
+    span.text-muted
+      i.fa-solid.fa-filter.me-1.d-none.d-lg-inline
+      = "Aktive Filter:"
+    - chips.each do |chip|
+      span.badge.rounded-pill.text-bg-light.border.d-inline-flex.align-items-center.gap-2.py-2.px-2
+        span = chip[:label]
+        = link_to chip[:remove_path], class: "text-reset lh-1 text-decoration-none", "aria-label": "Filter entfernen" do
+          i.fa-solid.fa-xmark
+    = link_to "Alle zurücksetzen", url_for(reset_filter: true), class: "btn btn-link btn-sm text-decoration-none"

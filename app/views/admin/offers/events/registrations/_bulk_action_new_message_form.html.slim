@@ -1,0 +1,18 @@
+/ <%# locals: (offer:, event:, registrations:, message:) -%>
+
+/ Carries its own id so validation errors can re-render just the content of
+/ the already open modal instead of spawning a second one.
+#bulk-action-message-form.modal-content
+  = simple_form_for message, url: send_message_admin_offer_event_registrations_path(offer, event), method: :post do |form|
+    - registrations.each do |registration|
+      = hidden_field_tag "registration_ids[]", registration.id
+
+    .modal-header
+      h5.modal-title = "Nachricht senden"
+      button.btn-close(type="button" data-bs-dismiss="modal" aria-label="Schließen")
+    .modal-body
+      = form.input :subject, label: "Betreff", required: true, input_html: {autofocus: true}
+      = form.input :body, label: "Nachricht", as: :text, input_html: {rows: 5}, required: true
+    .modal-footer
+      button.btn.btn-outline-secondary(type="button" data-bs-dismiss="modal") = "Abbrechen"
+      = form.submit "Senden", class: "btn btn-primary"

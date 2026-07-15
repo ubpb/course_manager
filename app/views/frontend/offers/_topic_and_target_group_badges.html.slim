@@ -1,0 +1,53 @@
+/ <%# locals: (object:) -%>
+
+.d-flex.flex-wrap.align-items-center.gap-2
+  - offer_type = object.type
+  - if offer_type == "course"
+    span.badge.rounded-pill.text-bg-light.border.d-inline-flex.align-items-center.gap-2.py-2.px-2(
+      data-controller="tooltip"
+      data-bs-toggle="tooltip"
+      data-bs-title="Art des Angebots"
+    )
+      i.fa-solid.fa-chalkboard-teacher.fa-fw
+      = link_to frontend_offers_path(filter: { scope: :courses }), class: "text-decoration-none" do
+        = "Schulung"
+  - elsif offer_type == "consulting"
+    span.badge.rounded-pill.text-bg-light.border.d-inline-flex.align-items-center.gap-2.py-2.px-2(
+      data-controller="tooltip"
+      data-bs-toggle="tooltip"
+      data-bs-title="Art des Angebots"
+    )
+      i.fa-solid.fa-people-arrows.fa-fw
+      = link_to frontend_offers_path(filter: { scope: :consultings }), class: "text-decoration-none" do
+        = "Beratung"
+  - elsif offer_type == "self_study_course"
+    span.badge.rounded-pill.text-bg-light.border.d-inline-flex.align-items-center.gap-2.py-2.px-2(
+      data-controller="tooltip"
+      data-bs-toggle="tooltip"
+      data-bs-title="Art des Angebots"
+    )
+      i.fa-solid.fa-user-graduate.fa-fw
+      = link_to frontend_offers_path(filter: { scope: :self_study_courses }), class: "text-decoration-none" do
+        = "Selbstlernkurs"
+
+  - if object.respond_to?(:topics) && object.topics.present?
+    - object.topics.each do |t|
+      span.badge.rounded-pill.text-bg-light.border.d-inline-flex.align-items-center.gap-2.py-2.px-2(
+        data-controller="tooltip"
+        data-bs-toggle="tooltip"
+        data-bs-title="Thema"
+      )
+        i.fa-solid.fa-tags.fa-fw
+        = link_to frontend_offers_path(filter: { topics: [t.id] }), class: "text-decoration-none" do
+          = t.title
+
+  - if object.respond_to?(:target_groups) && object.target_groups.present?
+    - object.target_groups.each do |tg|
+      span.badge.rounded-pill.text-bg-light.border.d-inline-flex.align-items-center.gap-2.py-2.px-2(
+        data-controller="tooltip"
+        data-bs-toggle="tooltip"
+        data-bs-title="Zielgruppe"
+      )
+        i.fa-solid.fa-users-viewfinder.fa-fw
+        = link_to frontend_offers_path(filter: { target_groups: [tg.id] }), class: "text-decoration-none" do
+          = tg.title

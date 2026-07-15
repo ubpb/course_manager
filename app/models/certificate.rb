@@ -26,7 +26,7 @@ class Certificate < ApplicationRecord
 
         pdf.text(registration.full_name, font: ["Helvetica", variant: :bold], margin: [40, 0, 0, 0])
         pdf.text("hat im Rahmen der Angebote zur Informationskompetenz der Universitätsbibliothek am #{I18n.l(registration.event.date_and_time.to_date)} an der Veranstaltung", margin: [20, 0, 0, 0])
-        pdf.text(registration.event.course.title, font: ["Helvetica", variant: :bold], margin: [20, 0, 0, 0])
+        pdf.text(registration.event.offer.title, font: ["Helvetica", variant: :bold], margin: [20, 0, 0, 0])
         pdf.text("teilgenommen.", margin: [20, 0, 0, 0])
 
         if registration.event.certification.learning_results.present?

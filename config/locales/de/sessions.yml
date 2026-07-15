@@ -1,0 +1,21 @@
+---
+de:
+  sessions:
+    new:
+      title: Anmelden
+      intro_html: >
+        Melden Sie sich mit den Zugangsdaten Ihres Bibliothekskontos an. Sollten Sie kein
+        Bibliothekskonto besitzen, wenden Sie sich bitte an <a href="%{contact_link}">unser Schulungsteam</a>.
+      user_id: Bibliotheks- oder Matrikelnummer
+      user_id_placeholder: Die Nummer finden Sie auf Ihrem Bibliotheks- oder Studierendenausweis
+      password: Passwort
+      password_placeholder: Ihr Bibliothekspasswort
+      submit: Anmelden
+      cancel: Abbrechen
+      forgot_password_html: >
+        Passwort für Ihr Bibliothekskonto vergessen? Sie können Ihr Passwort über unseren Katalog zurücksetzen, indem Sie auf
+        <a href="https://katalog.ub.uni-paderborn.de/password/reset" target="_blank">diesen Link</a> klicken.
+    create:
+      failed: Fehler bei der Anmeldung. Bitte überprüfen Sie Ihre Eingaben.
+    destroy:
+      logged_out: Sie wurden abgemeldet.

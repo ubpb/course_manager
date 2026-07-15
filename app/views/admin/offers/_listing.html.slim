@@ -1,0 +1,54 @@
+/ <%# locals: (offers:) -%>
+
+#bulk-action-form
+
+= form_tag bulk_process_admin_offers_path, method: :patch
+  table.table(
+    data-controller="checkbox-select-all"
+  )
+    thead
+      - if @bulk_process_actions.any?
+        tr
+          th.table-light(colspan="6")
+            .btn-toolbar.justify-content-start.flex-nowrap.align-items-center
+              .ms-0 = check_box_tag :bulk_process_select_all, 0, false, "data-checkbox-select-all-target": "checkboxAll"
+              .ms-2 = select_tag(:bulk_process_action, options_for_select(@bulk_process_actions), class: "form-control form-control-sm", prompt: "Aktion wählen")
+              .ms-2 = submit_tag("Ausführen", class: "btn btn-primary btn-sm")
+      tr
+        - if @bulk_process_actions.any?
+          th.table-light(width="10")
+        th(colspan="2") = "Name"
+        th = "Art"
+        th = "Termine"
+        th.actions = "Aktionen"
+    tbody
+      - offers.each do |offer|
+        tr(id=dom_id(offer))
+          - if @bulk_process_actions.any?
+            td.table-light = check_box_tag "bulk_process_ids[]", offer.id, false, id: nil, "data-checkbox-select-all-target": "checkbox"
+          td(width="1" class="#{offer.published? ? "table-success" : "table-danger"}") = ""
+          td
+            - if offer.archived?
+              i.fa-solid.fa-box-archive.me-2.text-muted title="Archiviert"
+            = offer.title
+          td = offer.course? ? "Kurs" : "Beratung"
+          td = "#{offer.events.upcoming.count} / #{offer.events.past.count}"
+          td.actions
+            .dropdown
+              button.btn.btn-outline-primary.btn-sm.dropdown-toggle(type="button" data-bs-toggle="dropdown")
+                i.fas.fa-cog
+              ul.dropdown-menu.dropdown-menu-end
+                li = link_to edit_admin_offer_path(offer), class: "dropdown-item" do
+                  i.fa-solid.fa-edit.me-2
+                  = "Bearbeiten"
+                - if offer.course?
+                  hr.dropdown-divider
+                  li = link_to admin_offer_events_path(offer), class: "dropdown-item" do
+                    i.fa-solid.fa-calendar-alt.me-2
+                    = "Termine"
+
+/ Fix to reset indeterminate state of checkbox on turbo:load
+javascript:
+  document.addEventListener("turbo:load", function() {
+    document.querySelector("#bulk_process_select_all").indeterminate = false;
+  })

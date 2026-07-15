@@ -1,0 +1,32 @@
+.card.card-shadowed
+  .card-header.d-flex.align-items-center.gap-2
+    h5.card-title.mb-0 = "Termine für '#{@offer.title}'"
+    .ms-auto
+    = link_to new_admin_offer_event_path, class: "btn btn-primary btn-sm" do
+      i.fa-solid.fa-plus.me-2
+      = "Neuen Termin anlegen"
+    = link_to admin_offers_path(anchor: dom_id(@offer)), class: "btn btn-link btn-sm" do
+      i.fa-solid.fa-times
+  .card-body
+    h5.m-0.p-2.d-block.bg-body-tertiary.bg-gradient.border-bottom
+      = "Kommende Termine"
+    - if @upcoming_events.present?
+      = render "listing", offer: @offer, events: @upcoming_events, scope: "upcoming"
+    - else
+      .p-2.text-muted = "Keine Termine vorhanden"
+
+    .mt-4
+    h5.m-0.p-2.d-block.bg-body-tertiary.bg-gradient.border-bottom
+      = "Vergangene Termine"
+    - if @past_events.present?
+      = render "listing", offer: @offer, events: @past_events, scope: "past"
+    - else
+      .p-2.text-muted = "Keine Termine vorhanden"
+
+/ Fix to reset indeterminate state of select-all checkboxes on turbo:load
+javascript:
+  document.addEventListener("turbo:load", function() {
+    document.querySelectorAll("input[data-checkbox-select-all-target='checkboxAll']").forEach(function(cb) {
+      cb.indeterminate = false;
+    });
+  })

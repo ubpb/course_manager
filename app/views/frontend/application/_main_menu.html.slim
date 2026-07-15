@@ -3,20 +3,17 @@
     = link_to root_path, class: "list-group-item list-group-item-action" do
       i.fas.fa-home.fa-fw.me-2
       = t("application.main_menu.home")
-    /= link_to frontend_contact_path, class: "list-group-item list-group-item-action" do
-      i.fa-solid.fa-circle-info.fa-fw.me-2
-      = "Kontakt"
-    = link_to frontend_courses_path, class: "list-group-item list-group-item-action" do
+    = link_to frontend_redirect_courses_path, class: "list-group-item list-group-item-action" do
       i.fa-solid.fa-chalkboard-teacher.fa-fw.me-2
-      = "Kurse"
-    /= link_to frontend_events_path, class: "list-group-item list-group-item-action" do
-      i.fa-solid.fa-calendar-days.fa-fw.me-2
-      = "Termine"
-    = link_to frontend_consultings_path, class: "list-group-item list-group-item-action" do
+      = "Schulungen"
+    = link_to frontend_redirect_consultings_path, class: "list-group-item list-group-item-action" do
       i.fa-solid.fa-people-arrows.fa-fw.me-2
       = "Beratungen"
     = link_to frontend_offers_path(reset_filter: true), class: "list-group-item list-group-item-action" do
       i.fa-solid.fa-ellipsis.fa-fw.me-2
       = "Alle Angebote"
+    = link_to frontend_contact_path, class: "list-group-item list-group-item-action" do
+      i.fa-solid.fa-info.fa-fw.me-2
+      = "Kontakt"
 
 = render "application/main_menu"

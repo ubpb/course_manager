@@ -10,6 +10,7 @@ namespace :app do
             first_name: "Gelöscht",
             last_name: "Gelöscht",
             email: "Gelöscht",
+            ils_primary_id: nil,
             field_of_interest: nil,
             user_notes: nil
           )

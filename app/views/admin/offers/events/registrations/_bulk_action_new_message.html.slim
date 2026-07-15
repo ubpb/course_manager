@@ -1,0 +1,6 @@
+/ <%# locals: (offer:, event:, registrations:, message:) -%>
+
+#bulk-action-form
+  .modal.fade(tabindex="-1" aria-hidden="true" data-controller="modal")
+    .modal-dialog.modal-lg.modal-dialog-centered.modal-dialog-scrollable
+      = render "bulk_action_new_message_form", offer: offer, event: event, registrations: registrations, message: message

@@ -6,13 +6,13 @@ module Admin
     before_action -> { add_breadcrumb "Termine", admin_events_path }
 
     define_filter :events do
-      filter_by :upcoming_or_past, :string, default: "upcoming" do |arel, value|
+      filter_by :upcoming_or_past, :string, default: "all" do |arel, value|
         case value
         when "all"
           arel
         when "upcoming"
           arel.upcoming.reorder(date_and_time: :asc)
-        when "upcoming_and_3_months"
+        when "upcoming_and_last_3_months"
           arel.upcoming_and_last_3_months.reorder(date_and_time: :asc)
         when "past"
           arel.past
@@ -40,7 +40,7 @@ module Admin
       end
 
       filter_by :title, :string do |arel, title|
-        arel.joins(:course).where("courses.title like ?", "%#{ApplicationRecord.sanitize_sql_like(title)}%")
+        arel.joins(:offer).where("offers.title like ?", "%#{ApplicationRecord.sanitize_sql_like(title)}%")
       end
 
       filter_by :from_date, :date do |arel, from_date|
@@ -54,6 +54,52 @@ module Admin
 
     def index
       load_events
+      setup_bulk_process_actions(@events)
+    end
+
+    def bulk_process
+      events = Event.where(id: params[:bulk_process_ids])
+
+      case params[:bulk_process_action]
+      when "publish"
+        events.update_all(published: true)
+        flash[:success] = "Termin(e) wurde(n) veröffentlicht"
+      when "unpublish"
+        events.update_all(published: false)
+        flash[:success] = "Veröffentlichung von Termin(en) wurde zurückgezogen"
+      when "move_to_offer"
+        if events.none?
+          flash[:alert] = "Bitte mindestens einen Termin auswählen"
+        else
+          render turbo_stream: turbo_stream.replace(
+            "bulk-action-form",
+            partial: "bulk_action_move_to_offer",
+            locals: {
+              events: events.includes(:offer),
+              offers: Offer.courses.order(:title),
+              url: bulk_move_admin_events_path,
+              container_id: "bulk-action-form"
+            }
+          )
+          return
+        end
+      end
+
+      redirect_to admin_events_path
+    end
+
+    def bulk_move
+      events = Event.where(id: params[:event_ids])
+      offer = Offer.courses.find_by(id: params[:target_offer_id])
+
+      if offer.nil? || events.none?
+        flash[:alert] = "Bitte Termine und Ziel-Angebot auswählen"
+      else
+        events.update_all(offer_id: offer.id)
+        flash[:success] = "Termin(e) wurde(n) nach \"#{offer.title}\" verschoben"
+      end
+
+      redirect_to admin_events_path
     end
 
     def reports
@@ -74,15 +120,24 @@ module Admin
 
           response.headers["Content-Disposition"] = "attachment; filename=\"#{filename}.xlsx\""
 
-          render "admin/courses/events/reports/show"
+          render "admin/offers/events/reports/show"
         end
       end
     end
 
     private
 
+    def setup_bulk_process_actions(events)
+      @bulk_process_actions = []
+      return if events.empty?
+
+      @bulk_process_actions << ["Veröffentlichen", "publish"]
+      @bulk_process_actions << ["Veröffentlichung zurückziehen", "unpublish"]
+      @bulk_process_actions << ["In anderes Angebot verschieben", "move_to_offer"]
+    end
+
     def load_events
-      @events = Event.includes(:course, :report).order(date_and_time: :desc)
+      @events = Event.includes(:offer, :report).order(date_and_time: :desc)
 
       @filter = create_filter(:events) or return
       @events = @filter.filter(@events)

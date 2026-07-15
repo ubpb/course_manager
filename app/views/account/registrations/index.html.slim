@@ -1,0 +1,37 @@
+.d-flex.justify-content-between.align-items-center.gap-2.mb-4
+  h3.mb-0.fw-bold
+    = t(".title")
+
+h5.mb-3 = t(".upcoming")
+- if @upcoming_registrations.any?
+  .card.card-shadowed.mb-4
+    ul.list-group.list-group-flush
+      - @upcoming_registrations.each do |registration|
+        - offer = registration.event.offer
+        li.list-group-item.d-flex.justify-content-between.align-items-center.gap-2
+          div
+            - if offer.published? && !offer.archived?
+              = link_to offer.title, frontend_offer_path(offer)
+            - else
+              = offer.title
+            .text-body-secondary = l(registration.event.date_and_time)
+          = button_to t(".cancel"), account_registration_path(registration), method: :delete, \
+              class: "btn btn-outline-danger btn-sm", \
+              form: {data: {turbo_confirm: t(".cancel_confirm")}}
+- else
+  .alert.alert-warning = t(".empty")
+
+
+h5.mb-3 = t(".past")
+.callout.callout-info
+  i.fa-solid.fa-info-circle.me-1
+  = t(".past_info")
+- if @past_registrations.any?
+  .card.card-shadowed
+    ul.list-group.list-group-flush
+      - @past_registrations.each do |registration|
+        li.list-group-item
+          = registration.event.offer.title
+          .text-body-secondary = l(registration.event.date_and_time)
+- else
+  .alert.alert-warning = t(".empty_past")

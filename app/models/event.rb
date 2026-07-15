@@ -1,7 +1,7 @@
 class Event < ApplicationRecord
 
   # Relations
-  belongs_to :course
+  belongs_to :offer
   has_many :registrations, dependent: :destroy
   has_one :report, dependent: :destroy
   has_one :certification, dependent: :destroy
@@ -10,10 +10,13 @@ class Event < ApplicationRecord
   validates :date_and_time, presence: true
   validates :duration, numericality: {only_integer: true, greater_than_or_equal_to: 0}, allow_nil: true
   validates :max_no_of_participants, numericality: {only_integer: true, greater_than_or_equal_to: 0}
-  validates :email_from, format: {with: Course::UPB_EMAIL_REGEXP}
+  validates :email_from, format: {with: UPB_EMAIL_REGEXP}
 
   # Scopes
-  scope :published, -> { joins(:course).where("courses.published": true).where("events.published": true) }
+  scope :published, -> { where("events.published": true) }
+  scope :unpublished, -> { where("events.published": false) }
+  scope :from_published_offers, -> { joins(:offer).where("offers.published": true) }
+  scope :from_non_archived_offers, -> { joins(:offer).where("offers.archived": false) }
   scope :with_report, -> { includes(:report).where.not(reports: {id: nil}) }
   scope :without_report, -> { includes(:report).where(reports: {id: nil}) }
   scope :upcoming, -> { where("date_and_time >= ?", Time.zone.today.beginning_of_day) }
@@ -48,14 +51,6 @@ class Event < ApplicationRecord
 
   def registration_closed?
     full? || date_and_time.today?
-  end
-
-  def effective_reminder_message
-    reminder_message.presence || course.reminder_message.presence
-  end
-
-  def effective_email_from
-    email_from.presence || course.email_from.presence
   end
 
 end

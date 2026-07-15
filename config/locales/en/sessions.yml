@@ -1,0 +1,14 @@
+---
+en:
+  sessions:
+    new:
+      title: Login
+      intro: Log in with the credentials of your library account.
+      user_id: Username
+      password: Password
+      submit: Login
+      cancel: Cancel
+    create:
+      failed: Login failed. Please check your input.
+    destroy:
+      logged_out: You have been logged out.

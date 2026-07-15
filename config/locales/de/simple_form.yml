@@ -46,19 +46,20 @@ de:
         to_date: "Datum bis"
         date_range: "Datum"
         scope: "Angebote"
+        with_upcoming_events: "... mit anstehenden Terminen"
       registration:
         user_notes: "Anmerkungen"
         gdrp_consent: "Einwilligungserklärung"
-      consulting:
+      offer:
+        events_on_request: "Termine auf Anfrage?"
         contact_name: "Kontakt"
         contact_email: "E-Mail"
         contact_phone: "Telefon"
+        type: "Art"
+        call_to_action_url: "Call to Action URL"
+        call_to_action_text: "Call to Action Text"
     hints:
       defaults:
-        description: >
-          Formatierungen mit <a href="https://www.markdownguide.org/basic-syntax" target="_blank">Markdown</a> möglich
-        learning_targets: >
-          Formatierungen mit <a href="https://www.markdownguide.org/basic-syntax" target="_blank">Markdown</a> möglich
         email_from: >
           Die Adresse wird dem Empfänger als 'Antwort an' angezeigt. Diese muss auf '@ub.uni-paderborn.de' enden.
           Als Standard wird schulungen@ub.uni-paderborn.de verwendet.
@@ -82,6 +83,17 @@ de:
           gespeichert werden dürfen. Ich versichere, dass ich über 16 Jahre alt bin bzw. die Zustimmung der / des
           Sorgeberechtigten zur Anmeldung zur Schulung und Weitergabe der Daten vorliegt. Die <a href="https://ub.uni-paderborn.de/datenschutz" target="_blank">Datenschutzerklärung</a>
           habe ich gelesen. Das Recht des Widerrufs ist mir bekannt.
+      offer:
+        description: >
+          Formatierungen mit <a href="https://www.markdownguide.org/basic-syntax" target="_blank">Markdown</a> möglich
+        learning_targets: >
+          Formatierungen mit <a href="https://www.markdownguide.org/basic-syntax" target="_blank">Markdown</a> möglich
+        call_to_action_url: >
+          Die URL, die beim Klick auf den Call to Action Button geöffnet wird.
+          Muss mit <code>https://</code> oder <code>http://</code> beginnen.
+          Wenn leer, wird der Button nicht angezeigt.
+        call_to_action_text: >
+          Der Text, der auf dem Call to Action Button angezeigt wird.
     options:
       filter:
         date_range:

@@ -1,0 +1,53 @@
+.d-lg-flex.justify-content-between.align-items-center.gap-2.mb-4
+  h3.mb-lg-0.fw-bold
+    = @offer.title
+  div
+    = link_to frontend_offers_path, class: "btn btn-outline-primary btn-sm" do
+      i.fa-solid.fa-arrows-turn-right.fa-flip-horizontal.fa-fw.me-1
+      span = "Alle Angebote"
+
+- if (tatg = render("topic_and_target_group_badges", object: @offer)).present?
+  .mb-3 = tatg
+
+.row
+  / Main content
+  .col-xl-9.col-lg-8
+    .card
+      .card-body
+        - if @offer.description.present?
+          h4 = "Beschreibung"
+          == render_markdown(@offer.description)
+        - if @offer.course? && @offer.learning_targets.present?
+          h4 = "Lernziele"
+          == render_markdown(@offer.learning_targets)
+
+    - if @offer.course?
+      h5.m-0.mt-4 = "Die nächsten Termine"
+      hr.mt-1.mb-3
+      .card
+        = render "frontend/offers/events", offer: @offer, events: @upcoming_events
+
+  / Sidebar
+  .col-xl-3.col-lg-4.mt-4.mt-lg-0
+    .d-grid.gap-4
+      - if @offer.call_to_action?
+        = link_to @offer.call_to_action_url, class: "btn btn-primary w-100", target: "_blank" do
+          i.fa-solid.fa-arrow-up-right-from-square.me-2
+          span = @offer.call_to_action_text
+
+      - if @offer.contact_info?
+        div
+          h5.m-0 = "Kontakt"
+          hr.mt-1.mb-3
+          - if @offer.contact_name.present?
+            div
+              i.fa-solid.fa-person.fa-fw.me-2
+              span = @offer.contact_name
+          - if @offer.contact_email.present?
+            div
+              i.fa-regular.fa-envelope.fa-fw.me-2
+              span = mail_to @offer.contact_email
+          - if @offer.contact_phone.present?
+            div
+              i.fa-solid.fa-phone.fa-fw.me-2
+              span = link_to @offer.contact_phone, "tel:#{@offer.contact_phone}"

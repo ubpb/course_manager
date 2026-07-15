@@ -8,42 +8,62 @@
 .lead.text-center
  ' Die Universitätsbibliothek unterstützt Sie umfassend bei Ihrem Studium und Ihrer Forschung.
  ' Dieses Portal bündelt alle unsere Schulungs- und Beratungsangebote: Von Einführungen in die
- ' Bibliotheksnutzung über Workshops zu den Literaturverwaltungsprogrammen Citavi und Zotero
+ ' Bibliotheksnutzung über Kurse zu den Literaturverwaltungsprogrammen Citavi und Zotero
  ' bis hin zu individuellen Beratungen zu Recherchestrategien oder zur Forschungsunterstützung.
 
 .row
-  .col-md-6
+  .col-lg-6.col-xl-4.mb-4.mb-xl-0
     .card.card-shadowed.h-100
       .card-header
         h5.card-title.mb-0 = "Schulungen"
       .card-body
         p
-          ' Hier finden Sie unser aktuelles Schulungsangebot. Schulungen finden in
-          ' Gruppen in Präsenz oder als Online-Veranstaltung statt.
+          ' Schulungen finden in Gruppen in Präsenz oder als
+          ' Online-Veranstaltung statt.
 
         .d-flex.gap-2.justify-content-center.flex-column
-          = link_to frontend_courses_path, class: "btn btn-primary" do
+          = link_to frontend_redirect_courses_path, class: "btn btn-primary" do
             i.fa-solid.fa-chalkboard-teacher.me-2
-            = "Zur Kursübersicht"
-          = link_to frontend_events_path, class: "btn btn-link" do
+            = "Zum Schulungsangebot"
+          = link_to frontend_redirect_events_path, class: "btn btn-link" do
             = "... oder zur Anzeige aller kommenden Termine"
-  .col-md-6
-    .card.card-shadowed.mt-3.mt-md-0.h-100
+  .col-lg-6.col-xl-4.mb-4.mb-xl-0
+    .card.card-shadowed.h-100
       .card-header
         h5.card-title.mb-0 = "Beratungen"
       .card-body
         p
-          ' Hier finden Sie unser Beratungsangebot für individuelle
-          ' Einzelberatungen zu unseren Dienstleistungen und Angeboten.
+          ' Individuelle Einzelberatungen zu unseren Dienstleistungen
+          ' und Angeboten.
 
         .d-flex.gap-2.justify-content-center.flex-column
-          = link_to frontend_consultings_path, class: "btn btn-primary" do
+          = link_to frontend_redirect_consultings_path, class: "btn btn-primary" do
             i.fa-solid.fa-people-arrows.me-2
             = "Zum Beratungsangebot"
+
+  .col-lg-6.col-xl-4.mb-0.offset-lg-3.offset-xl-0
+    .card.card-shadowed.h-100
+      .card-header
+        h5.card-title.mb-0 = "Selbstlernkurse"
+      .card-body
+        p
+          ' Ausgewählte Onlinekurse oder Video-Tutorials zum Selbststudium.
+        .d-flex.gap-2.justify-content-center.flex-column
+          = link_to frontend_offers_path(filter: {scope: "self_study_courses"}), class: "btn btn-primary" do
+            i.fa-solid.fa-user-graduate.me-2
+            = "Zu den Selbstlernkursen"
+
 
 - topics = Topic.order(:position)
 - if topics.present?
   .mt-4.text-center
-    h5.mb-4 = "... oder steigen Sie über ein Thema ein"
+    h5.mb-4 = "... steigen Sie über ein Thema ein"
     - topics&.each do |topic|
       = link_to topic.title, frontend_offers_path(filter: {topics: [topic.id]}), class: "btn btn-outline-primary me-2 mb-2"
+
+- target_groups = TargetGroup.order(:position)
+- if target_groups.present?
+  .mt-4.text-center
+    h5.mb-4 = "... oder steigen Sie über eine Zielgruppe ein"
+    - target_groups&.each do |target_group|
+      = link_to target_group.title, frontend_offers_path(filter: {target_groups: [target_group.id]}), class: "btn btn-outline-primary me-2 mb-2"

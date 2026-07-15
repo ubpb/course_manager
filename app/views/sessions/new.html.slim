@@ -1,0 +1,15 @@
+.row
+  .col-lg-8.offset-lg-2.col-xl-6.offset-xl-3
+    = simple_form_for :login, url: session_path, method: :post do |f|
+      .card
+        h5.card-header
+          = t(".title")
+        .card-body
+          .callout.callout-info = t(".intro_html", contact_link: frontend_contact_path)
+          = render "alerts"
+          = f.input :user_id, autofocus: true, label: t(".user_id"), hint: false, placeholder: t(".user_id_placeholder"), input_html: { autocomplete: "off" }
+          = f.input :password, label: t(".password"), hint: false, placeholder: t(".password_placeholder"), input_html: { autocomplete: "off" }
+          p.text-body-secondary = t(".forgot_password_html")
+        .card-footer
+          => f.submit t(".submit"), class: "btn btn-primary"
+          => link_to t(".cancel"), root_path, class: "btn btn-default"
