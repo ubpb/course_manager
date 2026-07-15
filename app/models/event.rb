@@ -53,4 +53,8 @@ class Event < ApplicationRecord
     full? || date_and_time.today?
   end
 
+  def user_registered?(user)
+    registrations.exists?(ils_primary_id: user.ils_primary_id)
+  end
+
 end
