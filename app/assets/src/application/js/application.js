@@ -9,4 +9,7 @@ import "./stimulus/application"
 // Load bootstrap
 import "bootstrap"
 
+// Close open offcanvas panels before Turbo caches the page
+import "./offcanvas_cleanup"
+
 
