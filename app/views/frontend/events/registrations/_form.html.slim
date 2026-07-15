@@ -1,18 +1,27 @@
-/ <%# locals: (event:, registration:) -%>
+/ <%# locals: (event:, registration:, modal: false) -%>
 
-= simple_form_for [:frontend, event, registration] do |f|
-  .row
-    .col-xl-6 = f.input :first_name
-    .col-xl-6 = f.input :last_name
-  .row
-    .col-12 = f.input :email
-  .row
-    .col-12 = f.input :field_of_interest
-  .row
-    .col-12 = f.input :user_notes, input_html: {rows: 4}
-  .row
-    .col-12 = f.input :gdrp_consent
+#registration-form
+  = simple_form_for [:frontend, event, registration], html: {id: "event-registration-form"} do |f|
+    - if registration.errors.any?
+      .alert.alert-danger
+        = "Bitte überprüfen Sie Ihre Eingaben."
 
-  = f.submit "Jetzt anmelden", class: "btn btn-primary"
-  =< link_to "Abbrechen", frontend_offer_path(event.offer), class: "btn btn-link"
+    - if modal
+      = hidden_field_tag :modal, "1"
+    .row
+      .col-xl-6 = f.input :first_name
+      .col-xl-6 = f.input :last_name
+    .row
+      .col-12 = f.input :email
+    .row
+      .col-12 = f.input :field_of_interest
+    .row
+      .col-12 = f.input :user_notes, input_html: {rows: 4}
+    .row
+      .col-12 = f.input :gdrp_consent
 
+    / In the modal the buttons live in the modal footer and submit via the
+    / form attribute, so the form itself renders none.
+    - unless modal
+      = f.submit "Jetzt anmelden", class: "btn btn-primary"
+      =< link_to "Abbrechen", frontend_offer_path(event.offer), class: "btn btn-link"

@@ -1,0 +1,19 @@
+/ <%# locals: (event:, registration:) -%>
+
+#registration-modal
+  .modal.fade(tabindex="-1" aria-hidden="true" data-controller="modal")
+    .modal-dialog.modal-lg.modal-dialog-centered.modal-dialog-scrollable
+      .modal-content
+        .modal-header
+          h5.modal-title = "Anmeldung zu einem Termin"
+          button.btn-close(type="button" data-bs-dismiss="modal" aria-label="Schließen")
+        .modal-body
+          .card.mb-4
+            .card-header
+              h5.card-title.mb-0 = event.offer.title
+            .card-body
+              = render "frontend/events/details", event: event, show_location: true
+          = render "frontend/events/registrations/form", event: event, registration: registration, modal: true
+        .modal-footer
+          button.btn.btn-link(type="button" data-bs-dismiss="modal") Abbrechen
+          button.btn.btn-primary(type="submit" form="event-registration-form") Jetzt anmelden

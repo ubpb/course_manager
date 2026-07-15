@@ -16,7 +16,19 @@ module Frontend
           last_name: current_user.last_name,
           email: current_user.email
         )
-        ensure_registration_is_possible
+        ensure_registration_is_possible or return
+
+        respond_to do |format|
+          # Full page as no-JS / direct-URL / post-login fallback
+          format.html
+          format.turbo_stream do
+            render turbo_stream: turbo_stream.replace(
+              "registration-modal",
+              partial: "modal",
+              locals: {event: @event, registration: @registration}
+            )
+          end
+        end
       end
 
       def create
@@ -33,7 +45,16 @@ module Frontend
 
           redirect_to frontend_offer_path(@event.offer), notice: "Anmeldung erfolgreich. Wir haben Ihnen eine Bestätigung per E-Mail gesendet."
         else
-          render :new, status: :unprocessable_entity
+          respond_to do |format|
+            format.html { render :new, status: :unprocessable_entity }
+            format.turbo_stream do
+              render turbo_stream: turbo_stream.replace(
+                "registration-form",
+                partial: "form",
+                locals: {event: @event, registration: @registration, modal: params[:modal].present?}
+              ), status: :unprocessable_entity
+            end
+          end
         end
       end
 
