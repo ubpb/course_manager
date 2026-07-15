@@ -54,6 +54,8 @@ class Event < ApplicationRecord
   end
 
   def user_registered?(user)
+    return false if user.nil?
+
     registrations.exists?(ils_primary_id: user.ils_primary_id)
   end
 
