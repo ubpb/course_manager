@@ -76,8 +76,12 @@ de:
           Notizen, die für den Nutzer sichtbar sind
         internal_notes: >
           Interne Notizen, die nur für Mitarbeiter sichtbar sind
+        field_of_interest: >
+          Um den Kurs für Sie passgenau vorbereiten zu können, bitte wir Sie, uns Ihren
+          Studiengang, Ihre Fakultät/Institut/Department, oder einfach Ihren Interessenschwerpunkt
+          (z.B. "Digital Humanities", oder "Mathematik") zu nennen.
       registration:
-        user_notes: ""
+        user_notes: "Was möchten Sie uns noch mitteilen?"
         gdrp_consent: >
           Ich willige hiermit ein (Art. 6 Abs. 1 lit. a DSGVO), dass meine übermittelten persönlichen Daten verarbeitet und
           gespeichert werden dürfen. Ich versichere, dass ich über 16 Jahre alt bin bzw. die Zustimmung der / des

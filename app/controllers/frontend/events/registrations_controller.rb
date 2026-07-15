@@ -40,7 +40,14 @@ module Frontend
       private
 
       def registration_params
-        params.require(:registration).permit(:first_name, :last_name, :email, :user_notes, :gdrp_consent)
+        params.require(:registration).permit(
+          :first_name,
+          :last_name,
+          :email,
+          :field_of_interest,
+          :user_notes,
+          :gdrp_consent
+        )
       end
 
       def ensure_registration_is_possible
