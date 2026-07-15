@@ -9,7 +9,7 @@
     thead
       - if @bulk_process_actions.any?
         tr
-          th.table-light(colspan="7")
+          th.table-light(colspan="8")
             .btn-toolbar.justify-content-start.flex-nowrap.align-items-center
               .ms-0 = check_box_tag :bulk_process_select_all, 0, false, "data-checkbox-select-all-target": "checkboxAll"
               .ms-2 = select_tag(:bulk_process_action, options_for_select(@bulk_process_actions), class: "form-control form-control-sm", prompt: "Aktion wählen")
