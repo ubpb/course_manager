@@ -16,6 +16,8 @@ module Admin
           arel.courses
         when "consultings"
           arel.consultings
+        when "self_study_courses"
+          arel.self_study_courses
         else
           arel
         end
