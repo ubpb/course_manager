@@ -7,9 +7,9 @@
 
 h5.m-0 Allgemeine Angaben
 hr.mt-1.mb-3
-= form.input :type, as: :select, collection: [["Kurs", "course"], ["Beratung", "consulting"], ["Selbstlernkurs", "self_study_course"]], label: "Art", include_blank: false
+= form.input :type, as: :select, collection: [["Schulung", "course"], ["Beratung", "consulting"], ["Selbstlernkurs", "self_study_course"]], label: "Art des Angebots", include_blank: false
 = form.input :published, as: :boolean
-= form.input :events_on_request, as: :boolean
+= form.input :events_on_request, as: :boolean, hint: "... für Schulungen"
 = form.input :title
 .row
   .col

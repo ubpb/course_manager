@@ -31,7 +31,14 @@
             - if offer.archived?
               i.fa-solid.fa-box-archive.me-2.text-muted title="Archiviert"
             = offer.title
-          td = offer.course? ? "Kurs" : "Beratung"
+          ruby:
+            type_label = case offer.type
+                           when "course" then "Schulung"
+                           when "consulting" then "Beratung"
+                           when "self_study_course" then "Selbstlernkurs"
+                           else offer.type
+                         end
+          td = type_label
           td = "#{offer.events.upcoming.count} / #{offer.events.past.count}"
           td.actions
             .dropdown
