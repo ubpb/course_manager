@@ -17,9 +17,13 @@
         - if @offer.description.present?
           h4 = "Beschreibung"
           == render_markdown(@offer.description)
-        - if @offer.course? && @offer.learning_targets.present?
+        - if @offer.learning_targets.present?
           h4 = "Lernziele"
           == render_markdown(@offer.learning_targets)
+        - if @offer.call_to_action?
+          = link_to @offer.call_to_action_url, class: "btn btn-primary w-100", target: "_blank" do
+            i.fa-solid.fa-arrow-up-right-from-square.me-2
+            span = @offer.call_to_action_text
 
     - if @offer.course?
       #registration-modal
@@ -31,11 +35,6 @@
   / Sidebar
   .col-xl-3.col-lg-4.mt-4.mt-lg-0
     .d-grid.gap-4
-      - if @offer.call_to_action?
-        = link_to @offer.call_to_action_url, class: "btn btn-primary w-100", target: "_blank" do
-          i.fa-solid.fa-arrow-up-right-from-square.me-2
-          span = @offer.call_to_action_text
-
       - if @offer.contact_info?
         div
           h5.m-0 = "Kontakt"
