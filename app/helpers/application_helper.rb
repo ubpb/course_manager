@@ -30,6 +30,20 @@ module ApplicationHelper
     end
   end
 
+  # Per-page <title> content. An explicit `content_for :page_title` wins;
+  # otherwise fall back to the deepest breadcrumb label (set in controllers).
+  def page_title
+    content_for(:page_title).presence || breadcrumb.last&.dig(:label)
+  end
+
+  # Markdown → rendered HTML → plain text, whitespace-collapsed.
+  # Used to turn offer body copy into meta-description-safe text.
+  def strip_markdown(text)
+    return "" if text.blank?
+
+    strip_tags(render_markdown(text)).squish
+  end
+
   def render_markdown(text)
     Commonmarker.to_html(
       text,

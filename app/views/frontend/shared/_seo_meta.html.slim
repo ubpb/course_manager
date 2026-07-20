@@ -1,0 +1,25 @@
+/ SEO / social meta for a frontend page.
+/ Locals: title:, description:, canonical:, og_type: (optional), json_ld: (optional Hash).
+- og_type = local_assigns.fetch(:og_type, "website")
+- og_locale = {de: "de_DE", en: "en_US"}[I18n.locale] || "de_DE"
+
+- content_for :page_title, title
+
+- content_for :head do
+  meta name="description" content=description
+  link rel="canonical" href=canonical
+
+  meta property="og:title" content=title
+  meta property="og:description" content=description
+  meta property="og:url" content=canonical
+  meta property="og:type" content=og_type
+  meta property="og:site_name" content=t("application.app_name")
+  meta property="og:locale" content=og_locale
+
+  meta name="twitter:card" content="summary"
+  meta name="twitter:title" content=title
+  meta name="twitter:description" content=description
+
+  - if local_assigns[:json_ld].present?
+    script type="application/ld+json"
+      == local_assigns[:json_ld].to_json.gsub("</", "<\\/")

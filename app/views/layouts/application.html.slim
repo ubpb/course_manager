@@ -14,9 +14,14 @@ html
     = javascript_include_tag "application", "data-turbo-track": "reload"
 
     title
+      - if page_title.present?
+        = "#{page_title} · "
       = t("application.app_name")
       - if content_for?(:head_title_suffix)
         =< yield(:head_title_suffix)
+
+    - if content_for?(:head)
+      = yield(:head)
   body
     = render "application/test_server_warning"
     = render "application/global_message", global_message: @global_message
