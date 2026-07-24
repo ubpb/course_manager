@@ -5,7 +5,7 @@ const isWatch = process.argv.includes("--watch");
 
 async function build() {
   const result = await Bun.build({
-    entrypoints: ["./app/assets/src/application.js"],
+    entrypoints: ["./app/assets-src/application.js"],
     outdir: "./app/assets/builds",
     target: "browser",
     format: "iife",
@@ -31,10 +31,10 @@ async function build() {
 await build();
 
 if (isWatch) {
-  console.log("Watching for changes in app/assets/src/...");
+  console.log("Watching for changes in app/assets-src/...");
 
   let timeout;
-  watch("./app/assets/src", { recursive: true }, (_event, _filename) => {
+  watch("./app/assets-src", { recursive: true }, (_event, _filename) => {
     clearTimeout(timeout);
     timeout = setTimeout(async () => {
       console.log("Rebuilding...");

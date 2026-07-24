@@ -2,7 +2,7 @@
 @use "sass:math";
 // Customize FontAwesome font path
 @use '@fortawesome/fontawesome-free/scss/variables' with (
-  $font-path: "../../../../../node_modules/@fortawesome/fontawesome-free/webfonts",
+  $font-path: "../../../../node_modules/@fortawesome/fontawesome-free/webfonts",
 );
 
 //
