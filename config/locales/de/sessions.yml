@@ -17,5 +17,6 @@ de:
         <a href="https://katalog.ub.uni-paderborn.de/password/reset" target="_blank">diesen Link</a> klicken.
     create:
       failed: Fehler bei der Anmeldung. Bitte überprüfen Sie Ihre Eingaben.
+      rate_limited: Zu viele Anmeldeversuche. Bitte versuchen Sie es in einigen Minuten erneut.
     destroy:
       logged_out: Sie wurden abgemeldet.

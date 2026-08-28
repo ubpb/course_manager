@@ -4,6 +4,12 @@ class SessionsController < ApplicationController
 
   layout "frontend"
 
+  # Every attempt checks the given password against Alma, for any active library
+  # account, so the form is a password oracle if left unthrottled. There is no
+  # local account to lock, which leaves the IP as the only thing to key on.
+  rate_limit to: 10, within: 3.minutes, only: :create,
+             with: -> { redirect_to new_session_path, alert: t("sessions.create.rate_limited") }
+
   before_action { add_breadcrumb t("sessions.new.title"), new_session_path }
 
   def new

@@ -1,31 +1,5 @@
 require "test_helper"
 
-# Stub out the Alma round trip so the login can be driven from a test.
-module AlmaAuthenticationStub
-
-  VALID_USER_ID = "12345"
-  VALID_PASSWORD = "secret"
-
-  def authenticate_against_alma(user_id, password)
-    user_id == VALID_USER_ID && password == VALID_PASSWORD
-  end
-
-  def fetch_alma_user(user_id)
-    return nil unless user_id == VALID_USER_ID
-
-    {
-      "primary_id" => VALID_USER_ID,
-      "first_name" => "Erika",
-      "last_name" => "Mustermann",
-      "status" => {"value" => "ACTIVE"},
-      "contact_info" => {"email" => [{"preferred" => true, "email_address" => "erika@example.com"}]}
-    }
-  end
-
-end
-
-SessionsController.prepend(AlmaAuthenticationStub)
-
 # Clicking "Jetzt anmelden" while logged out must lead back to the registration
 # form after the login, not to the account page.
 class Frontend::RegistrationLoginRedirectTest < ActionDispatch::IntegrationTest

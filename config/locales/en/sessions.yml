@@ -10,5 +10,6 @@ en:
       cancel: Cancel
     create:
       failed: Login failed. Please check your input.
+      rate_limited: Too many login attempts. Please try again in a few minutes.
     destroy:
       logged_out: You have been logged out.

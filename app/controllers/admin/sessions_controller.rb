@@ -3,6 +3,11 @@ module Admin
 
     include AlmaAuthentication
 
+    # See the frontend SessionsController: an unthrottled login form is a
+    # password oracle against Alma.
+    rate_limit to: 10, within: 3.minutes, only: :create,
+               with: -> { redirect_to new_admin_session_path, alert: "Zu viele Anmeldeversuche. Bitte versuchen Sie es in einigen Minuten erneut." }
+
     before_action { add_breadcrumb "Login", new_admin_session_path }
 
     skip_before_action :authenticate!, only: [:new, :create]
@@ -19,6 +24,7 @@ module Admin
         if authenticate_against_alma(user_id, password) && (alma_user = get_alma_user(user_id)).present?
           alma_primary_id = alma_user["primary_id"]
 
+          rotate_session
           session[:current_admin_user_id] = alma_primary_id
 
           redirect_to admin_root_path
@@ -32,7 +38,7 @@ module Admin
     end
 
     def destroy
-      session[:current_admin_user_id] = nil
+      rotate_session
       redirect_to(root_path, status: :see_other)
     end
 
