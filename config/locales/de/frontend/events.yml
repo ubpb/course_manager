@@ -4,4 +4,4 @@ de:
       no_events_message: >
         Für dieses Semester sind keine regulären Termine mehr verfügbar.
       on_request_message: >
-        Weitere Termine auf Anfrage (für Gruppen ab 5 Personen).
+        Weitere Termine auf <a href="%{contact_url}">Anfrage (für Gruppen ab 5 Personen)</a>.

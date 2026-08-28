@@ -3,7 +3,7 @@
 - events_on_request_alert = capture do
   .alert.alert-info.mb-0.border-0
     i.fa-solid.fa-circle-info.me-2
-    == t("frontend.events.on_request_message")
+    == t("frontend.events.on_request_message", contact_url: frontend_contact_path)
 
 .list-group.list-group-flush
   - if events.present?

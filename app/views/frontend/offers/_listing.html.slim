@@ -16,7 +16,7 @@
           - events_on_request_message = capture do
             div
               i.fa-solid.fa-circle-info.me-1
-              == t("frontend.events.on_request_message")
+              == t("frontend.events.on_request_message", contact_url: frontend_contact_path)
 
           - if offer.course?
             .mt-3
