@@ -7,6 +7,28 @@ module MetaHelper
     truncate(text, length: 160, separator: " ", omission: " …")
   end
 
+  # schema.org BreadcrumbList built from the controller breadcrumb trail.
+  # Lets Google show "ub.uni-paderborn.de › Angebote › Schulungen › Titel"
+  # instead of the bare URL in the search result. Trails shorter than two
+  # linked crumbs carry no information and are skipped.
+  def breadcrumb_json_ld
+    crumbs = breadcrumb.select { |crumb| crumb[:path].present? }
+    return if crumbs.size < 2
+
+    {
+      "@context" => "https://schema.org",
+      "@type" => "BreadcrumbList",
+      "itemListElement" => crumbs.map.with_index(1) do |crumb, position|
+        {
+          "@type" => "ListItem",
+          "position" => position,
+          "name" => crumb[:label],
+          "item" => URI.join(root_url, crumb[:path]).to_s
+        }
+      end
+    }
+  end
+
   # schema.org structured data (JSON-LD) for an offer.
   # Courses map to `Course`; consultings to `Service`.
   def offer_json_ld(offer, upcoming_events = [])
