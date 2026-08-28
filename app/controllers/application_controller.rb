@@ -26,9 +26,12 @@ class ApplicationController < ActionController::Base
   def authenticate_user!
     return true if current_user
 
-    # Only remember GET requests as return target, the path is relative so
-    # there is no open redirect risk.
-    session[:return_to] = request.fullpath if request.get?
+    # Only remember GET (and HEAD, which Rails routes like GET) requests as
+    # return target, and only genuinely relative paths: "//host" is routable
+    # (the router collapses leading slashes) but is a protocol-relative URL.
+    path = request.fullpath
+    session[:return_to] = path if (request.get? || request.head?) &&
+                                  path.start_with?("/") && !path.start_with?("//")
 
     redirect_to new_session_path, alert: t("application.authentication.login_required")
     false
