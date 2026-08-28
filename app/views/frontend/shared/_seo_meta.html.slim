@@ -1,12 +1,15 @@
 / SEO / social meta for a frontend page.
 / Locals: title:, description:, canonical:, og_type: (optional),
-/         json_ld: (optional Hash or Array of Hashes).
+/         json_ld: (optional Hash or Array of Hashes),
+/         page_title: (optional override for the <title>; pass nil to keep the
+/                      bare app name, as on the home page).
 / The breadcrumb trail is always emitted as an additional JSON-LD block.
 - og_type = local_assigns.fetch(:og_type, "website")
 - json_ld = (Array.wrap(local_assigns[:json_ld]) + [breadcrumb_json_ld]).compact
 - og_locale = {de: "de_DE", en: "en_US"}[I18n.locale] || "de_DE"
 
-- content_for :page_title, title
+- head_title = local_assigns.fetch(:page_title, title)
+- content_for :page_title, head_title if head_title.present?
 
 - content_for :head do
   meta name="description" content=description

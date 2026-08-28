@@ -14,6 +14,15 @@ shared:
   default_call_to_action:
     text: "Selbstlernkurs öffnen"
 
+  # The library as a schema.org entity, emitted as JSON-LD on the home page and
+  # referenced by every other structured data block. `same_as` should list the
+  # official profiles of the library (Wikidata, social media, ...).
+  organization:
+    name: "Universitätsbibliothek Paderborn"
+    alternate_name: "UB Paderborn"
+    url: "https://www.ub.uni-paderborn.de"
+    same_as: []
+
 # Values for the development environment
 development:
   alma_api:

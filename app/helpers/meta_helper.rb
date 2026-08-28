@@ -7,6 +7,48 @@ module MetaHelper
     truncate(text, length: 160, separator: " ", omission: " …")
   end
 
+  # The library as a schema.org entity. Everything else points at it by @id
+  # (the website publisher, an offer's provider), so search engines see one
+  # organization for the whole site instead of one per page.
+  def organization_id = "#{root_url}#organization"
+
+  def organization_reference
+    {
+      "@type" => "Organization",
+      "@id" => organization_id,
+      "name" => ApplicationConfig[:organization, :name, default: "Universitätsbibliothek Paderborn"],
+      "url" => ApplicationConfig[:organization, :url, default: "https://www.ub.uni-paderborn.de"]
+    }
+  end
+
+  # The full organization node. Rendered once, on the home page.
+  def organization_json_ld
+    data = {"@context" => "https://schema.org"}
+             .merge(organization_reference)
+             .merge("logo" => image_url("ub-logo.svg"))
+
+    alternate_name = ApplicationConfig[:organization, :alternate_name]
+    same_as = ApplicationConfig[:organization, :same_as, default: []]
+
+    data["alternateName"] = alternate_name if alternate_name.present?
+    data["sameAs"] = same_as if same_as.present?
+    data
+  end
+
+  # This portal as a schema.org WebSite, published by the organization above.
+  def website_json_ld
+    {
+      "@context" => "https://schema.org",
+      "@type" => "WebSite",
+      "@id" => "#{root_url}#website",
+      "url" => root_url,
+      "name" => t("application.app_name"),
+      "description" => t("frontend.meta.default_description"),
+      "inLanguage" => I18n.locale.to_s,
+      "publisher" => {"@id" => organization_id}
+    }
+  end
+
   # schema.org BreadcrumbList built from the controller breadcrumb trail.
   # Lets Google show "ub.uni-paderborn.de › Angebote › Schulungen › Titel"
   # instead of the bare URL in the search result. Trails shorter than two
@@ -38,11 +80,7 @@ module MetaHelper
       "name" => offer.title,
       "description" => meta_description_for(offer.description, offer.learning_targets),
       "url" => frontend_offer_url(offer),
-      "provider" => {
-        "@type" => "Organization",
-        "name" => t("application.ub"),
-        "url" => root_url
-      }
+      "provider" => organization_reference
     }
 
     topics = offer.topics.map(&:title)

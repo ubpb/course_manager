@@ -2,5 +2,7 @@
 de:
   frontend:
     meta:
+      contact_description: Kontakt zum Schulungsteam der Universitätsbibliothek Paderborn – Ansprechpartner für Fragen zu Schulungen, Terminen und Beratungsangeboten.
       default_description: Schulungen, Kurse und Beratungsangebote der Universitätsbibliothek Paderborn – Termine, Themen und Anmeldung im Überblick.
+      home_title: Schulungs- und Beratungsangebote der Universitätsbibliothek Paderborn
       offers_index_description: Alle Schulungs- und Beratungsangebote der Universitätsbibliothek Paderborn – nach Thema und Zielgruppe filtern und direkt anmelden.

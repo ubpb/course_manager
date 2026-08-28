@@ -1,3 +1,10 @@
+= render "frontend/shared/seo_meta",
+         title: t("frontend.meta.home_title"),
+         description: t("frontend.meta.default_description"),
+         canonical: root_url,
+         page_title: nil,
+         json_ld: [website_json_ld, organization_json_ld]
+
 - content_for(:header_image) do
   = image_tag "homepage_head.jpg", class: "img-fluid"
 
