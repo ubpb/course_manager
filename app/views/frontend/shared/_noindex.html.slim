@@ -1,0 +1,4 @@
+/ Keeps a page out of the search index while still letting crawlers follow its
+/ links. For pages that are worthless as a search result: forms and funnels.
+- content_for :head do
+  meta name="robots" content="noindex, follow"
