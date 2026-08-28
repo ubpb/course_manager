@@ -4,9 +4,9 @@ gem "active_flag", "~> 2.0"
 gem "acts_as_list", "~> 1.1"
 gem "alma_api", "~> 2.0"
 gem "bootsnap", require: false
-gem "caxlsx_rails", "~> 0.6.2"
+gem "caxlsx_rails", "~> 0.7"
 gem "commonmarker", "~> 2.0"
-gem "github-markup", "~> 5.0", require: "github/markup"
+gem "github-markup", "~> 6.0", require: "github/markup"
 gem "hexapdf", "~> 1.1"
 gem "jbuilder"
 gem "mysql2"
@@ -23,7 +23,7 @@ gem "sqlite3", ">= 2.1"
 gem "stimulus-rails"
 gem "strip_attributes", "~> 2.0"
 gem "turbo-rails"
-gem "view_component", "~> 3.0"
+gem "view_component", "~> 4.0"
 
 gem "inline_svg", "~> 1.10" # Must be after propshaft
 
