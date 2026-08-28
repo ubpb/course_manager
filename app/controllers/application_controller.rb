@@ -26,15 +26,28 @@ class ApplicationController < ActionController::Base
   def authenticate_user!
     return true if current_user
 
-    # Only remember GET (and HEAD, which Rails routes like GET) requests as
-    # return target, and only genuinely relative paths: "//host" is routable
-    # (the router collapses leading slashes) but is a protocol-relative URL.
-    path = request.fullpath
-    session[:return_to] = path if (request.get? || request.head?) &&
-                                  path.start_with?("/") && !path.start_with?("//")
-
+    store_return_to
     redirect_to new_session_path, alert: t("application.authentication.login_required")
     false
+  end
+
+  # Only remember GET (and HEAD, which Rails routes like GET) requests as return
+  # target, and only genuinely relative paths: "//host" is routable (the router
+  # collapses leading slashes) but is a protocol-relative URL, and a backslash is
+  # normalised to a slash by browsers while Rails refuses to redirect to it at all.
+  def store_return_to
+    return unless request.get? || request.head?
+
+    path = return_to_path.to_s
+    return unless path.start_with?("/") && !path.start_with?("//") && !path.include?("\\")
+
+    session[:return_to] = path
+  end
+
+  # Where to send the user after a successful login. Controllers override this
+  # when the requested URL does not work as a landing page on its own.
+  def return_to_path
+    request.fullpath
   end
 
   # --------------------------------------------------------------------------

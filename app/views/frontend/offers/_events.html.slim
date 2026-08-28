@@ -25,7 +25,10 @@
                 .p-2.text-muted = "Anmeldung nicht mehr möglich"
               - else
                 .d-grid.gap-2
-                  = link_to "Jetzt anmelden", new_frontend_event_registration_path(event), class: "btn btn-primary", data: {turbo_stream: true}
+                  / modal=1 asks for the registration form as a modal. Without it
+                  / -- no-JS, a direct URL, or the redirect after a login -- the
+                  / form renders as a full page.
+                  = link_to "Jetzt anmelden", new_frontend_event_registration_path(event, modal: 1), class: "btn btn-primary", data: {turbo_stream: true}
                   - if event.limited?
                     .text-center = "Noch #{event.no_of_free_spaces} freie Plätze verfügbar"
           - else

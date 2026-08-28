@@ -18,16 +18,21 @@ module Frontend
         )
         ensure_registration_is_possible or return
 
-        respond_to do |format|
-          # Full page as no-JS / direct-URL / post-login fallback
-          format.html
-          format.turbo_stream do
-            render turbo_stream: turbo_stream.replace(
-              "registration-modal",
-              partial: "modal",
-              locals: {event: @event, registration: @registration}
-            )
-          end
+        # The modal is only ever requested by the "Jetzt anmelden" link on the
+        # offer page, which says so via ?modal=1. The response format alone
+        # cannot be used to decide this: Turbo keeps asking for a turbo stream
+        # through a whole redirect chain, so the request that arrives after a
+        # login also looks like a stream request -- but by then the page holding
+        # the #registration-modal placeholder is gone and the stream would be
+        # dropped silently. Everything else renders the full page.
+        if modal_request?
+          render turbo_stream: turbo_stream.replace(
+            "registration-modal",
+            partial: "modal",
+            locals: {event: @event, registration: @registration}
+          )
+        else
+          render :new, formats: [:html]
         end
       end
 
@@ -51,7 +56,7 @@ module Frontend
               render turbo_stream: turbo_stream.replace(
                 "registration-form",
                 partial: "form",
-                locals: {event: @event, registration: @registration, modal: params[:modal].present?}
+                locals: {event: @event, registration: @registration, modal: modal_request?}
               ), status: :unprocessable_entity
             end
           end
@@ -59,6 +64,16 @@ module Frontend
       end
 
       private
+
+      # After the login the offer page -- and with it the #registration-modal
+      # placeholder -- is gone, so come back as a full page by dropping ?modal.
+      def return_to_path
+        new_frontend_event_registration_path(params[:event_id])
+      end
+
+      def modal_request?
+        params[:modal].present? && request.format.turbo_stream?
+      end
 
       def registration_params
         params.require(:registration).permit(
