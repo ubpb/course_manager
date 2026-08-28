@@ -37,6 +37,16 @@ class Offer < ApplicationRecord
 
   def self_study_course? = type == "self_study_course"
 
+  # SEO friendly URLs: /angebote/42-recherche-in-datenbanken
+  #
+  # The ID stays in front, so `Offer.find(params[:id])` keeps working
+  # ("42-recherche-in-datenbanken".to_i == 42) and old, slug-less URLs
+  # remain valid. The slug is purely cosmetic and may change with the title.
+  def to_param
+    slug = title.to_s.parameterize(locale: :de).truncate(70, separator: "-", omission: "")
+    slug.blank? ? id.to_s : "#{id}-#{slug}"
+  end
+
   def contact_info?
     true # always true, because we always have a contact (either the default or a custom one)
   end

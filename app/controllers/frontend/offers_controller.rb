@@ -60,6 +60,11 @@ module Frontend
 
     def show
       # The @offer instance variable is set in the prepare_offer_context before_action.
+
+      # Canonicalize the URL: /angebote/42 and outdated slugs (the title has changed
+      # since the link was created) permanently redirect to the current slug URL.
+      return redirect_to(frontend_offer_path(@offer), status: :moved_permanently) if params[:id] != @offer.to_param
+
       @upcoming_events = @offer.events.published.upcoming.order(date_and_time: :asc)
     end
 

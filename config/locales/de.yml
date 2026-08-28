@@ -4,6 +4,18 @@ de:
   confirm-delete: Wirklich löschen?
   english: Englisch
   german: Deutsch
+  # Used by String#parameterize(locale: :de) for SEO friendly URL slugs,
+  # so that "Einführung" becomes "einfuehrung" instead of "einfuhrung".
+  i18n:
+    transliterate:
+      rule:
+        ä: ae
+        ö: oe
+        ü: ue
+        Ä: Ae
+        Ö: Oe
+        Ü: Ue
+        ß: ss
   save: Speichern
   time:
     formats:
