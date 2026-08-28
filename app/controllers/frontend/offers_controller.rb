@@ -4,6 +4,7 @@ module Frontend
     include Filterable
 
     before_action :prepare_offer_context, except: [:redirect_courses, :redirect_consultings, :redirect_events]
+    before_action -> { persist_filter_params(:offers) }, only: :index
 
     define_filter :offers do
       filter_by :scope, :string do |arel, scope|
@@ -19,7 +20,7 @@ module Frontend
         end
       end
 
-      filter_by :with_upcoming_events, :boolean do |arel, _with_upcoming_events, options|
+      filter_by :with_upcoming_events, :flag do |arel, _with_upcoming_events|
         arel.where(id: Event.published.upcoming.select(:offer_id))
         # ... reorder offers by event date and time instead of title
         # arel.joins(:events)
@@ -34,11 +35,11 @@ module Frontend
       end
 
       filter_by :target_groups, :integer do |arel, target_group_ids|
-        arel.joins(:target_groups).where("target_groups.id IN (?)", target_group_ids)
+        arel.joins(:target_groups).where("target_groups.id IN (?)", target_group_ids).distinct
       end
 
       filter_by :topics, :integer do |arel, topic_ids|
-        arel.joins(:topics).where("topics.id IN (?)", topic_ids)
+        arel.joins(:topics).where("topics.id IN (?)", topic_ids).distinct
       end
     end
 
@@ -48,12 +49,11 @@ module Frontend
                      .includes(:upcoming_events)
                      .order(title: :asc)
 
-      # If the scope filter is not "courses", we ignore the with_upcoming_events filter
-      # because events are only relevant for courses.
-      params[:filter][:with_upcoming_events] = nil if params[:filter] && params[:filter][:scope] != "courses"
-
       @filter = create_filter(:offers)
-      return unless @filter
+
+      # Events are only relevant for courses, so the with_upcoming_events filter is
+      # ignored for any other scope (the form does not even render it there).
+      @filter.with_upcoming_events = nil unless @filter.scope == "courses"
 
       @offers = @filter.filter(@offers)
     end

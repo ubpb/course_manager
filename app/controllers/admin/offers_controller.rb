@@ -4,6 +4,7 @@ module Admin
     include Filterable
 
     before_action :prepare_offer_context
+    before_action -> { persist_filter_params(:offers) }, only: :index
 
     define_filter :offers do
       filter_by :published, :boolean, default: nil do |arel, published|
@@ -27,13 +28,13 @@ module Admin
         arel.where("title like ?", "%#{ApplicationRecord.sanitize_sql_like(title)}%")
       end
 
-      filter_by :include_archived, :boolean, default: false
+      filter_by :include_archived, :flag
     end
 
     def index
       @offers = Offer.order("title")
 
-      @filter = create_filter(:offers) or return
+      @filter = create_filter(:offers)
       @offers = @filter.filter(@offers)
       @offers = @offers.not_archived unless @filter.include_archived
 

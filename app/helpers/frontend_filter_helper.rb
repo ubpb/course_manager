@@ -6,9 +6,4 @@ module FrontendFilterHelper
     filter_chips_for(filter, :scope, :with_upcoming_events, :title, :topics, :target_groups)
   end
 
-  # Active filters for the events index (see #frontend_offer_filter_chips).
-  def frontend_event_filter_chips(filter)
-    filter_chips_for(filter, :title, :online, :date_range, :topics, :target_groups)
-  end
-
 end

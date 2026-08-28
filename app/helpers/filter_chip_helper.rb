@@ -31,11 +31,6 @@ module FilterChipHelper
       chip(filter.with_report ? "Mit Bericht" : "Ohne Bericht", filter, :with_report) unless filter.with_report.nil?
     when :include_archived
       chip("Archivierte anzeigen", filter, :include_archived) if filter.include_archived
-    when :date_range
-      return if filter.date_range.blank?
-
-      labels = { "week" => "Diese Woche", "month" => "Dieser Monat", "quarter" => "Dieses Quartal" }
-      chip(labels.fetch(filter.date_range.to_s, filter.date_range), filter, :date_range)
     when :upcoming_or_past
       return if filter.upcoming_or_past.blank? || filter.upcoming_or_past == "all"
 
@@ -63,6 +58,8 @@ module FilterChipHelper
   # Path that removes one filter key, or a single value from an array filter,
   # from the currently stored filter params. Shared by the frontend and admin
   # chip helpers. Falls back to a clean reset when no filters remain.
+  # Filterable only persists params that carry a value, so what is left here is
+  # exactly the still-set filters.
   def filter_remove_path(filter, key, value = nil)
     params = filter.params.deep_dup
 
@@ -72,12 +69,6 @@ module FilterChipHelper
     else
       params.delete(key)
     end
-
-    # Drop blank/nil-valued keys (e.g. the controller injects
-    # `with_upcoming_events => nil`) so removing the last real filter falls
-    # back to a clean reset. String "false" is not blank, so an active
-    # `online=false` filter is preserved.
-    params = params.reject { |_, v| v.blank? }
 
     params.present? ? url_for(filter: params) : url_for(reset_filter: true)
   end

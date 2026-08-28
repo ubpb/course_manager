@@ -4,6 +4,7 @@ module Admin
     include Filterable
 
     before_action -> { add_breadcrumb "Termine", admin_events_path }
+    before_action -> { persist_filter_params(:events) }, only: [:index, :reports]
 
     define_filter :events do
       filter_by :upcoming_or_past, :string, default: "all" do |arel, value|
@@ -139,7 +140,7 @@ module Admin
     def load_events
       @events = Event.includes(:offer, :report).order(date_and_time: :desc)
 
-      @filter = create_filter(:events) or return
+      @filter = create_filter(:events)
       @events = @filter.filter(@events)
     end
 
