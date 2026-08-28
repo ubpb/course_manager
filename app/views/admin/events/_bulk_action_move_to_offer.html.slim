@@ -27,7 +27,17 @@ div id=container_id
                 data-select-filter-target="input"
                 data-action="input->select-filter#filter"
               )
-              = select_tag :target_offer_id, options_for_select(offers.map { |offer| [offer.title, offer.id] }), class: "form-select", size: 8, required: true, "data-select-filter-target": "select"
+              ruby:
+                ofs = options_for_select(offers.map { |offer|
+                  title = offer.archived? ? "[ARCHIVIERT] #{offer.title}" : offer.title
+                  [title, offer.id]
+                })
+              = select_tag :target_offer_id, \
+                ofs, \
+                class: "form-select", \
+                size: 8, \
+                required: true, \
+                "data-select-filter-target": "select"
           .modal-footer
             button.btn.btn-outline-secondary(type="button" data-bs-dismiss="modal") = "Abbrechen"
             = submit_tag "Verschieben", class: "btn btn-primary"

@@ -31,12 +31,6 @@ class Offer < ApplicationRecord
   scope :archived, -> { where(archived: true) }
   scope :not_archived, -> { where(archived: false) }
 
-  def title
-    title = super
-    title = "[ARCHIVIERT] #{title}" if title.present? && archived?
-    title
-  end
-
   def course? = type == "course"
 
   def consulting? = type == "consulting"

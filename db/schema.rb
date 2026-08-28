@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_13_090000) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_28_100828) do
   create_table "categories", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "color_code", null: false
     t.datetime "created_at", null: false
