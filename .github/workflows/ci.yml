@@ -5,6 +5,12 @@ on:
   push:
     branches: [ master ]
 
+# Cancel superseded runs when new commits are pushed in quick succession.
+# Runs on master are never cancelled, so every commit there keeps a result.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
+
 jobs:
   ci:
     runs-on: ubuntu-latest
@@ -32,7 +38,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
 
       - name: Install packages
         run: sudo apt-get update && sudo apt-get install --no-install-recommends -y build-essential default-libmysqlclient-dev pkg-config
