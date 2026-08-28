@@ -8,6 +8,12 @@ html
     meta(name="turbo-prefetch" content="false")
     meta(name="turbo-refresh-method" content="morph")
     meta(name="format-detection" content="telephone=yes")
+
+    / Icons. Static files in public/, because clients probe /favicon.ico and
+    / /apple-touch-icon.png at fixed paths, with or without these tags.
+    link rel="icon" href="/favicon.ico" sizes="32x32"
+    link rel="icon" href="/icon.svg" type="image/svg+xml"
+    link rel="apple-touch-icon" href="/apple-touch-icon.png"
     = csrf_meta_tags
     = csp_meta_tag
     = stylesheet_link_tag "application", "data-turbo-track": "reload", media: "all"

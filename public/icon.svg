@@ -1,3 +1,12 @@
-<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="256" cy="256" r="256" fill="red"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-3.2430 -1.6730 55.7660 55.7660">
+  <style>
+    svg { fill: #2d2e87 }
+    @media (prefers-color-scheme: dark) { svg { fill: #ffffff } }
+  </style>
+  <path d="M41.82,0h6.2v41.06c-.94-.41-1.97-.64-3.06-.64s-2.18.24-3.14.68V0Z" fill-rule="evenodd"/>
+  <rect x="31.36" width="6.2" height="47.95"/>
+  <rect x="20.91" width="6.2" height="47.95"/>
+  <rect x="10.45" width="6.2" height="47.95"/>
+  <rect width="6.2" height="47.95"/>
+  <path d="M40.56,48.06c0-2.41,1.95-4.36,4.36-4.36s4.36,1.95,4.36,4.36-1.95,4.36-4.36,4.36-4.36-1.95-4.36-4.36" fill-rule="evenodd"/>
 </svg>
