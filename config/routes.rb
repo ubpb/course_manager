@@ -31,6 +31,9 @@ Rails.application.routes.draw do
     root "pages#home"
     get  "kontakt", to: "pages#contact", as: :contact
 
+    # XML sitemap for search engines (referenced from public/robots.txt)
+    get "sitemap.xml", to: "sitemaps#show", as: :sitemap, defaults: {format: "xml"}
+
     # Offers
     scope "angebote" do
       # Redirects for legacy/filter URLs. Must be defined before the resources :offers route,
