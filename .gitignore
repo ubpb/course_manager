@@ -37,10 +37,11 @@
 # Ignore assets builds
 /app/assets/builds
 
+# Ignore dump files in db
+/db/*.dump
+
 # Ignore node_modules
 /node_modules
 
 # Ignore other unneeded files
 .DS_Store
-
-/config/credentials/production.key
