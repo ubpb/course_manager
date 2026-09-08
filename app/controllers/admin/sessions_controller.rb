@@ -24,8 +24,7 @@ module Admin
         if authenticate_against_alma(user_id, password) && (alma_user = get_alma_user(user_id)).present?
           alma_primary_id = alma_user["primary_id"]
 
-          rotate_session
-          session[:current_admin_user_id] = alma_primary_id
+          sign_in_admin(alma_primary_id)
 
           redirect_to admin_root_path
         else
@@ -38,7 +37,7 @@ module Admin
     end
 
     def destroy
-      rotate_session
+      sign_out_admin
       redirect_to(root_path, status: :see_other)
     end
 
