@@ -30,8 +30,14 @@ h5.mb-3 = t(".past")
   .card.card-shadowed
     ul.list-group.list-group-flush
       - @past_registrations.each do |registration|
-        li.list-group-item
-          = registration.event.offer.title
-          .text-body-secondary = l(registration.event.date_and_time)
+        li.list-group-item.d-flex.justify-content-between.align-items-center.gap-2
+          div
+            = registration.event.offer.title
+            .text-body-secondary = l(registration.event.date_and_time)
+          - if registration.certificate_available?
+            = link_to certificate_account_registration_path(registration), \
+                class: "btn btn-outline-primary btn-sm text-nowrap" do
+              i.fa-solid.fa-download.me-1
+              = t(".certificate")
 - else
   .alert.alert-warning = t(".empty_past")

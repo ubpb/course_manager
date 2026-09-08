@@ -26,4 +26,11 @@ class Registration < ApplicationRecord
     first_name == "Gelöscht" || last_name == "Gelöscht" || email == "Gelöscht"
   end
 
+  # Eine Teilnahmebescheinigung gibt es erst, wenn der Termin vorbei ist und für
+  # den Termin überhaupt eine Zertifizierung hinterlegt wurde. Für anonymisierte
+  # Anmeldungen wäre die Bescheinigung wertlos, da der Name fehlt.
+  def certificate_available?
+    !anonymized? && event.certification.present? && event.past?
+  end
+
 end
