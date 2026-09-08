@@ -1,0 +1,6 @@
+.card.card-shadowed
+  .card-header.d-flex.align-items-center.gap-2
+    h5.card-title.mb-0 = "Vorschau: E-Mail Anmeldebestätigung"
+  .card-body
+    = turbo_frame_tag "confirmation-message-preview" do
+      pre.mb-0(style="white-space: pre-wrap;") = @preview

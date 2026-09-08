@@ -67,7 +67,7 @@ Rails.application.routes.draw do
 
       resources :events, except: [:show], module: :offers do
         get :duplicate, on: :member
-        get :preview_reminder_message, path: "preview-reminder-message", on: :member
+        get :preview_confirmation_message, path: "preview-confirmation-message", on: :member
         patch :bulk_process, path: "bulk-process", on: :collection
         patch :bulk_move, path: "bulk-move", on: :collection
 

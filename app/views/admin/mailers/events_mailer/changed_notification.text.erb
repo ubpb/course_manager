@@ -1,25 +1,42 @@
 <%= render "application/mailers/salutation" -%>
 
-Sie haben sich für die Schulungsveranstaltung "<%= @offer.title %>" angemeldet. Wir möchten Sie hiermit darüber informieren, dass sich Daten der Veranstaltung geändert haben.
+Sie haben sich für die Schulungsveranstaltung "<%= @offer.title %>" angemeldet. Wir möchten Sie hiermit darüber informieren, dass sich einige Daten der Veranstaltung geändert haben. Weitere Details entnehmen Sie bitte Ihrem Benutzerkonto im Schulungsportal unter <%= account_root_url %>
 
 Es gab folgende Änderungen:
+<%# The blocks mirror Event#reportable_changes?, and each one brings the blank
+    line that separates it from the one before. -%>
+<% if @event.date_and_time_changed? -%>
 
-<% @event.changes.each do |k, v| %>
-<% if k == "date_and_time" %>
 Datum/Uhrzeit
 -------------
-Bisher: <%= l(v[0]) %>
-NEU: <%= l(v[1]) %>
-<% end %>
+Bisher: <%= l(@event.date_and_time_was) %>
+NEU: <%= l(@event.date_and_time) %>
 
-<% if k == "location" %>
+<%= render "application/mailers/cancel_info" -%>
+<% end -%>
+<% if @event.online_changed? -%>
+
+Veranstaltungsform
+------------------
+Bisher: <%= @event.online_was ? "online" : "vor Ort" %>
+NEU: <%= @event.online? ? "online" : "vor Ort" %>
+<%# Says where the event happens now, so a switched form never needs the
+    Treffpunkt or Zugangslink block on top of it. -%>
+<%= render "application/mailers/location_info" -%>
+<% end -%>
+<% if @event.location_changed? && !@event.online? && !@event.online_changed? -%>
+
 Treffpunkt
 ----------
-Bisher: <%= v[0] %>
-NEU: <%= v[1] %>
-<% end %>
-<% end %>
+Bisher: <%= @event.location_was.presence || "nicht angegeben" %>
+NEU: <%= @event.location.presence || "nicht angegeben" %>
+<% end -%>
+<% if @event.online_url_changed? && @event.online? && !@event.online_changed? -%>
 
-Sollten Sie Fragen haben oder auf Grund der Änderung nicht mehr teilnehmen können, können Sie uns kontaktieren, indem Sie einfach auf diese E-Mail antworten.
+Zugangslink
+-----------
+Bisher: <%= @event.online_url_was.presence || "nicht angegeben" %>
+NEU: <%= @event.online_url.presence || "nicht angegeben" %>
+<% end -%>
 
 <%= render "application/mailers/footer" -%>

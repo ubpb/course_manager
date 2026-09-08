@@ -161,10 +161,8 @@ module Admin
             @bulk_process_actions << ["Zertifikat per Mail senden", "send_certificates"]
           end
 
-          if @event.reminder_message.present?
-            @bulk_process_actions << ["Erinnerungsmail senden", "send_reminder_messages"]
-            @bulk_process_actions << ["Erinnerungsmail ERNEUT senden", "force_send_reminder_messages"]
-          end
+          @bulk_process_actions << ["Erinnerungsmail senden", "send_reminder_messages"]
+          @bulk_process_actions << ["Erinnerungsmail ERNEUT senden", "force_send_reminder_messages"]
 
           @bulk_process_actions << ["Nachricht schreiben", "send_message"]
         end

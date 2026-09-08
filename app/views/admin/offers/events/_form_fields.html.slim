@@ -15,6 +15,7 @@ hr.mt-1.mb-3
   .col
     = form.input :location
     = form.input :online, as: :boolean
+    = form.input :online_url
 .row
   .col
     = form.input :registration_required, as: :boolean
@@ -24,26 +25,26 @@ h5.mt-4.mb-0 Administrative Angaben
 hr.mt-1.mb-3
 ul.nav.nav-tabs.mb-3
   li.nav-item
-    button#reminder-message-tab.nav-link.active(data-bs-toggle="tab" data-bs-target="#reminder-message-pane" type="button") = "E-Mail Erinnerung"
+    button#confirmation-message-tab.nav-link.active(data-bs-toggle="tab" data-bs-target="#confirmation-message-pane" type="button") = "E-Mail Anmeldebestätigung"
   li.nav-item
-    button#reminder-message-preview-tab.nav-link(data-bs-toggle="tab" data-bs-target="#reminder-message-preview-pane" type="button") = "Vorschau"
+    button#confirmation-message-preview-tab.nav-link(data-bs-toggle="tab" data-bs-target="#confirmation-message-preview-pane" type="button") = "Vorschau"
 
 .tab-content
-  #reminder-message-pane.tab-pane.fade.show.active
-    = form.input :reminder_message, as: :text, input_html: { rows: 8 }, label: false
+  #confirmation-message-pane.tab-pane.fade.show.active
+    = form.input :confirmation_message, as: :text, input_html: { rows: 8 }, label: false
 
     = form.label :email_from
     = form.input :email_from, label: false
-  #reminder-message-preview-pane.tab-pane.fade.show
+  #confirmation-message-preview-pane.tab-pane.fade.show
     - if event.persisted?
-      = turbo_frame_tag "reminder-message-preview", src: preview_reminder_message_admin_offer_event_path(offer, event)
+      = turbo_frame_tag "confirmation-message-preview", src: preview_confirmation_message_admin_offer_event_path(offer, event)
     - else
       = "Bitte speichern Sie die Veranstaltung, um eine Vorschau der E-Mail zu sehen."
 
 /javascript:
-  const previewTab = document.querySelector("#reminder-message-preview-tab")
+  const previewTab = document.querySelector("#confirmation-message-preview-tab")
   previewTab.addEventListener("show.bs.tab", event => {
-    const previewFrame = document.querySelector("#reminder-message-preview")
+    const previewFrame = document.querySelector("#confirmation-message-preview")
     previewFrame.reload()
   })
 

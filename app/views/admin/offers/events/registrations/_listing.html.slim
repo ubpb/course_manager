@@ -52,12 +52,11 @@
                   li = link_to send_certificate_admin_offer_event_registration_path(offer, event, registration), data: {turbo_method: :patch, turbo_confirm: "Zertifikat wirklich senden?"}, class: "dropdown-item" do
                     i.fa-solid.fa-envelope.me-2
                     =< "Senden"
-                - if @event.reminder_message.present?
-                  li.dropdown-divider
-                  li: h6.dropdown-header = "Erinnerungsmail"
-                  li = link_to send_reminder_message_admin_offer_event_registration_path(offer, event, registration), data: {turbo_method: :patch, turbo_confirm: "Erinnerungsmail wirklich senden?"}, class: "dropdown-item" do
-                    i.fa-solid.fa-envelope.me-2
-                    =< "(Erneut) senden"
+                li.dropdown-divider
+                li: h6.dropdown-header = "Erinnerungsmail"
+                li = link_to send_reminder_message_admin_offer_event_registration_path(offer, event, registration), data: {turbo_method: :patch, turbo_confirm: "Erinnerungsmail wirklich senden?"}, class: "dropdown-item" do
+                  i.fa-solid.fa-envelope.me-2
+                  =< "(Erneut) senden"
 
 / Fix to reset indeterminate state of checkbox on turbo:load
 javascript:

@@ -1,7 +1,5 @@
-<%= "Hallo #{@full_name}," %>
+<%= render "application/mailers/salutation", full_name: @full_name -%>
 
 hiermit bestätigen wir Ihre Abmeldung von unserer Schulungsveranstaltung "<%= @offer.title %>" am <%= l(@event.date_and_time.to_date) %>.
-
-Sollten Sie Fragen haben, können Sie uns kontaktieren, indem Sie einfach auf diese E-Mail antworten.
 
 <%= render "application/mailers/footer" -%>

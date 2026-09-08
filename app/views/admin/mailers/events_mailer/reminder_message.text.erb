@@ -1,3 +1,11 @@
-<%= render_reminder_message(@reminder_message, registration: @registration) %>
+<%= render "application/mailers/salutation" -%>
+
+wir möchten Sie an Ihre Anmeldung zu unserer Schulungsveranstaltung "<%= @offer.title %>" erinnern.
+
+Termin: <%= l(@event.date_and_time.to_date) %>
+Uhrzeit: <%= l(@event.date_and_time.to_time, format: "%H:%M Uhr") %>
+<%= render "application/mailers/location_info" -%>
+
+<%= render "application/mailers/cancel_info" -%>
 
 <%= render "application/mailers/footer" -%>

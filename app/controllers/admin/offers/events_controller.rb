@@ -78,7 +78,7 @@ module Admin
         @event.assign_attributes(event_params)
 
         if @event.valid?
-          if @event.upcoming? && (@event.date_and_time_changed? || @event.location_changed?)
+          if @event.upcoming? && @event.reportable_changes?
             @event.registrations.each do |registration|
               # Must be send with #deliver and not #deliver_later, because the event is saved afterwards
               # ans we need the changes to be present in the email
@@ -120,7 +120,7 @@ module Admin
         redirect_to edit_admin_offer_event_path(@offer, event)
       end
 
-      def preview_reminder_message
+      def preview_confirmation_message
         event = @offer.events.find(params[:id])
 
         registration = Registration.new(
@@ -130,7 +130,7 @@ module Admin
           email: "schulung@ub.uni-paderborn.de"
         )
 
-        mail = Admin::Mailers::EventsMailer.reminder_message(registration, skip_if_sent: false)
+        mail = Frontend::Mailers::RegistrationsMailer.confirmation(registration)
         @preview = mail.body.to_s
       end
 
@@ -147,8 +147,8 @@ module Admin
 
       def event_params
         params.require(:event).permit(
-          :date_and_time, :duration, :location, :reminder_message,
-          :email_from, :online, :published, :registration_required,
+          :date_and_time, :duration, :location, :confirmation_message,
+          :email_from, :online, :online_url, :published, :registration_required,
           :max_no_of_participants
         )
       end

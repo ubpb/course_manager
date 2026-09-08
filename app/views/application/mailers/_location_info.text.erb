@@ -1,0 +1,9 @@
+<%# Renders nothing at all for an event without a place, so the partial brings
+    its own blank line instead of leaving one behind in the calling template. -%>
+<% if @event.online? -%>
+
+Die Veranstaltung findet online statt. <% if @event.online_url.present? -%>Zugangslink: <%= @event.online_url -%><% else -%>Zugangsdaten erhalten Sie vor der Veranstaltung in einer separaten E-Mail.<% end -%>
+<% elsif @event.location.present? -%>
+
+Ort / Treffpunkt: "<%= @event.location %>".
+<% end -%>

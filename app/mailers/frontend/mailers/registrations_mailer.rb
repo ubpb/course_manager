@@ -21,14 +21,15 @@ module Frontend
         )
       end
 
-      # The registration is already destroyed when a cancellation mail is sent,
-      # so these take the event and plain registrant data instead of the record.
+      # Die Registration ist zu diesem Zeitpunkt bereits gelöscht, daher werden
+      # die benötigten Daten als einfache Werte übergeben (Active Job kann keine
+      # Records ohne id serialisieren).
       def cancellation_confirmation(event, full_name:, email:)
         prepare_cancellation_context(event, full_name, email)
 
         mail(
           reply_to: @event.email_from || "schulung@ub.uni-paderborn.de",
-          to: email,
+          to: @email,
           subject: "[UB Paderborn] Ihre Abmeldung von einer Schulung"
         )
       end

@@ -11,6 +11,7 @@ class Event < ApplicationRecord
   validates :duration, numericality: {only_integer: true, greater_than_or_equal_to: 0}, allow_nil: true
   validates :max_no_of_participants, numericality: {only_integer: true, greater_than_or_equal_to: 0}
   validates :email_from, format: {with: UPB_EMAIL_REGEXP}
+  validates :online_url, format: {with: URI::DEFAULT_PARSER.make_regexp(%w[http https]), allow_blank: true}
 
   # Scopes
   scope :published, -> { where("events.published": true) }
@@ -23,6 +24,15 @@ class Event < ApplicationRecord
   scope :upcoming_and_last_3_months, -> { where("date_and_time >= ?", 3.months.ago) }
   scope :past, -> { where("date_and_time < ?", Time.zone.today.beginning_of_day) }
   scope :online, -> { where(online: true) }
+
+  # A change is only worth a change notification when the mail has something to
+  # show for it: the meeting point matters for an on site event, the access link
+  # only while the event is online.
+  def reportable_changes?
+    return true if date_and_time_changed? || online_changed?
+
+    online? ? online_url_changed? : location_changed?
+  end
 
   def upcoming?
     date_and_time >= Time.zone.today.beginning_of_day

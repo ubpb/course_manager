@@ -14,15 +14,19 @@ module Account
       @event = @registration.event
 
       if @event.upcoming?
+        full_name = @registration.full_name
+        email = @registration.email
+
         @registration.destroy
 
-        # The registration is destroyed, so pass the event and plain
-        # registrant data to the mailers instead of the record.
+        # Die Registration ist zu diesem Zeitpunkt bereits gelöscht, daher werden
+        # die benötigten Daten als einfache Werte übergeben (Active Job kann keine
+        # Records ohne id serialisieren).
         Frontend::Mailers::RegistrationsMailer
-          .cancellation_confirmation(@event, full_name: @registration.full_name, email: @registration.email)
+          .cancellation_confirmation(@event, full_name: full_name, email: email)
           .deliver_later
         Frontend::Mailers::RegistrationsMailer
-          .cancellation_notification(@event, full_name: @registration.full_name, email: @registration.email)
+          .cancellation_notification(@event, full_name: full_name, email: email)
           .deliver_later
 
         redirect_to account_root_path, notice: t("account.registrations.destroy.success"), status: :see_other

@@ -6,7 +6,7 @@ de:
         title: "Titel"
         description: "Beschreibung"
         learning_targets: "Lernziele"
-        reminder_message: "E-Mail Erinnerung"
+        confirmation_message: "Zusatztext für die Anmeldebestätigung"
         email_from: "E-Mail Antwortadresse"
         topics: "Themen"
         target_groups: "Zielgruppen"
@@ -14,6 +14,7 @@ de:
         date_and_time: "Datum und Uhrzeit"
         duration: "Dauer"
         online: "Online-Veranstaltung?"
+        online_url: "Zugangslink"
         registration_required: "Anmeldung erforderlich?"
         max_no_of_participants: "Maximale Teilnehmerzahl"
         first_name: "Vorname"
@@ -63,15 +64,18 @@ de:
         email_from: >
           Die Adresse wird dem Empfänger als 'Antwort an' angezeigt. Diese muss auf '@ub.uni-paderborn.de' enden.
           Als Standard wird schulungen@ub.uni-paderborn.de verwendet.
-        reminder_message: >
-          Mailvorlage für den Versand einer Erinnerungsmail an die angemeldeten Teilnehmer der Veranstaltung. Sie können
+        confirmation_message: >
+          Optionaler Zusatztext, der an die automatische Anmeldebestätigung angehängt wird (z.B. Zugangsdaten oder
+          Hinweise zur Vorbereitung). Bleibt das Feld leer, wird nur der Standardtext versendet. Sie können
           <code>###NAME###</code>, <code>###ANREDE###</code>, <code>###DATUM###</code>, <code>###UHRZEIT###</code>, <code>###DAUER###</code>,
-          <code>###TREFFPUNKT###</code> und <code>###TITEL###</code> in der Nachricht als Platzhalter verwenden. Die Nachricht wird automatisch
-          an die Teilnehmer versendet.
+          <code>###TREFFPUNKT###</code> und <code>###TITEL###</code> als Platzhalter verwenden.
         max_no_of_participants: >
           0 => Keine Beschränkung
         duration: >
           ... in Minuten
+        online_url: >
+          Der Link, über den die Teilnehmer der Online-Veranstaltung beitreten (z.B. Zoom oder BigBlueButton).
+          Muss mit <code>https://</code> oder <code>http://</code> beginnen.
         user_notes: >
           Notizen, die für den Nutzer sichtbar sind
         internal_notes: >

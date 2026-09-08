@@ -1,1 +1,2 @@
-<%= "Hallo #{@registration.full_name}," %>
+<% full_name = local_assigns.fetch(:full_name) { @registration.full_name } -%>
+<%= "Hallo #{full_name}," %>

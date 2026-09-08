@@ -4,7 +4,7 @@ Eine Anmeldung für eine Schulung wurde storniert.
 
 Schulung: <%= @offer.title %>
 Termin: <%= l(@event.date_and_time.to_date) %>
-Zeit: <%= l(@event.date_and_time.to_time, format: :short) %> Uhr
+Zeit: <%= l(@event.date_and_time.to_time, format: "%H:%M") %> Uhr
 
 Folgende Person hat sich abgemeldet:
 

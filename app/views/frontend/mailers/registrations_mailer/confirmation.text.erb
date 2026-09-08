@@ -1,9 +1,12 @@
 <%= render "application/mailers/salutation" -%>
 
-vielen Dank für Ihre Anmeldung zu unserer Schulungsveranstaltung "<%= @offer.title %>" am <%= l(@event.date_and_time.to_date) %>, die wir hiermit bestätigen. Die Veranstaltung beginnt um <%= l(@event.date_and_time.to_time, format: "%H:%M Uhr") %>. <% if @event.online? -%>Die Veranstaltung findet online statt. Zugangsdaten erhalten Sie vor der Veranstaltung in einer separaten E-Mail.<% elsif @event.location.present? -%>Als Ort der Veranstaltung bzw. als Treffpunkt wurde angegeben: "<%= @event.location %>".<% end -%>
+vielen Dank für Ihre Anmeldung zu unserer Schulungsveranstaltung "<%= @offer.title %>" am <%= l(@event.date_and_time.to_date) %>, die wir hiermit bestätigen. Die Veranstaltung beginnt um <%= l(@event.date_and_time.to_time, format: "%H:%M Uhr") %>.
+<%= render "application/mailers/location_info" -%>
+<% if @event.confirmation_message.present? -%>
 
-Sollten Sie den Termin nicht wahrnehmen können, bitten wir Sie sich rechtzeitig vom Termin wieder abzumelden. Rufen Sie dazu Ihr Konto im Schulungs- und Beratungsportal auf und klicken beim Termin auf "abmelden": <%= account_root_url %>
+<%= render_custom_message(@event.confirmation_message, registration: @registration) %>
+<% end -%>
 
-Sollten Sie Fragen haben, können Sie uns kontaktieren, indem Sie einfach auf diese E-Mail antworten.
+<%= render "application/mailers/cancel_info" -%>
 
 <%= render "application/mailers/footer" -%>

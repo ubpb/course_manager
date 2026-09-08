@@ -10,9 +10,6 @@ module Admin
         @event = @registration.event
         @offer = @event.offer
 
-        @reminder_message = @event.reminder_message
-        return if @reminder_message.blank?
-
         mail(
           reply_to: @event.email_from || "schulung@ub.uni-paderborn.de",
           to: @registration.email,
@@ -20,12 +17,14 @@ module Admin
         )
       end
 
+      # Built from the still unsaved changes on the event, and only worth a mail
+      # for the two attributes the template actually reports.
       def changed_notification(event, registration)
         @registration = registration
 
         @event = event
         @offer = @event.offer
-        return unless @event.changes.any?
+        return unless @event.reportable_changes?
 
         mail(
           reply_to: @event.email_from || "schulung@ub.uni-paderborn.de",

@@ -1,6 +1,6 @@
 module MailerHelper
 
-  def render_reminder_message(message, registration:)
+  def render_custom_message(message, registration:)
     return "" if message.blank?
 
     message = message.gsub(/###NAME###/, render_name(registration))
