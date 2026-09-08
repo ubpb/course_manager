@@ -14,6 +14,9 @@ de:
           aus Datenschutzgründen gelöscht.
         cancel: Abmelden
         cancel_confirm: Möchten Sie Ihre Anmeldung wirklich stornieren?
+        certificate: Teilnahmebescheinigung
+      certificate:
+        not_available: Für diesen Termin steht keine Teilnahmebescheinigung zur Verfügung.
       destroy:
         success: Ihre Anmeldung wurde storniert. Wir haben Ihnen eine Bestätigung per E-Mail gesendet.
         not_allowed: Anmeldungen zu vergangenen Terminen können nicht storniert werden.

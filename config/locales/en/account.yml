@@ -6,10 +6,17 @@ en:
       index:
         title: My registrations
         empty: You currently have no registrations.
+        empty_past: No events available
         upcoming: Upcoming events
         past: Past events
+        past_info: >
+          Events you were registered for are deleted 10 days after the event
+          for data protection reasons.
         cancel: Cancel registration
         cancel_confirm: Do you really want to cancel your registration?
+        certificate: Certificate of attendance
+      certificate:
+        not_available: No certificate of attendance is available for this event.
       destroy:
         success: Your registration has been cancelled. We have sent you a confirmation email.
         not_allowed: Registrations for past events cannot be cancelled.
