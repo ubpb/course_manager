@@ -10,7 +10,7 @@
     - events.each do |event|
       .list-group-item.d-xl-flex.justify-content-between.gap-4.align-items-center(id=dom_id(event))
         div
-          = render "frontend/events/details", event: event
+          = render "frontend/events/details", event: event, show_online_url: event.user_registered?(current_user)
         div.mt-3.mt-xl-0
           - if event.registration_required?
             - if event.user_registered?(current_user)

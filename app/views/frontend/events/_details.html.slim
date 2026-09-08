@@ -1,4 +1,4 @@
-/ <%# locals: (event:, show_date: true, show_duration: true, show_online: true, show_location: true, show_registration_info: true) -%>
+/ <%# locals: (event:, show_date: true, show_duration: true, show_online: true, show_location: true, show_registration_info: true, show_online_url: false) -%>
 
 - if show_date
   div
@@ -29,15 +29,22 @@
     span = event.location
 
 - if show_online
-  div
-    - if event.online?
+  - if event.online?
+    div
       i.fa-solid.fa-globe.fa-fw.me-2(
         data-controller="tooltip"
         data-bs-toggle="tooltip"
         data-bs-title="Online-Veranstaltung"
       )
-      span = "Online"
-    - else
+      span
+        = "Online"
+        - if show_online_url && event.online_url.present?
+          =< "("
+          = link_to "Zugangslink", event.online_url, target: "_blank"
+          = ")"
+
+  - else
+    div
       i.fa-solid.fa-person-chalkboard.fa-fw.me-2(
         data-controller="tooltip"
         data-bs-toggle="tooltip"
