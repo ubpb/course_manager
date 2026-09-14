@@ -21,9 +21,9 @@
           - if offer.course?
             .mt-3
               .fw-bold = "Nächste Termine"
-              - if offer.upcoming_events.any?
+              - if offer.upcoming_events.published.any?
                 ul.list-inline.mb-0
-                  - offer.upcoming_events.each do |event|
+                  - offer.upcoming_events.published.each do |event|
                     li.list-inline-item
                       i.fa-regular.fa-calendar.fa-fw.me-1
                       = l(event.date_and_time)
