@@ -13,7 +13,7 @@
       i.fa-solid.fa-arrows-turn-right.fa-flip-horizontal.fa-fw.me-1
       span = "Alle Angebote"
 
-- if (tatg = render("topic_and_target_group_badges", object: @offer)).present?
+- if (tatg = render("topic_and_target_group_badges", offer: @offer)).present?
   .mb-3 = tatg
 
 .row
