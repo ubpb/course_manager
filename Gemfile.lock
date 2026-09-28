@@ -178,7 +178,7 @@ GEM
       activesupport (>= 6.1)
     hashie (5.1.0)
       logger
-    hexapdf (1.10.0)
+    hexapdf (1.11.0)
       cmdparse (~> 3.0, >= 3.0.3)
       geom2d (~> 0.4, >= 0.4.1)
       openssl (>= 2.2.1)
@@ -490,7 +490,7 @@ DEPENDENCIES
   debug
   dotenv
   github-markup (~> 6.0)
-  hexapdf (~> 1.1)
+  hexapdf (~> 1.11)
   i18n-tasks
   inline_svg (~> 1.10)
   jbuilder
