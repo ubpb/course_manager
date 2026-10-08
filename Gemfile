@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "active_flag", "~> 2.0"
+gem "active_flag", "~> 2.2"
 gem "acts_as_list", "~> 1.1"
 gem "alma_api", "~> 2.0"
 gem "bootsnap", require: false
