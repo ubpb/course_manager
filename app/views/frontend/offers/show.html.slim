@@ -34,10 +34,10 @@
 
     - if @offer.course?
       #registration-modal
+
       h5.m-0.mt-4 = "Die nächsten Termine"
       hr.mt-1.mb-3
-      .card
-        = render "frontend/offers/events", offer: @offer, events: @upcoming_events
+      = render "frontend/offers/events", offer: @offer, events: @upcoming_events
 
   / Sidebar
   .col-xl-3.col-lg-4.mt-4.mt-lg-0

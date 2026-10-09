@@ -1,43 +1,40 @@
 / <%# locals: (offer:, events:) -%>
 
-- events_on_request_alert = capture do
-  .alert.alert-info.mb-0.border-0
+- if offer.events_on_request?
+  .callout.callout-info.mb-3.p-2
     i.fa-solid.fa-circle-info.me-2
     == t("frontend.events.on_request_message", contact_url: frontend_contact_path)
 
-.list-group.list-group-flush
-  - if events.present?
-    - events.each do |event|
-      .list-group-item.d-xl-flex.justify-content-between.gap-4.align-items-center(id=dom_id(event))
-        div
-          = render "frontend/events/details", event: event, show_online_url: event.user_registered?(current_user)
-        div.mt-3.mt-xl-0
-          - if event.registration_required?
-            - if event.user_registered?(current_user)
-              .d-grid.gap-2
-                = link_to account_root_path, class: "btn btn-success" do
-                  i.fa-solid.fa-circle-check.fa-fw.me-1
-                  span = "Sie sind bereits angemeldet"
-            - else
-              - if event.full?
-                .p-2.text-muted = "Keine freien Plätze mehr"
-              - elsif event.registration_closed?
-                .p-2.text-muted = "Anmeldung nicht mehr möglich"
-              - else
+- if events.present?
+  .card
+    .list-group.list-group-flush
+      - events.each do |event|
+        .list-group-item.d-xl-flex.justify-content-between.gap-4.align-items-center(id=dom_id(event))
+          div
+            = render "frontend/events/details", event: event, show_online_url: event.user_registered?(current_user)
+          div.mt-3.mt-xl-0
+            - if event.registration_required?
+              - if event.user_registered?(current_user)
                 .d-grid.gap-2
-                  / modal=1 asks for the registration form as a modal. Without it
-                  / -- no-JS, a direct URL, or the redirect after a login -- the
-                  / form renders as a full page.
-                  = link_to "Jetzt anmelden", new_frontend_event_registration_path(event, modal: 1), class: "btn btn-primary", data: {turbo_stream: true}
-                  - if event.limited?
-                    .text-center = "Noch #{event.no_of_free_spaces} freie Plätze verfügbar"
-          - else
-            .p-2.text-muted = "Keine Anmeldung erforderlich"
-      - if offer.events_on_request?
-        = events_on_request_alert
-  - else
-    .alert.alert-warning.mb-0.border-0
-      i.fa-regular.fa-calendar.me-2
-      = t("frontend.events.no_events_message")
-    - if offer.events_on_request?
-      = events_on_request_alert
+                  = link_to account_root_path, class: "btn btn-success" do
+                    i.fa-solid.fa-circle-check.fa-fw.me-1
+                    span = "Sie sind bereits angemeldet"
+              - else
+                - if event.full?
+                  .p-2.text-muted = "Keine freien Plätze mehr"
+                - elsif event.registration_closed?
+                  .p-2.text-muted = "Anmeldung nicht mehr möglich"
+                - else
+                  .d-grid.gap-2
+                    / modal=1 asks for the registration form as a modal. Without it
+                    / -- no-JS, a direct URL, or the redirect after a login -- the
+                    / form renders as a full page.
+                    = link_to "Jetzt anmelden", new_frontend_event_registration_path(event, modal: 1), class: "btn btn-primary", data: {turbo_stream: true}
+                    - if event.limited?
+                      .text-center = "Noch #{event.no_of_free_spaces} freie Plätze verfügbar"
+            - else
+              .p-2.text-muted = "Keine Anmeldung erforderlich"
+- else
+  .alert.alert-warning.mb-0
+    i.fa-regular.fa-calendar.me-2
+    = t("frontend.events.no_events_message")
