@@ -1,12 +1,11 @@
 GIT
   remote: https://github.com/ubpb/rubocop-ubpb.git
-  revision: 14ee1d9e95a7e9ce5bb832fed461aef9f610c3ca
+  revision: 4fecce4d3ac7dc026aa443be5b45bd401fed83e2
   specs:
-    rubocop-ubpb (1.1)
-      rubocop
-      rubocop-minitest
-      rubocop-performance
-      rubocop-rails
+    rubocop-ubpb (2.0.0)
+      rubocop (>= 1.72.1, < 2)
+      rubocop-minitest (>= 0.37)
+      rubocop-performance (>= 1.24)
 
 GEM
   remote: https://rubygems.org/
@@ -102,7 +101,7 @@ GEM
       oj (~> 3.11)
     ast (2.4.3)
     base64 (0.3.0)
-    bigdecimal (4.1.2)
+    bigdecimal (4.1.3)
     bindex (0.8.1)
     bootsnap (1.25.0)
       msgpack (~> 1.5)
@@ -212,7 +211,7 @@ GEM
     jbuilder (2.15.1)
       actionview (>= 7.0.0)
       activesupport (>= 7.0.0)
-    json (2.21.2)
+    json (3.1.0)
     language_server-protocol (3.17.0.6)
     launchy (3.1.1)
       addressable (~> 2.8)
@@ -279,7 +278,7 @@ GEM
       ostruct (>= 0.2)
     openssl (4.0.2)
     ostruct (0.6.3)
-    parallel (2.1.0)
+    parallel (2.3.0)
     parser (3.3.12.0)
       ast (~> 2.4.1)
       racc
@@ -348,38 +347,32 @@ GEM
       prism (>= 1.6.0)
       rbs (>= 4.0.0)
       tsort
-    regexp_parser (2.12.0)
+    regexp_parser (2.13.1)
     reline (0.7.0)
       io-console (~> 0.5)
     rexml (3.4.4)
-    rubocop (1.90.0)
+    rubocop (1.92.0)
       json (>= 2.3)
       language_server-protocol (~> 3.17.0.2)
       lint_roller (~> 1.1.0)
       parallel (>= 1.10)
       parser (>= 3.3.0.2)
       rainbow (>= 2.2.2, < 4.0)
-      regexp_parser (>= 2.9.3, < 3.0)
+      regexp_parser (>= 2.11.3, < 3.0)
       rubocop-ast (>= 1.49.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 4.0)
     rubocop-ast (1.50.0)
       parser (>= 3.3.7.2)
       prism (~> 1.7)
-    rubocop-minitest (0.40.0)
+    rubocop-minitest (0.41.0)
       lint_roller (~> 1.1)
-      rubocop (>= 1.75.0, < 2.0)
+      rubocop (>= 1.89.0, < 2.0)
       rubocop-ast (>= 1.38.0, < 2.0)
     rubocop-performance (1.27.0)
       lint_roller (~> 1.1)
       rubocop (>= 1.89.0, < 2.0)
       rubocop-ast (>= 1.47.1, < 2.0)
-    rubocop-rails (2.37.0)
-      activesupport (>= 4.2.0)
-      lint_roller (~> 1.1)
-      rack (>= 1.1)
-      rubocop (>= 1.89.0, < 2.0)
-      rubocop-ast (>= 1.44.0, < 2.0)
     ruby-progressbar (1.13.0)
     rubyzip (3.5.0)
     securerandom (0.4.1)
@@ -441,10 +434,10 @@ GEM
       railties (>= 7.1.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
-    unicode-display_width (3.2.0)
-      unicode-emoji (~> 4.1)
-    unicode-emoji (4.2.0)
-    uri (1.1.1)
+    unicode-display_width (3.3.0)
+      unicode-emoji (~> 4.3)
+    unicode-emoji (4.3.0)
+    uri (1.1.2)
     useragent (0.16.11)
     view_component (4.15.0)
       actionview (>= 7.1.0)
