@@ -26,7 +26,7 @@ Zusatztext direkt auf.
    Antwort auf die Mail.
 5. Erinnerungsmail enthält den Zusatztext (falls gepflegt).
 6. Admin „Neuen Teilnehmer anlegen“: Checkbox „Anmeldebestätigung senden“,
-   Standard **an**.
+   Standard **an** (bei vergangenen Terminen aus — Nachträge für Bescheinigungen).
 
 ## Nicht-Ziele
 
@@ -151,7 +151,7 @@ generierbar ist (`/account/anmeldungen/0`). Beispiel-URL in der Vorschau ist ok.
 ### Admin: Bestätigung bei manueller Anlage
 
 - `admin/offers/events/registrations/new.html.slim`: Checkbox „Anmeldebestätigung
-  senden“ (Standard angehakt), **nur** im New-Formular (nicht Edit, nicht in
+  senden“ (angehakt bei künftigen, leer bei vergangenen Terminen), **nur** im New-Formular (nicht Edit, nicht in
   `_form_fields`, das beide nutzen). Als eigenes Param außerhalb des Models,
   z. B. `params[:send_confirmation]` via `check_box_tag` mit Hidden-Field „0“
   (Bootstrap-Markup passend zu simple_form). Bei Validierungsfehler bleibt der
