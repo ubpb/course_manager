@@ -9,15 +9,20 @@ module Account
       @past_registrations = registrations.merge(Event.past).order("events.date_and_time DESC")
     end
 
-    # Zeigt die Anmeldung auch dann, wenn Angebot oder Termin inzwischen
-    # unveröffentlicht oder archiviert sind: Die Teilnehmenden sollen ihre
-    # Infos immer wiederfinden, auf die die Mails verlinken.
+    # Die Mails verlinken hierher. Die Anmeldung wird daher auch dann gezeigt,
+    # wenn Angebot oder Termin inzwischen unveröffentlicht oder archiviert sind.
+    # Ist sie selbst storniert, gelöscht oder (10 Tage nach dem Termin)
+    # anonymisiert, geht es statt auf eine 404-Seite zurück zur Übersicht.
+    # Fremde Anmeldungen bekommen dieselbe Antwort, verraten also nicht, ob es
+    # die id gibt.
     def show
       @registration = find_registration
       @event = @registration.event
       @offer = @event.offer
 
       add_breadcrumb @offer.title
+    rescue ActiveRecord::RecordNotFound
+      redirect_to account_root_path, alert: t(".not_found")
     end
 
     def certificate
