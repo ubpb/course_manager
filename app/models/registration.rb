@@ -26,6 +26,13 @@ class Registration < ApplicationRecord
     first_name == "Gelöscht" || last_name == "Gelöscht" || email == "Gelöscht"
   end
 
+  # Nur selbst angemeldete Personen haben ein Benutzerkonto, in dem sie die
+  # Anmeldung wiederfinden. Im Admin angelegte und anonymisierte Anmeldungen
+  # tragen keine ILS-ID.
+  def account_linked?
+    ils_primary_id.present?
+  end
+
   # Eine Teilnahmebescheinigung gibt es erst, wenn der Termin vorbei ist und für
   # den Termin überhaupt eine Zertifizierung hinterlegt wurde. Für anonymisierte
   # Anmeldungen wäre die Bescheinigung wertlos, da der Name fehlt.
