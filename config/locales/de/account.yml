@@ -21,6 +21,7 @@ de:
         success: Ihre Anmeldung wurde storniert. Wir haben Ihnen eine Bestätigung per E-Mail gesendet.
         not_allowed: Anmeldungen zu vergangenen Terminen können nicht storniert werden.
       show:
+        not_found: Diese Anmeldung ist nicht (mehr) vorhanden.
         badge_upcoming: Angemeldet
         badge_past: Vergangen
         back: Meine Anmeldungen

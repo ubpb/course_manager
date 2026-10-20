@@ -21,6 +21,7 @@ en:
         success: Your registration has been cancelled. We have sent you a confirmation email.
         not_allowed: Registrations for past events cannot be cancelled.
       show:
+        not_found: This registration no longer exists.
         badge_upcoming: Registered
         badge_past: Past
         back: My registrations

@@ -72,22 +72,44 @@ class Account::RegistrationShowTest < ActionDispatch::IntegrationTest
     assert_select "a[href=?]", frontend_offer_path(@offer)
   end
 
-  test "someone else's registration is not found" do
-    other = create_registration(@event, ils_primary_id: "99999")
+  # Mails link here, but a registration may be gone by the time the link is
+  # clicked: cancelled, deleted by staff, or anonymized 10 days after the event.
+  # Someone else's registration gets the very same answer, so the response
+  # gives nothing away about which ids exist.
+  def assert_led_back_to_the_overview
+    assert_redirected_to account_root_path
+    follow_redirect!
+    assert_response :success
+    assert_includes response.body, "Diese Anmeldung ist nicht (mehr) vorhanden."
+  end
+
+  test "someone else's registration leads back to the overview" do
+    other = create_registration(@event, ils_primary_id: "99999", first_name: "Fremd")
 
     log_in
     get account_registration_path(other)
 
-    assert_response :not_found
+    assert_led_back_to_the_overview
+    assert_not_includes response.body, "Fremd"
   end
 
-  test "a registration without an account is not found" do
+  test "a registration without an account leads back to the overview" do
     manual = create_registration(@event, ils_primary_id: nil)
 
     log_in
     get account_registration_path(manual)
 
-    assert_response :not_found
+    assert_led_back_to_the_overview
+  end
+
+  test "a cancelled registration leads back to the overview" do
+    id = @registration.id
+    @registration.destroy!
+
+    log_in
+    get account_registration_path(id)
+
+    assert_led_back_to_the_overview
   end
 
   test "a logged out visitor is sent to the login and back" do

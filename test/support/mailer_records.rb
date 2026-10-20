@@ -14,13 +14,13 @@ module MailerRecords
   end
 
   def linked_cancel_info(registration)
-    "Alle Informationen zu Ihrer Anmeldung finden Sie jederzeit in Ihrem Benutzerkonto im " \
+    "Alle Informationen zu Ihrer Anmeldung finden Sie in Ihrem Benutzerkonto im " \
       "Schulungs- und Beratungsportal. Sollten Sie den Termin nicht wahrnehmen können, melden " \
       "Sie sich dort bitte rechtzeitig ab: #{detail_url(registration)}"
   end
 
   def registration_link(registration)
-    "Alle Informationen zu Ihrer Anmeldung finden Sie jederzeit in Ihrem Benutzerkonto: #{detail_url(registration)}"
+    "Alle Informationen zu Ihrer Anmeldung finden Sie in Ihrem Benutzerkonto: #{detail_url(registration)}"
   end
 
   def create_offer(**attributes)

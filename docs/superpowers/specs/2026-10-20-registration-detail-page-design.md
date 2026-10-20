@@ -40,7 +40,10 @@ Zusatztext direkt auf.
 
 ## Anti-Ziele
 
-- Zugriff auf fremde Anmeldungen über die ID in der URL (IDOR). Muss 404 liefern.
+- Zugriff auf fremde Anmeldungen über die ID in der URL (IDOR). Fremde, gelöschte und
+  anonymisierte IDs bekommen dieselbe Antwort: Redirect zur Übersicht mit Hinweis
+  „Diese Anmeldung ist nicht (mehr) vorhanden.“ (statt englischer 404-Seite, da Mail-Links
+  die Anmeldung überleben — Stornierung, Löschung, DSGVO-Anonymisierung 10 Tage nach Termin).
 - Mails an Personen ohne Konto, die auf ein Konto verweisen.
 - Überraschende Mails: Bestätigung bei manueller Anlage nur, wenn Checkbox gesetzt.
 
@@ -56,7 +59,8 @@ Zusatztext direkt auf.
 
 - `config/routes.rb`, Namespace `account`: `resources :registrations, only: [:show, :destroy], path: "anmeldungen"` → `account_registration_path(registration)`.
 - `Account::RegistrationsController#show`: lädt über bestehendes `find_registration`
-  (scoped auf `current_user.ils_primary_id`) → fremde/unbekannte ID = `ActiveRecord::RecordNotFound` = 404.
+  (scoped auf `current_user.ils_primary_id`) → fremde/unbekannte ID = `ActiveRecord::RecordNotFound`
+  → Redirect `account_root_path` mit Alert `account.registrations.show.not_found`.
   Kein Filter auf `published`/`archived`.
 - Breadcrumb: „Mein Konto“ (existiert) › Angebotstitel.
 - Nicht eingeloggt → `authenticate_user!` leitet zum Login, merkt Pfad in
@@ -116,10 +120,10 @@ duplizieren — Builder entscheidet.
 ### Partials (`app/views/application/mailers/`)
 
 - `_cancel_info.text.erb` — zwei Varianten nach `@registration.account_linked?`:
-  - verknüpft (Vorschlag): „Alle Informationen zu Ihrer Anmeldung finden Sie jederzeit in Ihrem Benutzerkonto im Schulungs- und Beratungsportal. Sollten Sie den Termin nicht wahrnehmen können, melden Sie sich dort bitte rechtzeitig ab: <account_registration_url(@registration)>“
+  - verknüpft (Vorschlag): „Alle Informationen zu Ihrer Anmeldung finden Sie in Ihrem Benutzerkonto im Schulungs- und Beratungsportal. Sollten Sie den Termin nicht wahrnehmen können, melden Sie sich dort bitte rechtzeitig ab: <account_registration_url(@registration)>“
   - nicht verknüpft: „Sollten Sie den Termin nicht wahrnehmen können, bitten wir Sie, uns dies rechtzeitig mitzuteilen. Antworten Sie dazu einfach auf diese E-Mail.“
 - Neu `_registration_link.text.erb` — nur bei verknüpft, sonst leer (bringt eigene
-  Leerzeile mit, wie `_location_info`): „Alle Informationen zu Ihrer Anmeldung finden Sie jederzeit in Ihrem Benutzerkonto: <url>“
+  Leerzeile mit, wie `_location_info`): „Alle Informationen zu Ihrer Anmeldung finden Sie in Ihrem Benutzerkonto: <url>“
 - Neu `_confirmation_message.text.erb` — rendert `render_custom_message(@event.confirmation_message, registration: @registration)` mit führender Leerzeile, wenn vorhanden; ersetzt den Inline-Block in `confirmation.text.erb` und wird in `reminder_message.text.erb` wiederverwendet.
 
 Alle URLs: `account_registration_url(@registration)` (nicht mehr `account_root_url`).
@@ -166,7 +170,7 @@ Frontend-Login per `post session_path`, Admin per `post admin_session_path`.
 - **Integration** `test/integration/account/registration_show_test.rb`:
   - eigene Anmeldung: 200, Titel, Termindaten, Hinweise mit ersetzten Platzhaltern, Beschreibung + Lernziele (Markdown gerendert);
   - Angebot unveröffentlicht + archiviert → trotzdem 200;
-  - fremde Anmeldung (andere `ils_primary_id`) → 404; Anmeldung ohne `ils_primary_id` → 404;
+  - fremde Anmeldung (andere `ils_primary_id`), Anmeldung ohne `ils_primary_id`, gelöschte Anmeldung → Redirect Übersicht mit Hinweis;
   - ausgeloggt → Redirect Login, `session[:return_to]` = Detailpfad, nach Login zurück;
   - künftig online: Zugangslink sichtbar, Abmelde-Button da; vergangen: kein Zugangslink, kein Abmelden, Bescheinigungs-Link wenn verfügbar;
   - Link „Öffentliche Angebotsseite“ nur bei veröffentlicht + nicht archiviert;
