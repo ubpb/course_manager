@@ -123,7 +123,11 @@ module Admin
       def preview_confirmation_message
         event = @offer.events.find(params[:id])
 
+        # Previews the mail most participants get: the one for a registration
+        # made from an account. Its link to the detail page needs an id.
         registration = Registration.new(
+          id: 0,
+          ils_primary_id: "preview",
           event: event,
           first_name: "Max",
           last_name: "Mustermann",

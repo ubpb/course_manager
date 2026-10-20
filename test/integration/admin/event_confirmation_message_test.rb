@@ -33,6 +33,9 @@ class Admin::EventConfirmationMessageTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_includes response.body, "vielen Dank für Ihre Anmeldung"
     assert_includes response.body, "Zugangsdaten folgen für Max Mustermann."
+    # The preview shows the mail most participants get: the one for a
+    # registration made from an account, pointing to its detail page.
+    assert_includes response.body, "/account/anmeldungen/0"
   end
 
   test "the registration list offers the reminder actions without a stored text" do
