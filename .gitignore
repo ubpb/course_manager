@@ -45,3 +45,6 @@
 
 # Ignore other unneeded files
 .DS_Store
+
+# Brainstorming mockups (superpowers visual companion)
+/.superpowers
