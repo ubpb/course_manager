@@ -23,6 +23,15 @@ class Admin::EventConfirmationMessageTest < ActionDispatch::IntegrationTest
     assert_select "textarea[name=?]", "event[confirmation_message]"
   end
 
+  # The text no longer goes into the confirmation only, and staff write it
+  # differently when they know it is repeated just before the event.
+  test "the hint tells staff everywhere the confirmation message appears" do
+    get edit_admin_offer_event_path(@offer, @event)
+
+    assert_includes response.body, "Anmeldebestätigung und die Erinnerungsmail"
+    assert_includes response.body, "Detailseite"
+  end
+
   test "the confirmation message is saved and shown in the preview" do
     patch admin_offer_event_path(@offer, @event),
           params: {event: {confirmation_message: "Zugangsdaten folgen für ###NAME###."}}
