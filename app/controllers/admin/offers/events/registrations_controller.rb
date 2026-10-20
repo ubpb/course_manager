@@ -33,8 +33,9 @@ module Admin
           @registration = @event.registrations.build(registration_params)
 
           if @registration.save
-            # Manually entered participants have no account; the confirmation
-            # is the only place they get the custom text of the event from.
+            # Manually entered participants have no account to look things up
+            # in; the confirmation brings them the custom text of the event
+            # right away instead of only with the reminder.
             if params[:send_confirmation] == "1"
               Frontend::Mailers::RegistrationsMailer.confirmation(@registration).deliver_later
             end

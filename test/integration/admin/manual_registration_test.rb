@@ -29,6 +29,17 @@ class Admin::ManualRegistrationTest < ActionDispatch::IntegrationTest
     assert_select "input[type=checkbox][name=send_confirmation][checked]"
   end
 
+  # Staff add attendees after the event too, e.g. for a certificate. Thanking
+  # them for registering to a date that has passed would only confuse.
+  test "the checkbox starts unchecked for a past event" do
+    @event.update!(date_and_time: 3.days.ago)
+
+    get new_admin_offer_event_registration_path(@offer, @event)
+
+    assert_select "input[type=checkbox][name=send_confirmation]"
+    assert_select "input[type=checkbox][name=send_confirmation][checked]", count: 0
+  end
+
   test "a manual registration sends the confirmation when asked" do
     assert_enqueued_emails 1 do
       create_manual_registration(send_confirmation: "1")

@@ -14,7 +14,9 @@
       hr.mt-1.mb-3
       .form-check
         = hidden_field_tag :send_confirmation, "0", id: nil
-        = check_box_tag :send_confirmation, "1", params.fetch(:send_confirmation, "1") == "1", class: "form-check-input"
+        / Preselected for upcoming events only: after the event a "thank you for
+        / registering" would only confuse (staff add attendees for certificates).
+        = check_box_tag :send_confirmation, "1", params.fetch(:send_confirmation, @event.upcoming? ? "1" : "0") == "1", class: "form-check-input"
         = label_tag :send_confirmation, "Anmeldebestätigung senden", class: "form-check-label"
     .card-footer
       .d-flex.gap-2.flex-column.flex-md-row
