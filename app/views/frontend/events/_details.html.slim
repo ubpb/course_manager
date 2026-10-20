@@ -8,7 +8,9 @@
       data-bs-title="Datum und Uhrzeit"
     )
     span = l(event.date_and_time)
-    span.ms-1.fst-italic = "(#{date_in_words(event.date_and_time.to_date)})"
+    / date_in_words only phrases the future ("in 5 Tagen").
+    - if event.upcoming?
+      span.ms-1.fst-italic = "(#{date_in_words(event.date_and_time.to_date)})"
 
 - if show_duration && event.duration.present?
   div

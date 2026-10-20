@@ -115,6 +115,18 @@ class Account::RegistrationShowTest < ActionDispatch::IntegrationTest
     assert_not_includes response.body, "translation missing"
   end
 
+  # date_in_words only knows the future ("in 5 Tagen"), so a past date must not
+  # get it at all.
+  test "a past event does not claim to lie ahead" do
+    @event.update!(date_and_time: 5.days.ago)
+
+    log_in
+    get account_registration_path(@registration)
+
+    assert_response :success
+    assert_no_match(/\(in \d+ Tagen\)/, response.body)
+  end
+
   # Event#upcoming? counts the whole day, and so does the cancellation itself.
   test "an event earlier today can still be cancelled" do
     @event.update!(date_and_time: Time.zone.now.beginning_of_day + 1.minute)
