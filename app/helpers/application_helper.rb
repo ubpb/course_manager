@@ -21,12 +21,16 @@ module ApplicationHelper
     end
   end
 
+  # Counts calendar days from midnight to midnight. Measured from the current
+  # time of day, the distance would come up almost a day short in the afternoon.
   def date_in_words(date)
+    today = Time.zone.today
+
     case date
-    when Time.zone.today          then t("datetime.today")
-    when Time.zone.today + 1.day  then t("datetime.tomorrow")
-    when Time.zone.today + 2.days then t("datetime.day_after_tomorrow")
-    else distance_of_time_in_words_to_now(date, scope: "datetime.distance_in_words.date_only")
+    when today          then t("datetime.today")
+    when today + 1.day  then t("datetime.tomorrow")
+    when today + 2.days then t("datetime.day_after_tomorrow")
+    else distance_of_time_in_words(today.in_time_zone, date.in_time_zone, scope: "datetime.distance_in_words.date_only")
     end
   end
 
