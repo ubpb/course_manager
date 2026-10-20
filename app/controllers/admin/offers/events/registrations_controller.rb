@@ -33,6 +33,12 @@ module Admin
           @registration = @event.registrations.build(registration_params)
 
           if @registration.save
+            # Manually entered participants have no account; the confirmation
+            # is the only place they get the custom text of the event from.
+            if params[:send_confirmation] == "1"
+              Frontend::Mailers::RegistrationsMailer.confirmation(@registration).deliver_later
+            end
+
             redirect_to edit_admin_offer_event_registration_path(@offer, @event, @registration), notice: t("admin.application.form.success")
           else
             render :new, status: :unprocessable_entity
