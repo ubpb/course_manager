@@ -9,6 +9,17 @@ module Account
       @past_registrations = registrations.merge(Event.past).order("events.date_and_time DESC")
     end
 
+    # Zeigt die Anmeldung auch dann, wenn Angebot oder Termin inzwischen
+    # unveröffentlicht oder archiviert sind: Die Teilnehmenden sollen ihre
+    # Infos immer wiederfinden, auf die die Mails verlinken.
+    def show
+      @registration = find_registration
+      @event = @registration.event
+      @offer = @event.offer
+
+      add_breadcrumb @offer.title
+    end
+
     def certificate
       registration = find_registration
 

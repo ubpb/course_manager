@@ -20,3 +20,18 @@ en:
       destroy:
         success: Your registration has been cancelled. We have sent you a confirmation email.
         not_allowed: Registrations for past events cannot be cancelled.
+      show:
+        badge_upcoming: Registered
+        badge_past: Past
+        back: My registrations
+        event: Your event
+        notes: Notes on your event
+        description: Description
+        learning_targets: Learning objectives
+        actions: Actions
+        public_page: Public offer page
+        registration: Your registration
+        registered_at: registered on %{date}
+        field_of_interest: Field of interest
+        user_notes: Your note
+        contact: Contact
