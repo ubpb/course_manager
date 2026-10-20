@@ -1,0 +1,9 @@
+/ <%# locals: (registration:) -%>
+/ Der Zusatztext aus der Anmeldebestätigung. Er wird für Plain-Text-Mails
+/ gepflegt, daher escaped und nur mit Zeilenumbrüchen, nicht als Markdown.
+
+- message = registration.event.confirmation_message
+- if message.present?
+  .callout.callout-warning.mb-4
+    h5 = t("account.registrations.show.notes")
+    = simple_format(h(render_custom_message(message, registration: registration)))

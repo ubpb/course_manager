@@ -18,7 +18,7 @@ Rails.application.routes.draw do
   # User account
   namespace :account do
     root "registrations#index"
-    resources :registrations, only: [:destroy], path: "anmeldungen" do
+    resources :registrations, only: [:show, :destroy], path: "anmeldungen" do
       get :certificate, on: :member, path: "teilnahmebescheinigung"
     end
   end
