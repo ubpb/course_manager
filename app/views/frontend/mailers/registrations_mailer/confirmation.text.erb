@@ -2,10 +2,7 @@
 
 vielen Dank für Ihre Anmeldung zu unserer Schulungsveranstaltung "<%= @offer.title %>" am <%= l(@event.date_and_time.to_date) %>, die wir hiermit bestätigen. Die Veranstaltung beginnt um <%= l(@event.date_and_time.to_time, format: "%H:%M Uhr") %>.
 <%= render "application/mailers/location_info" -%>
-<% if @event.confirmation_message.present? -%>
-
-<%= render_custom_message(@event.confirmation_message, registration: @registration) %>
-<% end -%>
+<%= render "application/mailers/confirmation_message" -%>
 
 <%= render "application/mailers/cancel_info" -%>
 

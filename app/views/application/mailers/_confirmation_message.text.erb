@@ -1,0 +1,6 @@
+<%# The custom text staff keep on the event. Renders nothing without one, so the
+    partial brings its own blank line instead of leaving one behind. -%>
+<% if @event.confirmation_message.present? -%>
+
+<%= render_custom_message(@event.confirmation_message, registration: @registration) %>
+<% end -%>

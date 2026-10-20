@@ -1,0 +1,6 @@
+<%# Renders nothing at all for a registration without an account, so the partial
+    brings its own blank line instead of leaving one behind in the calling template. -%>
+<% if @registration.account_linked? -%>
+
+Alle Informationen zu Ihrer Anmeldung finden Sie jederzeit in Ihrem Benutzerkonto: <%= account_registration_url(@registration) %>
+<% end -%>

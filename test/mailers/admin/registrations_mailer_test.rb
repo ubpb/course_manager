@@ -94,4 +94,39 @@ class Admin::RegistrationsMailerTest < ActionMailer::TestCase
     end
   end
 
+  test "a linked user message points to the detail page" do
+    @registration.update!(ils_primary_id: "12345")
+
+    body = Admin::Mailers::RegistrationsMailer.user_message(@registration, staff_message).body.to_s
+
+    assert_includes body, "Wir treffen uns in Raum 9.\n\n#{registration_link(@registration)}\n\n"
+    assert_not_includes body, "\n\n\n"
+  end
+
+  test "an unlinked user message does not mention the account" do
+    body = Admin::Mailers::RegistrationsMailer.user_message(@registration, staff_message).body.to_s
+
+    assert_not_includes body, "Benutzerkonto"
+    assert_includes body, "Wir treffen uns in Raum 9.\n\nSollten Sie Fragen haben"
+  end
+
+  test "a linked certificate mail points to the detail page" do
+    certify!
+    @registration.update!(ils_primary_id: "12345")
+
+    body = certificate_mail.text_part.body.to_s
+
+    assert_includes body, registration_link(@registration)
+    assert_not_includes body, "\n\n\n"
+  end
+
+  test "an unlinked certificate mail does not mention the account" do
+    certify!
+
+    body = certificate_mail.text_part.body.to_s
+
+    assert_not_includes body, "Benutzerkonto"
+    assert_not_includes body, "\n\n\n"
+  end
+
 end
