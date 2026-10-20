@@ -1,1 +1,7 @@
-Sollten Sie den Termin nicht wahrnehmen können, bitten wir Sie sich rechtzeitig vom Termin wieder abzumelden. Rufen Sie dazu Ihr Konto im Schulungs- und Beratungsportal auf und klicken beim Termin auf "abmelden": <%= account_root_url %>
+<%# Without an account there is no detail page to point to, so the participant
+    is asked to reply to the mail instead. -%>
+<% if @registration.account_linked? -%>
+Alle Informationen zu Ihrer Anmeldung finden Sie jederzeit in Ihrem Benutzerkonto im Schulungs- und Beratungsportal. Sollten Sie den Termin nicht wahrnehmen können, melden Sie sich dort bitte rechtzeitig ab: <%= account_registration_url(@registration) %>
+<% else -%>
+Sollten Sie den Termin nicht wahrnehmen können, bitten wir Sie, uns dies rechtzeitig mitzuteilen. Antworten Sie dazu einfach auf diese E-Mail.
+<% end -%>

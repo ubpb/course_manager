@@ -4,6 +4,25 @@ module MailerRecords
 
   EVENT_TIME = "2026-10-15 10:00".freeze
 
+  # The cancel hint for a registration without an account, which can only be
+  # cancelled by replying to the mail.
+  UNLINKED_CANCEL_INFO = "Sollten Sie den Termin nicht wahrnehmen können, bitten wir Sie, " \
+                         "uns dies rechtzeitig mitzuteilen. Antworten Sie dazu einfach auf diese E-Mail.".freeze
+
+  def detail_url(registration)
+    "http://example.com/account/anmeldungen/#{registration.id}"
+  end
+
+  def linked_cancel_info(registration)
+    "Alle Informationen zu Ihrer Anmeldung finden Sie jederzeit in Ihrem Benutzerkonto im " \
+      "Schulungs- und Beratungsportal. Sollten Sie den Termin nicht wahrnehmen können, melden " \
+      "Sie sich dort bitte rechtzeitig ab: #{detail_url(registration)}"
+  end
+
+  def registration_link(registration)
+    "Alle Informationen zu Ihrer Anmeldung finden Sie jederzeit in Ihrem Benutzerkonto: #{detail_url(registration)}"
+  end
+
   def create_offer(**attributes)
     Offer.create!({title: "Literaturrecherche", type: "course", published: true}.merge(attributes))
   end

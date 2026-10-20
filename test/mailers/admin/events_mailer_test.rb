@@ -33,8 +33,19 @@ class Admin::EventsMailerTest < ActionMailer::TestCase
     assert_includes body, "Termin: 15.10.2026"
     assert_includes body, "Uhrzeit: 10:00 Uhr"
     assert_includes body, "Ort / Treffpunkt: \"Raum 1.2\"."
-    assert_includes body, "klicken beim Termin auf \"abmelden\": http://example.com/account"
+    assert_includes body, UNLINKED_CANCEL_INFO
+    assert_not_includes body, "/account"
     assert_includes body, "das Schulungsteam der UB Paderborn"
+  end
+
+  test "a linked reminder points to the detail page" do
+    @registration.update!(ils_primary_id: "12345")
+
+    body = reminder(skip_if_sent: false).body.to_s
+
+    assert_includes body, linked_cancel_info(@registration)
+    assert_not_includes body, "Antworten Sie dazu"
+    assert_not_includes body, "\n\n\n"
   end
 
   test "the reminder answers to the address kept on the event" do
@@ -92,7 +103,7 @@ class Admin::EventsMailerTest < ActionMailer::TestCase
     assert_includes body, "NEU: 01.11.2026, 14:00 Uhr"
     assert_not_includes body, "Treffpunkt"
     # Only a moved date is worth an early cancellation.
-    assert_includes body, "klicken beim Termin auf \"abmelden\": http://example.com/account"
+    assert_includes body, UNLINKED_CANCEL_INFO
   end
 
   test "a moved meeting point is reported without the cancel hint" do
@@ -104,7 +115,7 @@ class Admin::EventsMailerTest < ActionMailer::TestCase
     assert_includes body, "Bisher: Raum 1.2"
     assert_includes body, "NEU: Raum 9"
     assert_not_includes body, "Datum/Uhrzeit"
-    assert_not_includes body, "klicken beim Termin auf \"abmelden\""
+    assert_not_includes body, "nicht wahrnehmen"
   end
 
   test "a new access link is reported with the old and the new value" do
@@ -163,7 +174,7 @@ class Admin::EventsMailerTest < ActionMailer::TestCase
     body = Admin::Mailers::EventsMailer.changed_notification(@event, @registration).body.to_s
 
     assert_includes body, "Es gab folgende Änderungen:\n\nDatum/Uhrzeit"
-    assert_includes body, "http://example.com/account\n\nTreffpunkt"
+    assert_includes body, "auf diese E-Mail.\n\nTreffpunkt"
     assert_includes body, "NEU: Raum 9\n\nSollten Sie Fragen haben"
     assert_not_includes body, "\n\n\n"
   end
@@ -174,7 +185,7 @@ class Admin::EventsMailerTest < ActionMailer::TestCase
     body = Admin::Mailers::EventsMailer.changed_notification(@event, @registration).body.to_s
 
     assert_includes body, "NEU: 01.11.2026, 14:00 Uhr"
-    assert_includes body, "http://example.com/account\n\nVeranstaltungsform"
+    assert_includes body, "auf diese E-Mail.\n\nVeranstaltungsform"
     assert_includes body, "NEU: online"
     assert_not_includes body, "\n\n\n"
   end
@@ -240,6 +251,28 @@ class Admin::EventsMailerTest < ActionMailer::TestCase
     assert_no_emails do
       Admin::Mailers::EventsMailer.changed_notification(@event, @registration).deliver_now
     end
+  end
+
+  test "a linked change notice points to the detail page" do
+    @registration.update!(ils_primary_id: "12345")
+    @event.date_and_time = Time.zone.parse("2026-11-01 14:00")
+
+    body = Admin::Mailers::EventsMailer.changed_notification(@event, @registration).body.to_s
+
+    assert_includes body, "geändert haben. Weitere Details finden Sie in Ihrem Benutzerkonto im Schulungsportal unter #{detail_url(@registration)}"
+    assert_includes body, linked_cancel_info(@registration)
+    assert_not_includes body, "\n\n\n"
+  end
+
+  test "an unlinked change notice does not mention the account" do
+    @event.date_and_time = Time.zone.parse("2026-11-01 14:00")
+
+    body = Admin::Mailers::EventsMailer.changed_notification(@event, @registration).body.to_s
+
+    assert_includes body, "dass sich einige Daten der Veranstaltung geändert haben.\n"
+    assert_not_includes body, "Benutzerkonto"
+    assert_not_includes body, "/account"
+    assert_not_includes body, "\n\n\n"
   end
 
 end

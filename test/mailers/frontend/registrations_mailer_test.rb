@@ -39,8 +39,19 @@ class Frontend::RegistrationsMailerTest < ActionMailer::TestCase
     assert_includes body, "vielen Dank für Ihre Anmeldung zu unserer Schulungsveranstaltung \"Literaturrecherche\" am 15.10.2026"
     assert_includes body, "Die Veranstaltung beginnt um 10:00 Uhr."
     assert_includes body, "Ort / Treffpunkt: \"Raum 1.2\"."
-    assert_includes body, "klicken beim Termin auf \"abmelden\": http://example.com/account"
+    assert_includes body, UNLINKED_CANCEL_INFO
+    assert_not_includes body, "/account"
     assert_includes body, "das Schulungsteam der UB Paderborn"
+  end
+
+  test "a linked confirmation points to the detail page" do
+    registration = create_registration(ils_primary_id: "12345", email: "erika@example.com")
+
+    body = Frontend::Mailers::RegistrationsMailer.confirmation(registration).body.to_s
+
+    assert_includes body, linked_cancel_info(registration)
+    assert_not_includes body, "Antworten Sie dazu"
+    assert_not_includes body, "\n\n\n"
   end
 
   test "the notification goes to the team with the registration data" do

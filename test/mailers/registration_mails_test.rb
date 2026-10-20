@@ -1,7 +1,7 @@
 require "test_helper"
 
 # The registration confirmation carries the per-event text staff maintain in the
-# admin, the reminder is a fixed template. Both used to be the other way round.
+# admin, and the reminder repeats it: weeks may lie between the two mails.
 class RegistrationMailsTest < ActionMailer::TestCase
 
   setup do
@@ -55,6 +55,20 @@ class RegistrationMailsTest < ActionMailer::TestCase
     mail = Admin::Mailers::EventsMailer.reminder_message(@registration)
 
     assert_equal "", mail.body.to_s
+  end
+
+  test "the custom text is part of the reminder" do
+    @event.update!(confirmation_message: "###ANREDE###, bitte Zotero installieren.")
+
+    body = reminder_body
+
+    assert_includes body, "Ort / Treffpunkt: \"Raum 1.2\".\n\nHallo Max Mustermann, bitte Zotero installieren.\n\n"
+  end
+
+  test "a reminder without custom text and place has no gap" do
+    @event.update!(confirmation_message: nil, location: nil)
+
+    assert_not_includes reminder_body, "\n\n\n"
   end
 
 end

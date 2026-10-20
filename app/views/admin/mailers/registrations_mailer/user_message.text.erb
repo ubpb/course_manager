@@ -3,5 +3,6 @@
 Hinweis: Sie erhalten die E-Mail im Zusammenhang mit Ihrer Anmeldung bei der Schulungsveranstaltung "<%= @offer.title %>" am <%= l(@event.date_and_time.to_date) %>.
 
 <%= @message.body %>
+<%= render "application/mailers/registration_link" -%>
 
 <%= render "application/mailers/footer" -%>

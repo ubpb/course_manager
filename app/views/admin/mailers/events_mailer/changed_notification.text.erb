@@ -1,6 +1,6 @@
 <%= render "application/mailers/salutation" -%>
 
-Sie haben sich für die Schulungsveranstaltung "<%= @offer.title %>" angemeldet. Wir möchten Sie hiermit darüber informieren, dass sich einige Daten der Veranstaltung geändert haben. Weitere Details entnehmen Sie bitte Ihrem Benutzerkonto im Schulungsportal unter <%= account_root_url %>
+Sie haben sich für die Schulungsveranstaltung "<%= @offer.title %>" angemeldet. Wir möchten Sie hiermit darüber informieren, dass sich einige Daten der Veranstaltung geändert haben.<% if @registration.account_linked? %> Weitere Details finden Sie in Ihrem Benutzerkonto im Schulungsportal unter <%= account_registration_url(@registration) %><% end %>
 
 Es gab folgende Änderungen:
 <%# The blocks mirror Event#reportable_changes?, and each one brings the blank
