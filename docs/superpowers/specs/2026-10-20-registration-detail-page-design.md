@@ -217,3 +217,7 @@ Frontend-Login per `post session_path`, Admin per `post admin_session_path`.
   `Registration::RETENTION_PERIOD`, die auch `app:dsgvo:cleanup` nutzt.
 - **Checkbox** „Anmeldebestätigung senden“ nur bei künftigen Terminen vorausgewählt.
 - **Veraltete Links** (storniert/gelöscht/anonymisiert) und fremde IDs → Redirect zur Übersicht mit Hinweis.
+- **Übersicht „Meine Anmeldungen“** (2026-10-21): pro Anmeldung Titel + `frontend/events/_details`;
+  einzige Aktion „Details“ öffnet die Detailseite als Modal (`?modal=1` + Turbo Stream in
+  `#registration-modal`, Muster wie das Anmeldeformular). Abmelden/Bescheinigung nur noch dort.
+  Ohne Turbo bzw. aus Mails: volle Seite; Login-Rücksprung ohne `?modal`.

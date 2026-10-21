@@ -1,0 +1,16 @@
+/ <%# locals: (registration:) -%>
+/ Every option -- cancelling, the certificate, the access link -- lives on the
+/ detail page, so the list only offers to open it. ?modal=1 asks for it as a
+/ modal; without Turbo the same link opens it as a page.
+
+- detail_path = account_registration_path(registration, modal: 1)
+
+li.list-group-item.d-md-flex.justify-content-between.align-items-center.gap-4
+  div
+    .fw-semibold.mb-1
+      = link_to registration.event.offer.title, detail_path, data: {turbo_stream: true}
+    = render "frontend/events/details", event: registration.event, show_registration_info: false
+  .mt-3.mt-md-0
+    = link_to detail_path, class: "btn btn-outline-primary btn-sm text-nowrap", data: {turbo_stream: true} do
+      i.fa-solid.fa-circle-info.fa-fw.me-1
+      span = t("account.registrations.index.details")

@@ -21,6 +21,16 @@ module Account
       @offer = @event.offer
 
       add_breadcrumb @offer.title
+
+      # The overview opens the page as a modal via ?modal=1. Asked for as a turbo
+      # stream alone is not enough: Turbo keeps that through a whole redirect
+      # chain, e.g. after a login, when the placeholder is gone.
+      if params[:modal].present? && request.format.turbo_stream?
+        render turbo_stream: turbo_stream.replace("registration-modal", partial: "modal",
+                                                                        locals: {registration: @registration})
+      else
+        render :show, formats: [:html]
+      end
     rescue ActiveRecord::RecordNotFound
       redirect_to account_root_path, alert: t(".not_found")
     end
@@ -67,6 +77,12 @@ module Account
     end
 
     private
+
+    # After the login the overview -- and with it the #registration-modal
+    # placeholder -- is gone, so come back as a full page by dropping ?modal.
+    def return_to_path
+      action_name == "show" ? account_registration_path(params[:id]) : super
+    end
 
     # Nur die eigenen Anmeldungen sind auffindbar, damit die id aus der URL nicht
     # zum Zugriff auf fremde Anmeldungen (und deren Bescheinigungen) taugt.
