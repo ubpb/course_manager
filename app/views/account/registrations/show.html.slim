@@ -21,7 +21,21 @@
       .card-body
         h5.m-0 = t(".event")
         hr.mt-1.mb-3
-        = render "frontend/events/details", event: @event, show_registration_info: false, show_online_url: @event.upcoming?
+        = render "frontend/events/details", event: @event, show_registration_info: false
+
+        / This is the one place participants find the access link, so it gets a
+        / button of its own -- and the address to copy for joining from elsewhere.
+        - if @event.online? && @event.upcoming?
+          .mt-3.pt-3.border-top
+            - if @event.online_url.present?
+              = link_to @event.online_url, class: "btn btn-primary", target: "_blank", rel: "noopener" do
+                i.fa-solid.fa-video.fa-fw.me-2
+                span = t(".join_online")
+              .small.text-body-secondary.text-break.mt-2 = @event.online_url
+            - else
+              .text-body-secondary
+                i.fa-solid.fa-info-circle.fa-fw.me-2
+                span = t(".online_url_pending")
 
     = render "notes", registration: @registration
 
