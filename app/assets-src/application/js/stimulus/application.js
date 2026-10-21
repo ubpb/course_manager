@@ -36,3 +36,7 @@ application.register("modal", ModalController)
 import TooltipController from "./tooltip_controller.js"
 application.register("tooltip", TooltipController)
 
+// Register the sidecar controllers of view components (app/components)
+import CopyToClipboardComponentController from "../../../../components/copy_to_clipboard_component/controller.js"
+application.register("copy-to-clipboard-component", CopyToClipboardComponentController)
+

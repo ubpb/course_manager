@@ -1,0 +1,29 @@
+/ Read only, but not disabled: the text stays selectable, so it can still be
+/ copied by hand where the clipboard is not available.
+.input-group(data-controller="copy-to-clipboard-component")
+  input.form-control(
+    type="text"
+    value=@value
+    readonly=true
+    aria-label=@label
+    data-copy-to-clipboard-component-target="source"
+    data-action="focus->copy-to-clipboard-component#select click->copy-to-clipboard-component#select"
+  )
+  button.btn.btn-outline-primary(
+    type="button"
+    title=t(".copy_title")
+    data-copy-to-clipboard-component-target="button"
+    data-action="copy-to-clipboard-component#copy"
+  )
+    span(data-copy-to-clipboard-component-target="idle")
+      i.fa-regular.fa-copy.fa-fw.me-1
+      = t(".copy")
+    span(data-copy-to-clipboard-component-target="copied" hidden=true)
+      i.fa-solid.fa-check.fa-fw.me-1
+      = t(".copied")
+  span.visually-hidden(
+    aria-live="polite"
+    data-copy-to-clipboard-component-target="status"
+    data-copied=t(".copied_status")
+    data-failed=t(".failed_status")
+  )

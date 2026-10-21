@@ -60,8 +60,8 @@ class Account::RegistrationShowTest < ActionDispatch::IntegrationTest
     log_in
     get account_registration_path(@registration)
 
-    assert_select "a.btn[href=?][target=_blank]", "https://meet.example.com/abc", text: /Online-Termin beitreten/
-    assert_select ".text-break", text: "https://meet.example.com/abc"
+    assert_select "a.btn[href=?][target=_blank]", "https://meet.example.com/abc", text: /Zugangslink öffnen/
+    assert_select "[data-controller=copy-to-clipboard-component] input[readonly][value=?]", "https://meet.example.com/abc"
   end
 
   test "an online event without access link says how it will come" do
@@ -71,7 +71,8 @@ class Account::RegistrationShowTest < ActionDispatch::IntegrationTest
     get account_registration_path(@registration)
 
     assert_includes response.body, "Die Zugangsdaten erhalten Sie vor der Veranstaltung in einer separaten E-Mail."
-    assert_select "a", text: /Online-Termin beitreten/, count: 0
+    assert_select "a", text: /Zugangslink öffnen/, count: 0
+    assert_select "[data-controller=copy-to-clipboard-component]", count: 0
   end
 
   test "an event on site has no access section" do
@@ -252,7 +253,7 @@ class Account::RegistrationShowTest < ActionDispatch::IntegrationTest
     assert_equal "text/vnd.turbo-stream.html", response.media_type
     assert_includes response.body, '<turbo-stream action="replace" target="registration-modal">'
     assert_includes response.body, "Hallo Max Mustermann, bitte Zotero installieren."
-    assert_includes response.body, "Online-Termin beitreten"
+    assert_includes response.body, "Zugangslink öffnen"
     assert_not_includes response.body, "translation missing"
     assert_select_in_stream cancel_form_selector
   end

@@ -1,0 +1,12 @@
+de:
+  copy: Kopieren
+  copy_title: In die Zwischenablage kopieren
+  copied: Kopiert
+  copied_status: In die Zwischenablage kopiert.
+  failed_status: Kopieren nicht möglich. Der Text ist markiert und kann mit Strg+C bzw. Cmd+C kopiert werden.
+en:
+  copy: Copy
+  copy_title: Copy to clipboard
+  copied: Copied
+  copied_status: Copied to the clipboard.
+  failed_status: Copying is not possible. The text is selected and can be copied with Ctrl+C or Cmd+C.

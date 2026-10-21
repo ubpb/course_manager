@@ -221,3 +221,6 @@ Frontend-Login per `post session_path`, Admin per `post admin_session_path`.
   einzige Aktion „Details“ öffnet die Detailseite als Modal (`?modal=1` + Turbo Stream in
   `#registration-modal`, Muster wie das Anmeldeformular). Abmelden/Bescheinigung nur noch dort.
   Ohne Turbo bzw. aus Mails: volle Seite; Login-Rücksprung ohne `?modal`.
+- **Zugangslink** (2026-10-21): Button heißt „Zugangslink öffnen“; darunter `CopyToClipboardComponent`
+  (ViewComponent, erste im Projekt; Vorlage aus dem Katalog-Projekt) — Readonly-Feld + Button
+  „Kopieren“ statt der nackten URL.

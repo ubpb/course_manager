@@ -27,7 +27,8 @@ en:
         badge_upcoming: Registered
         badge_past: Past
         back: My registrations
-        join_online: Join the online event
+        open_online_url: Open access link
+        online_url: Access link
         online_url_pending: You will receive the access details in a separate email before the event.
         deletion_notice: For data protection reasons your registration is deleted %{days} days after the event, i.e. from %{date}.
         deletion_notice_certificate: Please download your certificate of attendance before then.

@@ -31,9 +31,9 @@
           .mt-3.pt-3.border-top
             - if event.online_url.present?
               = link_to event.online_url, class: "btn btn-primary", target: "_blank", rel: "noopener" do
-                i.fa-solid.fa-video.fa-fw.me-2
-                span = t(:join_online, scope:)
-              .small.text-body-secondary.text-break.mt-2 = event.online_url
+                i.fa-solid.fa-arrow-up-right-from-square.fa-fw.me-2
+                span = t(:open_online_url, scope:)
+              .mt-2 = render CopyToClipboardComponent.new(value: event.online_url, label: t(:online_url, scope:))
             - else
               .text-body-secondary
                 i.fa-solid.fa-info-circle.fa-fw.me-2
