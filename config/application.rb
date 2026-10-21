@@ -24,5 +24,8 @@ module CourseManager
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
     config.time_zone = "Berlin"
+
+    # Disable variant generation for active storage (not used currently)
+    config.active_storage.variant_processor = :disabled
   end
 end
