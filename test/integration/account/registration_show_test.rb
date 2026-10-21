@@ -54,6 +54,37 @@ class Account::RegistrationShowTest < ActionDispatch::IntegrationTest
     assert_select cancel_form_selector
   end
 
+  # The offer page no longer shows the access link, so the detail page has to
+  # make it easy to find -- and to copy, for those who join from another device.
+  test "the access link stands out as a button with the address to copy" do
+    log_in
+    get account_registration_path(@registration)
+
+    assert_select "a.btn[href=?][target=_blank]", "https://meet.example.com/abc", text: /Online-Termin beitreten/
+    assert_select ".text-break", text: "https://meet.example.com/abc"
+  end
+
+  test "an online event without access link says how it will come" do
+    @event.update!(online_url: nil)
+
+    log_in
+    get account_registration_path(@registration)
+
+    assert_includes response.body, "Die Zugangsdaten erhalten Sie vor der Veranstaltung in einer separaten E-Mail."
+    assert_select "a", text: /Online-Termin beitreten/, count: 0
+  end
+
+  test "an event on site has no access section" do
+    @event.update!(online: false, location: "Raum 1.2")
+
+    log_in
+    get account_registration_path(@registration)
+
+    assert_includes response.body, "Raum 1.2"
+    assert_not_includes response.body, "meet.example.com"
+    assert_not_includes response.body, "Zugangsdaten"
+  end
+
   test "an unpublished and archived offer is still shown" do
     @offer.update!(published: false, archived: true)
     @event.update!(published: false)
