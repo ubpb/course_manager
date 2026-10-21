@@ -63,10 +63,10 @@ class Event < ApplicationRecord
     full? || date_and_time.today?
   end
 
-  def user_registered?(user)
-    return false if user.nil?
+  def registration_for(user)
+    return nil if user.nil?
 
-    registrations.exists?(ils_primary_id: user.ils_primary_id)
+    registrations.find_by(ils_primary_id: user.ils_primary_id)
   end
 
 end
