@@ -1,5 +1,9 @@
 class Registration < ApplicationRecord
 
+  # So lange nach dem Termin bleiben die personenbezogenen Daten erhalten, bevor
+  # app:dsgvo:cleanup die Anmeldung anonymisiert.
+  RETENTION_PERIOD = 10.days
+
   # Relations
   belongs_to :event, counter_cache: true
   has_many :certificates, dependent: :nullify
@@ -31,6 +35,11 @@ class Registration < ApplicationRecord
   # tragen keine ILS-ID.
   def account_linked?
     ils_primary_id.present?
+  end
+
+  # Der Tag, ab dem app:dsgvo:cleanup die Anmeldung anonymisiert.
+  def deletion_date
+    (event.date_and_time + RETENTION_PERIOD).to_date
   end
 
   # Eine Teilnahmebescheinigung gibt es erst, wenn der Termin vorbei ist und für

@@ -13,4 +13,12 @@ class RegistrationTest < ActiveSupport::TestCase
     assert_not_predicate Registration.new(ils_primary_id: ""), :account_linked?
   end
 
+  test "personal data is kept for ten days after the event" do
+    assert_equal 10.days, Registration::RETENTION_PERIOD
+
+    event = Event.new(date_and_time: Time.zone.parse("2026-10-15 18:00"))
+
+    assert_equal Date.new(2026, 10, 25), Registration.new(event: event).deletion_date
+  end
+
 end

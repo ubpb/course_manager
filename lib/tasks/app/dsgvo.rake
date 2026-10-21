@@ -3,7 +3,7 @@ namespace :app do
 
     desc "Cleanup personal information to be GDRP compliant"
     task cleanup: :environment do
-      Event.includes(:registrations).where("date_and_time <= ?", 10.days.ago).find_each do |event|
+      Event.includes(:registrations).where("date_and_time <= ?", Registration::RETENTION_PERIOD.ago).find_each do |event|
         event.registrations.each do |r|
           # Update registration and skipping validations
           r.update_columns( # rubocop:disable Rails/SkipsModelValidations

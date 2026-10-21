@@ -27,6 +27,8 @@ de:
         back: Meine Anmeldungen
         join_online: Online-Termin beitreten
         online_url_pending: Die Zugangsdaten erhalten Sie vor der Veranstaltung in einer separaten E-Mail.
+        deletion_notice: Aus Datenschutzgründen wird Ihre Anmeldung %{days} Tage nach dem Termin gelöscht, also ab dem %{date}.
+        deletion_notice_certificate: Bitte laden Sie Ihre Teilnahmebescheinigung bis dahin herunter.
         event: Ihr Termin
         notes: Hinweise zu Ihrem Termin
         description: Beschreibung
