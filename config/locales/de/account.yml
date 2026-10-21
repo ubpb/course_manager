@@ -4,6 +4,7 @@ de:
     title: Mein Konto
     registrations:
       index:
+        details: Details
         title: Meine Anmeldungen
         empty: Sie sind derzeit für keine Schulungen angemeldet
         empty_past: Keine Termine verfügbar
@@ -12,15 +13,16 @@ de:
         past_info: >
           Termine von Schulungen, für die Sie angemeldet waren, werden 10 Tage nach dem Termin
           aus Datenschutzgründen gelöscht.
-        cancel: Abmelden
-        cancel_confirm: Möchten Sie Ihre Anmeldung wirklich stornieren?
-        certificate: Teilnahmebescheinigung
       certificate:
         not_available: Für diesen Termin steht keine Teilnahmebescheinigung zur Verfügung.
       destroy:
         success: Ihre Anmeldung wurde storniert. Wir haben Ihnen eine Bestätigung per E-Mail gesendet.
         not_allowed: Anmeldungen zu vergangenen Terminen können nicht storniert werden.
       show:
+        cancel: Abmelden
+        cancel_confirm: Möchten Sie Ihre Anmeldung wirklich stornieren?
+        certificate: Teilnahmebescheinigung
+        close: Schließen
         not_found: Diese Anmeldung ist nicht (mehr) vorhanden.
         badge_upcoming: Angemeldet
         badge_past: Vergangen

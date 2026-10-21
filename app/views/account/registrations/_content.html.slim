@@ -1,0 +1,116 @@
+/ <%# locals: (registration:) -%>
+/ Everything about one registration. Rendered as a page of its own (the mails
+/ link here) and as a modal from the overview.
+
+- event = registration.event
+- offer = event.offer
+- scope = "account.registrations.show"
+- public_offer = offer.published? && !offer.archived?
+- can_cancel = event.upcoming?
+- certificate = registration.certificate_available?
+
+.row
+  / Main content
+  .col-xl-9.col-lg-8
+    - if event.past?
+      .callout.callout-info.mb-4
+        i.fa-solid.fa-user-shield.fa-fw.me-2
+        = t(:deletion_notice, scope:, days: Registration::RETENTION_PERIOD.in_days.to_i, date: l(registration.deletion_date))
+        - if certificate
+          =< t(:deletion_notice_certificate, scope:)
+
+    .card.mb-4
+      .card-body
+        h5.m-0 = t(:event, scope:)
+        hr.mt-1.mb-3
+        = render "frontend/events/details", event: event, show_registration_info: false
+
+        / This is the one place participants find the access link, so it gets a
+        / button of its own -- and the address to copy for joining from elsewhere.
+        - if event.online? && event.upcoming?
+          .mt-3.pt-3.border-top
+            - if event.online_url.present?
+              = link_to event.online_url, class: "btn btn-primary", target: "_blank", rel: "noopener" do
+                i.fa-solid.fa-video.fa-fw.me-2
+                span = t(:join_online, scope:)
+              .small.text-body-secondary.text-break.mt-2 = event.online_url
+            - else
+              .text-body-secondary
+                i.fa-solid.fa-info-circle.fa-fw.me-2
+                span = t(:online_url_pending, scope:)
+
+    = render "account/registrations/notes", registration: registration
+
+    - if offer.description.present? || offer.learning_targets.present? || offer.call_to_action?
+      .card
+        .card-body
+          - if offer.description.present?
+            h4 = t(:description, scope:)
+            == render_markdown(offer.description)
+          - if offer.learning_targets.present?
+            h4 = t(:learning_targets, scope:)
+            == render_markdown(offer.learning_targets)
+          - if offer.call_to_action?
+            = link_to offer.call_to_action_url, class: "btn btn-primary w-100", target: "_blank" do
+              i.fa-solid.fa-arrow-up-right-from-square.me-2
+              span = offer.call_to_action_text
+
+  / Sidebar
+  .col-xl-3.col-lg-4.mt-4.mt-lg-0
+    .d-grid.gap-4
+      - if can_cancel || certificate || public_offer
+        div
+          h5.m-0 = t(:actions, scope:)
+          hr.mt-1.mb-3
+          .d-grid.gap-2
+            - if can_cancel
+              = button_to account_registration_path(registration), method: :delete, \
+                  class: "btn btn-outline-danger w-100", \
+                  form: {data: {turbo_confirm: t(:cancel_confirm, scope:)}} do
+                i.fa-solid.fa-xmark.fa-fw.me-1
+                span = t(:cancel, scope:)
+            - if certificate
+              = link_to certificate_account_registration_path(registration), class: "btn btn-outline-primary" do
+                i.fa-solid.fa-download.fa-fw.me-1
+                span = t(:certificate, scope:)
+            - if public_offer
+              = link_to frontend_offer_path(offer), class: "btn btn-outline-secondary" do
+                i.fa-solid.fa-arrow-up-right-from-square.fa-fw.me-1
+                span = t(:public_page, scope:)
+
+      div
+        h5.m-0 = t(:registration, scope:)
+        hr.mt-1.mb-3
+        div
+          i.fa-solid.fa-person.fa-fw.me-2
+          span = registration.full_name
+        div
+          i.fa-regular.fa-envelope.fa-fw.me-2
+          span = registration.email
+        div
+          i.fa-regular.fa-calendar-check.fa-fw.me-2
+          span = t(:registered_at, scope:, date: l(registration.created_at.to_date))
+        - if registration.field_of_interest.present?
+          .mt-2
+            .fw-semibold = t(:field_of_interest, scope:)
+            div = registration.field_of_interest
+        - if registration.user_notes.present?
+          .mt-2
+            .fw-semibold = t(:user_notes, scope:)
+            div = simple_format(h(registration.user_notes), {}, wrapper_tag: "div")
+
+      div
+        h5.m-0 = t(:contact, scope:)
+        hr.mt-1.mb-3
+        - if offer.contact_name.present?
+          div
+            i.fa-solid.fa-person.fa-fw.me-2
+            span = offer.contact_name
+        - if offer.contact_email.present?
+          div
+            i.fa-regular.fa-envelope.fa-fw.me-2
+            span = mail_to offer.contact_email
+        - if offer.contact_phone.present?
+          div
+            i.fa-solid.fa-phone.fa-fw.me-2
+            span = link_to offer.contact_phone, "tel:#{offer.contact_phone}"

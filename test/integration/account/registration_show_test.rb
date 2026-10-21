@@ -240,15 +240,47 @@ class Account::RegistrationShowTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "&lt;script&gt;alert(1)"
   end
 
-  test "the overview links each registration to its detail page" do
-    past_event = @offer.events.create!(date_and_time: 3.days.ago, max_no_of_participants: 10)
-    past = create_registration(past_event, ils_primary_id: AlmaAuthenticationStub::VALID_USER_ID)
+  TURBO_STREAM_HEADERS = {
+    "Accept" => "text/vnd.turbo-stream.html, text/html, application/xhtml+xml"
+  }.freeze
 
+  test "the overview gets the detail page as a modal" do
     log_in
-    get account_root_path
+    get account_registration_path(@registration, modal: 1), headers: TURBO_STREAM_HEADERS
 
-    assert_select "a[href=?]", account_registration_path(@registration)
-    assert_select "a[href=?]", account_registration_path(past)
+    assert_response :success
+    assert_equal "text/vnd.turbo-stream.html", response.media_type
+    assert_includes response.body, '<turbo-stream action="replace" target="registration-modal">'
+    assert_includes response.body, "Hallo Max Mustermann, bitte Zotero installieren."
+    assert_includes response.body, "Online-Termin beitreten"
+    assert_not_includes response.body, "translation missing"
+    assert_select_in_stream cancel_form_selector
+  end
+
+  # Without Turbo -- or with ?modal=1 left in a bookmarked URL -- the very same
+  # request has to work as a page of its own.
+  test "a modal link without Turbo renders the full page" do
+    log_in
+    get account_registration_path(@registration, modal: 1)
+
+    assert_response :success
+    assert_equal "text/html", response.media_type
+    assert_select "h3", text: /Literaturrecherche/
+  end
+
+  # After the login the overview -- and with it the #registration-modal
+  # placeholder -- is gone, so come back as a full page by dropping ?modal.
+  test "a modal request while logged out comes back as a full page" do
+    get account_registration_path(@registration, modal: 1), headers: TURBO_STREAM_HEADERS
+
+    assert_redirected_to new_session_path
+    assert_equal account_registration_path(@registration), session[:return_to]
+  end
+
+  def assert_select_in_stream(selector)
+    template = Nokogiri::HTML5.fragment(response.body).at_css("turbo-stream template")
+    assert template, "no turbo stream template in the response"
+    assert Nokogiri::HTML5.fragment(template.inner_html).at_css(selector), "#{selector} not in the modal"
   end
 
 end

@@ -2,18 +2,15 @@
   h3.mb-0.fw-bold
     = t(".title")
 
+/ Filled with the detail page of a registration, opened as a modal.
+#registration-modal
+
 h5.mb-3 = t(".upcoming")
 - if @upcoming_registrations.any?
   .card.card-shadowed.mb-4
     ul.list-group.list-group-flush
       - @upcoming_registrations.each do |registration|
-        li.list-group-item.d-flex.justify-content-between.align-items-center.gap-2
-          div
-            = link_to registration.event.offer.title, account_registration_path(registration)
-            .text-body-secondary = l(registration.event.date_and_time)
-          = button_to t(".cancel"), account_registration_path(registration), method: :delete, \
-              class: "btn btn-outline-danger btn-sm", \
-              form: {data: {turbo_confirm: t(".cancel_confirm")}}
+        = render "listing_item", registration: registration
 - else
   .alert.alert-warning = t(".empty")
 
@@ -26,14 +23,6 @@ h5.mb-3 = t(".past")
   .card.card-shadowed
     ul.list-group.list-group-flush
       - @past_registrations.each do |registration|
-        li.list-group-item.d-flex.justify-content-between.align-items-center.gap-2
-          div
-            = link_to registration.event.offer.title, account_registration_path(registration)
-            .text-body-secondary = l(registration.event.date_and_time)
-          - if registration.certificate_available?
-            = link_to certificate_account_registration_path(registration), \
-                class: "btn btn-outline-primary btn-sm text-nowrap" do
-              i.fa-solid.fa-download.me-1
-              = t(".certificate")
+        = render "listing_item", registration: registration
 - else
   .alert.alert-warning = t(".empty_past")
