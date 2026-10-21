@@ -31,14 +31,18 @@ async function build() {
 await build();
 
 if (isWatch) {
-  console.log("Watching for changes in app/assets-src/...");
+  console.log("Watching for changes in app/assets-src/ and app/components/...");
 
   let timeout;
-  watch("./app/assets-src", { recursive: true }, (_event, _filename) => {
+  const rebuild = (_event, _filename) => {
     clearTimeout(timeout);
     timeout = setTimeout(async () => {
       console.log("Rebuilding...");
       await build();
     }, 100);
-  });
+  };
+
+  // View components bring their Stimulus controllers along as sidecar files.
+  watch("./app/assets-src", { recursive: true }, rebuild);
+  watch("./app/components", { recursive: true }, rebuild);
 }
