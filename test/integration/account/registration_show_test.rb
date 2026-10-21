@@ -168,6 +168,34 @@ class Account::RegistrationShowTest < ActionDispatch::IntegrationTest
     assert_not_includes response.body, "translation missing"
   end
 
+  test "a past event announces when the registration is deleted" do
+    @event.update!(date_and_time: Time.zone.parse("2026-10-15 18:00"))
+    travel_to Time.zone.parse("2026-10-21 10:00")
+
+    log_in
+    get account_registration_path(@registration)
+
+    assert_includes response.body, "Aus Datenschutzgründen wird Ihre Anmeldung 10 Tage nach dem Termin gelöscht, also ab dem 25.10.2026."
+    assert_not_includes response.body, "Teilnahmebescheinigung bis dahin"
+  end
+
+  test "with a certificate the deletion notice asks to download it in time" do
+    @event.update!(date_and_time: 3.days.ago)
+    Certification.create!(event: @event, learning_results: "Katalogrecherche", signature: "Max Muster")
+
+    log_in
+    get account_registration_path(@registration)
+
+    assert_includes response.body, "Bitte laden Sie Ihre Teilnahmebescheinigung bis dahin herunter."
+  end
+
+  test "an upcoming event has no deletion notice" do
+    log_in
+    get account_registration_path(@registration)
+
+    assert_not_includes response.body, "Aus Datenschutzgründen"
+  end
+
   # date_in_words only knows the future ("in 5 Tagen"), so a past date must not
   # get it at all.
   test "a past event does not claim to lie ahead" do

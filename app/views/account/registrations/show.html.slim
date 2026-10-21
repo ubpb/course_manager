@@ -17,6 +17,13 @@
 .row
   / Main content
   .col-xl-9.col-lg-8
+    - if @event.past?
+      .callout.callout-info.mb-4
+        i.fa-solid.fa-user-shield.fa-fw.me-2
+        = t(".deletion_notice", days: Registration::RETENTION_PERIOD.in_days.to_i, date: l(@registration.deletion_date))
+        - if certificate
+          =< t(".deletion_notice_certificate")
+
     .card.mb-4
       .card-body
         h5.m-0 = t(".event")

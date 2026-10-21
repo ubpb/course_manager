@@ -203,3 +203,17 @@ Frontend-Login per `post session_path`, Admin per `post admin_session_path`.
 - Linked-Variante von `_cancel_info` kombiniert „alle Infos“ + Abmelden in einem Absatz mit einer URL; Bestätigung/Erinnerung brauchen damit keinen zusätzlichen Link-Absatz.
 - Admin-Vorschau zeigt verknüpfte Variante mit Beispiel-URL `/account/anmeldungen/0`.
 - Checkbox als Controller-Param, nicht als Model-Attribut.
+
+## Nachträge (2026-10-21, nach Review)
+
+- **Zugangslink nur noch auf der Detailseite.** Die öffentliche Angebotsseite zeigt ihn nicht
+  mehr; der Button „Sie sind bereits angemeldet“ führt auf die Detailseite der Anmeldung
+  (`Event#registration_for(user)` ersetzt `Event#user_registered?`). Auf der Detailseite steht
+  er bei künftigen Online-Terminen als Button „Online-Termin beitreten“ plus Adresse zum
+  Kopieren; ohne Link der Hinweis aus der Mail („Die Zugangsdaten erhalten Sie … separaten E-Mail“).
+- **Löschhinweis bei vergangenen Terminen:** „Aus Datenschutzgründen wird Ihre Anmeldung
+  10 Tage nach dem Termin gelöscht, also ab dem <Datum>.“, mit Bescheinigung zusätzlich
+  „Bitte laden Sie Ihre Teilnahmebescheinigung bis dahin herunter.“ Frist als
+  `Registration::RETENTION_PERIOD`, die auch `app:dsgvo:cleanup` nutzt.
+- **Checkbox** „Anmeldebestätigung senden“ nur bei künftigen Terminen vorausgewählt.
+- **Veraltete Links** (storniert/gelöscht/anonymisiert) und fremde IDs → Redirect zur Übersicht mit Hinweis.

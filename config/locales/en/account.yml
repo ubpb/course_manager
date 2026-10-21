@@ -27,6 +27,8 @@ en:
         back: My registrations
         join_online: Join the online event
         online_url_pending: You will receive the access details in a separate email before the event.
+        deletion_notice: For data protection reasons your registration is deleted %{days} days after the event, i.e. from %{date}.
+        deletion_notice_certificate: Please download your certificate of attendance before then.
         event: Your event
         notes: Notes on your event
         description: Description
