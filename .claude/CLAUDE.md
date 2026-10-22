@@ -17,9 +17,9 @@ bin/ci                    # full CI: setup, rubocop, importmap audit, brakeman, 
 bin/rails test            # run minitest suite
 bin/rails test test/models/offer_test.rb              # single file
 bin/rails test test/models/offer_test.rb:42           # single test by line
+bin/rubocop               # lint (config: rubocop-ubpb rails.yml, see .rubocop.yml); -a for safe autocorrections
 ```
 
-- **Never run rubocop** (`bin/rubocop`) — the user handles linting. (It runs in `bin/ci`, but don't invoke it standalone for verification.)
 - **Database is MySQL/MariaDB** (`mysql2`, socket `/tmp/mysql.sock`; servers run MariaDB 11.8), the only database — no sqlite. Solid Queue's tables live in it too (no separate queue DB). Running `rake`/`bin/rails test` **regenerates the test DB from development** — don't point them at the same DB.
 
 ## Assets — non-standard
