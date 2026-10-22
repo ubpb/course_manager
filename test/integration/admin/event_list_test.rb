@@ -97,4 +97,30 @@ class Admin::EventListTest < ActionDispatch::IntegrationTest
     assert_includes response.body, '<turbo-stream action="replace" target="bulk-action-form">'
   end
 
+  # The checkbox and the actions menu sit in cells larger than themselves; a
+  # click next to them must not open the event (see row_link_controller.js).
+  test "the checkbox and actions cells do not open the event" do
+    get admin_events_path
+
+    assert_select "##{dom_id(@upcoming)} td[data-row-link-ignore]", count: 2
+    assert_select "##{dom_id(@upcoming)} td.actions[data-row-link-ignore]"
+  end
+
+  test "both lists start a new event and export statistics the same way" do
+    global_new = new_admin_event_path
+    global_export = reports_admin_events_path(format: :xlsx)
+    offer_new = new_admin_offer_event_path(@offer, nav_scope: "offer")
+    offer_export = reports_admin_offer_events_path(@offer, format: :xlsx)
+
+    get admin_events_path
+
+    assert_select ".card-header a.btn[href=?]", global_new, text: "Neuer Termin"
+    assert_select ".card-header a.btn[href=?]", global_export, text: "Statistik (Excel)"
+
+    get admin_offer_events_path(@offer)
+
+    assert_select ".card-header a.btn[href=?]", offer_new, text: "Neuer Termin"
+    assert_select ".card-header a.btn[href=?]", offer_export, text: "Statistik (Excel)"
+  end
+
 end

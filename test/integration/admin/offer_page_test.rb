@@ -63,4 +63,13 @@ class Admin::OfferPageTest < ActionDispatch::IntegrationTest
     assert_select "#offer_#{@offer.id} .badge", text: "veröffentlicht"
   end
 
+  test "a failed save keeps the head on the stored offer" do
+    patch admin_offer_path(@offer), params: {offer: {title: "", published: "0", type: "consulting"}}
+
+    assert_response :unprocessable_content
+    assert_select ".context-head-offer h2", text: "Literaturrecherche"
+    assert_select ".context-head-offer .badge", text: "veröffentlicht"
+    assert_select ".offer-tabs .nav-link", text: /Termine/
+  end
+
 end

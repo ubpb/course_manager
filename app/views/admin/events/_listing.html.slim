@@ -41,7 +41,7 @@
           data-action="click->row-link#visit"
         )
           - if @bulk_process_actions.any?
-            td.table-light = check_box_tag "bulk_process_ids[]", event.id, false, id: nil, "data-checkbox-select-all-target": "checkbox"
+            td.table-light(data-row-link-ignore) = check_box_tag "bulk_process_ids[]", event.id, false, id: nil, "data-checkbox-select-all-target": "checkbox"
           td
             = link_to l(event.date_and_time, format: "%a, %d.%m.%Y · %H:%M"), event_path, class: "fw-bold text-nowrap"
             .small.text-body-secondary
@@ -64,7 +64,7 @@
             - else
               = "—"
           td = published_badge(event)
-          td.actions
+          td.actions(data-row-link-ignore)
             .dropdown
               button.btn.btn-outline-primary.btn-sm.dropdown-toggle(type="button" data-bs-toggle="dropdown")
                 i.fas.fa-cog
