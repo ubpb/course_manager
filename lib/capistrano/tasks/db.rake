@@ -31,7 +31,8 @@ namespace :app do
       # Fail early if the local development database isn't MySQL
       local_db_config = database_config.call(ERB.new(File.read("config/database.yml")).result, "development")
       unless ["mysql2", "trilogy"].include?(local_db_config["adapter"])
-        raise "Local development database must be MySQL (adapter: #{local_db_config["adapter"]}). Run with DB_ADAPTER=mysql."
+        raise "Local development database must be MySQL (adapter: #{local_db_config["adapter"]}). Run with " \
+              "DB_ADAPTER=mysql."
       end
 
       local_db_config = local_db_config.merge("host" => local_db_config["host"] || "localhost")
@@ -52,7 +53,8 @@ namespace :app do
         begin
           upload!(StringIO.new(mysql_option_file.call(db_config)), option_file, mode: 0o600)
           # umask: the dump must not be readable by other users on the server
-          execute("umask 077 && mysqldump --defaults-extra-file=#{option_file} --column-statistics=0 -r #{remote_dump_file} #{db_config["database"]}")
+          execute("umask 077 && mysqldump --defaults-extra-file=#{option_file} --column-statistics=0 -r " \
+                  "#{remote_dump_file} #{db_config["database"]}")
           download!(remote_dump_file, local_dump_file)
         ensure
           execute(:rm, "-f", option_file, remote_dump_file)

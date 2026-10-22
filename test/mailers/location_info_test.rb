@@ -115,7 +115,8 @@ class LocationInfoTest < ActionMailer::TestCase
     body = ParticipantMailer.confirmation(@registration).body.to_s
 
     assert_includes body,
-                    "Die Veranstaltung beginnt um 10:00 Uhr.\n\nBitte Max Mustermann mitbringen.\n\nSollten Sie den Termin"
+                    "Die Veranstaltung beginnt um 10:00 Uhr.\n\nBitte Max Mustermann mitbringen.\n\nSollten Sie " \
+                    "den Termin"
     assert_not_includes body, "\n\n\n"
   end
 

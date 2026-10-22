@@ -27,7 +27,8 @@ class Certificate < ApplicationRecord
 
         pdf.text(registration.full_name, font: ["Helvetica", {variant: :bold}], margin: [40, 0, 0, 0])
         pdf.text(
-          "hat im Rahmen der Angebote zur Informationskompetenz der Universitätsbibliothek am #{I18n.l(registration.event.date_and_time.to_date)} an der Veranstaltung", margin: [
+          "hat im Rahmen der Angebote zur Informationskompetenz der Universitätsbibliothek am " \
+          "#{I18n.l(registration.event.date_and_time.to_date)} an der Veranstaltung", margin: [
             20, 0, 0, 0
           ]
         )
@@ -51,7 +52,8 @@ class Certificate < ApplicationRecord
 
         pdf.formatted_text(
           [{
-            text: "Hinweis: Die Gültigkeit der digitalen Version dieser Teilnahmebescheinigung kann unter https://schulungen.ub.uni-paderborn.de/validate überprüft werden.",
+            text: "Hinweis: Die Gültigkeit der digitalen Version dieser Teilnahmebescheinigung kann unter " \
+                  "https://schulungen.ub.uni-paderborn.de/validate überprüft werden.",
             fill_color: "gray"
           }],
           valign: :bottom,

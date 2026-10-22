@@ -107,7 +107,8 @@ module Admin
         event.save
 
         flash[:notice] =
-          "Das Event wurde dupliziert und gespeichert. Datum und Uhrzeit wurden auf die aktuelle Zeit eingestellt. Bitte bearbeite die Details."
+          "Das Event wurde dupliziert und gespeichert. Datum und Uhrzeit wurden auf die aktuelle Zeit eingestellt. " \
+          "Bitte bearbeite die Details."
         redirect_to edit_admin_offer_event_path(@offer, event)
       end
 

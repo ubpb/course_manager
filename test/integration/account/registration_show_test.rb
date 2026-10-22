@@ -168,7 +168,8 @@ module Account
       get account_registration_path(@registration)
 
       assert_includes response.body,
-                      "Aus Datenschutzgründen wird Ihre Anmeldung 10 Tage nach dem Termin gelöscht, also ab dem 25.10.2026."
+                      "Aus Datenschutzgründen wird Ihre Anmeldung 10 Tage nach dem Termin gelöscht, also ab dem " \
+                      "25.10.2026."
       assert_not_includes response.body, "Bitte laden Sie Ihre Teilnahmebescheinigung"
     end
 

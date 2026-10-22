@@ -55,7 +55,8 @@ class ParticipantMailerTest < ActionMailer::TestCase
 
     assert_includes body, "Hallo Max Mustermann,"
     assert_includes body,
-                    "vielen Dank für Ihre Anmeldung zu unserer Schulungsveranstaltung \"Literaturrecherche\" am 15.10.2026"
+                    "vielen Dank für Ihre Anmeldung zu unserer Schulungsveranstaltung \"Literaturrecherche\" am " \
+                    "15.10.2026"
     assert_includes body, "Die Veranstaltung beginnt um 10:00 Uhr."
     assert_includes body, "Ort / Treffpunkt: \"Raum 1.2\"."
     assert_includes body, UNLINKED_CANCEL_INFO
@@ -88,7 +89,8 @@ class ParticipantMailerTest < ActionMailer::TestCase
 
     assert_includes body, "Hallo Erika Musterfrau,"
     assert_includes body,
-                    "hiermit bestätigen wir Ihre Abmeldung von unserer Schulungsveranstaltung \"Literaturrecherche\" am 15.10.2026."
+                    "hiermit bestätigen wir Ihre Abmeldung von unserer Schulungsveranstaltung " \
+                    "\"Literaturrecherche\" am 15.10.2026."
     assert_includes body, "das Schulungsteam der UB Paderborn"
   end
 
@@ -120,7 +122,8 @@ class ParticipantMailerTest < ActionMailer::TestCase
 
     assert_includes body, "Hallo Max Mustermann,"
     assert_includes body,
-                    "wir möchten Sie an Ihre Anmeldung zu unserer Schulungsveranstaltung \"Literaturrecherche\" erinnern."
+                    "wir möchten Sie an Ihre Anmeldung zu unserer Schulungsveranstaltung \"Literaturrecherche\" " \
+                    "erinnern."
     assert_includes body, "Termin: 15.10.2026"
     assert_includes body, "Uhrzeit: 10:00 Uhr"
     assert_includes body, "Ort / Treffpunkt: \"Raum 1.2\"."
@@ -352,7 +355,8 @@ class ParticipantMailerTest < ActionMailer::TestCase
     body = ParticipantMailer.change_notice(@event, @registration).body.to_s
 
     assert_includes body,
-                    "geändert haben. Weitere Details finden Sie in Ihrem Benutzerkonto im Schulungsportal unter #{detail_url(@registration)}"
+                    "geändert haben. Weitere Details finden Sie in Ihrem Benutzerkonto im Schulungsportal unter " \
+                    "#{detail_url(@registration)}"
     assert_includes body, linked_cancel_info(@registration)
     assert_not_includes body, "\n\n\n"
   end
@@ -390,7 +394,8 @@ class ParticipantMailerTest < ActionMailer::TestCase
 
     assert_includes body, "Hallo Max Mustermann,"
     assert_includes body,
-                    "im Zusammenhang mit Ihrer Anmeldung bei der Schulungsveranstaltung \"Literaturrecherche\" am 15.10.2026."
+                    "im Zusammenhang mit Ihrer Anmeldung bei der Schulungsveranstaltung \"Literaturrecherche\" am " \
+                    "15.10.2026."
     assert_includes body, "Wir treffen uns in Raum 9."
     assert_includes body, "das Schulungsteam der UB Paderborn"
   end
@@ -409,7 +414,8 @@ class ParticipantMailerTest < ActionMailer::TestCase
     assert_not_nil attachment
     assert_equal "%PDF-1.7 fake", attachment.body.decoded
     assert_includes mail.text_part.body.to_s,
-                    "anbei erhalten Sie Ihre Teilnahmebescheinigung für die Schulungsveranstaltung \"Literaturrecherche\" am 15.10.2026."
+                    "anbei erhalten Sie Ihre Teilnahmebescheinigung für die Schulungsveranstaltung " \
+                    "\"Literaturrecherche\" am 15.10.2026."
   end
 
   test "the certificate answers to the address kept on the event" do
