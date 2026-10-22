@@ -36,6 +36,14 @@ class ApplicationHelperTest < ActionView::TestCase
     assert_equal "in 7 Tagen", in_days(7)
   end
 
+  test "render_markdown joins single line breaks into one paragraph by default" do
+    assert_equal "<p>Zeile 1\nZeile 2</p>\n", render_markdown("Zeile 1\nZeile 2")
+  end
+
+  test "render_markdown keeps single line breaks when asked to" do
+    assert_includes render_markdown("Zeile 1\nZeile 2", hardbreaks: true), "Zeile 1<br />\nZeile 2"
+  end
+
   test "distant dates fall back to months and years" do
     assert_equal "in 2 Monaten", in_days(61)
     assert_equal "in etwa einem Jahr", in_days(366)

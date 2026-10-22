@@ -46,6 +46,7 @@ class Admin::EventParticipantNotesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Hinweise für Teilnehmende"
     assert_includes response.body, "Anmeldebestätigung und die Erinnerungsmail"
     assert_includes response.body, "Detailseite"
+    assert_includes response.body, "Markdown"
   end
 
   test "the notes are saved" do
