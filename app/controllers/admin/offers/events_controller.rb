@@ -5,9 +5,10 @@ module Admin
       include Filterable
       include EventFilter
 
-      before_action -> { prepare_offer_event_context(offer_page: true) }, only: [:index, :bulk_process, :bulk_move]
-      before_action -> { persist_filter_params(:events) }, only: :index
-      before_action :prepare_offer_event_context, except: [:index, :bulk_process, :bulk_move]
+      before_action -> { prepare_offer_event_context(offer_page: true) },
+                    only: [:index, :reports, :bulk_process, :bulk_move]
+      before_action -> { persist_filter_params(:events) }, only: [:index, :reports]
+      before_action :prepare_offer_event_context, except: [:index, :reports, :bulk_process, :bulk_move]
       before_action -> { add_breadcrumb "Termindaten" }, only: [:edit, :update]
       before_action -> { add_breadcrumb "Neuer Termin" }, only: [:new, :create]
 
@@ -15,6 +16,19 @@ module Admin
         @events = filtered_events(@offer.events.includes(:offer, :report, :certification).order(date_and_time: :desc))
 
         setup_bulk_process_actions(@events)
+      end
+
+      def reports
+        prepare_report_export(filtered_events(@offer.events.includes(:offer, :report)))
+
+        respond_to do |format|
+          format.xlsx do
+            filename = report_export_filename(@offer.title.parameterize)
+            response.headers["Content-Disposition"] = "attachment; filename=\"#{filename}.xlsx\""
+
+            render "admin/offers/events/reports/show"
+          end
+        end
       end
 
       def bulk_process

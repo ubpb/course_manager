@@ -6,6 +6,9 @@
       = link_to new_admin_offer_event_path(@offer, nav_scope: "offer"), class: "btn btn-primary btn-sm" do
         i.fa-solid.fa-plus.me-2
         = "Neuen Termin anlegen"
+      = link_to reports_admin_offer_events_path(@offer, format: :xlsx), class: "btn btn-outline-primary btn-sm" do
+        i.fa-solid.fa-download.me-2
+        = "Statistik (Excel Export)"
     .card-body
       .d-flex.flex-wrap.align-items-center.gap-3.mb-3
         = render "admin/events/period_switch", filter: @filter

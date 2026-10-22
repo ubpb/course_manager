@@ -50,22 +50,11 @@ module Admin
     end
 
     def reports
-      @reports = load_events.with_report.map(&:report)
-
-      if @filter&.active?
-        @from_date = @filter.from_date
-        @to_date = @filter.to_date
-      end
+      prepare_report_export(load_events)
 
       respond_to do |format|
         format.xlsx do
-          filename = [
-            @from_date ? I18n.l(@from_date, format: "%Y-%m-%d") : nil,
-            @to_date ? I18n.l(@to_date, format: "%Y-%m-%d") : nil,
-            "report"
-          ].compact.join("_")
-
-          response.headers["Content-Disposition"] = "attachment; filename=\"#{filename}.xlsx\""
+          response.headers["Content-Disposition"] = "attachment; filename=\"#{report_export_filename}.xlsx\""
 
           render "admin/offers/events/reports/show"
         end

@@ -62,5 +62,24 @@ module Admin
       @filter.filter(scope)
     end
 
+    # The reports of the given (filtered) events and the period they cover,
+    # for admin/offers/events/reports/show.
+    def prepare_report_export(events)
+      @reports = events.with_report.map(&:report)
+      return unless @filter&.active?
+
+      @from_date = @filter.from_date
+      @to_date = @filter.to_date
+    end
+
+    def report_export_filename(*parts)
+      [
+        @from_date ? I18n.l(@from_date, format: "%Y-%m-%d") : nil,
+        @to_date ? I18n.l(@to_date, format: "%Y-%m-%d") : nil,
+        *parts,
+        "report"
+      ].compact.join("_")
+    end
+
   end
 end

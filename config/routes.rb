@@ -73,6 +73,7 @@ Rails.application.routes.draw do
         post :preview_reminder, path: "preview-reminder", on: :collection
         patch :bulk_process, path: "bulk-process", on: :collection
         patch :bulk_move, path: "bulk-move", on: :collection
+        get :reports, on: :collection, constraints: {format: :xlsx}
 
         resources :registrations, except: [:show], module: :events do
           get :download_certificate, on: :member, path: "certificate/download"
