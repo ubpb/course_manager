@@ -24,7 +24,7 @@ class Admin::EventsMailerTest < ActionMailer::TestCase
     assert_equal ["max@example.com"], mail.to
     assert_equal [TEAM], mail.from
     assert_equal [TEAM], mail.reply_to
-    assert_equal "[UB Paderborn] Erinnerung: Literaturrecherche", mail.subject
+    assert_equal "[UB Paderborn] Erinnerung: Literaturrecherche (15.10.2026)", mail.subject
 
     body = mail.body.to_s
 
@@ -93,7 +93,8 @@ class Admin::EventsMailerTest < ActionMailer::TestCase
 
     assert_equal ["max@example.com"], mail.to
     assert_equal [TEAM], mail.reply_to
-    assert_equal "[UB Paderborn] Terminänderung: Literaturrecherche", mail.subject
+    # The subject names the new date, the one that counts from now on.
+    assert_equal "[UB Paderborn] Terminänderung: Literaturrecherche (01.11.2026)", mail.subject
 
     body = mail.body.to_s
 
@@ -125,7 +126,7 @@ class Admin::EventsMailerTest < ActionMailer::TestCase
     mail = Admin::Mailers::EventsMailer.changed_notification(@event, @registration)
 
     assert_equal ["max@example.com"], mail.to
-    assert_equal "[UB Paderborn] Terminänderung: Literaturrecherche", mail.subject
+    assert_equal "[UB Paderborn] Terminänderung: Literaturrecherche (15.10.2026)", mail.subject
 
     body = mail.body.to_s
 
