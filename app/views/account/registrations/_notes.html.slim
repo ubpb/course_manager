@@ -2,7 +2,7 @@
 / Der Zusatztext aus der Anmeldebestätigung. Er wird für Plain-Text-Mails
 / gepflegt, daher escaped und nur mit Zeilenumbrüchen, nicht als Markdown.
 
-- message = registration.event.confirmation_message
+- message = registration.event.participant_notes
 - if message.present?
   .callout.callout-warning.mb-4
     h5 = t("account.registrations.show.notes")

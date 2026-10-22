@@ -33,7 +33,7 @@ class RegistrationMailsTest < ActionMailer::TestCase
   end
 
   test "the custom text is appended to the confirmation with placeholders expanded" do
-    @event.update!(confirmation_message: "###ANREDE###, der Termin am ###DATUM### findet in ###TREFFPUNKT### statt.")
+    @event.update!(participant_notes: "###ANREDE###, der Termin am ###DATUM### findet in ###TREFFPUNKT### statt.")
 
     body = confirmation_body
 
@@ -58,7 +58,7 @@ class RegistrationMailsTest < ActionMailer::TestCase
   end
 
   test "the custom text is part of the reminder" do
-    @event.update!(confirmation_message: "###ANREDE###, bitte Zotero installieren.")
+    @event.update!(participant_notes: "###ANREDE###, bitte Zotero installieren.")
 
     body = reminder_body
 
@@ -66,7 +66,7 @@ class RegistrationMailsTest < ActionMailer::TestCase
   end
 
   test "a reminder without custom text and place has no gap" do
-    @event.update!(confirmation_message: nil, location: nil)
+    @event.update!(participant_notes: nil, location: nil)
 
     assert_not_includes reminder_body, "\n\n\n"
   end

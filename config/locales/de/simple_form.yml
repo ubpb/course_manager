@@ -6,7 +6,7 @@ de:
         title: "Titel"
         description: "Beschreibung"
         learning_targets: "Lernziele"
-        confirmation_message: "Zusatztext für Anmeldebestätigung und Erinnerung"
+        participant_notes: "Hinweise für Teilnehmende"
         email_from: "E-Mail Antwortadresse"
         topics: "Themen"
         target_groups: "Zielgruppen"
@@ -64,10 +64,10 @@ de:
         email_from: >
           Die Adresse wird dem Empfänger als 'Antwort an' angezeigt. Diese muss auf '@ub.uni-paderborn.de' enden.
           Als Standard wird schulungen@ub.uni-paderborn.de verwendet.
-        confirmation_message: >
-          Optionaler Zusatztext, der an die automatische Anmeldebestätigung und die Erinnerungsmail angehängt wird
-          (z.B. Zugangsdaten oder Hinweise zur Vorbereitung). Teilnehmende mit Benutzerkonto sehen ihn außerdem auf
-          der Detailseite ihrer Anmeldung. Bleibt das Feld leer, wird nur der Standardtext versendet. Sie können
+        participant_notes: >
+          Optionale Hinweise für die Teilnehmenden (z.B. Zugangsdaten oder Hinweise zur Vorbereitung). Sie werden an
+          die automatische Anmeldebestätigung und die Erinnerungsmail angehängt; Teilnehmende mit Benutzerkonto sehen
+          sie außerdem auf der Detailseite ihrer Anmeldung. Bleibt das Feld leer, werden nur die Standardtexte versendet. Sie können
           <code>###NAME###</code>, <code>###ANREDE###</code>, <code>###DATUM###</code>, <code>###UHRZEIT###</code>, <code>###DAUER###</code>,
           <code>###TREFFPUNKT###</code> und <code>###TITEL###</code> als Platzhalter verwenden.
         max_no_of_participants: >

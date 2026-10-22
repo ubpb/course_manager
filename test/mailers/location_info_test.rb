@@ -110,7 +110,7 @@ class LocationInfoTest < ActionMailer::TestCase
   # The confirmation puts the custom staff text right after the place, so it has
   # to close up when there is no place to print.
   test "the custom confirmation text follows an omitted location without a gap" do
-    @event.update!(online: false, location: nil, confirmation_message: "Bitte ###NAME### mitbringen.")
+    @event.update!(online: false, location: nil, participant_notes: "Bitte ###NAME### mitbringen.")
 
     body = Frontend::Mailers::RegistrationsMailer.confirmation(@registration).body.to_s
 

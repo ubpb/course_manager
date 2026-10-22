@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_08_090000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_22_090000) do
   create_table "categories", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "color_code", null: false
     t.datetime "created_at", null: false
@@ -40,7 +40,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_08_090000) do
   end
 
   create_table "events", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
-    t.text "confirmation_message"
     t.datetime "created_at", null: false
     t.datetime "date_and_time", null: false
     t.integer "duration"
@@ -50,6 +49,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_08_090000) do
     t.bigint "offer_id", null: false
     t.boolean "online", default: false, null: false
     t.string "online_url"
+    t.text "participant_notes"
     t.boolean "published", default: false, null: false
     t.boolean "registration_required", default: false, null: false
     t.integer "registrations_count", default: 0, null: false

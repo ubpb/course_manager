@@ -5,7 +5,7 @@ wir möchten Sie an Ihre Anmeldung zu unserer Schulungsveranstaltung "<%= @offer
 Termin: <%= l(@event.date_and_time.to_date) %>
 Uhrzeit: <%= l(@event.date_and_time.to_time, format: "%H:%M Uhr") %>
 <%= render "application/mailers/location_info" -%>
-<%= render "application/mailers/confirmation_message" -%>
+<%= render "application/mailers/participant_notes" -%>
 
 <%= render "application/mailers/cancel_info" -%>
 
