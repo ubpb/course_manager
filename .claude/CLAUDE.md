@@ -20,7 +20,7 @@ bin/rails test test/models/offer_test.rb:42           # single test by line
 ```
 
 - **Never run rubocop** (`bin/rubocop`) — the user handles linting. (It runs in `bin/ci`, but don't invoke it standalone for verification.)
-- **Database is MySQL** (`mysql2`, socket `/tmp/mysql.sock`), not sqlite. sqlite3 is only used by Solid Queue/Cache/Cable. Running `rake`/`bin/rails test` **regenerates the test DB from development** — don't point them at the same DB.
+- **Database is MySQL/MariaDB** (`mysql2`, socket `/tmp/mysql.sock`; servers run MariaDB 11.8), the only database — no sqlite. Solid Queue's tables live in it too (no separate queue DB). Running `rake`/`bin/rails test` **regenerates the test DB from development** — don't point them at the same DB.
 
 ## Assets — non-standard
 
@@ -48,6 +48,10 @@ Propshaft + **Bun as the bundler** (not importmap or jsbundling). `bun.build.js`
 **Config access:** `ApplicationConfig[:key, :subkey, default: ...]` reads `config/application.yml` (loaded via `config_for(:application)`), which supports `shared`/`development`/`production` sections and ERB (e.g. pulls Alma keys from Rails credentials). An env var named after the upcased, underscore-joined keys (e.g. `ENV["ALMA_API_API_KEY"]`) **overrides the file value**. Feature flags and defaults live here (`color_mode`, `locale_switching`, `default_contact`, `default_call_to_action`).
 
 **Reports/documents:** `caxlsx_rails` for XLSX exports (admin event reports), `hexapdf` for certificate PDFs, `commonmarker`/`github-markup` for rendering markdown content.
+
+**Mails:** grouped by recipient, not by trigger — `ParticipantMailer` (confirmation, cancellation_confirmation, reminder, change_notice, staff_message, certificate) and `TeamMailer` (new_registration, cancelled_registration). Plain-text only. Templates, partials and the mail layout live under `app/views/mailers/` (`ApplicationMailer` prepends that view path).
+
+**Jobs:** Active Job runs on **Solid Queue** in production (development uses `:async`, tests `:test`). `config/recurring.yml` replaces the server crontab: `SendReminderMessagesJob` (daily 7am) and `DsgvoCleanupJob` (daily 3am), Berlin time; the rake tasks `app:mailer:send_reminder_messages` / `app:dsgvo:cleanup` run them by hand. On the servers `bin/jobs` runs as the systemd **user** service `course_manager-jobs` on the host with the Capistrano role `:jobs` (exactly one per stage); Capistrano checks, installs and restarts it on every deploy (`lib/capistrano/tasks/jobs.rake`). Each such server needs `loginctl enable-linger <deploy user>` once.
 
 ## Testing note
 
