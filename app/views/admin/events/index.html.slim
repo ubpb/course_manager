@@ -4,6 +4,9 @@
       .card-header.d-flex.align-items-center.gap-2
         h5.card-title.mb-0 = "Termine"
         .ms-auto
+        = link_to new_admin_event_path, class: "btn btn-primary btn-sm" do
+          i.fa-solid.fa-plus.me-2
+          = "Neuer Termin"
         .dropdown
           button.btn.btn-outline-primary.btn-sm.dropdown-toggle(type="button" data-bs-toggle="dropdown")
             i.fas.fa-cog

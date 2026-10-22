@@ -89,7 +89,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :events, only: [:index] do
+    resources :events, only: [:index, :new] do
       get :reports, on: :collection, constraints: {format: :xlsx}
       patch :bulk_process, path: "bulk-process", on: :collection
       patch :bulk_move, path: "bulk-move", on: :collection

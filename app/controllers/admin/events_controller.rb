@@ -12,6 +12,23 @@ module Admin
       setup_bulk_process_actions(@events)
     end
 
+    # A new event needs its course first; the event form itself belongs to the
+    # course (see Admin::Offers::EventsController#new).
+    def new
+      add_breadcrumb "Neuer Termin"
+      @offers = Offer.courses.not_archived.order(:title)
+
+      offer_id = params[:offer_id].presence || return
+      offer = @offers.find_by(id: offer_id)
+
+      if offer
+        redirect_to new_admin_offer_event_path(offer)
+      else
+        flash.now[:alert] = "Bitte ein Angebot auswählen"
+        render :new, status: :unprocessable_content
+      end
+    end
+
     def bulk_process
       events = Event.where(id: params[:bulk_process_ids])
 

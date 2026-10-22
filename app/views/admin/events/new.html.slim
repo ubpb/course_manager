@@ -1,0 +1,25 @@
+/ Choose the course of a new event, then continue with the event form.
+= form_tag new_admin_event_path, method: :get do
+  .card.card-shadowed
+    .card-header
+      h5.card-title.mb-0 = "Neuer Termin"
+    .card-body
+      div(data-controller="select-filter")
+        label.form-label(for="offer_id") = "Für welches Angebot?"
+        input.form-control.mb-2(
+          type="search"
+          placeholder="Nach Titel filtern …"
+          autofocus=true
+          data-select-filter-target="input"
+          data-action="input->select-filter#filter"
+        )
+        = select_tag :offer_id,
+                     options_from_collection_for_select(@offers, :id, :title),
+                     class: "form-select",
+                     size: 8,
+                     required: true,
+                     "data-select-filter-target": "select"
+    .card-footer
+      .d-flex.gap-2.flex-column.flex-md-row
+        = submit_tag "Weiter", name: nil, class: "btn btn-primary"
+        = link_to t("admin.application.btn_cancel"), admin_events_path, class: "btn btn-outline-secondary"
