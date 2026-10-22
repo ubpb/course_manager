@@ -101,6 +101,8 @@ module Admin
                                 .where(id: params[:bulk_process_ids])
           action = params[:bulk_process_action]
 
+          # The redirect below follows, so no flash.now (the cop misreads the case).
+          # rubocop:disable-next Rails/ActionControllerFlashBeforeRender
           case action
           when "send_certificates"
             send_certificates!(registrations)
@@ -112,17 +114,7 @@ module Admin
             send_reminder_messages!(registrations, skip_if_sent: false)
             flash[:success] = "Erinnerungsmail(s) wurde versendet"
           when "send_message"
-            render turbo_stream: turbo_stream.replace(
-              "bulk-action-form",
-              partial: "bulk_action_new_message",
-              locals: {
-                offer: @offer,
-                event: @event,
-                registrations: registrations,
-                message: Message.new
-              }
-            )
-            return
+            return render_new_message_form(registrations)
           end
 
           redirect_to admin_offer_event_registrations_path(@offer, @event)
@@ -160,6 +152,20 @@ module Admin
         end
 
         private
+
+        # The dialog for writing a message to the selected participants.
+        def render_new_message_form(registrations)
+          render turbo_stream: turbo_stream.replace(
+            "bulk-action-form",
+            partial: "bulk_action_new_message",
+            locals: {
+              offer: @offer,
+              event: @event,
+              registrations: registrations,
+              message: Message.new
+            }
+          )
+        end
 
         def setup_bulk_process_actions(registrations)
           @bulk_process_actions = []
