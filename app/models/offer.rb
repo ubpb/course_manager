@@ -1,6 +1,6 @@
 class Offer < ApplicationRecord
 
-  TYPES = %w[course consulting self_study_course].freeze
+  TYPES = ["course", "consulting", "self_study_course"].freeze
 
   # `type` is a reserved word in Rails for Single Table Inheritance (STI).
   # We want type as a normal attribute, so we disable STI by setting the inheritance_column to nil.
@@ -10,14 +10,18 @@ class Offer < ApplicationRecord
   has_and_belongs_to_many :topics, -> { order("position") } # rubocop:disable Rails/HasAndBelongsToMany
   has_and_belongs_to_many :target_groups, -> { order("position") } # rubocop:disable Rails/HasAndBelongsToMany
   has_many :events, dependent: :destroy
-  has_many :upcoming_events, -> { upcoming.order(date_and_time: :asc) }, class_name: "Event", dependent: :destroy, inverse_of: :offer
-  has_many :past_events, -> { past.order(date_and_time: :desc) }, class_name: "Event", dependent: :destroy, inverse_of: :offer
+  has_many :upcoming_events, lambda {
+    upcoming.order(date_and_time: :asc)
+  }, class_name: "Event", dependent: :destroy, inverse_of: :offer
+  has_many :past_events, lambda {
+    past.order(date_and_time: :desc)
+  }, class_name: "Event", dependent: :destroy, inverse_of: :offer
 
   # Validations
   validates :title, presence: true
   validates :type, inclusion: {in: TYPES}
   validates :contact_email, format: {with: UPB_EMAIL_REGEXP}
-  validates :call_to_action_url, format: {with: URI::DEFAULT_PARSER.make_regexp(%w[http https]), allow_blank: true}
+  validates :call_to_action_url, format: {with: URI::DEFAULT_PARSER.make_regexp(["http", "https"]), allow_blank: true}
 
   # Callbacks
   before_save :nullify_default_values

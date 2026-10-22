@@ -36,23 +36,25 @@ module Admin
           end
         end
 
+        def edit; end
+
         def create
           @report = @event.build_report(report_params)
 
           if @report.save
-            redirect_to edit_admin_offer_event_report_path(@offer, @event, @report), notice: t("admin.application.form.success")
+            redirect_to edit_admin_offer_event_report_path(@offer, @event, @report),
+                        notice: t("admin.application.form.success")
           else
-            render :new, status: :unprocessable_entity
+            render :new, status: :unprocessable_content
           end
         end
 
-        def edit; end
-
         def update
           if @report.update(report_params)
-            redirect_to edit_admin_offer_event_report_path(@offer, @event, @report), notice: t("admin.application.form.success")
+            redirect_to edit_admin_offer_event_report_path(@offer, @event, @report),
+                        notice: t("admin.application.form.success")
           else
-            render :edit, status: :unprocessable_entity
+            render :edit, status: :unprocessable_content
           end
         end
 

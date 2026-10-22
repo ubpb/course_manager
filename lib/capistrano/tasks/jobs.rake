@@ -48,16 +48,16 @@ namespace :app do
       on roles(:jobs) do
         execute :mkdir, "-p", File.dirname(unit_file)
         upload! StringIO.new(unit), unit_file
-        execute systemctl.("daemon-reload")
-        execute systemctl.("enable", service)
+        execute systemctl.call("daemon-reload")
+        execute systemctl.call("enable", service)
       end
     end
 
-    %w[start stop restart].each do |command|
+    ["start", "stop", "restart"].each do |command|
       desc "#{command.capitalize} the Solid Queue service"
       task command do
         on roles(:jobs) do
-          execute systemctl.(command, service)
+          execute systemctl.call(command, service)
         end
       end
     end
@@ -65,7 +65,7 @@ namespace :app do
     desc "Show the status of the Solid Queue service"
     task :status do
       on roles(:jobs) do
-        puts capture(systemctl.("status", service, "--no-pager"), raise_on_non_zero_exit: false)
+        puts capture(systemctl.call("status", service, "--no-pager"), raise_on_non_zero_exit: false)
       end
     end
   end

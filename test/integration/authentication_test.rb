@@ -37,7 +37,8 @@ class AuthenticationTest < ActionDispatch::IntegrationTest
   test "the login rotates the session id" do
     set_offers_filter
     before = session_id
-    assert before.present?
+
+    assert_predicate before, :present?
 
     log_in
 
@@ -48,7 +49,8 @@ class AuthenticationTest < ActionDispatch::IntegrationTest
     log_in
     follow_redirect!
     before = session_id
-    assert before.present?
+
+    assert_predicate before, :present?
 
     get logout_path
 
@@ -58,7 +60,8 @@ class AuthenticationTest < ActionDispatch::IntegrationTest
   # Anything that is not explicitly carried over is dropped by the rotation.
   test "the logout drops unrelated session data" do
     get new_frontend_event_registration_path(@event)
-    assert session[:return_to].present?
+
+    assert_predicate session[:return_to], :present?
 
     log_in
     follow_redirect!
@@ -71,6 +74,7 @@ class AuthenticationTest < ActionDispatch::IntegrationTest
   # realm cannot rotate the other one out of its session.
   test "the admin login stores no identity in the session" do
     admin_log_in
+
     assert_redirected_to admin_root_path
 
     assert_nil session[:current_admin_user_id]
@@ -84,6 +88,7 @@ class AuthenticationTest < ActionDispatch::IntegrationTest
     admin_log_in
 
     get account_root_path
+
     assert_response :success
   end
 
@@ -96,6 +101,7 @@ class AuthenticationTest < ActionDispatch::IntegrationTest
     # `admin_root_path` is a route level redirect, so it never reaches
     # `authenticate!`. Ask for a page that does.
     get admin_events_path
+
     assert_response :success
   end
 
@@ -107,6 +113,7 @@ class AuthenticationTest < ActionDispatch::IntegrationTest
     delete admin_session_path
 
     get account_root_path
+
     assert_response :success
   end
 
@@ -118,6 +125,7 @@ class AuthenticationTest < ActionDispatch::IntegrationTest
     get logout_path
 
     get admin_events_path
+
     assert_response :success
   end
 
@@ -127,6 +135,7 @@ class AuthenticationTest < ActionDispatch::IntegrationTest
     delete admin_session_path
 
     get admin_events_path
+
     assert_redirected_to new_admin_session_path
   end
 
@@ -141,6 +150,7 @@ class AuthenticationTest < ActionDispatch::IntegrationTest
 
   test "list filters survive the login" do
     set_offers_filter
+
     assert_equal({"scope" => "courses"}, session["frontend/offers/filter"])
 
     log_in
@@ -161,6 +171,7 @@ class AuthenticationTest < ActionDispatch::IntegrationTest
   test "the login is rate limited" do
     10.times do
       post session_path, params: {login: {user_id: "nobody", password: "wrong"}}
+
       assert_response :unprocessable_entity
     end
 

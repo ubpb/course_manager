@@ -26,8 +26,8 @@ class SessionsController < ApplicationController
 
         redirect_to session.delete(:return_to) || account_root_path
       else
-        flash.now[:error] = t("sessions.create.failed")
-        render :new, status: :unprocessable_entity
+        flash.now[:error] = t(".failed")
+        render :new, status: :unprocessable_content
       end
     else
       redirect_to new_session_path
@@ -36,7 +36,7 @@ class SessionsController < ApplicationController
 
   def destroy
     sign_out
-    redirect_to root_path, notice: t("sessions.destroy.logged_out")
+    redirect_to root_path, notice: t(".logged_out")
   end
 
   private

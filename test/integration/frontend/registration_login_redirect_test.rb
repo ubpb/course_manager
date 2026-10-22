@@ -37,6 +37,7 @@ class Frontend::RegistrationLoginRedirectTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to new_frontend_event_registration_path(@event)
     follow_redirect!
+
     assert_response :success
   end
 
@@ -49,6 +50,7 @@ class Frontend::RegistrationLoginRedirectTest < ActionDispatch::IntegrationTest
     assert_equal new_frontend_event_registration_path(@event), session[:return_to]
 
     log_in
+
     assert_redirected_to new_frontend_event_registration_path(@event)
 
     get response.location, headers: TURBO_STREAM_HEADERS

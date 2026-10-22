@@ -123,7 +123,6 @@ style = workbook.styles.add_style(alignment: {wrap_text: true, vertical: :top})
 row = sheet.add_row(values, style: style)
 row.cells[52].style = date_format
 
-
 # Make the first row a header
 sheet.sheet_view.pane do |pane|
   pane.top_left_cell = "A4"

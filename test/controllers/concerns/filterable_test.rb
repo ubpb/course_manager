@@ -6,16 +6,16 @@ class FilterableTest < ActiveSupport::TestCase
 
   # Builds a filter for an ad-hoc context. Blocks append the filter name to a
   # plain array, so `#filter` can be tested without touching the database.
-  def build_filter(params = {}, &definitions)
+  def build_filter(params = {}, &)
     context = Filterable::FilterContext.new
-    context.instance_eval(&definitions)
+    context.instance_eval(&)
     Filterable::Filter.new(filter_context: context, filter_params: params)
   end
 
   # --- casting ---------------------------------------------------------------
 
   test "casts values by type" do
-    filter = build_filter({ str: "abc", int: "42", flt: "1.5", date: "2026-01-02", bool: "true" }) do
+    filter = build_filter({str: "abc", int: "42", flt: "1.5", date: "2026-01-02", bool: "true"}) do
       filter_by :str, :string
       filter_by :int, :integer
       filter_by :flt, :float
@@ -31,7 +31,7 @@ class FilterableTest < ActiveSupport::TestCase
   end
 
   test "blank params are unset" do
-    filter = build_filter({ str: "", int: "", date: "", bool: "", list: [] }) do
+    filter = build_filter({str: "", int: "", date: "", bool: "", list: []}) do
       filter_by :str, :string
       filter_by :int, :integer
       filter_by :date, :date
@@ -48,7 +48,7 @@ class FilterableTest < ActiveSupport::TestCase
   end
 
   test "uncastable values are unset instead of raising or filtering for garbage" do
-    filter = build_filter({ date: "xxx", int: "abc" }) do
+    filter = build_filter({date: "xxx", int: "abc"}) do
       filter_by :date, :date
       filter_by :int, :integer
     end
@@ -58,7 +58,7 @@ class FilterableTest < ActiveSupport::TestCase
   end
 
   test "array values drop blank members and an all-blank array is unset" do
-    filter = build_filter({ some: ["", "3", "7"], none: ["", ""] }) do
+    filter = build_filter({some: ["", "3", "7"], none: ["", ""]}) do
       filter_by :some, :integer
       filter_by :none, :integer
     end
@@ -70,8 +70,8 @@ class FilterableTest < ActiveSupport::TestCase
   # --- boolean vs flag -------------------------------------------------------
 
   test "boolean is tri-state: false is a value that filters" do
-    off = build_filter({ published: "0" }) { filter_by :published, :boolean }
-    on = build_filter({ published: "1" }) { filter_by :published, :boolean }
+    off = build_filter({published: "0"}) { filter_by :published, :boolean }
+    on = build_filter({published: "1"}) { filter_by :published, :boolean }
     unset = build_filter({}) { filter_by :published, :boolean }
 
     assert_equal false, off.published
@@ -86,8 +86,8 @@ class FilterableTest < ActiveSupport::TestCase
   end
 
   test "flag treats false like unset, so an unchecked checkbox stops filtering" do
-    off = build_filter({ archived: "0" }) { filter_by :archived, :flag }
-    on = build_filter({ archived: "1" }) { filter_by :archived, :flag }
+    off = build_filter({archived: "0"}) { filter_by :archived, :flag }
+    on = build_filter({archived: "1"}) { filter_by :archived, :flag }
 
     assert_nil off.archived
     assert_not off.applied?(:archived)
@@ -117,22 +117,22 @@ class FilterableTest < ActiveSupport::TestCase
   end
 
   test "a param equal to the default is applied but not active" do
-    filter = build_filter({ range: "all" }) { filter_by :range, :string, default: "all" }
+    filter = build_filter({range: "all"}) { filter_by :range, :string, default: "all" }
 
     assert filter.applied?(:range)
     assert_not filter.active?(:range)
   end
 
   test "a param differing from the default is active" do
-    filter = build_filter({ range: "past" }) { filter_by :range, :string, default: "all" }
+    filter = build_filter({range: "past"}) { filter_by :range, :string, default: "all" }
 
     assert_equal "past", filter.range
     assert filter.active?(:range)
-    assert filter.active?
+    assert_predicate filter, :active?
   end
 
   test "a blank param falls back to the default" do
-    filter = build_filter({ range: "" }) { filter_by :range, :string, default: "all" }
+    filter = build_filter({range: ""}) { filter_by :range, :string, default: "all" }
 
     assert_equal "all", filter.range
     assert_not filter.active?(:range)
@@ -141,7 +141,7 @@ class FilterableTest < ActiveSupport::TestCase
   # --- applying --------------------------------------------------------------
 
   test "only applied filters run their block, and blocks never see nil" do
-    filter = build_filter({ set: "x", blank: "", flag_off: "0" }) do
+    filter = build_filter({set: "x", blank: "", flag_off: "0"}) do
       filter_by :set, :string do |arel, value|
         arel + ["set:#{value}"]
       end
@@ -160,7 +160,7 @@ class FilterableTest < ActiveSupport::TestCase
   end
 
   test "a block returning nil leaves the relation untouched" do
-    filter = build_filter({ noop: "x" }) do
+    filter = build_filter({noop: "x"}) do
       filter_by :noop, :string do |_arel, _value|
         nil
       end
@@ -170,7 +170,7 @@ class FilterableTest < ActiveSupport::TestCase
   end
 
   test "a filter without a block only carries its value" do
-    filter = build_filter({ flag: "1" }) { filter_by :flag, :flag }
+    filter = build_filter({flag: "1"}) { filter_by :flag, :flag }
 
     assert_equal true, filter.flag
     assert_equal [], filter.filter([])
@@ -213,14 +213,14 @@ class FilterableTest < ActiveSupport::TestCase
       "junk" => "x" * 100
     )
 
-    assert_equal({ "title" => "ruby", "published" => "false", "topics" => ["", "3"] }, stored)
+    assert_equal({"title" => "ruby", "published" => "false", "topics" => ["", "3"]}, stored)
   end
 
   # --- the regression this rework came from ----------------------------------
 
   test "unchecking a flag next to another filter stops filtering by it" do
-    checked = build_filter({ scope: "courses", with_upcoming_events: "1" }, &offers_definitions)
-    unchecked = build_filter({ scope: "courses", with_upcoming_events: "0" }, &offers_definitions)
+    checked = build_filter({scope: "courses", with_upcoming_events: "1"}, &offers_definitions)
+    unchecked = build_filter({scope: "courses", with_upcoming_events: "0"}, &offers_definitions)
 
     assert_equal ["scope:courses", "upcoming"], checked.filter([])
     assert_equal ["scope:courses"], unchecked.filter([])

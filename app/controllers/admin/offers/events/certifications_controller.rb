@@ -21,23 +21,25 @@ module Admin
           end
         end
 
+        def edit; end
+
         def create
           @certification = @event.build_certification(certification_params)
 
           if @certification.save
-            redirect_to edit_admin_offer_event_certification_path(@offer, @event, @certification), notice: t("admin.application.form.success")
+            redirect_to edit_admin_offer_event_certification_path(@offer, @event, @certification),
+                        notice: t("admin.application.form.success")
           else
-            render :new, status: :unprocessable_entity
+            render :new, status: :unprocessable_content
           end
         end
 
-        def edit; end
-
         def update
           if @certification.update(certification_params)
-            redirect_to edit_admin_offer_event_certification_path(@offer, @event, @certification), notice: t("admin.application.form.success")
+            redirect_to edit_admin_offer_event_certification_path(@offer, @event, @certification),
+                        notice: t("admin.application.form.success")
           else
-            render :edit, status: :unprocessable_entity
+            render :edit, status: :unprocessable_content
           end
         end
 

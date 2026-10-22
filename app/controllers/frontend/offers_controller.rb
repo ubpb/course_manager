@@ -94,7 +94,8 @@ module Frontend
       if event
         redirect_to frontend_offer_path(event.offer), status: :moved_permanently
       else
-        redirect_to frontend_offers_path(filter: {scope: "courses", with_upcoming_events: true}), status: :moved_permanently
+        redirect_to frontend_offers_path(filter: {scope: "courses", with_upcoming_events: true}),
+                    status: :moved_permanently
       end
     end
 

@@ -22,11 +22,16 @@ class Certificate < ApplicationRecord
         pdf.image(upb_logo, width: 150, position: :float, margin: [0, 0], style: {align: :left})
         pdf.image(ub_logo, width: 130, position: :default, margin: [0, 0], style: {align: :right})
 
-        pdf.text("Teilnahmebescheinigung", font_size: 20, align: :left, margin: [60, 0, 0, 0], font: ["Helvetica", variant: :bold])
+        pdf.text("Teilnahmebescheinigung", font_size: 20, align: :left, margin: [60, 0, 0, 0],
+                                           font: ["Helvetica", {variant: :bold}])
 
-        pdf.text(registration.full_name, font: ["Helvetica", variant: :bold], margin: [40, 0, 0, 0])
-        pdf.text("hat im Rahmen der Angebote zur Informationskompetenz der Universitätsbibliothek am #{I18n.l(registration.event.date_and_time.to_date)} an der Veranstaltung", margin: [20, 0, 0, 0])
-        pdf.text(registration.event.offer.title, font: ["Helvetica", variant: :bold], margin: [20, 0, 0, 0])
+        pdf.text(registration.full_name, font: ["Helvetica", {variant: :bold}], margin: [40, 0, 0, 0])
+        pdf.text(
+          "hat im Rahmen der Angebote zur Informationskompetenz der Universitätsbibliothek am #{I18n.l(registration.event.date_and_time.to_date)} an der Veranstaltung", margin: [
+            20, 0, 0, 0
+          ]
+        )
+        pdf.text(registration.event.offer.title, font: ["Helvetica", {variant: :bold}], margin: [20, 0, 0, 0])
         pdf.text("teilgenommen.", margin: [20, 0, 0, 0])
 
         if registration.event.certification.learning_results.present?

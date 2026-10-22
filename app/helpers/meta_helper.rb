@@ -24,8 +24,8 @@ module MetaHelper
   # The full organization node. Rendered once, on the home page.
   def organization_json_ld
     data = {"@context" => "https://schema.org"}
-             .merge(organization_reference)
-             .merge("logo" => image_url("ub-logo.svg"))
+           .merge(organization_reference)
+           .merge("logo" => image_url("ub-logo.svg"))
 
     alternate_name = ApplicationConfig[:organization, :alternate_name]
     same_as = ApplicationConfig[:organization, :same_as, default: []]
@@ -86,11 +86,13 @@ module MetaHelper
     topics = offer.topics.map(&:title)
     target_groups = offer.target_groups.map(&:title)
     data["about"] = topics if topics.any?
-    data["audience"] = target_groups.map { |name| {"@type" => "Audience", "audienceType" => name} } if target_groups.any?
-
-    if upcoming_events.present?
-      data["hasCourseInstance"] = upcoming_events.map { |event| event_json_ld(event) }
+    if target_groups.any?
+      data["audience"] = target_groups.map do |name|
+        {"@type" => "Audience", "audienceType" => name}
+      end
     end
+
+    data["hasCourseInstance"] = upcoming_events.map { |event| event_json_ld(event) } if upcoming_events.present?
 
     data
   end

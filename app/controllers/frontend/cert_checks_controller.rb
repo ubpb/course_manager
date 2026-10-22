@@ -6,6 +6,11 @@ class Frontend::CertChecksController < Frontend::ApplicationController
     redirect_to new_frontend_cert_check_path
   end
 
+  def show
+    @digest = params[:id]
+    @registration = Certificate.find_by(digest: @digest)&.registration
+  end
+
   def create
     file = params.dig(:cert_check, :file)&.tempfile
 
@@ -21,11 +26,6 @@ class Frontend::CertChecksController < Frontend::ApplicationController
 
     digest = Digest::SHA256.hexdigest(File.read(file))
     redirect_to frontend_cert_check_path(id: digest)
-  end
-
-  def show
-    @digest = params[:id]
-    @registration = Certificate.find_by(digest: @digest)&.registration
   end
 
 end

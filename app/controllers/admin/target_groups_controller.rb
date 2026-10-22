@@ -11,6 +11,10 @@ module Admin
       @target_group = TargetGroup.new
     end
 
+    def edit
+      @target_group = TargetGroup.find(params[:id])
+    end
+
     def create
       @target_group = TargetGroup.new(target_group_params)
 
@@ -23,12 +27,8 @@ module Admin
           redirect_to admin_target_groups_path
         end
       else
-        render :new, status: :unprocessable_entity
+        render :new, status: :unprocessable_content
       end
-    end
-
-    def edit
-      @target_group = TargetGroup.find(params[:id])
     end
 
     def update
@@ -37,7 +37,7 @@ module Admin
       if @target_group.update(target_group_params)
         redirect_to admin_target_groups_path
       else
-        render :edit, status: :unprocessable_entity
+        render :edit, status: :unprocessable_content
       end
     end
 

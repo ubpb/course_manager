@@ -29,10 +29,11 @@ namespace :app do
       raise "No server in role 'db' found" if server.nil?
 
       # Fail early if the local development database isn't MySQL
-      local_db_config = database_config.(ERB.new(File.read("config/database.yml")).result, "development")
-      unless %w[mysql2 trilogy].include?(local_db_config["adapter"])
-        raise "Local development database must be MySQL (adapter: #{local_db_config['adapter']}). Run with DB_ADAPTER=mysql."
+      local_db_config = database_config.call(ERB.new(File.read("config/database.yml")).result, "development")
+      unless ["mysql2", "trilogy"].include?(local_db_config["adapter"])
+        raise "Local development database must be MySQL (adapter: #{local_db_config["adapter"]}). Run with DB_ADAPTER=mysql."
       end
+
       local_db_config = local_db_config.merge("host" => local_db_config["host"] || "localhost")
 
       # Setup variables
@@ -44,13 +45,13 @@ namespace :app do
       # Dump db on remote server and download it
       on(server) do
         # download! instead of capture: capture logs the output to log/capistrano.log
-        db_config   = database_config.(download!("#{shared_path}/config/database.yml"), fetch(:rails_env))
+        db_config   = database_config.call(download!("#{shared_path}/config/database.yml"), fetch(:rails_env))
         option_file = capture(:mktemp)
 
         begin
-          upload!(StringIO.new(mysql_option_file.(db_config)), option_file, mode: 0o600)
+          upload!(StringIO.new(mysql_option_file.call(db_config)), option_file, mode: 0o600)
           # umask: the dump must not be readable by other users on the server
-          execute("umask 077 && mysqldump --defaults-extra-file=#{option_file} --column-statistics=0 -r #{remote_dump_file} #{db_config['database']}")
+          execute("umask 077 && mysqldump --defaults-extra-file=#{option_file} --column-statistics=0 -r #{remote_dump_file} #{db_config["database"]}")
           download!(remote_dump_file, local_dump_file)
         ensure
           execute(:rm, "-f", option_file, remote_dump_file)
@@ -62,7 +63,7 @@ namespace :app do
         database = local_db_config["database"]
 
         Tempfile.create(["mysql-", ".cnf"]) do |option_file|
-          option_file.write(mysql_option_file.(local_db_config))
+          option_file.write(mysql_option_file.call(local_db_config))
           option_file.close
           mysql = "mysql --defaults-extra-file=#{option_file.path}"
 

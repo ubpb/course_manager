@@ -48,16 +48,17 @@ module Frontend
           # Send notification to Schulungs-Team
           TeamMailer.new_registration(@registration).deliver_later
 
-          redirect_to frontend_offer_path(@event.offer), notice: "Anmeldung erfolgreich. Wir haben Ihnen eine Bestätigung per E-Mail gesendet."
+          redirect_to frontend_offer_path(@event.offer),
+                      notice: "Anmeldung erfolgreich. Wir haben Ihnen eine Bestätigung per E-Mail gesendet."
         else
           respond_to do |format|
-            format.html { render :new, status: :unprocessable_entity }
+            format.html { render :new, status: :unprocessable_content }
             format.turbo_stream do
               render turbo_stream: turbo_stream.replace(
                 "registration-form",
                 partial: "form",
                 locals: {event: @event, registration: @registration, modal: modal_request?}
-              ), status: :unprocessable_entity
+              ), status: :unprocessable_content
             end
           end
         end
