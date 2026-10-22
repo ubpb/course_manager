@@ -70,6 +70,12 @@ class Admin::EventPageTest < ActionDispatch::IntegrationTest
     assert_select ".offer-context-bar a[href=?]", back
   end
 
+  test "the offer context names the way back once" do
+    get admin_offer_event_registrations_path(@offer, @event, nav_scope: "offer")
+
+    assert_select "a", text: /Zurück zum Angebot/, count: 1
+  end
+
   test "an archived offer still opens, without a link to the front end" do
     get admin_offer_event_registrations_path(@offer, @event)
 
