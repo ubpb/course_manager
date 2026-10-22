@@ -21,4 +21,29 @@ class RegistrationTest < ActiveSupport::TestCase
     assert_equal Date.new(2026, 10, 25), Registration.new(event: event).deletion_date
   end
 
+  def create_event
+    offer = Offer.create!(title: "T", type: "course")
+    offer.events.create!(date_and_time: 1.week.from_now, max_no_of_participants: 10)
+  end
+
+  # The validation alone cannot stop two requests saving at the same moment.
+  test "the database refuses a second registration of one account for an event" do
+    event = create_event
+    row = {event_id: event.id, first_name: "A", last_name: "B", email: "a@example.com",
+           ils_primary_id: "12345", created_at: Time.current, updated_at: Time.current}
+
+    Registration.insert_all!([row])
+    assert_raises(ActiveRecord::RecordNotUnique) do
+      Registration.insert_all!([row])
+    end
+  end
+
+  test "registrations without an account may repeat" do
+    event = create_event
+
+    2.times { event.registrations.create!(first_name: "A", last_name: "B", email: "a@example.com") }
+
+    assert_equal 2, event.registrations.count
+  end
+
 end

@@ -2,13 +2,13 @@
 # Headers
 #
 
-headers_0 = [
+headers0 = [
   from,
   to
 ]
 
 # Static headers
-headers_1 = [
+headers1 = [
   "ID",
   "Bibliothek",
   "OPTIONAL: Dozent/in oder Bibliothek",
@@ -69,7 +69,7 @@ headers_1 = [
   "Text 5"
 ]
 
-headers_2 = [
+headers2 = [
   "ID",
   "Bibliothek",
   "OPTIONAL: Dozent/in oder Bibliothek",
@@ -108,7 +108,8 @@ headers_2 = [
   "Externe/Sonstige",
   "unspezifische Gruppe",
   "Informationskompetenz umfassend (Kurse mit umfassenden Ansatz)",
-  "Bibliotheksbenutzung (z. B. raeumliche Orientierung, Ansprechpartner, Homepage, Kataloge (ohne Vertiefung in Suchstrategien und -techniken))",
+  "Bibliotheksbenutzung (z. B. raeumliche Orientierung, Ansprechpartner, Homepage, Kataloge (ohne Vertiefung in " \
+  "Suchstrategien und -techniken))",
   "Suchstrategien und Suchtechniken (ueberwiegend methodischer Ansatz)",
   "Einzelne Kataloge und Datenbanken (Handhabung einzelner Kataloge und Datenbanken)",
   "Internetrecherche (z. B. Suchmaschinen, Internetverzeichnisse, Fachportale / Evaluierung von Internetressourcen)",
@@ -131,6 +132,6 @@ headers_2 = [
 ]
 
 # Add header row
-sheet.add_row(headers_0, style: date_format)
-sheet.add_row(headers_1, types: :string)
-sheet.add_row(headers_2, types: :string)
+sheet.add_row(headers0, style: date_format)
+sheet.add_row(headers1, types: :string)
+sheet.add_row(headers2, types: :string)

@@ -17,7 +17,8 @@ class CopyToClipboardComponentTest < ViewComponent::TestCase
     render_inline(CopyToClipboardComponent.new(value: URL, label: "Zugangslink"))
 
     assert_selector "[data-controller='copy-to-clipboard-component']"
-    assert_selector "button[type=button][data-action='copy-to-clipboard-component#copy'][title='In die Zwischenablage kopieren']",
+    assert_selector "button[type=button][data-action='copy-to-clipboard-component#copy'][title='In die " \
+                    "Zwischenablage kopieren']",
                     text: "Kopieren"
     assert_selector "[data-copy-to-clipboard-component-target='copied'][hidden]", text: "Kopiert", visible: :all
   end

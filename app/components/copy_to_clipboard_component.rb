@@ -5,6 +5,7 @@ class CopyToClipboardComponent < ViewComponent::Base
   # value: the text to copy
   # label: accessible name of the text field (it has no visible label)
   def initialize(value:, label:)
+    super()
     @value = value
     @label = label
   end
