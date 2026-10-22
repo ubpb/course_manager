@@ -27,7 +27,7 @@ class FilterableTest < ActiveSupport::TestCase
     assert_equal 42, filter.int
     assert_in_delta 1.5, filter.flt
     assert_equal Date.new(2026, 1, 2), filter.date
-    assert_equal true, filter.bool
+    assert_same true, filter.bool
   end
 
   test "blank params are unset" do
@@ -74,11 +74,11 @@ class FilterableTest < ActiveSupport::TestCase
     on = build_filter({published: "1"}) { filter_by :published, :boolean }
     unset = build_filter({}) { filter_by :published, :boolean }
 
-    assert_equal false, off.published
+    assert_same false, off.published
     assert off.applied?(:published)
     assert off.active?(:published)
 
-    assert_equal true, on.published
+    assert_same true, on.published
     assert on.applied?(:published)
 
     assert_nil unset.published
@@ -93,7 +93,7 @@ class FilterableTest < ActiveSupport::TestCase
     assert_not off.applied?(:archived)
     assert_not off.active?(:archived)
 
-    assert_equal true, on.archived
+    assert_same true, on.archived
     assert on.applied?(:archived)
     assert on.active?(:archived)
   end
@@ -172,7 +172,7 @@ class FilterableTest < ActiveSupport::TestCase
   test "a filter without a block only carries its value" do
     filter = build_filter({flag: "1"}) { filter_by :flag, :flag }
 
-    assert_equal true, filter.flag
+    assert_same true, filter.flag
     assert_equal [], filter.filter([])
   end
 

@@ -5,7 +5,7 @@ require "rake"
 # is that nobody is ever mailed twice.
 class SendReminderMessagesTest < ActiveSupport::TestCase
 
-  TASK = "app:mailer:send_reminder_messages"
+  TASK = "app:mailer:send_reminder_messages".freeze
 
   setup do
     Rails.application.load_tasks unless Rake::Task.task_defined?(TASK)
