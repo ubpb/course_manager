@@ -65,6 +65,16 @@ class RegistrationMailsTest < ActionMailer::TestCase
     assert_includes body, "Ort / Treffpunkt: \"Raum 1.2\".\n\nHallo Max Mustermann, bitte Zotero installieren.\n\n"
   end
 
+  # Markdown is written to read well as plain text, so the mails carry it as is.
+  test "the mails keep the Markdown of the notes as plain text" do
+    @event.update!(participant_notes: "Bitte **pünktlich** sein.\n\n- Laptop")
+
+    [confirmation_body, reminder_body].each do |body|
+      assert_includes body, "Bitte **pünktlich** sein.\n\n- Laptop"
+      assert_not_includes body, "<strong>"
+    end
+  end
+
   test "a reminder without custom text and place has no gap" do
     @event.update!(participant_notes: nil, location: nil)
 

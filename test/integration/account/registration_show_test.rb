@@ -229,16 +229,38 @@ class Account::RegistrationShowTest < ActionDispatch::IntegrationTest
     assert_select ".callout-warning", count: 0
   end
 
-  # The text is kept for plain text mails, so the page must not render more of
-  # it than the mail would.
-  test "the custom text is escaped" do
+  # The notes are Markdown: rendered on the page, readable as they are in the
+  # plain text mails.
+  test "the notes are rendered as Markdown" do
+    @event.update!(participant_notes: "Bitte **pünktlich** sein.\n\n- Laptop\n- Ausweis\n\nInfos: https://example.org/info")
+
+    log_in
+    get account_registration_path(@registration)
+
+    assert_select ".callout-warning strong", text: "pünktlich"
+    assert_select ".callout-warning li", text: "Laptop"
+    assert_select ".callout-warning a[href=?]", "https://example.org/info"
+  end
+
+  # Access data is often written line by line; Markdown alone would run the
+  # lines together.
+  test "single line breaks in the notes are kept" do
+    @event.update!(participant_notes: "Meeting-ID: 123\nKennwort: abc")
+
+    log_in
+    get account_registration_path(@registration)
+
+    assert_select ".callout-warning p br"
+    assert_includes response.body, "Meeting-ID: 123<br"
+  end
+
+  test "raw HTML in the notes is not rendered" do
     @event.update!(participant_notes: "<script>alert(1)</script>")
 
     log_in
     get account_registration_path(@registration)
 
     assert_not_includes response.body, "<script>alert(1)"
-    assert_includes response.body, "&lt;script&gt;alert(1)"
   end
 
   TURBO_STREAM_HEADERS = {

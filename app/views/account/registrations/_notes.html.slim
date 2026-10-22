@@ -1,9 +1,10 @@
 / <%# locals: (registration:) -%>
-/ Der Zusatztext aus der Anmeldebestätigung. Er wird für Plain-Text-Mails
-/ gepflegt, daher escaped und nur mit Zeilenumbrüchen, nicht als Markdown.
+/ Die Hinweise für Teilnehmende sind Markdown: hier gerendert, in den
+/ Plain-Text-Mails so lesbar, wie sie geschrieben sind. Einfache
+/ Zeilenumbrüche bleiben erhalten (Zugangsdaten stehen oft zeilenweise).
 
 - message = registration.event.participant_notes
 - if message.present?
   .callout.callout-warning.mb-4
     h5 = t("account.registrations.show.notes")
-    = simple_format(h(render_custom_message(message, registration: registration)))
+    == render_markdown(render_custom_message(message, registration: registration), hardbreaks: true)

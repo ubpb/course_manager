@@ -232,3 +232,6 @@ Frontend-Login per `post session_path`, Admin per `post admin_session_path`.
   ein Modal mit Betreff + Text für den **aktuellen Formularstand** (auch ungespeichert, auch bei
   neuen Terminen); nichts wird gespeichert, keine Änderungsmail. `POST preview_confirmation` /
   `preview_reminder` (Collection-Routen), Stimulus-Controller `mail-preview`.
+- **Markdown** (2026-10-22): „Hinweise für Teilnehmende“ sind Markdown. Die Detailseite rendert sie mit
+  `render_markdown(…, hardbreaks: true)` (einfache Zeilenumbrüche bleiben, Roh-HTML wird verworfen);
+  die Mails bleiben Plaintext und enthalten den Markdown-Quelltext unverändert. Hilfetext empfiehlt nackte URLs.

@@ -48,12 +48,14 @@ module ApplicationHelper
     strip_tags(render_markdown(text)).squish
   end
 
-  def render_markdown(text)
+  # hardbreaks: true keeps single line breaks, for texts written line by line
+  # (e.g. access data) rather than in paragraphs.
+  def render_markdown(text, hardbreaks: false)
     Commonmarker.to_html(
       text,
       options: {
         parse: {smart: true},
-        render: {hardbreaks: false}
+        render: {hardbreaks: hardbreaks}
       }
     )
   end
