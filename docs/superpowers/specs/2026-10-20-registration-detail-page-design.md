@@ -239,5 +239,8 @@ Frontend-Login per `post session_path`, Admin per `post admin_session_path`.
   `ParticipantMailer` (`confirmation`, `cancellation_confirmation`, `reminder`, `change_notice`,
   `staff_message`, `certificate`) und `TeamMailer` (`new_registration`, `cancelled_registration`) im
   Root-Namespace ersetzen `Frontend::Mailers::RegistrationsMailer`, `Admin::Mailers::EventsMailer` und
-  `Admin::Mailers::RegistrationsMailer`. Templates und Partials liegen in `app/views/participant_mailer/`
+  `Admin::Mailers::RegistrationsMailer`. Templates und Partials liegen in `app/views/mailers/participant_mailer/`
   bzw. `team_mailer/` (oben genannte Pfade unter `application/mailers/` sind damit veraltet).
+- **Mail-Views** (2026-10-22): `ApplicationMailer` setzt `prepend_view_path "app/views/mailers"`; alle
+  Mail-Templates, Partials und das Mail-Layout liegen unter `app/views/mailers/` (`participant_mailer/`,
+  `team_mailer/`, `layouts/mailer.text.erb`). Der klassische Ort `app/views/<mailer>/` funktioniert weiterhin.
