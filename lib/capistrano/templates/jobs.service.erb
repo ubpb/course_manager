@@ -1,0 +1,22 @@
+# Solid Queue (bin/jobs) for course_manager -- a systemd user service of the
+# deploy user. Rendered and installed by `cap <stage> app:jobs:install` on every
+# deploy (lib/capistrano/tasks/jobs.rake); edits on the server get overwritten.
+
+[Unit]
+Description=Solid Queue for course_manager (<%= stage %>)
+
+[Service]
+Type=simple
+WorkingDirectory=<%= current_path %>
+Environment=RAILS_ENV=<%= rails_env %>
+# Optional: environment variables the app needs besides the linked config files.
+EnvironmentFile=-%h/.config/course_manager/jobs.env
+# Ruby comes from the deploy user's RVM (set :rvm_type, :user in config/deploy.rb).
+ExecStart=%h/.rvm/bin/rvm <%= ruby_version %> do bundle exec bin/jobs
+Restart=always
+RestartSec=5
+# Solid Queue shuts down gracefully on SIGTERM; give running jobs time to finish.
+TimeoutStopSec=60
+
+[Install]
+WantedBy=default.target
