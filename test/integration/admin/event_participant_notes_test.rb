@@ -74,7 +74,7 @@ class Admin::EventParticipantNotesTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_equal "text/vnd.turbo-stream.html", response.media_type
     assert_includes response.body, '<turbo-stream action="replace" target="mail-preview-modal">'
-    assert_includes response.body, "[UB Paderborn] Ihre Schulungsanmeldung"
+    assert_includes response.body, "[UB Paderborn] Bestätigung Ihrer Schulungsanmeldung"
     assert_includes response.body, "vielen Dank für Ihre Anmeldung"
     assert_includes response.body, "05.11.2026"
     assert_includes response.body, "Zugangsdaten folgen für Max Mustermann."
