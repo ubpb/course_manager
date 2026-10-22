@@ -224,3 +224,11 @@ Frontend-Login per `post session_path`, Admin per `post admin_session_path`.
 - **Zugangslink** (2026-10-21): Button heißt „Zugangslink öffnen“; darunter `CopyToClipboardComponent`
   (ViewComponent, erste im Projekt; Vorlage aus dem Katalog-Projekt) — Readonly-Feld + Button
   „Kopieren“ statt der nackten URL.
+- **Umbenennung** (2026-10-22): `events.confirmation_message` → `events.participant_notes`
+  (Migration `20261022090000`, Daten bleiben), Admin-Label „Hinweise für Teilnehmende“, Feld steht
+  bei den „Allgemeinen Angaben“. Mail-Partial `application/mailers/_participant_notes`.
+- **Admin-Vorschau** (2026-10-22): statt Tab neben dem Textfeld zwei Buttons „Vorschau
+  Anmeldebestätigung“ / „Vorschau Erinnerungsmail“ bei den „Administrativen Angaben“. Sie öffnen
+  ein Modal mit Betreff + Text für den **aktuellen Formularstand** (auch ungespeichert, auch bei
+  neuen Terminen); nichts wird gespeichert, keine Änderungsmail. `POST preview_confirmation` /
+  `preview_reminder` (Collection-Routen), Stimulus-Controller `mail-preview`.

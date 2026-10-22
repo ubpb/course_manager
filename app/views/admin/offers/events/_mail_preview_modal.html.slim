@@ -1,0 +1,19 @@
+/ <%# locals: (title:, mail:) -%>
+
+#mail-preview-modal
+  .modal.fade(tabindex="-1" aria-hidden="true" data-controller="modal")
+    .modal-dialog.modal-lg.modal-dialog-centered.modal-dialog-scrollable
+      .modal-content
+        .modal-header
+          h5.modal-title = title
+          button.btn-close(type="button" data-bs-dismiss="modal" aria-label="Schließen")
+        .modal-body
+          - if mail
+            .mb-3
+              .small.text-body-secondary = "Betreff"
+              .fw-semibold = mail.subject
+            pre.mb-0(style="white-space: pre-wrap;") = mail.body.to_s
+          - else
+            .alert.alert-warning.mb-0
+              i.fa-solid.fa-exclamation-triangle.me-2
+              = "Bitte geben Sie zuerst Datum und Uhrzeit an, um eine Vorschau der E-Mail zu sehen."
