@@ -1,0 +1,68 @@
+/ <%# locals: (offer:, event:, active_tab:) -%>
+
+/ Head and tabs around every part of an event. After a failed save the head
+/ shows the event as stored, not the invalid input of the form; a report or
+/ certification only counts once it is saved.
+- stored = event.changed? ? Event.find(event.id) : event
+- tabs = [[:registrations, "Teilnehmer", admin_offer_event_registrations_path(offer, event), event.registrations_count],
+          [:report, "Statistik", admin_offer_event_report_path(offer, event), nil],
+          [:certification, "Zertifikat", admin_offer_event_certification_path(offer, event), nil],
+          [:event, "Termindaten", edit_admin_offer_event_path(offer, event), nil]]
+
+- if offer_context?
+  .offer-context-bar.d-flex.flex-wrap.align-items-center.gap-2
+    span
+      = "Angebot: "
+      strong = offer.title
+    = link_to event_list_path(event), class: "ms-auto" do
+      i.fa-solid.fa-arrow-left.me-1
+      = "Zurück zum Angebot"
+
+.context-head.context-head-event
+  .d-flex.flex-column.flex-md-row.gap-3
+    .flex-grow-1
+      .context-head-overline
+        = offer_type_label(offer)
+        = " · "
+        = link_to offer.title, offer_page_path(offer)
+      h2.context-head-title
+        = event_heading(stored)
+        - if stored.upcoming?
+          small.ms-2 = date_in_words(stored.date_and_time.to_date)
+      .d-flex.flex-wrap.gap-2
+        = published_badge(stored)
+        - if offer.archived?
+          span.badge.text-bg-secondary = "archiviert"
+        span.badge.text-bg-light.border = stored.online? ? "Online" : "Präsenz"
+        span.badge(class=(stored.full? ? "text-bg-warning" : "text-bg-light border")) = "#{event_capacity(stored)} Plätze"
+        - if stored.past?
+          span.badge.text-bg-light.border = stored.report&.persisted? ? "Statistik erfasst" : "keine Statistik"
+        - if stored.certification&.persisted?
+          span.badge.text-bg-light.border = "Zertifikat"
+    .d-flex.flex-column.align-items-md-end.gap-2
+      = link_to event_list_path(event), class: "text-nowrap" do
+        i.fa-solid.fa-arrow-left.me-1
+        = offer_context? ? "Zurück zum Angebot" : "Zurück zur Terminliste"
+      .d-flex.gap-2
+        = link_to duplicate_admin_offer_event_path(offer, event), data: {turbo_method: :get, turbo_confirm: "Termin duplizieren? Datum und Uhrzeit wird auf JETZT voreingestellt und muss geändert werden."}, class: "btn btn-outline-primary btn-sm" do
+          i.fa-solid.fa-clone.me-1
+          = "Duplizieren"
+        - if offer.published? && !offer.archived?
+          .dropdown
+            button.btn.btn-outline-primary.btn-sm(type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Weitere Aktionen")
+              i.fa-solid.fa-ellipsis
+            ul.dropdown-menu.dropdown-menu-end
+              li = link_to frontend_offer_path(offer), class: "dropdown-item", target: "_blank", rel: "noopener" do
+                i.fa-solid.fa-arrow-up-right-from-square.me-2
+                = "Im Frontend ansehen"
+
+.row.g-4
+  .col-lg-3.col-xl-2
+    nav.nav.nav-pills.flex-lg-column.gap-1.event-tabs(aria-label="Bereiche des Termins")
+      - tabs.each do |key, label, path, count|
+        = link_to path, class: ["nav-link", ("active" if key == active_tab)], "aria-current": ("page" if key == active_tab) do
+          = label
+          - if count
+            span.badge.rounded-pill.text-bg-light.ms-2 = count
+  .col-lg-9.col-xl-10
+    = yield

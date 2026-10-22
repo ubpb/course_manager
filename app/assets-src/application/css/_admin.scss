@@ -13,3 +13,60 @@
     }
   }
 }
+
+// Head of an event or offer page, above its tabs. Events are himmelblau,
+// offers irisviolett, so the offer context stands out from the event.
+.context-head {
+  --context-color: #{$upb-himmelblau};
+  --context-tint: #{$upb-himmelblau-20p};
+
+  margin-bottom: 1.5rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--bs-border-color);
+  border-left: 5px solid var(--context-color);
+  border-radius: var(--bs-border-radius);
+  background-color: color-mix(in srgb, var(--context-tint) 50%, var(--bs-body-bg));
+
+  .context-head-overline {
+    font-size: 0.85rem;
+    color: var(--bs-secondary-color);
+    overflow-wrap: anywhere;
+  }
+
+  .context-head-title {
+    margin: 0.25rem 0 0.5rem;
+    font-size: 1.4rem;
+    overflow-wrap: anywhere;
+
+    small {
+      font-size: 0.9rem;
+      font-weight: normal;
+      color: var(--bs-secondary-color);
+    }
+  }
+}
+
+.context-head-offer {
+  --context-color: #{$upb-irisviolett};
+  --context-tint: #{$upb-irisviolett-20p};
+}
+
+// Shown above an event opened from the events of its offer.
+.offer-context-bar {
+  margin-bottom: 0.5rem;
+  padding: 0.4rem 1rem;
+  border-radius: var(--bs-border-radius);
+  background-color: $upb-irisviolett;
+  color: var(--bs-white);
+  overflow-wrap: anywhere;
+
+  a {
+    color: var(--bs-white);
+  }
+}
+
+@include color-mode(dark) {
+  .context-head {
+    background-color: var(--bs-light-bg-subtle);
+  }
+}
