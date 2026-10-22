@@ -5,6 +5,8 @@ require "test_helper"
 module Frontend
   class RegistrationChecksTest < ActionDispatch::IntegrationTest
 
+    include ActionMailer::TestHelper
+
     setup do
       @offer = Offer.create!(title: "Literaturrecherche", type: "course", published: true)
       @event = @offer.events.create!(date_and_time: 1.week.from_now,
@@ -53,6 +55,25 @@ module Frontend
         register
       end
       assert_turned_away_with "Die Anmeldung ist geschlossen"
+    end
+
+    # Two requests at the same moment (a double click, two tabs) both pass the
+    # checks; the unique index stops the second one, which must still end on
+    # the offer page instead of an error.
+    test "a registration losing the race to an identical one is turned away" do
+      competing = lambda do |registration|
+        Registration.insert_all!([registration.attributes.except("id").merge(
+          "created_at" => Time.current, "updated_at" => Time.current
+        )])
+      end
+      Registration.set_callback(:create, :before, competing)
+
+      assert_no_enqueued_emails do
+        register
+      end
+      assert_turned_away_with "Sie sind bereits für diesen Termin angemeldet."
+    ensure
+      Registration.skip_callback(:create, :before, competing)
     end
 
     test "a second registration of the same user is turned away" do
