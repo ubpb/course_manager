@@ -11,6 +11,10 @@ module Admin
       @topic = Topic.new
     end
 
+    def edit
+      @topic = Topic.find(params[:id])
+    end
+
     def create
       @topic = Topic.new(topic_params)
 
@@ -23,12 +27,8 @@ module Admin
           redirect_to admin_topics_path
         end
       else
-        render :new, status: :unprocessable_entity
+        render :new, status: :unprocessable_content
       end
-    end
-
-    def edit
-      @topic = Topic.find(params[:id])
     end
 
     def update
@@ -37,7 +37,7 @@ module Admin
       if @topic.update(topic_params)
         redirect_to admin_topics_path
       else
-        render :edit, status: :unprocessable_entity
+        render :edit, status: :unprocessable_content
       end
     end
 

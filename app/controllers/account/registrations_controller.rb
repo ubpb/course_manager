@@ -46,7 +46,7 @@ module Account
           disposition: "attachment"
         )
       else
-        redirect_to account_root_path, alert: t("account.registrations.certificate.not_available"), status: :see_other
+        redirect_to account_root_path, alert: t(".not_available"), status: :see_other
       end
     end
 
@@ -70,9 +70,9 @@ module Account
           .cancelled_registration(@event, full_name: full_name, email: email)
           .deliver_later
 
-        redirect_to account_root_path, notice: t("account.registrations.destroy.success"), status: :see_other
+        redirect_to account_root_path, notice: t(".success"), status: :see_other
       else
-        redirect_to account_root_path, alert: t("account.registrations.destroy.not_allowed"), status: :see_other
+        redirect_to account_root_path, alert: t(".not_allowed"), status: :see_other
       end
     end
 

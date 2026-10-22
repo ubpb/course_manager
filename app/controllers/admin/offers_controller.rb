@@ -58,23 +58,23 @@ module Admin
       @offer = Offer.new(type: "course")
     end
 
+    def edit; end
+
     def create
       @offer = Offer.new(offer_params)
 
       if @offer.save
         redirect_to edit_admin_offer_path(@offer), notice: t("admin.application.form.success")
       else
-        render :new, status: :unprocessable_entity
+        render :new, status: :unprocessable_content
       end
     end
-
-    def edit; end
 
     def update
       if @offer.update(offer_params)
         redirect_to edit_admin_offer_path(@offer), notice: t("admin.application.form.success")
       else
-        render :edit, status: :unprocessable_entity
+        render :edit, status: :unprocessable_content
       end
     end
 

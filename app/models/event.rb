@@ -11,7 +11,7 @@ class Event < ApplicationRecord
   validates :duration, numericality: {only_integer: true, greater_than_or_equal_to: 0}, allow_nil: true
   validates :max_no_of_participants, numericality: {only_integer: true, greater_than_or_equal_to: 0}
   validates :email_from, format: {with: UPB_EMAIL_REGEXP}
-  validates :online_url, format: {with: URI::DEFAULT_PARSER.make_regexp(%w[http https]), allow_blank: true}
+  validates :online_url, format: {with: URI::DEFAULT_PARSER.make_regexp(["http", "https"]), allow_blank: true}
 
   # Scopes
   scope :published, -> { where("events.published": true) }

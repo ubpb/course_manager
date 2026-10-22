@@ -11,12 +11,13 @@ class Frontend::OffersFilteringTest < ActionDispatch::IntegrationTest
     @consulting = Offer.create!(title: "Testberatung", type: "consulting", published: true)
 
     @scheduled_course.events.create!(date_and_time: 1.week.from_now,
-                                    max_no_of_participants: 10,
-                                    published: true)
+                                     max_no_of_participants: 10,
+                                     published: true)
   end
 
   def filter(params)
     get frontend_offers_path(filter: params)
+
     assert_redirected_to frontend_offers_path
     follow_redirect!
   end
@@ -41,6 +42,7 @@ class Frontend::OffersFilteringTest < ActionDispatch::IntegrationTest
 
   test "unchecking with_upcoming_events stops filtering by it" do
     filter(scope: "courses", with_upcoming_events: "1")
+
     assert_equal [@scheduled_course], listed
 
     # What an unchecked simple_form checkbox submits.
@@ -59,9 +61,11 @@ class Frontend::OffersFilteringTest < ActionDispatch::IntegrationTest
     filter(scope: "courses", with_upcoming_events: "1")
 
     get frontend_offers_path
+
     assert_equal [@scheduled_course], listed
 
     get frontend_offers_path(reset_filter: true)
+
     assert_redirected_to frontend_offers_path
     follow_redirect!
 
@@ -72,6 +76,7 @@ class Frontend::OffersFilteringTest < ActionDispatch::IntegrationTest
     filter(scope: "courses", title: "")
 
     get frontend_offers_path
+
     assert_equal [@scheduled_course, @unscheduled_course], listed
 
     filter(scope: "", title: "")
@@ -81,22 +86,24 @@ class Frontend::OffersFilteringTest < ActionDispatch::IntegrationTest
 
   test "removing a filter through its chip drops only that filter" do
     filter(scope: "courses", with_upcoming_events: "1")
+
     assert_equal [@scheduled_course], listed
 
     chip = css_select("span.badge").find { |badge| badge.text.include?("Mit anstehenden Terminen") }
+
     assert chip, "expected a chip for the with_upcoming_events filter"
 
     get chip.at_css("a")["href"]
     follow_redirect!
 
     assert_equal [@scheduled_course, @unscheduled_course], listed
-    assert_empty css_select("span.badge").select { |badge| badge.text.include?("Mit anstehenden Terminen") }
+    assert_empty(css_select("span.badge").select { |badge| badge.text.include?("Mit anstehenden Terminen") })
   end
 
   test "an unset filter has no chip" do
     filter(scope: "courses", with_upcoming_events: "0")
 
-    assert_empty css_select("span.badge").select { |badge| badge.text.include?("Mit anstehenden Terminen") }
+    assert_empty(css_select("span.badge").select { |badge| badge.text.include?("Mit anstehenden Terminen") })
   end
 
   test "a filter param that is not a hash does not raise" do

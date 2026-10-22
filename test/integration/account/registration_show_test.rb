@@ -25,7 +25,8 @@ class Account::RegistrationShowTest < ActionDispatch::IntegrationTest
   end
 
   def create_registration(event, **attributes)
-    event.registrations.create!({first_name: "Max", last_name: "Mustermann", email: "max@example.com"}.merge(attributes))
+    event.registrations.create!({first_name: "Max", last_name: "Mustermann",
+                                 email: "max@example.com"}.merge(attributes))
   end
 
   def log_in
@@ -104,17 +105,6 @@ class Account::RegistrationShowTest < ActionDispatch::IntegrationTest
     assert_select "a[href=?]", frontend_offer_path(@offer)
   end
 
-  # Mails link here, but a registration may be gone by the time the link is
-  # clicked: cancelled, deleted by staff, or anonymized 10 days after the event.
-  # Someone else's registration gets the very same answer, so the response
-  # gives nothing away about which ids exist.
-  def assert_led_back_to_the_overview
-    assert_redirected_to account_root_path
-    follow_redirect!
-    assert_response :success
-    assert_includes response.body, "Diese Anmeldung ist nicht (mehr) vorhanden."
-  end
-
   test "someone else's registration leads back to the overview" do
     other = create_registration(@event, ils_primary_id: "99999", first_name: "Fremd")
 
@@ -176,7 +166,8 @@ class Account::RegistrationShowTest < ActionDispatch::IntegrationTest
     log_in
     get account_registration_path(@registration)
 
-    assert_includes response.body, "Aus Datenschutzgründen wird Ihre Anmeldung 10 Tage nach dem Termin gelöscht, also ab dem 25.10.2026."
+    assert_includes response.body,
+                    "Aus Datenschutzgründen wird Ihre Anmeldung 10 Tage nach dem Termin gelöscht, also ab dem 25.10.2026."
     assert_not_includes response.body, "Bitte laden Sie Ihre Teilnahmebescheinigung"
   end
 
@@ -302,8 +293,23 @@ class Account::RegistrationShowTest < ActionDispatch::IntegrationTest
 
   def assert_select_in_stream(selector)
     template = Nokogiri::HTML5.fragment(response.body).at_css("turbo-stream template")
+
     assert template, "no turbo stream template in the response"
     assert Nokogiri::HTML5.fragment(template.inner_html).at_css(selector), "#{selector} not in the modal"
+  end
+
+  private
+
+  # Mails link here, but a registration may be gone by the time the link is
+  # clicked: cancelled, deleted by staff, or anonymized 10 days after the event.
+  # Someone else's registration gets the very same answer, so the response
+  # gives nothing away about which ids exist.
+  def assert_led_back_to_the_overview
+    assert_redirected_to account_root_path
+    follow_redirect!
+
+    assert_response :success
+    assert_includes response.body, "Diese Anmeldung ist nicht (mehr) vorhanden."
   end
 
 end

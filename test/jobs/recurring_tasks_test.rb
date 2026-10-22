@@ -9,7 +9,7 @@ class RecurringTasksTest < ActiveSupport::TestCase
     config = ActiveSupport::ConfigurationFile.parse(Rails.root.join("config/recurring.yml")).deep_symbolize_keys
     options = config.fetch(:production).fetch(key)
 
-    SolidQueue::RecurringTask.from_configuration(key, **options.merge(static: true))
+    SolidQueue::RecurringTask.from_configuration(key, **options, static: true)
   end
 
   test "the reminder mails go out every morning" do

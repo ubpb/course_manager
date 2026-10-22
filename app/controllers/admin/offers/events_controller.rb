@@ -25,7 +25,7 @@ module Admin
           if events.none?
             flash[:alert] = "Bitte mindestens einen Termin auswählen"
           else
-            scope = params[:bulk_process_scope].presence_in(%w[upcoming past]) || "upcoming"
+            scope = params[:bulk_process_scope].presence_in(["upcoming", "past"]) || "upcoming"
 
             render turbo_stream: turbo_stream.replace(
               "bulk-action-form-#{scope}",
@@ -62,17 +62,17 @@ module Admin
         @event = @offer.events.build
       end
 
+      def edit; end
+
       def create
         @event = @offer.events.build(event_params)
 
         if @event.save
           redirect_to edit_admin_offer_event_path(@offer, @event), notice: t("admin.application.form.success")
         else
-          render :new, status: :unprocessable_entity
+          render :new, status: :unprocessable_content
         end
       end
-
-      def edit; end
 
       def update
         @event.assign_attributes(event_params)
@@ -90,7 +90,7 @@ module Admin
 
           redirect_to edit_admin_offer_event_path(@offer, @event), notice: t("admin.application.form.success")
         else
-          render :edit, status: :unprocessable_entity
+          render :edit, status: :unprocessable_content
         end
       end
 
@@ -116,7 +116,8 @@ module Admin
         event.date_and_time = new_date_and_time
         event.save
 
-        flash[:notice] = "Das Event wurde dupliziert und gespeichert. Datum und Uhrzeit wurden auf die aktuelle Zeit eingestellt. Bitte bearbeite die Details."
+        flash[:notice] =
+          "Das Event wurde dupliziert und gespeichert. Datum und Uhrzeit wurden auf die aktuelle Zeit eingestellt. Bitte bearbeite die Details."
         redirect_to edit_admin_offer_event_path(@offer, event)
       end
 

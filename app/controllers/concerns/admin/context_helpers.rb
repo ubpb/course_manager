@@ -18,7 +18,7 @@ module Admin
       prepare_offer_context
 
       unless @offer.course?
-        redirect_back(fallback_location: admin_offers_path, alert: "Nur Kurse können Termine haben.")
+        redirect_back_or_to(admin_offers_path, alert: "Nur Kurse können Termine haben.")
         return
       end
 

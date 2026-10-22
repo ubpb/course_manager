@@ -6,7 +6,9 @@ module Admin
     # See the frontend SessionsController: an unthrottled login form is a
     # password oracle against Alma.
     rate_limit to: 10, within: 3.minutes, only: :create,
-               with: -> { redirect_to new_admin_session_path, alert: "Zu viele Anmeldeversuche. Bitte versuchen Sie es in einigen Minuten erneut." }
+               with: lambda {
+                 redirect_to new_admin_session_path, alert: "Zu viele Anmeldeversuche. Bitte versuchen Sie es in einigen Minuten erneut."
+               }
 
     before_action { add_breadcrumb "Login", new_admin_session_path }
 
@@ -29,7 +31,7 @@ module Admin
           redirect_to admin_root_path
         else
           flash[:error] = "Fehler bei der Anmeldung. Bitte überprüfen Sie Ihre Eingaben."
-          render :new, status: :unprocessable_entity
+          render :new, status: :unprocessable_content
         end
       else
         redirect_to new_admin_session_path

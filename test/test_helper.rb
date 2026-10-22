@@ -6,6 +6,7 @@ Dir[Rails.root.join("test/support/**/*.rb")].each { |file| require file }
 
 module ActiveSupport
   class TestCase
+
     # Run tests in parallel with specified workers
     parallelize(workers: :number_of_processors)
 
@@ -17,5 +18,6 @@ module ActiveSupport
     setup { Rails.cache.clear }
 
     # Add more helper methods to be used by all tests here...
+
   end
 end

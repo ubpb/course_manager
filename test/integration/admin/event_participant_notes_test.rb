@@ -34,8 +34,10 @@ class Admin::EventParticipantNotesTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     notes = response.body.index('name="event[participant_notes]"')
+
     assert notes, "no participant notes field"
-    assert notes < response.body.index("Administrative Angaben"), "the notes field is not among the general data"
+    assert_operator notes, :<, response.body.index("Administrative Angaben"),
+                    "the notes field is not among the general data"
   end
 
   # The text is not only part of the confirmation, and staff write it
@@ -104,6 +106,7 @@ class Admin::EventParticipantNotesTest < ActionDispatch::IntegrationTest
     end
 
     @event.reload
+
     assert_equal Time.zone.parse("2026-11-05 14:00"), @event.date_and_time
     assert_nil @event.participant_notes
   end

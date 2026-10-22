@@ -3,13 +3,13 @@ module MailerHelper
   def render_custom_message(message, registration:)
     return "" if message.blank?
 
-    message = message.gsub(/###NAME###/, render_name(registration))
-    message = message.gsub(/###ANREDE###/, render_salutation(registration))
-    message = message.gsub(/###DATUM###/, render_date(registration))
-    message = message.gsub(/###UHRZEIT###/, render_time(registration))
-    message = message.gsub(/###DAUER###/, render_duration(registration))
-    message = message.gsub(/###TREFFPUNKT###/, render_location(registration))
-    message = message.gsub(/###TITEL###/, render_title(registration))
+    message = message.gsub("###NAME###", render_name(registration))
+    message = message.gsub("###ANREDE###", render_salutation(registration))
+    message = message.gsub("###DATUM###", render_date(registration))
+    message = message.gsub("###UHRZEIT###", render_time(registration))
+    message = message.gsub("###DAUER###", render_duration(registration))
+    message = message.gsub("###TREFFPUNKT###", render_location(registration))
+    message = message.gsub("###TITEL###", render_title(registration))
 
     message.presence || ""
   end

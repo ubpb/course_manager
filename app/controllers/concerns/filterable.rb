@@ -44,9 +44,9 @@ module Filterable
   end
 
   class_methods do
-    def define_filter(name, &block)
+    def define_filter(name, &)
       filter_context = FilterContext.new
-      filter_context.instance_eval(&block) if block_given?
+      filter_context.instance_eval(&) if block_given?
 
       # Assign instead of mutating: `class_attribute` shares its default between
       # all including classes, and a subclass must not write into its parent.

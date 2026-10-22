@@ -30,6 +30,7 @@ class DsgvoCleanupTest < ActiveSupport::TestCase
     run_task
 
     registration.reload
+
     assert_predicate registration, :anonymized?
     assert_nil registration.ils_primary_id
   end

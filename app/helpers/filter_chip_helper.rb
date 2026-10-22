@@ -17,7 +17,7 @@ module FilterChipHelper
     when :scope
       return if filter.scope.blank?
 
-      labels = { "courses" => "Schulungen", "consultings" => "Beratungen", "self_study_courses" => "Selbstlernkurse" }
+      labels = {"courses" => "Schulungen", "consultings" => "Beratungen", "self_study_courses" => "Selbstlernkurse"}
       chip(labels.fetch(filter.scope.to_s, filter.scope), filter, :scope)
     when :title
       chip("Titel: #{filter.title}", filter, :title) if filter.title.present?
@@ -47,12 +47,14 @@ module FilterChipHelper
     when :topics
       Topic.where(id: filter.topics).order(:position).map { |t| chip("Thema: #{t.title}", filter, :topics, t.id) }
     when :target_groups
-      TargetGroup.where(id: filter.target_groups).order(:position).map { |tg| chip("Zielgruppe: #{tg.title}", filter, :target_groups, tg.id) }
+      TargetGroup.where(id: filter.target_groups).order(:position).map do |tg|
+        chip("Zielgruppe: #{tg.title}", filter, :target_groups, tg.id)
+      end
     end
   end
 
   def chip(label, filter, key, value = nil)
-    { label: label, remove_path: filter_remove_path(filter, key, value) }
+    {label: label, remove_path: filter_remove_path(filter, key, value)}
   end
 
   # Path that removes one filter key, or a single value from an array filter,

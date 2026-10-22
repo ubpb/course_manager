@@ -29,6 +29,10 @@ module Admin
           @registration = @event.registrations.build
         end
 
+        def edit
+          @registration = @event.registrations.find(params[:id])
+        end
+
         def create
           @registration = @event.registrations.build(registration_params)
 
@@ -36,31 +40,28 @@ module Admin
             # Manually entered participants have no account to look things up
             # in; the confirmation brings them the custom text of the event
             # right away instead of only with the reminder.
-            if params[:send_confirmation] == "1"
-              ParticipantMailer.confirmation(@registration).deliver_later
-            end
+            ParticipantMailer.confirmation(@registration).deliver_later if params[:send_confirmation] == "1"
 
-            redirect_to edit_admin_offer_event_registration_path(@offer, @event, @registration), notice: t("admin.application.form.success")
+            redirect_to edit_admin_offer_event_registration_path(@offer, @event, @registration),
+                        notice: t("admin.application.form.success")
           else
-            render :new, status: :unprocessable_entity
+            render :new, status: :unprocessable_content
           end
-        end
-
-        def edit
-          @registration = @event.registrations.find(params[:id])
         end
 
         def update
           if @registration.update(registration_params)
-            redirect_to edit_admin_offer_event_registration_path(@offer, @event, @registration), notice: t("admin.application.form.success")
+            redirect_to edit_admin_offer_event_registration_path(@offer, @event, @registration),
+                        notice: t("admin.application.form.success")
           else
-            render :edit, status: :unprocessable_entity
+            render :edit, status: :unprocessable_content
           end
         end
 
         def destroy
           @registration.destroy
-          redirect_to admin_offer_event_registrations_path(@offer, @event), notice: t("admin.application.form.destroy_success")
+          redirect_to admin_offer_event_registrations_path(@offer, @event),
+                      notice: t("admin.application.form.destroy_success")
         end
 
         def download_certificate
@@ -164,9 +165,7 @@ module Admin
           @bulk_process_actions = []
           return if registrations.empty?
 
-          if @event.certification.present?
-            @bulk_process_actions << ["Zertifikat per Mail senden", "send_certificates"]
-          end
+          @bulk_process_actions << ["Zertifikat per Mail senden", "send_certificates"] if @event.certification.present?
 
           @bulk_process_actions << ["Erinnerungsmail senden", "send_reminder_messages"]
           @bulk_process_actions << ["Erinnerungsmail ERNEUT senden", "force_send_reminder_messages"]
