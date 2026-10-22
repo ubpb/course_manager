@@ -7,25 +7,11 @@
         i.fa-solid.fa-plus.me-2
         = "Neuen Termin anlegen"
     .card-body
-      h5.m-0.p-2.d-block.bg-body-tertiary.bg-gradient.border-bottom
-        = "Kommende Termine"
-      - if @upcoming_events.present?
-        = render "listing", offer: @offer, events: @upcoming_events, scope: "upcoming"
+      .mb-3 = render "application/filter_bar", filter: @filter, chips: admin_event_filter_chips(@filter), always: true, button_end: true
+      - if @events.present?
+        = render "admin/events/listing", events: @events, offer: @offer
       - else
         .p-2.text-muted = "Keine Termine vorhanden"
 
-      .mt-4
-      h5.m-0.p-2.d-block.bg-body-tertiary.bg-gradient.border-bottom
-        = "Vergangene Termine"
-      - if @past_events.present?
-        = render "listing", offer: @offer, events: @past_events, scope: "past"
-      - else
-        .p-2.text-muted = "Keine Termine vorhanden"
-
-/ Fix to reset indeterminate state of select-all checkboxes on turbo:load
-javascript:
-  document.addEventListener("turbo:load", function() {
-    document.querySelectorAll("input[data-checkbox-select-all-target='checkboxAll']").forEach(function(cb) {
-      cb.indeterminate = false;
-    });
-  })
+= render "application/filter_offcanvas", filter: @filter, filters_partial: "admin/events/filter_form", always: true,
+                                         filters_locals: {url: admin_offer_events_path(@offer), show_title: false}

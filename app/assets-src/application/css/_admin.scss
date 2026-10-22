@@ -70,3 +70,8 @@
     background-color: var(--bs-light-bg-subtle);
   }
 }
+
+// Rows of the event lists open their event (see row_link_controller.js).
+.event-list tbody tr[data-controller~="row-link"] {
+  cursor: pointer;
+}

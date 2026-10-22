@@ -2,16 +2,19 @@ module Admin
   module Offers
     class EventsController < ApplicationController
 
+      include Filterable
+      include EventFilter
+
       before_action -> { prepare_offer_event_context(offer_page: true) }, only: [:index, :bulk_process, :bulk_move]
+      before_action -> { persist_filter_params(:events) }, only: :index
       before_action :prepare_offer_event_context, except: [:index, :bulk_process, :bulk_move]
       before_action -> { add_breadcrumb "Termindaten" }, only: [:edit, :update]
       before_action -> { add_breadcrumb "Neuer Termin" }, only: [:new, :create]
 
       def index
-        @upcoming_events = @offer.events.upcoming.order(date_and_time: :asc)
-        @past_events = @offer.events.past.order(date_and_time: :desc)
+        @events = filtered_events(@offer.events.includes(:offer, :report, :certification).order(date_and_time: :desc))
 
-        setup_bulk_process_actions(@offer.events)
+        setup_bulk_process_actions(@events)
       end
 
       def bulk_process
@@ -130,17 +133,14 @@ module Admin
       # The dialog for picking the target offer, opened as a modal in the list
       # (upcoming or past) it was started from.
       def render_move_to_offer_form(events)
-        # Optional, defaults to "upcoming" -- params.expect would answer 400 without it.
-        scope = params[:bulk_process_scope].presence_in(["upcoming", "past"]) || "upcoming" # rubocop:disable Rails/StrongParametersExpect
-
         render turbo_stream: turbo_stream.replace(
-          "bulk-action-form-#{scope}",
+          "bulk-action-form",
           partial: "admin/events/bulk_action_move_to_offer",
           locals: {
             events: events.includes(:offer),
             offers: Offer.courses.where.not(id: @offer.id).order(:title),
             url: bulk_move_admin_offer_events_path(@offer),
-            container_id: "bulk-action-form-#{scope}"
+            container_id: "bulk-action-form"
           }
         )
       end
