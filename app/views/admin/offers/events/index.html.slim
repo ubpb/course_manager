@@ -7,7 +7,9 @@
         i.fa-solid.fa-plus.me-2
         = "Neuen Termin anlegen"
     .card-body
-      .mb-3 = render "application/filter_bar", filter: @filter, chips: admin_event_filter_chips(@filter), always: true, button_end: true
+      .d-flex.flex-wrap.align-items-center.gap-3.mb-3
+        = render "admin/events/period_switch", filter: @filter
+        .flex-grow-1 = render "application/filter_bar", filter: @filter, chips: admin_event_filter_chips(@filter), always: true, button_end: true
       - if @events.present?
         = render "admin/events/listing", events: @events, offer: @offer
       - else

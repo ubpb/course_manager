@@ -1,7 +1,8 @@
 / <%# locals: (filter:, url: admin_events_path, show_title: true) -%>
 
 = simple_form_for filter, as: :filter, url: url, method: :get, html: { data: { controller: "filter-form" } } do |form|
-  = form.input :upcoming_or_past, as: :select, collection: [["Alle Termine", "all"], ["Nur kommende Termine", "upcoming"], ["Nur kommende Termine + letzten drei Monate", "upcoming_and_last_3_months"], ["Nur vergangene Termine", "past"]], include_blank: false, required: false
+  / The period switch sets the period; submitting the panel must keep it.
+  = form.hidden_field :upcoming_or_past
   = form.input :published, as: :select, collection: [["Ja", "true"], ["Nein", "false"]], include_blank: true, required: false
   = form.input :online, as: :select, collection: [["Ja", "true"], ["Nein", "false"]], include_blank: true, required: false
   = form.input :with_report, as: :select, collection: [["Ja", "true"], ["Nein", "false"]], include_blank: true, required: false

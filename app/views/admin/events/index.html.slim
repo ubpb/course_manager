@@ -13,7 +13,9 @@
                 i.fa-solid.fa-download.me-2
                 = "Statistik (Excel Export)"
       .card-body
-        .mb-3 = render "application/filter_bar", filter: @filter, chips: admin_event_filter_chips(@filter), always: true, button_end: true
+        .d-flex.flex-wrap.align-items-center.gap-3.mb-3
+          = render "admin/events/period_switch", filter: @filter
+          .flex-grow-1 = render "application/filter_bar", filter: @filter, chips: admin_event_filter_chips(@filter), always: true, button_end: true
         - if @events.present?
           = render "listing", events: @events
         - else
