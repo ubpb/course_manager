@@ -17,22 +17,23 @@
       tr
         - if @bulk_process_actions.any?
           th.table-light(width="10")
-        th(colspan="2") = "Name"
+        th = "Name"
         th = "Art"
         th = "Termine"
+        th = "Status"
         th.actions = "Aktionen"
     tbody
       - offers.each do |offer|
         tr(id=dom_id(offer))
           - if @bulk_process_actions.any?
             td.table-light = check_box_tag "bulk_process_ids[]", offer.id, false, id: nil, "data-checkbox-select-all-target": "checkbox"
-          td(width="1" class="#{offer.published? ? "table-success" : "table-danger"}") = ""
           td
             - if offer.archived?
               i.fa-solid.fa-box-archive.me-2.text-muted title="Archiviert"
-            = offer.title
+            = link_to offer.title, offer_page_path(offer)
           td = offer_type_label(offer)
           td = "#{offer.events.upcoming.count} / #{offer.events.past.count}"
+          td = published_badge(offer)
           td.actions
             .dropdown
               button.btn.btn-outline-primary.btn-sm.dropdown-toggle(type="button" data-bs-toggle="dropdown")
