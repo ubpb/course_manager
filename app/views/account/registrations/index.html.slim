@@ -5,7 +5,7 @@
 / Filled with the detail page of a registration, opened as a modal.
 #registration-modal
 
-h5.mb-3 = t(".upcoming")
+h4.mb-3 = t(".upcoming")
 - if @upcoming_registrations.any?
   .card.card-shadowed.mb-4
     ul.list-group.list-group-flush
@@ -15,11 +15,12 @@ h5.mb-3 = t(".upcoming")
   .alert.alert-warning = t(".empty")
 
 
-h5.mb-3 = t(".past")
-.text-muted.mb-3
-  i.fa-solid.fa-info-circle.me-1
-  = t(".past_info")
+h4.mb-3 = t(".past")
 - if @past_registrations.any?
+  .callout.callout-info.mb-3
+    i.fa-solid.fa-user-shield.fa-fw.me-2
+    = t(".past_info")
+
   .card.card-shadowed
     ul.list-group.list-group-flush
       - @past_registrations.each do |registration|
