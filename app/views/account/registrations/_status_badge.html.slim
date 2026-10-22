@@ -1,6 +1,6 @@
 / <%# locals: (event:) -%>
 
 - if event.upcoming?
-  span.badge.text-bg-success.ms-2.fs-6.align-middle = t("account.registrations.show.badge_upcoming")
+  .badge.rounded-pill.text-bg-success.fs-6.align-middle = t("account.registrations.show.badge_upcoming")
 - else
-  span.badge.text-bg-secondary.ms-2.fs-6.align-middle = t("account.registrations.show.badge_past")
+  .badge.rounded-pill.text-bg-secondary.fs-6.align-middle = t("account.registrations.show.badge_past")

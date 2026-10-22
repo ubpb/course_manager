@@ -5,9 +5,10 @@
     .modal-dialog.modal-xl.modal-dialog-centered.modal-dialog-scrollable
       .modal-content
         .modal-header
-          h5.modal-title
-            = registration.event.offer.title
-            = render "account/registrations/status_badge", event: registration.event
+          div
+            h5.modal-title
+              = registration.event.offer.title
+              span.ms-2 = render "account/registrations/status_badge", event: registration.event
           button.btn-close(type="button" data-bs-dismiss="modal" aria-label=t("account.registrations.show.close"))
         .modal-body
           = render "account/registrations/content", registration: registration
