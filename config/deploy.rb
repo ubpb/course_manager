@@ -25,3 +25,9 @@ set :keep_assets, 3
 # Hooks
 before "deploy:assets:precompile", "app:bun:install"
 before "deploy:assets:precompile", "app:bun:build"
+
+# Solid Queue: a broken configuration stops the deploy before it goes live;
+# afterwards the service is (re)installed and restarted with the new release.
+before "deploy:publishing", "app:jobs:check"
+after "deploy:published", "app:jobs:install"
+after "deploy:published", "app:jobs:restart"
