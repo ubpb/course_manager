@@ -1,0 +1,6 @@
+<%= render "salutation" -%>
+
+anbei erhalten Sie Ihre Teilnahmebescheinigung für die Schulungsveranstaltung "<%= @offer.title %>" am <%= l(@event.date_and_time.to_date) %>.
+<%= render "registration_link" -%>
+
+<%= render "footer" -%>

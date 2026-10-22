@@ -63,11 +63,11 @@ module Account
         # Die Registration ist zu diesem Zeitpunkt bereits gelöscht, daher werden
         # die benötigten Daten als einfache Werte übergeben (Active Job kann keine
         # Records ohne id serialisieren).
-        Frontend::Mailers::RegistrationsMailer
+        ParticipantMailer
           .cancellation_confirmation(@event, full_name: full_name, email: email)
           .deliver_later
-        Frontend::Mailers::RegistrationsMailer
-          .cancellation_notification(@event, full_name: full_name, email: email)
+        TeamMailer
+          .cancelled_registration(@event, full_name: full_name, email: email)
           .deliver_later
 
         redirect_to account_root_path, notice: t("account.registrations.destroy.success"), status: :see_other

@@ -37,7 +37,7 @@ module Admin
             # in; the confirmation brings them the custom text of the event
             # right away instead of only with the reminder.
             if params[:send_confirmation] == "1"
-              Frontend::Mailers::RegistrationsMailer.confirmation(@registration).deliver_later
+              ParticipantMailer.confirmation(@registration).deliver_later
             end
 
             redirect_to edit_admin_offer_event_registration_path(@offer, @event, @registration), notice: t("admin.application.form.success")
@@ -137,7 +137,7 @@ module Admin
 
           if message.valid?
             registrations.each do |registration|
-              Admin::Mailers::RegistrationsMailer.user_message(registration, message).deliver
+              ParticipantMailer.staff_message(registration, message).deliver
             end
 
             flash[:success] = "Nachricht gesendet"
@@ -181,7 +181,7 @@ module Admin
         end
 
         def send_certificate!(registration)
-          Admin::Mailers::RegistrationsMailer.certificate(
+          ParticipantMailer.certificate(
             registration,
             Certificate.generate(registration),
             Certificate.filename(registration)
@@ -199,7 +199,7 @@ module Admin
         def send_reminder_message!(registration, skip_if_sent: true)
           return if registration.reminder_message_sent_at.present? && skip_if_sent
 
-          Admin::Mailers::EventsMailer.reminder_message(
+          ParticipantMailer.reminder(
             registration,
             skip_if_sent: skip_if_sent
           ).deliver_later

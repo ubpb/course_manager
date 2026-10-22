@@ -18,11 +18,11 @@ class RegistrationMailsTest < ActionMailer::TestCase
   end
 
   def confirmation_body
-    Frontend::Mailers::RegistrationsMailer.confirmation(@registration).body.to_s
+    ParticipantMailer.confirmation(@registration).body.to_s
   end
 
   def reminder_body
-    Admin::Mailers::EventsMailer.reminder_message(@registration, skip_if_sent: false).body.to_s
+    ParticipantMailer.reminder(@registration, skip_if_sent: false).body.to_s
   end
 
   test "the confirmation is sent without a custom text on the event" do
@@ -52,7 +52,7 @@ class RegistrationMailsTest < ActionMailer::TestCase
   test "the reminder is skipped for a registration that already got one" do
     @registration.update!(reminder_message_sent_at: Time.zone.now)
 
-    mail = Admin::Mailers::EventsMailer.reminder_message(@registration)
+    mail = ParticipantMailer.reminder(@registration)
 
     assert_equal "", mail.body.to_s
   end
