@@ -13,7 +13,7 @@ module Admin
         mail(
           reply_to: @event.email_from || "schulung@ub.uni-paderborn.de",
           to: @registration.email,
-          subject: "[UB Paderborn] Erinnerung zu Ihrer Schulungsveranstaltung"
+          subject: participant_subject("Erinnerung")
         )
       end
 
@@ -29,7 +29,7 @@ module Admin
         mail(
           reply_to: @event.email_from || "schulung@ub.uni-paderborn.de",
           to: @registration.email,
-          subject: "[UB Paderborn] Änderung eines Schulungstermins"
+          subject: participant_subject("Terminänderung")
         )
       end
 

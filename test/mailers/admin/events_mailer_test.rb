@@ -24,7 +24,7 @@ class Admin::EventsMailerTest < ActionMailer::TestCase
     assert_equal ["max@example.com"], mail.to
     assert_equal [TEAM], mail.from
     assert_equal [TEAM], mail.reply_to
-    assert_equal "[UB Paderborn] Erinnerung zu Ihrer Schulungsveranstaltung", mail.subject
+    assert_equal "[UB Paderborn] Erinnerung: Literaturrecherche", mail.subject
 
     body = mail.body.to_s
 
@@ -93,7 +93,7 @@ class Admin::EventsMailerTest < ActionMailer::TestCase
 
     assert_equal ["max@example.com"], mail.to
     assert_equal [TEAM], mail.reply_to
-    assert_equal "[UB Paderborn] Änderung eines Schulungstermins", mail.subject
+    assert_equal "[UB Paderborn] Terminänderung: Literaturrecherche", mail.subject
 
     body = mail.body.to_s
 
@@ -125,7 +125,7 @@ class Admin::EventsMailerTest < ActionMailer::TestCase
     mail = Admin::Mailers::EventsMailer.changed_notification(@event, @registration)
 
     assert_equal ["max@example.com"], mail.to
-    assert_equal "[UB Paderborn] Änderung eines Schulungstermins", mail.subject
+    assert_equal "[UB Paderborn] Terminänderung: Literaturrecherche", mail.subject
 
     body = mail.body.to_s
 

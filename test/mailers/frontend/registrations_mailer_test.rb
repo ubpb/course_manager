@@ -20,7 +20,7 @@ class Frontend::RegistrationsMailerTest < ActionMailer::TestCase
     assert_equal ["max@example.com"], mail.to
     assert_equal [TEAM], mail.from
     assert_equal [TEAM], mail.reply_to
-    assert_equal "[UB Paderborn] Bestätigung Ihrer Schulungsanmeldung", mail.subject
+    assert_equal "[UB Paderborn] Anmeldebestätigung: Literaturrecherche", mail.subject
   end
 
   test "the confirmation answers to the address kept on the event" do
@@ -80,7 +80,7 @@ class Frontend::RegistrationsMailerTest < ActionMailer::TestCase
 
     assert_equal ["erika@example.com"], mail.to
     assert_equal [TEAM], mail.reply_to
-    assert_equal "[UB Paderborn] Ihre Abmeldung von einer Schulung", mail.subject
+    assert_equal "[UB Paderborn] Abmeldebestätigung: Literaturrecherche", mail.subject
 
     body = mail.body.to_s
 
