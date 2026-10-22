@@ -46,7 +46,7 @@ class Admin::ManualRegistrationTest < ActionDispatch::IntegrationTest
     end
 
     registration = @event.registrations.last
-    body = Frontend::Mailers::RegistrationsMailer.confirmation(registration).body.to_s
+    body = ParticipantMailer.confirmation(registration).body.to_s
 
     assert_includes body, UNLINKED_CANCEL_INFO
     assert_not_includes body, "/account"

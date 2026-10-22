@@ -1,4 +1,4 @@
-<%= render "application/mailers/salutation" -%>
+<%= render "salutation" -%>
 
 Sie haben sich für die Schulungsveranstaltung "<%= @offer.title %>" angemeldet. Wir möchten Sie hiermit darüber informieren, dass sich einige Daten der Veranstaltung geändert haben.<% if @registration.account_linked? %> Weitere Details finden Sie in Ihrem Benutzerkonto im Schulungsportal unter <%= account_registration_url(@registration) %><% end %>
 
@@ -12,7 +12,7 @@ Datum/Uhrzeit
 Bisher: <%= l(@event.date_and_time_was) %>
 NEU: <%= l(@event.date_and_time) %>
 
-<%= render "application/mailers/cancel_info" -%>
+<%= render "cancel_info" -%>
 <% end -%>
 <% if @event.online_changed? -%>
 
@@ -22,7 +22,7 @@ Bisher: <%= @event.online_was ? "online" : "vor Ort" %>
 NEU: <%= @event.online? ? "online" : "vor Ort" %>
 <%# Says where the event happens now, so a switched form never needs the
     Treffpunkt or Zugangslink block on top of it. -%>
-<%= render "application/mailers/location_info" -%>
+<%= render "location_info" -%>
 <% end -%>
 <% if @event.location_changed? && !@event.online? && !@event.online_changed? -%>
 
@@ -39,4 +39,4 @@ Bisher: <%= @event.online_url_was.presence || "nicht angegeben" %>
 NEU: <%= @event.online_url.presence || "nicht angegeben" %>
 <% end -%>
 
-<%= render "application/mailers/footer" -%>
+<%= render "footer" -%>

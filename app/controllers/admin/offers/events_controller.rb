@@ -82,7 +82,7 @@ module Admin
             @event.registrations.each do |registration|
               # Must be send with #deliver and not #deliver_later, because the event is saved afterwards
               # ans we need the changes to be present in the email
-              Admin::Mailers::EventsMailer.changed_notification(@event, registration).deliver
+              ParticipantMailer.change_notice(@event, registration).deliver
             end
           end
 
@@ -125,13 +125,13 @@ module Admin
       # is saved, so no change notice is sent either.
       def preview_confirmation
         render_mail_preview("Vorschau: E-Mail Anmeldebestätigung") do |registration|
-          Frontend::Mailers::RegistrationsMailer.confirmation(registration)
+          ParticipantMailer.confirmation(registration)
         end
       end
 
       def preview_reminder
         render_mail_preview("Vorschau: Erinnerungsmail") do |registration|
-          Admin::Mailers::EventsMailer.reminder_message(registration, skip_if_sent: false)
+          ParticipantMailer.reminder(registration, skip_if_sent: false)
         end
       end
 

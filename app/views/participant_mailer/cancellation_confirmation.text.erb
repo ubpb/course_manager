@@ -1,5 +1,5 @@
-<%= render "application/mailers/salutation", full_name: @full_name -%>
+<%= render "salutation", full_name: @full_name -%>
 
 hiermit bestätigen wir Ihre Abmeldung von unserer Schulungsveranstaltung "<%= @offer.title %>" am <%= l(@event.date_and_time.to_date) %>.
 
-<%= render "application/mailers/footer" -%>
+<%= render "footer" -%>

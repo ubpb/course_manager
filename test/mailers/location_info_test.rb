@@ -22,8 +22,8 @@ class LocationInfoTest < ActionMailer::TestCase
   # templates, so every variant is asserted against both bodies.
   def bodies
     [
-      Frontend::Mailers::RegistrationsMailer.confirmation(@registration).body.to_s,
-      Admin::Mailers::EventsMailer.reminder_message(@registration, skip_if_sent: false).body.to_s
+      ParticipantMailer.confirmation(@registration).body.to_s,
+      ParticipantMailer.reminder(@registration, skip_if_sent: false).body.to_s
     ]
   end
 
@@ -112,7 +112,7 @@ class LocationInfoTest < ActionMailer::TestCase
   test "the custom confirmation text follows an omitted location without a gap" do
     @event.update!(online: false, location: nil, participant_notes: "Bitte ###NAME### mitbringen.")
 
-    body = Frontend::Mailers::RegistrationsMailer.confirmation(@registration).body.to_s
+    body = ParticipantMailer.confirmation(@registration).body.to_s
 
     assert_includes body, "Die Veranstaltung beginnt um 10:00 Uhr.\n\nBitte Max Mustermann mitbringen.\n\nSollten Sie den Termin"
     assert_not_includes body, "\n\n\n"

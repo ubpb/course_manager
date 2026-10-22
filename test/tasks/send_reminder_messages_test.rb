@@ -41,14 +41,14 @@ class SendReminderMessagesTest < ActiveSupport::TestCase
   # so there is nothing for Minitest's stub to alias -- define the singleton for
   # the duration of the block instead.
   def with_failing_delivery(&block)
-    Admin::Mailers::EventsMailer.define_singleton_method(:reminder_message) do |registration, **_options|
+    ParticipantMailer.define_singleton_method(:reminder) do |registration, **_options|
       block&.call(registration)
       raise "Mailserver nicht erreichbar"
     end
 
     capture_io { run_task }.last
   ensure
-    Admin::Mailers::EventsMailer.singleton_class.send(:remove_method, :reminder_message)
+    ParticipantMailer.singleton_class.send(:remove_method, :reminder)
   end
 
   test "every participant of an upcoming event is reminded" do

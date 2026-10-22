@@ -235,3 +235,9 @@ Frontend-Login per `post session_path`, Admin per `post admin_session_path`.
 - **Markdown** (2026-10-22): „Hinweise für Teilnehmende“ sind Markdown. Die Detailseite rendert sie mit
   `render_markdown(…, hardbreaks: true)` (einfache Zeilenumbrüche bleiben, Roh-HTML wird verworfen);
   die Mails bleiben Plaintext und enthalten den Markdown-Quelltext unverändert. Hilfetext empfiehlt nackte URLs.
+- **Mailer-Umbau** (2026-10-22): Die Mailer sind nach Empfänger statt nach Auslöser geordnet.
+  `ParticipantMailer` (`confirmation`, `cancellation_confirmation`, `reminder`, `change_notice`,
+  `staff_message`, `certificate`) und `TeamMailer` (`new_registration`, `cancelled_registration`) im
+  Root-Namespace ersetzen `Frontend::Mailers::RegistrationsMailer`, `Admin::Mailers::EventsMailer` und
+  `Admin::Mailers::RegistrationsMailer`. Templates und Partials liegen in `app/views/participant_mailer/`
+  bzw. `team_mailer/` (oben genannte Pfade unter `application/mailers/` sind damit veraltet).

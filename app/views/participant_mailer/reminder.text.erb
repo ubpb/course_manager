@@ -1,0 +1,12 @@
+<%= render "salutation" -%>
+
+wir möchten Sie an Ihre Anmeldung zu unserer Schulungsveranstaltung "<%= @offer.title %>" erinnern.
+
+Termin: <%= l(@event.date_and_time.to_date) %>
+Uhrzeit: <%= l(@event.date_and_time.to_time, format: "%H:%M Uhr") %>
+<%= render "location_info" -%>
+<%= render "participant_notes" -%>
+
+<%= render "cancel_info" -%>
+
+<%= render "footer" -%>

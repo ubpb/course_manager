@@ -25,7 +25,7 @@ namespace :app do
 
           # The claim above has taken the place of the mailer's own guard, which
           # would now see the timestamp and skip the delivery.
-          Admin::Mailers::EventsMailer.reminder_message(registration, skip_if_sent: false).deliver
+          ParticipantMailer.reminder(registration, skip_if_sent: false).deliver
         rescue StandardError => e
           # Release our own claim -- and only ours, so a reminder someone sent
           # from the admin in the meantime is left alone -- to have the next run

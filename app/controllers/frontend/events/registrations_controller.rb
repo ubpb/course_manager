@@ -44,9 +44,9 @@ module Frontend
 
         if @registration.save(context: :user_registration)
           # Send confirmation to user
-          Frontend::Mailers::RegistrationsMailer.confirmation(@registration).deliver_later
+          ParticipantMailer.confirmation(@registration).deliver_later
           # Send notification to Schulungs-Team
-          Frontend::Mailers::RegistrationsMailer.notification(@registration).deliver_later
+          TeamMailer.new_registration(@registration).deliver_later
 
           redirect_to frontend_offer_path(@event.offer), notice: "Anmeldung erfolgreich. Wir haben Ihnen eine Bestätigung per E-Mail gesendet."
         else
