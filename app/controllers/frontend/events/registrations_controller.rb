@@ -77,13 +77,8 @@ module Frontend
       end
 
       def registration_params
-        params.require(:registration).permit(
-          :first_name,
-          :last_name,
-          :email,
-          :field_of_interest,
-          :user_notes,
-          :gdrp_consent
+        params.expect(
+          registration: [:first_name, :last_name, :email, :field_of_interest, :user_notes, :gdrp_consent]
         )
       end
 

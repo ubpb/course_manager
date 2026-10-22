@@ -46,10 +46,7 @@ module Admin
         private
 
         def certification_params
-          params.require(:certification).permit(
-            :learning_results,
-            :signature
-          )
+          params.expect(certification: [:learning_results, :signature])
         end
 
       end
