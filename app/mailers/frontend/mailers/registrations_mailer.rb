@@ -8,7 +8,7 @@ module Frontend
         mail(
           reply_to: @event.email_from || "schulung@ub.uni-paderborn.de",
           to: @registration.email,
-          subject: "[UB Paderborn] Ihre Schulungsanmeldung"
+          subject: "[UB Paderborn] Bestätigung Ihrer Schulungsanmeldung"
         )
       end
 
