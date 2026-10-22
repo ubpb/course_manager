@@ -24,7 +24,7 @@ class Admin::EventsMailerTest < ActionMailer::TestCase
     assert_equal ["max@example.com"], mail.to
     assert_equal [TEAM], mail.from
     assert_equal [TEAM], mail.reply_to
-    assert_equal "[UB Paderborn] Informationen zu Ihrer Schulungsveranstaltung", mail.subject
+    assert_equal "[UB Paderborn] Erinnerung zu Ihrer Schulungsveranstaltung", mail.subject
 
     body = mail.body.to_s
 

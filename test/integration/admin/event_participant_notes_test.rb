@@ -87,7 +87,7 @@ class Admin::EventParticipantNotesTest < ActionDispatch::IntegrationTest
     preview(:reminder, participant_notes: "Bitte ###NAME### mitbringen.")
 
     assert_response :success
-    assert_includes response.body, "[UB Paderborn] Informationen zu Ihrer Schulungsveranstaltung"
+    assert_includes response.body, "[UB Paderborn] Erinnerung zu Ihrer Schulungsveranstaltung"
     assert_includes response.body, "wir möchten Sie an Ihre Anmeldung"
     assert_includes response.body, "Bitte Max Mustermann mitbringen."
   end
