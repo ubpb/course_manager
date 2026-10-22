@@ -61,7 +61,7 @@ class Admin::RegistrationsMailerTest < ActionMailer::TestCase
 
     assert_equal ["max@example.com"], mail.to
     assert_equal [TEAM], mail.reply_to
-    assert_equal "[UB Paderborn] Ihre Teilnahmebescheinigung", mail.subject
+    assert_equal "[UB Paderborn] Teilnahmebescheinigung: Literaturrecherche", mail.subject
 
     attachment = mail.attachments[CERTIFICATE_FILENAME]
 

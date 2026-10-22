@@ -28,7 +28,7 @@ module Admin
         mail(
           reply_to: @event.email_from || "schulung@ub.uni-paderborn.de",
           to: @registration.email,
-          subject: "[UB Paderborn] Ihre Teilnahmebescheinigung"
+          subject: participant_subject("Teilnahmebescheinigung")
         )
       end
 
