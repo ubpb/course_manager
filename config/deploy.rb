@@ -1,6 +1,6 @@
 lock "~> 3.11"
 
-set :application, "catalog"
+set :application, "course_manager"
 set :repo_url, "git@github.com:ubpb/course_manager.git"
 set :branch, "master"
 set :log_level, :debug
