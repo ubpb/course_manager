@@ -19,18 +19,18 @@ class RecurringTasksTest < ActiveSupport::TestCase
     assert_equal "SendReminderMessagesJob", task.class_name
 
     travel_to Time.zone.parse("2026-10-22 12:00") do
-      assert_equal Time.zone.parse("2026-10-23 07:00"), task.next_time
+      assert_equal Time.zone.parse("2026-10-23 06:00"), task.next_time
     end
   end
 
-  test "personal data is cleaned up every night" do
+  test "personal data is cleaned up every morning" do
     task = production_task(:dsgvo_cleanup)
 
     assert_predicate task, :valid?, task.errors.full_messages.to_sentence
     assert_equal "DsgvoCleanupJob", task.class_name
 
     travel_to Time.zone.parse("2026-10-22 12:00") do
-      assert_equal Time.zone.parse("2026-10-23 03:00"), task.next_time
+      assert_equal Time.zone.parse("2026-10-23 05:00"), task.next_time
     end
   end
 
@@ -40,7 +40,7 @@ class RecurringTasksTest < ActiveSupport::TestCase
     task = production_task(:send_reminder_messages)
 
     travel_to Time.zone.parse("2026-10-24 12:00") do
-      assert_equal Time.zone.parse("2026-10-25 07:00"), task.next_time
+      assert_equal Time.zone.parse("2026-10-25 06:00"), task.next_time
       assert_equal "+01:00", task.next_time.in_time_zone.formatted_offset
     end
   end
