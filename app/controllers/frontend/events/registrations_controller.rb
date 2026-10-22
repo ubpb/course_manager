@@ -2,6 +2,8 @@ module Frontend
   module Events
     class RegistrationsController < ApplicationController
 
+      ALREADY_REGISTERED = "Sie sind bereits für diesen Termin angemeldet.".freeze
+
       before_action :authenticate_user!
       before_action :prepare_event_context
       before_action -> { add_breadcrumb "Anmeldung", frontend_event_registrations_path(@event) }
@@ -61,6 +63,11 @@ module Frontend
             end
           end
         end
+      rescue ActiveRecord::RecordNotUnique
+        # Another request registered the same account a moment earlier (a double
+        # click, two tabs): the checks passed for both, the unique index on
+        # (event_id, ils_primary_id) stopped this one.
+        redirect_to frontend_offer_path(@event.offer), alert: ALREADY_REGISTERED
       end
 
       private
@@ -90,7 +97,7 @@ module Frontend
           elsif @event.registration_closed?
             "Die Anmeldung ist geschlossen"
           elsif @event.registrations.exists?(ils_primary_id: current_user.ils_primary_id)
-            "Sie sind bereits für diesen Termin angemeldet."
+            ALREADY_REGISTERED
           end
 
         redirect_to frontend_offer_path(@event.offer), alert: alert if alert
