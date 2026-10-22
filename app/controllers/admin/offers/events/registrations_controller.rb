@@ -4,6 +4,7 @@ module Admin
       class RegistrationsController < ApplicationController
 
         before_action :prepare_offer_event_registration_context
+        before_action -> { add_breadcrumb "Neuer Teilnehmer" }, only: [:new, :create]
 
         def index
           @registrations = @event.registrations.order(last_name: :asc, first_name: :asc)

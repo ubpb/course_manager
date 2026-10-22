@@ -1,4 +1,4 @@
-- return_path = (nav_scope == "events") ? admin_events_path(anchor: dom_id(@event), nav_scope: nil) : admin_offer_events_path(anchor: dom_id(@event), nav_scope: nil)
+- return_path = event_list_path
 
 = simple_form_for @certification, url: admin_offer_event_certification_path(@offer, @event, @certification) do |form|
   .card.card-shadowed

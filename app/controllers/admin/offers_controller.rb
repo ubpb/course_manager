@@ -4,6 +4,9 @@ module Admin
     include Filterable
 
     before_action :prepare_offer_context
+    before_action -> { @offer_page = true }, only: [:edit, :update]
+    before_action -> { add_breadcrumb "Angebotsdaten" }, only: [:edit, :update]
+    before_action -> { add_breadcrumb "Neues Angebot" }, only: [:new, :create]
     before_action -> { persist_filter_params(:offers) }, only: :index
 
     define_filter :offers do

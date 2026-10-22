@@ -53,17 +53,17 @@
               button.btn.btn-outline-primary.btn-sm.dropdown-toggle(type="button" data-bs-toggle="dropdown")
                 i.fas.fa-cog
               ul.dropdown-menu.dropdown-menu-end
-                li = link_to edit_admin_offer_event_path(event.offer, event, nav_scope: "events"), class: "dropdown-item" do
+                li = link_to edit_admin_offer_event_path(event.offer, event), class: "dropdown-item" do
                   i.fa-solid.fa-edit.me-2
                   = "Bearbeiten"
                 hr.dropdown-divider
-                li = link_to admin_offer_event_registrations_path(event.offer, event, nav_scope: "events"), class: "dropdown-item" do
+                li = link_to admin_offer_event_registrations_path(event.offer, event), class: "dropdown-item" do
                   i.fa-solid.fa-users.me-2
                   = "Teilnehmer"
-                li = link_to admin_offer_event_report_path(event.offer, event, nav_scope: "events"), class: "dropdown-item" do
+                li = link_to admin_offer_event_report_path(event.offer, event), class: "dropdown-item" do
                   i.fa-solid.fa-chart-line.me-2
                   = "Statistik"
-                li = link_to admin_offer_event_certification_path(event.offer, event, nav_scope: "events"), class: "dropdown-item" do
+                li = link_to admin_offer_event_certification_path(event.offer, event), class: "dropdown-item" do
                   i.fa-solid.fa-certificate.me-2
                   = "Zertifizierung"
 

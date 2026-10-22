@@ -2,7 +2,10 @@ module Admin
   module Offers
     class EventsController < ApplicationController
 
-      before_action :prepare_offer_event_context
+      before_action -> { prepare_offer_event_context(offer_page: true) }, only: [:index, :bulk_process, :bulk_move]
+      before_action :prepare_offer_event_context, except: [:index, :bulk_process, :bulk_move]
+      before_action -> { add_breadcrumb "Termindaten" }, only: [:edit, :update]
+      before_action -> { add_breadcrumb "Neuer Termin" }, only: [:new, :create]
 
       def index
         @upcoming_events = @offer.events.upcoming.order(date_and_time: :asc)
@@ -88,12 +91,7 @@ module Admin
         @event.destroy
 
         flash[:notice] = t("admin.application.form.destroy_success")
-
-        if nav_scope == "events"
-          redirect_to admin_events_path(nav_scope: nil)
-        else
-          redirect_to admin_offer_events_path(@offer)
-        end
+        redirect_to event_list_path
       end
 
       def duplicate

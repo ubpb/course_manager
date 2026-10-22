@@ -2,7 +2,7 @@
   .card-header.d-flex.align-items-center.gap-2
     h5.card-title.mb-0 = "Termine für '#{@offer.title}'"
     .ms-auto
-    = link_to new_admin_offer_event_path, class: "btn btn-primary btn-sm" do
+    = link_to new_admin_offer_event_path(@offer, nav_scope: "offer"), class: "btn btn-primary btn-sm" do
       i.fa-solid.fa-plus.me-2
       = "Neuen Termin anlegen"
     = link_to admin_offers_path(anchor: dom_id(@offer)), class: "btn btn-link btn-sm" do
