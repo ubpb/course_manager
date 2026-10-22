@@ -1,2 +1,2 @@
 inherit_gem:
-  rubocop-ubpb: rubocop.yml
+  rubocop-ubpb: rails.yml
