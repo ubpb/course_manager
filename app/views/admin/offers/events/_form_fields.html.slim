@@ -21,33 +21,27 @@ hr.mt-1.mb-3
     = form.input :registration_required, as: :boolean
     = form.input :max_no_of_participants
 
+= form.input :participant_notes, as: :text, input_html: { rows: 8 }
+
 h5.mt-4.mb-0 Administrative Angaben
 hr.mt-1.mb-3
-ul.nav.nav-tabs.mb-3
-  li.nav-item
-    button#confirmation-message-tab.nav-link.active(data-bs-toggle="tab" data-bs-target="#confirmation-message-pane" type="button") = "E-Mail Anmeldebestätigung"
-  li.nav-item
-    button#confirmation-message-preview-tab.nav-link(data-bs-toggle="tab" data-bs-target="#confirmation-message-preview-pane" type="button") = "Vorschau"
+= form.input :email_from
 
-.tab-content
-  #confirmation-message-pane.tab-pane.fade.show.active
-    = form.input :participant_notes, as: :text, input_html: { rows: 8 }, label: false
-
-    = form.label :email_from
-    = form.input :email_from, label: false
-  #confirmation-message-preview-pane.tab-pane.fade.show
-    - if event.persisted?
-      = turbo_frame_tag "confirmation-message-preview", src: preview_confirmation_message_admin_offer_event_path(offer, event)
-    - else
-      = "Bitte speichern Sie die Veranstaltung, um eine Vorschau der E-Mail zu sehen."
-
-/javascript:
-  const previewTab = document.querySelector("#confirmation-message-preview-tab")
-  previewTab.addEventListener("show.bs.tab", event => {
-    const previewFrame = document.querySelector("#confirmation-message-preview")
-    previewFrame.reload()
-  })
-
-
-
-
+/ The previews take what the form currently holds, saved or not. They are
+/ plain buttons, not submit buttons, so Enter in a text field still saves.
+#mail-preview-modal
+.d-flex.flex-wrap.gap-2(data-controller="mail-preview")
+  button.btn.btn-outline-secondary(
+    type="button"
+    data-action="mail-preview#open"
+    data-mail-preview-url-param=preview_confirmation_admin_offer_events_path(offer)
+  )
+    i.fa-regular.fa-eye.fa-fw.me-1
+    = "Vorschau Anmeldebestätigung"
+  button.btn.btn-outline-secondary(
+    type="button"
+    data-action="mail-preview#open"
+    data-mail-preview-url-param=preview_reminder_admin_offer_events_path(offer)
+  )
+    i.fa-regular.fa-eye.fa-fw.me-1
+    = "Vorschau Erinnerungsmail"

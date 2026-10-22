@@ -120,12 +120,39 @@ module Admin
         redirect_to edit_admin_offer_event_path(@offer, event)
       end
 
-      def preview_confirmation_message
-        event = @offer.events.find(params[:id])
+      # The previews show the mails as they would go out with what the form
+      # currently holds -- of a new event as well as of an existing one. Nothing
+      # is saved, so no change notice is sent either.
+      def preview_confirmation
+        render_mail_preview("Vorschau: E-Mail Anmeldebestätigung") do |registration|
+          Frontend::Mailers::RegistrationsMailer.confirmation(registration)
+        end
+      end
 
-        # Previews the mail most participants get: the one for a registration
-        # made from an account. Its link to the detail page needs an id.
-        registration = Registration.new(
+      def preview_reminder
+        render_mail_preview("Vorschau: Erinnerungsmail") do |registration|
+          Admin::Mailers::EventsMailer.reminder_message(registration, skip_if_sent: false)
+        end
+      end
+
+      private
+
+      # The mail texts need a date, so without one there is only a hint.
+      def render_mail_preview(title)
+        event = @offer.events.build(event_params)
+        mail = yield(preview_registration(event)) if event.date_and_time.present?
+
+        render turbo_stream: turbo_stream.replace(
+          "mail-preview-modal",
+          partial: "mail_preview_modal",
+          locals: {title: title, mail: mail}
+        )
+      end
+
+      # The mails most participants get: those for a registration made from an
+      # account. Its link to the detail page needs an id.
+      def preview_registration(event)
+        Registration.new(
           id: 0,
           ils_primary_id: "preview",
           event: event,
@@ -133,12 +160,7 @@ module Admin
           last_name: "Mustermann",
           email: "schulung@ub.uni-paderborn.de"
         )
-
-        mail = Frontend::Mailers::RegistrationsMailer.confirmation(registration)
-        @preview = mail.body.to_s
       end
-
-      private
 
       def setup_bulk_process_actions(events)
         @bulk_process_actions = []
