@@ -51,6 +51,16 @@ class SendReminderMessagesTest < ActiveSupport::TestCase
     ParticipantMailer.singleton_class.send(:remove_method, :reminder)
   end
 
+  # The scheduler runs the job (config/recurring.yml); the rake task is the way
+  # to run it by hand. Both do the same.
+  test "the job reminds the participants just like the task" do
+    register(@event, "Max", "max@example.com")
+
+    SendReminderMessagesJob.perform_now
+
+    assert_equal ["max@example.com"], recipients
+  end
+
   test "every participant of an upcoming event is reminded" do
     register(@event, "Max", "max@example.com")
     register(@event, "Erika", "erika@example.com")
