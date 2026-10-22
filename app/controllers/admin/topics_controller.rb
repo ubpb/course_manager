@@ -12,7 +12,7 @@ module Admin
     end
 
     def edit
-      @topic = Topic.find(params[:id])
+      @topic = Topic.find(params.expect(:id))
     end
 
     def create
@@ -32,7 +32,7 @@ module Admin
     end
 
     def update
-      @topic = Topic.find(params[:id])
+      @topic = Topic.find(params.expect(:id))
 
       if @topic.update(topic_params)
         redirect_to admin_topics_path
@@ -42,7 +42,7 @@ module Admin
     end
 
     def destroy
-      @topic = Topic.find(params[:id])
+      @topic = Topic.find(params.expect(:id))
       @topic.destroy
 
       respond_to do |format|
@@ -54,7 +54,7 @@ module Admin
     end
 
     def reorder
-      @topic = Topic.find(params[:id])
+      @topic = Topic.find(params.expect(:id))
       @topic.insert_at(params.dig(:topic, :position).to_i)
       head :ok
     end
@@ -62,7 +62,7 @@ module Admin
     private
 
     def topic_params
-      params.require(:topic).permit(:title)
+      params.expect(topic: [:title])
     end
 
   end

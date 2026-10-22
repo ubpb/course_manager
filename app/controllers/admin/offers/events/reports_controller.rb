@@ -61,20 +61,13 @@ module Admin
         private
 
         def report_params
-          params.require(:report).permit(
-            :duration,
-            :number_of_participants,
-            :lecturer_md,
-            :lecturer_gd,
-            :lecturer_hd,
-            :lecturer,
-            :organization_types,
-            :levels,
-            :categories,
-            :presence_types,
-            forms: [],
-            audiences: [],
-            focus: []
+          params.expect(
+            report: [
+              :duration, :number_of_participants,
+              :lecturer_md, :lecturer_gd, :lecturer_hd, :lecturer,
+              :organization_types, :levels, :categories, :presence_types,
+              {forms: [], audiences: [], focus: []}
+            ]
           )
         end
 

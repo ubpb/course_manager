@@ -30,7 +30,7 @@ module Admin
         end
 
         def edit
-          @registration = @event.registrations.find(params[:id])
+          @registration = @event.registrations.find(params.expect(:id))
         end
 
         def create
@@ -66,7 +66,7 @@ module Admin
 
         def download_certificate
           if @event.certification.present?
-            registration = @event.registrations.includes(event: [:offer, :certification]).find(params[:id])
+            registration = @event.registrations.includes(event: [:offer, :certification]).find(params.expect(:id))
 
             send_data(
               Certificate.generate(registration),
@@ -80,7 +80,7 @@ module Admin
         end
 
         def send_certificate
-          registration = @event.registrations.includes(event: [:offer, :certification]).find(params[:id])
+          registration = @event.registrations.includes(event: [:offer, :certification]).find(params.expect(:id))
           send_certificate!(registration)
 
           flash[:success] = "Zertifikat wurde versendet"
@@ -88,7 +88,7 @@ module Admin
         end
 
         def send_reminder_message
-          registration = @event.registrations.includes(event: [:offer]).find(params[:id])
+          registration = @event.registrations.includes(event: [:offer]).find(params.expect(:id))
           send_reminder_message!(registration, skip_if_sent: false)
 
           flash[:success] = "Erinnerungsmail wurde versendet"
@@ -133,7 +133,7 @@ module Admin
                                 .includes(event: [:offer, :certification])
                                 .where(id: params[:registration_ids])
 
-          message_params = params.require(:message).permit(:subject, :body)
+          message_params = params.expect(message: [:subject, :body])
           message = Message.new(message_params)
 
           if message.valid?
@@ -174,8 +174,8 @@ module Admin
         end
 
         def registration_params
-          params.require(:registration).permit(
-            :first_name, :last_name, :email, :field_of_interest, :user_notes, :internal_notes
+          params.expect(
+            registration: [:first_name, :last_name, :email, :field_of_interest, :user_notes, :internal_notes]
           )
         end
 

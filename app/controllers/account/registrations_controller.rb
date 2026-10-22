@@ -89,7 +89,7 @@ module Account
     def find_registration
       Registration.for_ils_user(current_user.ils_primary_id)
                   .includes(event: [:offer, :certification])
-                  .find(params[:id])
+                  .find(params.expect(:id))
     end
 
   end

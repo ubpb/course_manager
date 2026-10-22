@@ -25,7 +25,8 @@ module Admin
           if events.none?
             flash[:alert] = "Bitte mindestens einen Termin auswählen"
           else
-            scope = params[:bulk_process_scope].presence_in(["upcoming", "past"]) || "upcoming"
+            # Optional, defaults to "upcoming" -- params.expect would answer 400 without it.
+            scope = params[:bulk_process_scope].presence_in(["upcoming", "past"]) || "upcoming" # rubocop:disable Rails/StrongParametersExpect
 
             render turbo_stream: turbo_stream.replace(
               "bulk-action-form-#{scope}",
@@ -110,7 +111,7 @@ module Admin
         new_date_and_time = Time.zone.now
         new_date_and_time = new_date_and_time.change(sec: 0, usec: 0)
 
-        event = @offer.events.find(params[:id]).dup
+        event = @offer.events.find(params.expect(:id)).dup
         event.registrations_count = 0
         event.published = false
         event.date_and_time = new_date_and_time
@@ -173,10 +174,12 @@ module Admin
       end
 
       def event_params
-        params.require(:event).permit(
-          :date_and_time, :duration, :location, :participant_notes,
-          :email_from, :online, :online_url, :published, :registration_required,
-          :max_no_of_participants
+        params.expect(
+          event: [
+            :date_and_time, :duration, :location, :participant_notes,
+            :email_from, :online, :online_url, :published, :registration_required,
+            :max_no_of_participants
+          ]
         )
       end
 

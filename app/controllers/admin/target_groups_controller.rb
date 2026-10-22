@@ -12,7 +12,7 @@ module Admin
     end
 
     def edit
-      @target_group = TargetGroup.find(params[:id])
+      @target_group = TargetGroup.find(params.expect(:id))
     end
 
     def create
@@ -32,7 +32,7 @@ module Admin
     end
 
     def update
-      @target_group = TargetGroup.find(params[:id])
+      @target_group = TargetGroup.find(params.expect(:id))
 
       if @target_group.update(target_group_params)
         redirect_to admin_target_groups_path
@@ -42,7 +42,7 @@ module Admin
     end
 
     def destroy
-      @target_group = TargetGroup.find(params[:id])
+      @target_group = TargetGroup.find(params.expect(:id))
       @target_group.destroy
 
       respond_to do |format|
@@ -54,7 +54,7 @@ module Admin
     end
 
     def reorder
-      @target_group = TargetGroup.find(params[:id])
+      @target_group = TargetGroup.find(params.expect(:id))
       @target_group.insert_at(params.dig(:target_group, :position).to_i)
       head :ok
     end
@@ -62,7 +62,7 @@ module Admin
     private
 
     def target_group_params
-      params.require(:target_group).permit(:title)
+      params.expect(target_group: [:title])
     end
 
   end
