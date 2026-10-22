@@ -49,7 +49,7 @@ class User
   end
 
   def full_name
-    [first_name, last_name].map(&:presence).compact.join(" ")
+    [first_name, last_name].filter_map(&:presence).join(" ")
   end
 
 end

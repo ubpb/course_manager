@@ -32,7 +32,7 @@ module Admin
     end
 
     def index
-      @offers = Offer.order("title")
+      @offers = Offer.order(:title)
 
       @filter = create_filter(:offers)
       @offers = @filter.filter(@offers)

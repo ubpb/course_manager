@@ -19,11 +19,11 @@ class Registration < ApplicationRecord
   validates :ils_primary_id, uniqueness: {scope: :event_id}, allow_nil: true, on: :user_registration
 
   def full_name
-    [first_name, last_name].map(&:presence).compact.join(" ")
+    [first_name, last_name].filter_map(&:presence).join(" ")
   end
 
   def full_name_reversed
-    [last_name, first_name].map(&:presence).compact.join(", ")
+    [last_name, first_name].filter_map(&:presence).join(", ")
   end
 
   def anonymized?

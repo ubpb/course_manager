@@ -37,7 +37,8 @@ namespace :app do
       local_db_config = local_db_config.merge("host" => local_db_config["host"] || "localhost")
 
       # Setup variables
-      dump_file_name   = "#{fetch(:application)}-#{Time.now.strftime("%Y%m%d-%H%M%S")}.dump"
+      # Capistrano runs without Rails, so there is no Time.zone here.
+      dump_file_name   = "#{fetch(:application)}-#{Time.now.strftime("%Y%m%d-%H%M%S")}.dump" # rubocop:disable Rails/TimeZone
       remote_dump_file = "/tmp/#{dump_file_name}"
       local_dump_dir   = Dir.mktmpdir
       local_dump_file  = File.join(local_dump_dir, dump_file_name)

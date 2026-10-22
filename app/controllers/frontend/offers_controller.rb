@@ -35,11 +35,11 @@ module Frontend
       end
 
       filter_by :target_groups, :integer do |arel, target_group_ids|
-        arel.joins(:target_groups).where("target_groups.id IN (?)", target_group_ids).distinct
+        arel.joins(:target_groups).where(target_groups: {id: target_group_ids}).distinct
       end
 
       filter_by :topics, :integer do |arel, topic_ids|
-        arel.joins(:topics).where("topics.id IN (?)", topic_ids).distinct
+        arel.joins(:topics).where(topics: {id: topic_ids}).distinct
       end
     end
 

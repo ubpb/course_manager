@@ -173,8 +173,8 @@ module Filterable
     # value actually casts to something. Keeps unset values and unrelated keys
     # out of the (cookie-backed) session.
     def storable_params(raw_params)
-      raw_params.slice(*filters.keys.map(&:to_s)).select do |name, value|
-        !filters[name].cast(value).nil?
+      raw_params.slice(*filters.keys.map(&:to_s)).reject do |name, value|
+        filters[name].cast(value).nil?
       end
     end
 
