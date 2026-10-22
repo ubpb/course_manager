@@ -63,7 +63,7 @@ class ApplicationController < ActionController::Base
     return unless request.get? || request.head?
 
     path = return_to_path.to_s
-    return unless path.start_with?("/") && !path.start_with?("//") && !path.include?("\\")
+    return unless path.start_with?("/") && !path.start_with?("//") && path.exclude?("\\")
 
     session[:return_to] = path
   end
@@ -86,7 +86,7 @@ class ApplicationController < ActionController::Base
   def current_locale
     cookie_locale = cookies["#{application_cookie_prefix}_locale"]&.to_sym
 
-    browser_locale = request.env["HTTP_ACCEPT_LANGUAGE"]&.scan(/^[a-z]{2}/)&.first&.to_sym
+    browser_locale = request.env["HTTP_ACCEPT_LANGUAGE"].to_s[/\A[a-z]{2}/]&.to_sym
     browser_locale = :en if browser_locale != I18n.default_locale
 
     I18n.available_locales.find { |l| l == cookie_locale } ||

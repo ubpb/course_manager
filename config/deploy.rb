@@ -9,7 +9,7 @@ append :linked_files, "config/database.yml", "config/master.key", "config/applic
 append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/system"
 
 set :rvm_type, :user
-set :rvm_ruby_version, IO.read(".ruby-version").strip
+set :rvm_ruby_version, File.read(".ruby-version").strip
 
 set :passenger_roles, :web
 

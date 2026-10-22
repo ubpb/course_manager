@@ -7,8 +7,8 @@ class Offer < ApplicationRecord
   self.inheritance_column = nil
 
   # Relations
-  has_and_belongs_to_many :topics, -> { order("position") } # rubocop:disable Rails/HasAndBelongsToMany
-  has_and_belongs_to_many :target_groups, -> { order("position") } # rubocop:disable Rails/HasAndBelongsToMany
+  has_and_belongs_to_many :topics, -> { order(:position) } # rubocop:disable Rails/HasAndBelongsToMany
+  has_and_belongs_to_many :target_groups, -> { order(:position) } # rubocop:disable Rails/HasAndBelongsToMany
   has_many :events, dependent: :destroy
   has_many :upcoming_events, lambda {
     upcoming.order(date_and_time: :asc)

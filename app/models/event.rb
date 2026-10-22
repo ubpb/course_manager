@@ -20,9 +20,9 @@ class Event < ApplicationRecord
   scope :from_non_archived_offers, -> { joins(:offer).where("offers.archived": false) }
   scope :with_report, -> { includes(:report).where.not(reports: {id: nil}) }
   scope :without_report, -> { includes(:report).where(reports: {id: nil}) }
-  scope :upcoming, -> { where("date_and_time >= ?", Time.zone.today.beginning_of_day) }
-  scope :upcoming_and_last_3_months, -> { where("date_and_time >= ?", 3.months.ago) }
-  scope :past, -> { where("date_and_time < ?", Time.zone.today.beginning_of_day) }
+  scope :upcoming, -> { where(date_and_time: Time.zone.today.beginning_of_day..) }
+  scope :upcoming_and_last_3_months, -> { where(date_and_time: 3.months.ago..) }
+  scope :past, -> { where(date_and_time: ...Time.zone.today.beginning_of_day) }
   scope :online, -> { where(online: true) }
 
   # A change is only worth a change notification when the mail has something to

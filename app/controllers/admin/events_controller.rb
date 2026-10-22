@@ -45,11 +45,11 @@ module Admin
       end
 
       filter_by :from_date, :date do |arel, from_date|
-        arel.where("date_and_time >= ?", from_date.beginning_of_day)
+        arel.where(date_and_time: from_date.beginning_of_day..)
       end
 
       filter_by :to_date, :date do |arel, to_date|
-        arel.where("date_and_time <= ?", to_date.end_of_day)
+        arel.where(date_and_time: ..to_date.end_of_day)
       end
     end
 

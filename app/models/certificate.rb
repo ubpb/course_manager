@@ -84,11 +84,8 @@ class Certificate < ApplicationRecord
     end
 
     def filename(registration)
-      [
-        registration.event.date_and_time.to_date.strftime("%Y%m%d"),
-        "teilnahmebescheinigung",
-        registration.last_name.downcase.parameterize
-      ].join("_") + ".pdf"
+      date = registration.event.date_and_time.to_date.strftime("%Y%m%d")
+      "#{date}_teilnahmebescheinigung_#{registration.last_name.downcase.parameterize}.pdf"
     end
 
   end
