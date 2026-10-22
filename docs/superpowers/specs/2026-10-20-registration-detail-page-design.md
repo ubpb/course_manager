@@ -121,7 +121,7 @@ duplizieren — Builder entscheidet.
 
 - `_cancel_info.text.erb` — zwei Varianten nach `@registration.account_linked?`:
   - verknüpft (Vorschlag): „Alle Informationen zu Ihrer Anmeldung finden Sie in Ihrem Benutzerkonto im Schulungs- und Beratungsportal. Sollten Sie den Termin nicht wahrnehmen können, melden Sie sich dort bitte rechtzeitig ab: <account_registration_url(@registration)>“
-  - nicht verknüpft: „Sollten Sie den Termin nicht wahrnehmen können, bitten wir Sie, uns dies rechtzeitig mitzuteilen. Antworten Sie dazu einfach auf diese E-Mail.“
+  - nicht verknüpft: „Sollten Sie den Termin nicht wahrnehmen können, bitten wir Sie, uns dies rechtzeitig mitzuteilen.“
 - Neu `_registration_link.text.erb` — nur bei verknüpft, sonst leer (bringt eigene
   Leerzeile mit, wie `_location_info`): „Alle Informationen zu Ihrer Anmeldung finden Sie in Ihrem Benutzerkonto: <url>“
 - Neu `_confirmation_message.text.erb` — rendert `render_custom_message(@event.confirmation_message, registration: @registration)` mit führender Leerzeile, wenn vorhanden; ersetzt den Inline-Block in `confirmation.text.erb` und wird in `reminder_message.text.erb` wiederverwendet.
@@ -213,7 +213,7 @@ Frontend-Login per `post session_path`, Admin per `post admin_session_path`.
   Kopieren; ohne Link der Hinweis aus der Mail („Die Zugangsdaten erhalten Sie … separaten E-Mail“).
 - **Löschhinweis bei vergangenen Terminen:** „Aus Datenschutzgründen wird Ihre Anmeldung
   10 Tage nach dem Termin gelöscht, also ab dem <Datum>.“, mit Bescheinigung zusätzlich
-  „Bitte laden Sie Ihre Teilnahmebescheinigung bis dahin herunter.“ Frist als
+  „Bitte laden Sie Ihre Teilnahmebescheinigung bei Bedarf bis dahin herunter.“ Frist als
   `Registration::RETENTION_PERIOD`, die auch `app:dsgvo:cleanup` nutzt.
 - **Checkbox** „Anmeldebestätigung senden“ nur bei künftigen Terminen vorausgewählt.
 - **Veraltete Links** (storniert/gelöscht/anonymisiert) und fremde IDs → Redirect zur Übersicht mit Hinweis.

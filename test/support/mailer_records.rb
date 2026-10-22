@@ -5,9 +5,9 @@ module MailerRecords
   EVENT_TIME = "2026-10-15 10:00".freeze
 
   # The cancel hint for a registration without an account, which can only be
-  # cancelled by replying to the mail.
+  # cancelled by telling the team (the footer says to reply to the mail).
   UNLINKED_CANCEL_INFO = "Sollten Sie den Termin nicht wahrnehmen können, bitten wir Sie, " \
-                         "uns dies rechtzeitig mitzuteilen. Antworten Sie dazu einfach auf diese E-Mail.".freeze
+                         "uns dies rechtzeitig mitzuteilen.".freeze
 
   def detail_url(registration)
     "http://example.com/account/anmeldungen/#{registration.id}"
