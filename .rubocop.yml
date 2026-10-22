@@ -11,3 +11,11 @@ AllCops:
     # Generator output, kept as generated.
     - "config/initializers/simple_form*.rb"
     - "db/migrate/**/*"
+
+# Tests deliberately check several aspects of one behaviour at once.
+Minitest/MultipleAssertions:
+  Enabled: false
+
+# The UI is German; flash messages and texts are written in place.
+Rails/I18nLocaleTexts:
+  Enabled: false
