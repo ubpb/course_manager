@@ -44,7 +44,7 @@ class Admin::EventsMailerTest < ActionMailer::TestCase
     body = reminder(skip_if_sent: false).body.to_s
 
     assert_includes body, linked_cancel_info(@registration)
-    assert_not_includes body, "Antworten Sie dazu"
+    assert_not_includes body, UNLINKED_CANCEL_INFO
     assert_not_includes body, "\n\n\n"
   end
 
@@ -174,7 +174,7 @@ class Admin::EventsMailerTest < ActionMailer::TestCase
     body = Admin::Mailers::EventsMailer.changed_notification(@event, @registration).body.to_s
 
     assert_includes body, "Es gab folgende Änderungen:\n\nDatum/Uhrzeit"
-    assert_includes body, "auf diese E-Mail.\n\nTreffpunkt"
+    assert_includes body, "rechtzeitig mitzuteilen.\n\nTreffpunkt"
     assert_includes body, "NEU: Raum 9\n\nSollten Sie Fragen haben"
     assert_not_includes body, "\n\n\n"
   end
@@ -185,7 +185,7 @@ class Admin::EventsMailerTest < ActionMailer::TestCase
     body = Admin::Mailers::EventsMailer.changed_notification(@event, @registration).body.to_s
 
     assert_includes body, "NEU: 01.11.2026, 14:00 Uhr"
-    assert_includes body, "auf diese E-Mail.\n\nVeranstaltungsform"
+    assert_includes body, "rechtzeitig mitzuteilen.\n\nVeranstaltungsform"
     assert_includes body, "NEU: online"
     assert_not_includes body, "\n\n\n"
   end

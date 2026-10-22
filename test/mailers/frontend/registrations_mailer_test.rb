@@ -50,7 +50,7 @@ class Frontend::RegistrationsMailerTest < ActionMailer::TestCase
     body = Frontend::Mailers::RegistrationsMailer.confirmation(registration).body.to_s
 
     assert_includes body, linked_cancel_info(registration)
-    assert_not_includes body, "Antworten Sie dazu"
+    assert_not_includes body, UNLINKED_CANCEL_INFO
     assert_not_includes body, "\n\n\n"
   end
 

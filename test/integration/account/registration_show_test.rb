@@ -177,7 +177,7 @@ class Account::RegistrationShowTest < ActionDispatch::IntegrationTest
     get account_registration_path(@registration)
 
     assert_includes response.body, "Aus Datenschutzgründen wird Ihre Anmeldung 10 Tage nach dem Termin gelöscht, also ab dem 25.10.2026."
-    assert_not_includes response.body, "Teilnahmebescheinigung bis dahin"
+    assert_not_includes response.body, "Bitte laden Sie Ihre Teilnahmebescheinigung"
   end
 
   test "with a certificate the deletion notice asks to download it in time" do
@@ -187,7 +187,7 @@ class Account::RegistrationShowTest < ActionDispatch::IntegrationTest
     log_in
     get account_registration_path(@registration)
 
-    assert_includes response.body, "Bitte laden Sie Ihre Teilnahmebescheinigung bis dahin herunter."
+    assert_includes response.body, "Bitte laden Sie Ihre Teilnahmebescheinigung bei Bedarf bis dahin herunter."
   end
 
   test "an upcoming event has no deletion notice" do
