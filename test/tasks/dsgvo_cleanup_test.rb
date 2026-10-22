@@ -34,6 +34,16 @@ class DsgvoCleanupTest < ActiveSupport::TestCase
     assert_nil registration.ils_primary_id
   end
 
+  # The scheduler runs the job (config/recurring.yml); the rake task is the way
+  # to run it by hand. Both do the same.
+  test "the job anonymizes just like the task" do
+    registration = registration_at(Registration::RETENTION_PERIOD.ago - 1.hour)
+
+    DsgvoCleanupJob.perform_now
+
+    assert_predicate registration.reload, :anonymized?
+  end
+
   test "registrations within the retention period are kept" do
     registration = registration_at(Registration::RETENTION_PERIOD.ago + 1.hour)
 
