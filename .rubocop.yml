@@ -1,2 +1,13 @@
 inherit_gem:
   rubocop-ubpb: rails.yml
+
+# Add to the inherited excludes instead of replacing them.
+inherit_mode:
+  merge:
+    - Exclude
+
+AllCops:
+  Exclude:
+    # Generator output, kept as generated.
+    - "config/initializers/simple_form*.rb"
+    - "db/migrate/**/*"
