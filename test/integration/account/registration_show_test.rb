@@ -18,7 +18,7 @@ class Account::RegistrationShowTest < ActionDispatch::IntegrationTest
                                    max_no_of_participants: 10,
                                    registration_required: true,
                                    published: true,
-                                   confirmation_message: "###ANREDE###, bitte Zotero installieren.")
+                                   participant_notes: "###ANREDE###, bitte Zotero installieren.")
     @registration = create_registration(@event, ils_primary_id: AlmaAuthenticationStub::VALID_USER_ID,
                                                 user_notes: "Komme etwas später",
                                                 internal_notes: "Intern: VIP")
@@ -220,7 +220,7 @@ class Account::RegistrationShowTest < ActionDispatch::IntegrationTest
   end
 
   test "without a custom text there is no notes box" do
-    @event.update!(confirmation_message: nil, location: nil, duration: nil)
+    @event.update!(participant_notes: nil, location: nil, duration: nil)
 
     log_in
     get account_registration_path(@registration)
@@ -232,7 +232,7 @@ class Account::RegistrationShowTest < ActionDispatch::IntegrationTest
   # The text is kept for plain text mails, so the page must not render more of
   # it than the mail would.
   test "the custom text is escaped" do
-    @event.update!(confirmation_message: "<script>alert(1)</script>")
+    @event.update!(participant_notes: "<script>alert(1)</script>")
 
     log_in
     get account_registration_path(@registration)

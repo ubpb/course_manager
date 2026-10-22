@@ -1,0 +1,7 @@
+<%# The notes staff keep on the event for its participants. Renders nothing
+    without them, so the partial brings its own blank line instead of leaving
+    one behind. -%>
+<% if @event.participant_notes.present? -%>
+
+<%= render_custom_message(@event.participant_notes, registration: @registration) %>
+<% end -%>

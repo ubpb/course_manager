@@ -20,7 +20,7 @@ class Admin::EventConfirmationMessageTest < ActionDispatch::IntegrationTest
     get edit_admin_offer_event_path(@offer, @event)
 
     assert_response :success
-    assert_select "textarea[name=?]", "event[confirmation_message]"
+    assert_select "textarea[name=?]", "event[participant_notes]"
   end
 
   # The text no longer goes into the confirmation only, and staff write it
@@ -34,8 +34,8 @@ class Admin::EventConfirmationMessageTest < ActionDispatch::IntegrationTest
 
   test "the confirmation message is saved and shown in the preview" do
     patch admin_offer_event_path(@offer, @event),
-          params: {event: {confirmation_message: "Zugangsdaten folgen für ###NAME###."}}
-    assert_equal "Zugangsdaten folgen für ###NAME###.", @event.reload.confirmation_message
+          params: {event: {participant_notes: "Zugangsdaten folgen für ###NAME###."}}
+    assert_equal "Zugangsdaten folgen für ###NAME###.", @event.reload.participant_notes
 
     get preview_confirmation_message_admin_offer_event_path(@offer, @event)
 

@@ -151,7 +151,7 @@ module Admin
 
       def event_params
         params.require(:event).permit(
-          :date_and_time, :duration, :location, :confirmation_message,
+          :date_and_time, :duration, :location, :participant_notes,
           :email_from, :online, :online_url, :published, :registration_required,
           :max_no_of_participants
         )
