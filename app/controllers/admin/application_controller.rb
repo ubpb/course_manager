@@ -4,7 +4,6 @@ module Admin
     include NavScope
     include ContextHelpers
 
-    before_action -> { add_breadcrumb("Admin", admin_root_path) }
     before_action :authenticate!
 
     layout "admin"

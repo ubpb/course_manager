@@ -1,0 +1,25 @@
+/ Menu bar of the admin area. Every link leaves the offer context.
+- section = admin_menu_section
+nav#admin-navbar.navbar.navbar-expand.navbar-dark.bg-primary.d-print-none(aria-label="Admin-Bereiche")
+  .container
+    ul.navbar-nav
+      li.nav-item
+        = link_to "Termine", admin_events_path(nav_scope: nil),
+                  class: ["nav-link", ("active" if section == :events)],
+                  "aria-current": ("page" if section == :events)
+      li.nav-item
+        = link_to "Angebote", admin_offers_path(nav_scope: nil),
+                  class: ["nav-link", ("active" if section == :offers)],
+                  "aria-current": ("page" if section == :offers)
+      li.nav-item.dropdown
+        a.nav-link.dropdown-toggle(
+          href="#"
+          role="button"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+          class=("active" if section == :master_data)
+          aria-current=("page" if section == :master_data)
+        ) = "Stammdaten"
+        ul.dropdown-menu
+          li = link_to "Zielgruppen", admin_target_groups_path(nav_scope: nil), class: "dropdown-item"
+          li = link_to "Themen", admin_topics_path(nav_scope: nil), class: "dropdown-item"
