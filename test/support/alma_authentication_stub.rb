@@ -2,8 +2,8 @@
 # be driven from a test without talking to the API.
 module AlmaAuthenticationStub
 
-  VALID_USER_ID = "12345"
-  VALID_PASSWORD = "secret"
+  VALID_USER_ID = "12345".freeze
+  VALID_PASSWORD = "secret".freeze
 
   def authenticate_against_alma(user_id, password)
     user_id == VALID_USER_ID && password == VALID_PASSWORD

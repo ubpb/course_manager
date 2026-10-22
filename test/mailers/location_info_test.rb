@@ -8,9 +8,9 @@ class LocationInfoTest < ActionMailer::TestCase
 
   include MailerRecords
 
-  ONLINE_INTRO = "Die Veranstaltung findet online statt."
-  NO_LINK_YET = "Zugangsdaten erhalten Sie vor der Veranstaltung in einer separaten E-Mail."
-  MEETING_POINT = "Ort / Treffpunkt: \"Raum 1.2\"."
+  ONLINE_INTRO = "Die Veranstaltung findet online statt.".freeze
+  NO_LINK_YET = "Zugangsdaten erhalten Sie vor der Veranstaltung in einer separaten E-Mail.".freeze
+  MEETING_POINT = "Ort / Treffpunkt: \"Raum 1.2\".".freeze
 
   setup do
     @offer = create_offer

@@ -19,3 +19,8 @@ Minitest/MultipleAssertions:
 # The UI is German; flash messages and texts are written in place.
 Rails/I18nLocaleTexts:
   Enabled: false
+
+# Tests set up states such as anonymized registrations directly.
+Rails/SkipsModelValidations:
+  Exclude:
+    - "test/**/*"
