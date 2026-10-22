@@ -45,6 +45,9 @@ module Admin
       offers = Offer.where(id: params[:bulk_process_ids])
       action = params[:bulk_process_action]
 
+      # The redirect below follows, so no flash.now (the cop misreads the case);
+      # update_all on purpose for a bulk change of a plain flag.
+      # rubocop:disable-next Rails/ActionControllerFlashBeforeRender, Rails/SkipsModelValidations
       case action
       when "archive"
         offers.update_all(archived: true)

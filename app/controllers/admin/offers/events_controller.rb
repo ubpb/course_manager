@@ -14,6 +14,10 @@ module Admin
       def bulk_process
         events = @offer.events.where(id: params[:bulk_process_ids])
 
+        # Every branch ends in the redirect below, so the flash messages must not be
+        # flash.now (the cop misreads the case branches). update_all on purpose: one
+        # old, invalid record must not stop a bulk change.
+        # rubocop:disable-next Rails/ActionControllerFlashBeforeRender, Rails/SkipsModelValidations
         case params[:bulk_process_action]
         when "publish"
           events.update_all(published: true)
@@ -22,24 +26,9 @@ module Admin
           events.update_all(published: false)
           flash[:success] = "Veröffentlichung von Termin(en) wurde zurückgezogen"
         when "move_to_offer"
-          if events.none?
-            flash[:alert] = "Bitte mindestens einen Termin auswählen"
-          else
-            # Optional, defaults to "upcoming" -- params.expect would answer 400 without it.
-            scope = params[:bulk_process_scope].presence_in(["upcoming", "past"]) || "upcoming" # rubocop:disable Rails/StrongParametersExpect
+          return render_move_to_offer_form(events) if events.any?
 
-            render turbo_stream: turbo_stream.replace(
-              "bulk-action-form-#{scope}",
-              partial: "admin/events/bulk_action_move_to_offer",
-              locals: {
-                events: events.includes(:offer),
-                offers: Offer.courses.where.not(id: @offer.id).order(:title),
-                url: bulk_move_admin_offer_events_path(@offer),
-                container_id: "bulk-action-form-#{scope}"
-              }
-            )
-            return
-          end
+          flash[:alert] = "Bitte mindestens einen Termin auswählen"
         end
 
         redirect_to admin_offer_events_path(@offer)
@@ -52,7 +41,7 @@ module Admin
         if offer.nil? || events.none?
           flash[:alert] = "Bitte Termine und Ziel-Angebot auswählen"
         else
-          events.update_all(offer_id: offer.id)
+          events.update_all(offer_id: offer.id) # rubocop:disable Rails/SkipsModelValidations -- see bulk_process
           flash[:success] = "Termin(e) wurde(n) nach \"#{offer.title}\" verschoben"
         end
 
@@ -138,6 +127,24 @@ module Admin
       end
 
       private
+
+      # The dialog for picking the target offer, opened as a modal in the list
+      # (upcoming or past) it was started from.
+      def render_move_to_offer_form(events)
+        # Optional, defaults to "upcoming" -- params.expect would answer 400 without it.
+        scope = params[:bulk_process_scope].presence_in(["upcoming", "past"]) || "upcoming" # rubocop:disable Rails/StrongParametersExpect
+
+        render turbo_stream: turbo_stream.replace(
+          "bulk-action-form-#{scope}",
+          partial: "admin/events/bulk_action_move_to_offer",
+          locals: {
+            events: events.includes(:offer),
+            offers: Offer.courses.where.not(id: @offer.id).order(:title),
+            url: bulk_move_admin_offer_events_path(@offer),
+            container_id: "bulk-action-form-#{scope}"
+          }
+        )
+      end
 
       # The mail texts need a date, so without one there is only a hint.
       def render_mail_preview(title)

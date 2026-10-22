@@ -48,11 +48,10 @@ class ApplicationController < ActionController::Base
   end
 
   def authenticate_user!
-    return true if current_user
+    return if current_user
 
     store_return_to
     redirect_to new_session_path, alert: t("application.authentication.login_required")
-    false
   end
 
   # Only remember GET (and HEAD, which Rails routes like GET) requests as return

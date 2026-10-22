@@ -5,7 +5,7 @@ module AlmaAuthenticationStub
   VALID_USER_ID = "12345".freeze
   VALID_PASSWORD = "secret".freeze
 
-  def authenticate_against_alma(user_id, password)
+  def authenticate_against_alma(user_id, password) # rubocop:disable Naming/PredicateMethod -- the name of the stubbed method
     user_id == VALID_USER_ID && password == VALID_PASSWORD
   end
 

@@ -24,12 +24,7 @@ module Admin
     private
 
     def authenticate!
-      if current_admin_user
-        true
-      else
-        redirect_to(new_admin_session_path)
-        false
-      end
+      redirect_to(new_admin_session_path) unless current_admin_user
     end
 
     def current_admin_user
