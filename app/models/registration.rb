@@ -4,6 +4,16 @@ class Registration < ApplicationRecord
   # app:dsgvo:cleanup die Anmeldung anonymisiert.
   RETENTION_PERIOD = 10.days
 
+  # What app:dsgvo:cleanup leaves of a registration's personal data.
+  ANONYMIZED_ATTRIBUTES = {
+    first_name: "Gelöscht",
+    last_name: "Gelöscht",
+    email: "Gelöscht",
+    ils_primary_id: nil,
+    field_of_interest: nil,
+    user_notes: nil
+  }.freeze
+
   # Relations
   belongs_to :event, counter_cache: true
   has_many :certificates, dependent: :nullify
