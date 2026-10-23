@@ -6,7 +6,7 @@ set :branch, "master"
 set :log_level, :debug
 
 append :linked_files, "config/database.yml", "config/master.key", "config/application.yml"
-append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/system"
+append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/system", "tmp/letter_opener"
 
 set :rvm_type, :user
 set :rvm_ruby_version, File.read(".ruby-version").strip

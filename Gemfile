@@ -9,6 +9,9 @@ gem "commonmarker", "~> 2.0"
 gem "github-markup", "~> 6.0", require: "github/markup"
 gem "hexapdf", "~> 1.1"
 gem "jbuilder"
+# Delivers mails to files and shows them in the browser: development, and test
+# systems that set mail.delivery_method: letter_opener_web (config/application.yml)
+gem "letter_opener_web"
 gem "mysql2"
 gem "propshaft"
 gem "puma", ">= 5.0"
@@ -40,7 +43,6 @@ group :development do
   gem "capistrano-rvm"
   # gem "i18n-debug"
   gem "i18n-tasks"
-  gem "letter_opener_web"
   gem "web-console"
 end
 

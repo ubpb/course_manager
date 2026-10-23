@@ -32,3 +32,8 @@ development:
 production:
   alma_api:
     api_key: <%= Rails.application.credentials.dig("alma_api", "production", "api_key") %>
+
+  # Only on a test system (the servers' config/application.yml):
+  # mail:
+  #   delivery_method: letter_opener_web   # default: sendmail; read at /admin/letter_opener
+  #   host: stage.ub.uni-paderborn.de       # default: schulungen.ub.uni-paderborn.de
