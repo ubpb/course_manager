@@ -60,6 +60,8 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = false
 
   # Set host to be used by links generated in mailer templates.
+  # Defaults; a server's config/application.yml may override both (mail.host,
+  # mail.delivery_method), see ApplicationMailer.apply_server_settings.
   config.action_mailer.default_url_options = {host: "schulungen.ub.uni-paderborn.de"}
 
   # Specify outgoing SMTP server. Remember to add smtp/* credentials via bin/rails credentials:edit.
