@@ -5,9 +5,12 @@ require "test_helper"
 module Admin
   class LetterOpenerTest < ActionDispatch::IntegrationTest
 
+    # Temporarily: a permanent redirect would be cached by the browser and keep
+    # sending the admin to the login after logging in.
     test "logged out visitors are sent to the admin login" do
-      get "/admin/letter_opener"
+      get "/admin/mail"
 
+      assert_response :found
       assert_redirected_to new_admin_session_path
     end
 
@@ -15,7 +18,7 @@ module Admin
       post admin_session_path, params: {login: {user_id: AlmaAuthenticationStub::VALID_USER_ID,
                                                 password: AlmaAuthenticationStub::VALID_PASSWORD}}
 
-      get "/admin/letter_opener"
+      get "/admin/mail"
 
       assert_response :success
     end

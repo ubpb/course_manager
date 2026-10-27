@@ -21,7 +21,7 @@ bun run build:watch      # JavaScript/CSS bei Änderungen neu bauen – in einem
 
 `bin/dev` startet nur den Rails-Server; ohne `bun run build:watch` (oder einmalig `bun run build`) werden Änderungen an JavaScript und CSS nicht übernommen.
 
-Mails werden lokal nicht verschickt, sondern abgelegt und sind unter <http://localhost:3000/letter_opener> zu lesen.
+Mails werden lokal nicht verschickt, sondern abgelegt und sind nach der Anmeldung im Admin-Bereich unter <http://localhost:3000/admin/mail> zu lesen.
 
 ### Tests und Linting
 
@@ -153,7 +153,7 @@ Ein Tippfehler im Schlüssel fällt sonst nicht auf: Die Anwendung verschickt da
 
 ### Mails lesen statt verschicken
 
-Mit `mail.delivery_method: letter_opener_web` verlässt keine Mail der Anwendung den Server – weder aus der Web-Anwendung noch aus dem Jobs-Dienst, Rake-Tasks oder der Konsole. Die Mails werden unter `tmp/letter_opener` abgelegt (über Deploys hinweg) und sind nach der Anmeldung im Admin-Bereich unter `/admin/letter_opener` zu lesen.
+Mit `mail.delivery_method: letter_opener_web` verlässt keine Mail der Anwendung den Server – weder aus der Web-Anwendung noch aus dem Jobs-Dienst, Rake-Tasks oder der Konsole. Die Mails werden unter `tmp/letter_opener` abgelegt (über Deploys hinweg) und sind nach der Anmeldung im Admin-Bereich unter `/admin/mail` zu lesen.
 
 Das betrifft nur Mails dieser Anwendung. Was andere Software auf dem Server über `sendmail` verschickt, regelt der Mailserver des Servers.
 

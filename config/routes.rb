@@ -110,6 +110,6 @@ Rails.application.routes.draw do
     constraints(->(request) { request.cookie_jar.signed[Admin::ApplicationController::ADMIN_COOKIE].present? }) do
       mount LetterOpenerWeb::Engine, at: "/admin/mail", as: :admin_letter_opener
     end
-    get "/admin/mail(/*path)", to: redirect("/admin/session/new")
+    get "/admin/mail(/*path)", to: redirect("/admin/session/new", status: 302)
   end
 end
