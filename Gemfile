@@ -7,7 +7,7 @@ gem "bootsnap", require: false
 gem "caxlsx_rails", "~> 0.7"
 gem "commonmarker", "~> 2.0"
 gem "github-markup", "~> 6.0", require: "github/markup"
-gem "hexapdf", "~> 1.1"
+gem "hexapdf", "~> 1.11"
 gem "jbuilder"
 # Delivers mails to files and shows them in the browser: development, and test
 # systems that set mail.delivery_method: letter_opener_web (config/application.yml)
