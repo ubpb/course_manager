@@ -103,16 +103,13 @@ Rails.application.routes.draw do
     end
   end
 
-  # Dev Tools
-  mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
-
   # Mails delivered to letter_opener_web on a test system (config/application.yml:
   # mail.delivery_method) can be read here -- by logged in admins only, as they
   # hold personal data. The admin cookie is only sent below /admin.
   if Rails.env.local? || ApplicationConfig[:mail, :delivery_method] == "letter_opener_web"
     constraints(->(request) { request.cookie_jar.signed[Admin::ApplicationController::ADMIN_COOKIE].present? }) do
-      mount LetterOpenerWeb::Engine, at: "/admin/letter_opener", as: :admin_letter_opener
+      mount LetterOpenerWeb::Engine, at: "/admin/mail", as: :admin_letter_opener
     end
-    get "/admin/letter_opener(/*path)", to: redirect("/admin/session/new")
+    get "/admin/mail(/*path)", to: redirect("/admin/session/new")
   end
 end
