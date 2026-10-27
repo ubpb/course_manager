@@ -60,7 +60,7 @@ class Admin::OfferPageTest < ActionDispatch::IntegrationTest
   test "the offer list shows the status as a badge" do
     get admin_offers_path
 
-    assert_select "#offer_#{@offer.id} .badge", text: "veröffentlicht"
+    assert_select "#offer_#{@offer.id} .status-badge", text: "veröffentlicht"
   end
 
   test "a failed save keeps the head on the stored offer" do
@@ -68,7 +68,7 @@ class Admin::OfferPageTest < ActionDispatch::IntegrationTest
 
     assert_response :unprocessable_content
     assert_select ".context-head-offer h2", text: "Literaturrecherche"
-    assert_select ".context-head-offer .badge", text: "veröffentlicht"
+    assert_select ".context-head-offer .status-badge", text: "veröffentlicht"
     assert_select ".offer-tabs .nav-link", text: /Termine/
   end
 

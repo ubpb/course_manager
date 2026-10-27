@@ -2,9 +2,12 @@
 
 / One list for all events (without an offer, with an offer column) and for the
 / events of an offer, whose links lead into the events in the offer context.
+/ The rows are grouped by month, and a line marks today where the list passes
+/ from upcoming to past events or the other way round.
 - scope = offer ? NavScope::OFFER : nil
 - bulk_url = offer ? bulk_process_admin_offer_events_path(offer) : bulk_process_admin_events_path
-- columns = offer ? 7 : 8
+- columns = offer ? 6 : 7
+- columns += 1 if @bulk_process_actions.any?
 
 #bulk-action-form
 
@@ -32,9 +35,18 @@
         th = "Status"
         th.actions = "Aktionen"
     tbody
+      - previous = nil
       - events.each do |event|
+        - if previous && previous.upcoming? != event.upcoming?
+          tr.event-list-today
+            td(colspan=columns)
+              .event-list-today-label: span = "Heute, #{l(Time.zone.today, format: "%a %d.%m.")}"
+        - if previous.nil? || previous.date_and_time.beginning_of_month != event.date_and_time.beginning_of_month
+          tr.event-list-month
+            td(colspan=columns) = l(event.date_and_time, format: "%B %Y")
+        - previous = event
         - event_path = admin_offer_event_registrations_path(event.offer, event, nav_scope: scope)
-        tr(
+        tr.event-row(
           id=dom_id(event)
           data-controller="row-link"
           data-row-link-url-value=event_path
@@ -43,11 +55,18 @@
           - if @bulk_process_actions.any?
             td.table-light(data-row-link-ignore) = check_box_tag "bulk_process_ids[]", event.id, false, id: nil, "data-checkbox-select-all-target": "checkbox"
           td
-            = link_to l(event.date_and_time, format: "%a, %d.%m.%Y · %H:%M"), event_path, class: "fw-bold text-nowrap"
+            = link_to event_path, class: "event-row-date" do
+              = l(event.date_and_time, format: "%a, %d.%m.")
+              span.event-row-time = l(event.date_and_time, format: "%H:%M")
             .small.text-body-secondary
+              - if event.online?
+                i.fa-solid.fa-video.me-1(aria-hidden="true")
+                = "Online"
+              - else
+                i.fa-solid.fa-location-dot.me-1(aria-hidden="true")
+                = "Präsenz"
               - if event.upcoming?
-                = "#{date_in_words(event.date_and_time.to_date)} · "
-              = event.online? ? "Online" : "Präsenz"
+                span.ms-2 = date_in_words(event.date_and_time.to_date)
           - unless offer
             td = link_to event.offer.title, offer_page_path(event.offer)
           td.text-center = event_capacity(event)
@@ -55,7 +74,7 @@
             - if event.report.present?
               i.fa-solid.fa-check(title="Statistik erfasst")
             - elsif event.past?
-              span.badge.text-bg-light.border = "fehlt"
+              span.status-badge.status-missing = "fehlt"
             - else
               = "—"
           td.text-center

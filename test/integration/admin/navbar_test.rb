@@ -33,24 +33,23 @@ class Admin::NavbarTest < ActionDispatch::IntegrationTest
     get admin_offer_event_registrations_path(@offer, @event, nav_scope: "offer")
 
     assert_select "#admin-navbar a[href=?]", events
-    assert_select "#admin-navbar a[href*='nav_scope'], #offcanvas-main-menu nav.list-group a[href*='nav_scope']",
-                  count: 0
+    assert_select "#admin-navbar a[href*='nav_scope']", count: 0
   end
 
   test "the breadcrumb shows the admin path only and does not link the current page" do
     get admin_events_path
 
-    assert_select "#breadcrumb .breadcrumb-item", count: 1
-    assert_select "#breadcrumb .breadcrumb-item[aria-current=page]", text: "Termine"
-    assert_select "#breadcrumb .breadcrumb-item a", count: 0
+    assert_select "#admin-breadcrumb .breadcrumb-item", count: 1
+    assert_select "#admin-breadcrumb .breadcrumb-item[aria-current=page]", text: "Termine"
+    assert_select "#admin-breadcrumb .breadcrumb-item a", count: 0
   end
 
   test "on a participant the breadcrumb links the participant list" do
     registration = create_registration
     get edit_admin_offer_event_registration_path(@offer, @event, registration)
 
-    assert_select "#breadcrumb a[href=?]", admin_offer_event_registrations_path(@offer, @event), text: "Teilnehmer"
-    assert_select "#breadcrumb .breadcrumb-item[aria-current=page]", text: "Mustermann, Max"
+    assert_select "#admin-breadcrumb a[href=?]", admin_offer_event_registrations_path(@offer, @event), text: "Teilnehmer"
+    assert_select "#admin-breadcrumb .breadcrumb-item[aria-current=page]", text: "Mustermann, Max"
   end
 
 end

@@ -22,13 +22,13 @@
   .d-flex.flex-column.flex-md-row.gap-3
     .flex-grow-1
       .context-head-overline
-        = offer_type_label(offer)
-        = " · "
         = link_to offer.title, offer_page_path(offer)
+        span = offer_type_label(offer)
       h2.context-head-title
-        = event_heading(stored)
+        span.context-head-date = event_date(stored)
+        span.context-head-time = event_time_span(stored)
         - if stored.upcoming?
-          small.ms-2 = date_in_words(stored.date_and_time.to_date)
+          span.context-head-relative = date_in_words(stored.date_and_time.to_date)
       .d-flex.flex-wrap.gap-2
         = published_badge(stored)
         - if offer.archived?

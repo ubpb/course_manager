@@ -10,7 +10,7 @@
 .context-head.context-head-offer
   .d-flex.flex-column.flex-md-row.gap-3
     .flex-grow-1
-      .context-head-overline = "Angebot · #{offer_type_label(stored)}"
+      .context-head-overline = offer_type_label(stored)
       h2.context-head-title = stored.title
       .d-flex.flex-wrap.gap-2
         = published_badge(stored)

@@ -25,19 +25,29 @@ module AdminNavigationHelper
   # For offers and events alike.
   def published_badge(record)
     if record.published?
-      tag.span("veröffentlicht", class: "badge text-bg-success")
+      tag.span("veröffentlicht", class: "status-badge status-published")
     else
-      tag.span("nicht veröffentlicht", class: "badge text-bg-danger")
+      tag.span("nicht veröffentlicht", class: "status-badge status-unpublished")
     end
   end
 
   # "Do, 15.10.2026 · 10:00–11:30 Uhr", without a duration only the start.
   def event_heading(event)
+    "#{event_date(event)} · #{event_time_span(event)}"
+  end
+
+  # "Do, 15.10.2026"
+  def event_date(event)
+    l(event.date_and_time, format: "%a, %d.%m.%Y")
+  end
+
+  # "10:00–11:30 Uhr", without a duration "10:00 Uhr".
+  def event_time_span(event)
     start = event.date_and_time
     time = l(start, format: "%H:%M")
     time += "–#{l(start + event.duration.minutes, format: "%H:%M")}" if event.duration.to_i.positive?
 
-    "#{l(start, format: "%a, %d.%m.%Y")} · #{time} Uhr"
+    "#{time} Uhr"
   end
 
   def event_capacity(event)

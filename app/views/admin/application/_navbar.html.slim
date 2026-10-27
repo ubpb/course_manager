@@ -1,25 +1,60 @@
-/ Menu bar of the admin area. Every link leaves the offer context.
-- section = admin_menu_section
-nav#admin-navbar.navbar.navbar-expand.navbar-dark.bg-primary.d-print-none(aria-label="Admin-Bereiche")
-  .container
-    ul.navbar-nav
-      li.nav-item
-        = link_to "Termine", admin_events_path(nav_scope: nil),
-                  class: ["nav-link", ("active" if section == :events)],
-                  "aria-current": ("page" if section == :events)
-      li.nav-item
-        = link_to "Angebote", admin_offers_path(nav_scope: nil),
-                  class: ["nav-link", ("active" if section == :offers)],
-                  "aria-current": ("page" if section == :offers)
-      li.nav-item.dropdown
-        a.nav-link.dropdown-toggle(
-          href="#"
-          role="button"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
-          class=("active" if section == :master_data)
-          aria-current=("page" if section == :master_data)
-        ) = "Stammdaten"
-        ul.dropdown-menu
-          li = link_to "Zielgruppen", admin_target_groups_path(nav_scope: nil), class: "dropdown-item"
-          li = link_to "Themen", admin_topics_path(nav_scope: nil), class: "dropdown-item"
+/ App bar of the admin area: the brand, the areas and the account. Every link
+/ leaves the offer context. Before the login only the brand shows.
+nav#admin-navbar.navbar.navbar-expand-md.d-print-none(data-bs-theme="dark" aria-label="Admin-Bereiche")
+  .container-fluid
+    = link_to admin_root_path(nav_scope: nil), class: "navbar-brand admin-brand" do
+      = inline_svg_tag "ub-logo-symbol.svg", class: "admin-brand-logo", aria_hidden: true
+      span.admin-brand-name = t("application.app_name")
+      span.admin-brand-area = "Admin"
+
+    - if current_admin_user
+      - section = admin_menu_section
+      button.navbar-toggler(
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#admin-navbar-menu"
+        aria-controls="admin-navbar-menu"
+        aria-expanded="false"
+        aria-label="Menü"
+      )
+        span.navbar-toggler-icon
+
+      #admin-navbar-menu.collapse.navbar-collapse
+        ul.navbar-nav.me-auto
+          li.nav-item
+            = link_to admin_events_path(nav_scope: nil),
+                      class: ["nav-link", ("active" if section == :events)],
+                      "aria-current": ("page" if section == :events) do
+              i.fa-regular.fa-calendar.me-2(aria-hidden="true")
+              = "Termine"
+          li.nav-item
+            = link_to admin_offers_path(nav_scope: nil),
+                      class: ["nav-link", ("active" if section == :offers)],
+                      "aria-current": ("page" if section == :offers) do
+              i.fa-solid.fa-layer-group.me-2(aria-hidden="true")
+              = "Angebote"
+          li.nav-item.dropdown
+            a.nav-link.dropdown-toggle(
+              href="#"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+              class=("active" if section == :master_data)
+              aria-current=("page" if section == :master_data)
+            )
+              i.fa-solid.fa-tags.me-2(aria-hidden="true")
+              = "Stammdaten"
+            ul.dropdown-menu(data-bs-theme="light")
+              li = link_to "Zielgruppen", admin_target_groups_path(nav_scope: nil), class: "dropdown-item"
+              li = link_to "Themen", admin_topics_path(nav_scope: nil), class: "dropdown-item"
+
+        .admin-navbar-tools
+          - if color_mode_enabled?
+            = render "application/color_mode_switcher"
+          - if locale_switching_enabled?
+            = render "application/locale_switcher"
+          = link_to admin_session_path(nav_scope: nil),
+                    data: {turbo_method: :delete, turbo_confirm: t("application.account_menu.logout_msg")},
+                    class: "nav-link admin-logout" do
+            i.fa-solid.fa-power-off.me-2(aria-hidden="true")
+            = t("application.account_menu.logout")

@@ -25,7 +25,7 @@ class Admin::EventPeriodSwitchTest < ActionDispatch::IntegrationTest
     get admin_events_path
 
     assert_select ".period-switch a.active", text: "Alle"
-    assert_select "table.event-list tbody tr", count: 3
+    assert_select "table.event-list tbody tr.event-row", count: 3
   end
 
   test "switching the period keeps the other filters" do
@@ -35,7 +35,7 @@ class Admin::EventPeriodSwitchTest < ActionDispatch::IntegrationTest
     follow_redirect!
 
     assert_select ".period-switch a.active", text: "Vergangene"
-    assert_select "table.event-list tbody tr", count: 1
+    assert_select "table.event-list tbody tr.event-row", count: 1
   end
 
   test "the filter panel keeps the period" do
@@ -59,7 +59,7 @@ class Admin::EventPeriodSwitchTest < ActionDispatch::IntegrationTest
     follow_redirect!
 
     assert_select ".period-switch a.active", text: "Kommende"
-    assert_select "table.event-list tbody tr", count: 1
+    assert_select "table.event-list tbody tr.event-row", count: 1
   end
 
 end

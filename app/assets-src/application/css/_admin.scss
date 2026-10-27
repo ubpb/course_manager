@@ -1,77 +1,464 @@
-// Admin area: menu bar, context heads and event lists.
+// Admin area (layouts/admin). Every rule is scoped to body.admin-ui, so the
+// public site is not affected by anything in here.
+//
+// Colour carries meaning only: saphirblau is the admin chrome, himmelblau an
+// event, irisviolett an offer, limettengrün today. Surfaces are flat.
 
-#admin-navbar {
+.admin-ui {
+  --admin-ink: #{$upb-saphirblau};
+  --admin-heading: #{$upb-saphirblau};
+  --admin-canvas: #f1f4f9;
+  --admin-surface: #fff;
+  --admin-line: #d8dee8;
+  --admin-muted: #5b6275;
+  --admin-event: #{$upb-himmelblau};
+  --admin-offer: #{$upb-irisviolett};
+  --admin-today: #{$upb-limettengruen};
+  --admin-published: #{$upb-arktisblau};
+
+  min-height: 100vh;
+  background-color: var(--admin-canvas);
+  font-size: 0.9375rem;
+  font-variant-numeric: tabular-nums;
+}
+
+@include color-mode(dark) {
+  .admin-ui {
+    --admin-heading: var(--bs-emphasis-color);
+    --admin-canvas: var(--bs-body-bg);
+    --admin-surface: var(--bs-tertiary-bg);
+    --admin-line: var(--bs-border-color);
+    --admin-muted: var(--bs-secondary-color);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// App bar
+// ---------------------------------------------------------------------------
+
+.admin-ui #admin-navbar {
   --bs-navbar-padding-y: 0;
+  --bs-navbar-color: rgba(255, 255, 255, 0.72);
+  --bs-navbar-hover-color: #fff;
+  --bs-navbar-active-color: #fff;
 
-  .nav-link {
-    padding: 0.75rem 1rem;
+  min-height: 3.5rem;
+  background-color: var(--admin-ink);
+
+  .admin-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    margin-right: 2rem;
+    font-weight: 700;
+    font-size: 1rem;
+  }
+
+  .admin-brand-logo {
+    height: 1.75rem;
+    width: auto;
+
+    * {
+      fill: #fff !important;
+    }
+  }
+
+  .admin-brand-area {
+    padding: 0 0.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.4rem;
+  }
+
+  .navbar-nav .nav-link {
+    padding: 1.0625rem 0.875rem 0.875rem;
     font-weight: 600;
     border-bottom: 3px solid transparent;
 
     &.active {
-      border-bottom-color: var(--bs-white);
+      border-bottom-color: #fff;
+    }
+  }
+
+  .admin-navbar-tools {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .dropdown-toggle {
+      color: var(--bs-navbar-color);
+    }
+  }
+
+  .admin-logout {
+    padding: 0.5rem 0;
+    color: var(--bs-navbar-color);
+    white-space: nowrap;
+
+    &:hover,
+    &:focus-visible {
+      color: var(--bs-navbar-hover-color);
     }
   }
 }
 
-// Head of an event or offer page, above its tabs. Events are himmelblau,
-// offers irisviolett, so the offer context stands out from the event.
-.context-head {
-  --context-color: #{$upb-himmelblau};
-  --context-tint: #{$upb-himmelblau-20p};
+// ---------------------------------------------------------------------------
+// Breadcrumb strip and page
+// ---------------------------------------------------------------------------
 
-  margin-bottom: 1.5rem;
-  padding: 1rem 1.25rem;
-  border: 1px solid var(--bs-border-color);
-  border-left: 5px solid var(--context-color);
-  border-radius: var(--bs-border-radius);
-  background-color: color-mix(in srgb, var(--context-tint) 50%, var(--bs-body-bg));
+.admin-ui #admin-breadcrumb {
+  padding: 0.625rem 0;
+  background-color: var(--admin-surface);
+  border-bottom: 1px solid var(--admin-line);
+  font-size: 0.875rem;
 
-  .context-head-overline {
-    font-size: 0.85rem;
-    color: var(--bs-secondary-color);
-    overflow-wrap: anywhere;
+  .breadcrumb {
+    flex-wrap: wrap;
+    row-gap: 0.25rem;
   }
 
-  .context-head-title {
-    margin: 0.25rem 0 0.5rem;
-    font-size: 1.4rem;
-    overflow-wrap: anywhere;
-
-    small {
-      font-size: 0.9rem;
-      font-weight: normal;
-      color: var(--bs-secondary-color);
-    }
+  .breadcrumb-item.active {
+    color: var(--admin-heading);
   }
 }
 
-.context-head-offer {
-  --context-color: #{$upb-irisviolett};
-  --context-tint: #{$upb-irisviolett-20p};
+.admin-ui .container-fluid {
+  padding-inline: clamp(1rem, 2.5vw, 2.5rem);
 }
 
-// Shown above an event opened from the events of its offer.
-.offer-context-bar {
-  margin-bottom: 0.5rem;
-  padding: 0.4rem 1rem;
-  border-radius: var(--bs-border-radius);
-  background-color: $upb-irisviolett;
-  color: var(--bs-white);
-  overflow-wrap: anywhere;
+.admin-ui .admin-page {
+  padding: 1.5rem 0 4rem;
 
-  a {
-    color: var(--bs-white);
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--admin-heading);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Surfaces: flat cards, quiet tables
+// ---------------------------------------------------------------------------
+
+.admin-ui .card {
+  --bs-card-bg: var(--admin-surface);
+  --bs-card-cap-bg: var(--admin-surface);
+  --bs-card-border-color: var(--admin-line);
+  --bs-card-border-radius: 0.5rem;
+  --bs-card-inner-border-radius: calc(0.5rem - 1px);
+  --bs-card-cap-padding-y: 0.875rem;
+  --bs-card-cap-padding-x: 1.25rem;
+
+  &.card-shadowed {
+    box-shadow: none;
+    filter: none;
+  }
+}
+
+// Lists use the full width, forms keep a readable line length.
+.admin-ui form > .card > .card-body {
+  max-width: 64rem;
+}
+
+.admin-ui .card-title {
+  color: var(--admin-heading) !important;
+  font-size: 1.0625rem;
+  font-weight: 700;
+}
+
+.admin-ui .table {
+  --bs-table-bg: transparent;
+
+  margin-bottom: 0;
+
+  > thead th {
+    color: var(--admin-muted);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    white-space: nowrap;
+    border-bottom-width: 1px;
+  }
+
+  // The bulk action bar and the checkbox column used table-light.
+  .table-light {
+    --bs-table-bg: transparent;
+    --bs-table-color: inherit;
+  }
+}
+
+// The filter button of the shared filter bar matches the small buttons around it.
+.admin-ui .btn[data-bs-target="#offcanvas-filters"] {
+  --bs-btn-padding-y: 0.25rem;
+  --bs-btn-padding-x: 0.75rem;
+  --bs-btn-font-size: 0.875rem;
+}
+
+@include color-mode(dark) {
+  .admin-ui .btn-outline-primary {
+    --bs-btn-color: var(--bs-primary-text-emphasis);
+    --bs-btn-border-color: var(--bs-primary-border-subtle);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Status badges
+// ---------------------------------------------------------------------------
+
+.admin-ui .status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.125rem 0.5rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+
+  &::before {
+    content: "";
+    width: 0.4375rem;
+    height: 0.4375rem;
+    border-radius: 50%;
+    background-color: currentColor;
+  }
+}
+
+.admin-ui .status-published {
+  color: var(--admin-ink);
+  background-color: color-mix(in srgb, var(--admin-published) 28%, var(--admin-surface));
+
+  &::before {
+    background-color: var(--admin-ink);
+  }
+}
+
+.admin-ui .status-unpublished {
+  color: var(--admin-muted);
+  border: 1px dashed var(--admin-muted);
+
+  &::before {
+    background-color: transparent;
+    border: 1px solid currentColor;
+  }
+}
+
+// A past event without statistics: noticeable, not alarming.
+.admin-ui .status-missing {
+  color: var(--admin-muted);
+  background-color: var(--admin-canvas);
+  border-color: var(--admin-line);
+
+  &::before {
+    display: none;
   }
 }
 
 @include color-mode(dark) {
-  .context-head {
-    background-color: var(--bs-light-bg-subtle);
+  .admin-ui .status-published {
+    color: var(--bs-emphasis-color);
+
+    &::before {
+      background-color: var(--admin-published);
+    }
   }
 }
 
-// Rows of the event lists open their event (see row_link_controller.js).
-.event-list tbody tr[data-controller~="row-link"] {
-  cursor: pointer;
+// ---------------------------------------------------------------------------
+// Heads of event and offer pages
+// ---------------------------------------------------------------------------
+
+.admin-ui .context-head {
+  --context-color: var(--admin-event);
+
+  margin-bottom: 1.5rem;
+  padding: 1.25rem 1.5rem;
+  background-color: var(--admin-surface);
+  border: 1px solid var(--admin-line);
+  border-left: 6px solid var(--context-color);
+  border-radius: 0.5rem;
+
+  .context-head-overline {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem;
+    color: var(--admin-muted);
+    font-size: 0.875rem;
+    overflow-wrap: anywhere;
+
+    a {
+      font-weight: 600;
+    }
+  }
+
+  .context-head-title {
+    margin: 0.25rem 0 0.75rem;
+    font-weight: 700;
+    font-size: clamp(1.375rem, 1.1rem + 0.9vw, 1.875rem);
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+  }
+
+  // The date of an event is the anchor of the page: heavy date, light time.
+  .context-head-date {
+    font-weight: 800;
+  }
+
+  .context-head-time {
+    margin-left: 0.5rem;
+    font-weight: 300;
+  }
+
+  .context-head-relative {
+    margin-left: 0.75rem;
+    color: var(--admin-muted);
+    font-size: 0.9375rem;
+    font-weight: 400;
+    white-space: nowrap;
+  }
+
+  .badge.text-bg-light {
+    --bs-badge-color: var(--bs-body-color);
+
+    background-color: var(--admin-canvas) !important;
+    border-color: var(--admin-line) !important;
+  }
+}
+
+.admin-ui .context-head-offer {
+  --context-color: var(--admin-offer);
+}
+
+// Above an event opened from the events of its offer; it joins the head.
+.admin-ui .offer-context-bar {
+  padding: 0.5rem 1.5rem;
+  background-color: var(--admin-offer);
+  color: #fff;
+  border-radius: 0.5rem 0.5rem 0 0;
+  font-size: 0.875rem;
+  overflow-wrap: anywhere;
+
+  a {
+    color: #fff;
+    font-weight: 600;
+  }
+
+  + .context-head {
+    border-top: 0;
+    border-left-color: var(--admin-offer);
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Tabs of event and offer pages
+// ---------------------------------------------------------------------------
+
+.admin-ui .event-tabs,
+.admin-ui .offer-tabs {
+  --bs-nav-link-color: var(--bs-body-color);
+  --bs-nav-link-hover-color: var(--bs-body-color);
+  --bs-nav-pills-border-radius: 0.375rem;
+  --bs-nav-pills-link-active-bg: var(--admin-event);
+
+  font-weight: 600;
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    white-space: nowrap;
+
+    &:not(.active):hover {
+      background-color: color-mix(in srgb, var(--bs-nav-pills-link-active-bg) 10%, transparent);
+    }
+  }
+
+  @include media-breakpoint-up(lg) {
+    position: sticky;
+    top: 1rem;
+  }
+}
+
+.admin-ui .offer-tabs {
+  --bs-nav-pills-link-active-bg: var(--admin-offer);
+}
+
+// ---------------------------------------------------------------------------
+// Event lists
+// ---------------------------------------------------------------------------
+
+.admin-ui .event-list {
+  tbody tr.event-row[data-controller~="row-link"] {
+    cursor: pointer;
+
+    &:hover > * {
+      background-color: color-mix(in srgb, var(--admin-event) 6%, transparent);
+    }
+  }
+
+  .event-row-date {
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .event-row-time {
+    margin-left: 0.375rem;
+    font-weight: 400;
+  }
+
+  // Month of the following rows.
+  tr.event-list-month > td {
+    padding: 1.5rem 0.5rem 0.375rem;
+    color: var(--admin-heading);
+    font-size: 1rem;
+    font-weight: 700;
+    border-bottom: 2px solid var(--admin-line);
+  }
+
+  tbody tr.event-list-month:first-child > td {
+    padding-top: 0.75rem;
+  }
+
+  // Between the upcoming and the past events.
+  tr.event-list-today > td {
+    padding: 0;
+    border-bottom: 0;
+  }
+
+  .event-list-today-label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0.75rem 0;
+    color: var(--admin-ink);
+    font-size: 0.8125rem;
+    font-weight: 700;
+
+    &::after {
+      content: "";
+      flex: 1;
+      height: 2px;
+      background-color: var(--admin-today);
+    }
+
+    span {
+      padding: 0.125rem 0.625rem;
+      background-color: var(--admin-today);
+      border-radius: 999px;
+    }
+  }
+}
+
+@include color-mode(dark) {
+  .admin-ui .event-list .event-list-today-label {
+    color: var(--bs-emphasis-color);
+
+    span {
+      color: $upb-saphirblau;
+    }
+  }
 }

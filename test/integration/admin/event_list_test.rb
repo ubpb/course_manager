@@ -21,7 +21,7 @@ class Admin::EventListTest < ActionDispatch::IntegrationTest
   test "the offer's list shows only its events, without an offer column" do
     get admin_offer_events_path(@offer)
 
-    assert_select "table.event-list tbody tr", count: 2
+    assert_select "table.event-list tbody tr.event-row", count: 2
     assert_select "table.event-list", text: /Recherche in Fachdatenbanken/, count: 0
     assert_select "table.event-list th", text: "Angebot", count: 0
   end
@@ -50,11 +50,11 @@ class Admin::EventListTest < ActionDispatch::IntegrationTest
     get admin_offer_events_path(@offer, filter: {online: "true"})
     follow_redirect!
 
-    assert_select "table.event-list tbody tr", count: 1
+    assert_select "table.event-list tbody tr.event-row", count: 1
 
     get admin_events_path
 
-    assert_select "table.event-list tbody tr", count: 3
+    assert_select "table.event-list tbody tr.event-row", count: 3
   end
 
   test "the offer context has no title filter" do
@@ -66,8 +66,8 @@ class Admin::EventListTest < ActionDispatch::IntegrationTest
   test "missing statistics are marked for past events only" do
     get admin_offer_events_path(@offer)
 
-    assert_select "##{dom_id(@past)} .badge", text: "fehlt"
-    assert_select "##{dom_id(@upcoming)} .badge", text: "fehlt", count: 0
+    assert_select "##{dom_id(@past)} .status-badge.status-missing", text: "fehlt"
+    assert_select "##{dom_id(@upcoming)} .status-missing", count: 0
   end
 
   test "both lists offer to duplicate" do
@@ -121,6 +121,31 @@ class Admin::EventListTest < ActionDispatch::IntegrationTest
 
     assert_select ".card-header a.btn[href=?]", offer_new, text: "Neuer Termin"
     assert_select ".card-header a.btn[href=?]", offer_export, text: "Statistik (Excel)"
+  end
+
+  # The rows are grouped by month, and a line marks today between the upcoming
+  # and the past events.
+  test "the list is grouped by month with a line for today" do
+    travel_to Time.zone.parse("2026-10-27 12:00") do
+      @upcoming.update!(date_and_time: Time.zone.parse("2026-11-03 10:00"))
+      @past.update!(date_and_time: Time.zone.parse("2026-10-20 10:00"))
+
+      get admin_offer_events_path(@offer)
+    end
+
+    rows = css_select("table.event-list tbody tr").map { |tr| tr["class"].to_s.split.first }
+
+    assert_equal ["event-list-month", "event-row", "event-list-today", "event-list-month", "event-row"], rows
+    assert_select "tr.event-list-month", text: "November 2026"
+    assert_select "tr.event-list-month", text: "Oktober 2026"
+    assert_select "tr.event-list-today", text: /Heute/
+  end
+
+  test "a list of upcoming events only has no line for today" do
+    get admin_offer_events_path(@offer, filter: {upcoming_or_past: "upcoming"})
+    follow_redirect!
+
+    assert_select "tr.event-list-today", count: 0
   end
 
 end

@@ -37,7 +37,8 @@ class Admin::EventPageTest < ActionDispatch::IntegrationTest
     create_registration
     get admin_offer_event_registrations_path(@offer, @event)
 
-    assert_select ".context-head-event", text: /Do, 15\.10\.2026 · 10:00–11:30 Uhr/
+    assert_select ".context-head-event .context-head-date", text: "Do, 15.10.2026"
+    assert_select ".context-head-event .context-head-time", text: "10:00–11:30 Uhr"
     assert_select ".context-head-event .badge", text: "1 / 10 Plätze"
     assert_select ".event-tabs .nav-link", text: /Teilnehmer\s*1/
   end

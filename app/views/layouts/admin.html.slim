@@ -1,8 +1,25 @@
+/ The admin area has a document of its own, so nothing of it reaches the public
+/ layout: a compact app bar, a breadcrumb strip and the full window width.
 - content_for :head_title_suffix do
   = ":: Admin"
 
-- if current_admin_user
-  - content_for :navbar do
+doctype html
+html
+  head
+    = render "layouts/head"
+
+  body.admin-ui
+    = render "application/test_server_warning"
+    = render "application/global_message", global_message: @global_message
+
     = render "admin/application/navbar"
 
-= render template: "layouts/application"
+    - if breadcrumb.any?
+      nav#admin-breadcrumb.d-print-none(aria-label="breadcrumb")
+        .container-fluid
+          = render "admin/application/breadcrumb"
+
+    main.admin-page
+      .container-fluid
+        = render "alerts", global: true
+        = yield
