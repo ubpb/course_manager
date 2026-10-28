@@ -7,15 +7,11 @@ module Admin
   class SortedListsTest < ActionDispatch::IntegrationTest
 
     include AdminLogin
+    include TurboStreamRequests
 
     LISTS = {
       "topic" => {model: Topic, list_id: "topics"},
       "target_group" => {model: TargetGroup, list_id: "target-groups"}
-    }.freeze
-
-    # What Turbo sends for a link with data-turbo-stream.
-    TURBO_STREAM_HEADERS = {
-      "Accept" => "text/vnd.turbo-stream.html, text/html, application/xhtml+xml"
     }.freeze
 
     setup { log_in_admin }
