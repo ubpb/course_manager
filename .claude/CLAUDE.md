@@ -63,7 +63,8 @@ Minitest, run in parallel, without fixtures: each test creates its own records. 
 - `AlmaAuthenticationStub` replaces the Alma calls of both logins (a valid staff user, a library user who is not staff, an inactive staff member); `AdminLogin#log_in_admin` signs in to the admin.
 - `MailerRecords` builds the offer → event → registration chain (`create_offer`, `create_event`, `create_registration`); `ReportRecords#create_report` adds statistics.
 - `ConfigOverride#with_config` replaces values of `config/application.yml` for a block, e.g. to switch on a feature flag.
+- `TurboStreamRequests::TURBO_STREAM_HEADERS` requests what Turbo asks for with `data-turbo-stream`, e.g. the modal of a form (`get new_admin_offer_path, headers: TURBO_STREAM_HEADERS`). `assert_select` reaches into the `<template>` of a `<turbo-stream>`.
 
-System tests (`test/system`, headless Chrome via Selenium) cover what only a browser shows, such as modals and other JavaScript behaviour. `bin/rails test` leaves them out; `bin/rails test:system` runs them against the built assets, so run `bun run build` first. `ApplicationSystemTestCase#log_in_admin` signs in through the login form, with Alma stubbed out as above.
+System tests (`test/system`, headless Chrome via Selenium) cover what only a browser shows, such as modals and other JavaScript behaviour. `bin/rails test` leaves them out; `bin/rails test:system` runs them against the built assets, so run `bun run build` first. `ApplicationSystemTestCase#log_in_admin` signs in through the login form, with Alma stubbed out as above. `collect_script_errors` records the script errors of the current page and `script_errors` reads them; `wait_for_transitions` waits out Bootstrap's fade (a modal ignores a close while it is still opening, so wait for it to have the focus first).
 
 No coverage tool is set up yet.
