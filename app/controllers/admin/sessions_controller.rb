@@ -39,8 +39,7 @@ module Admin
       end
     rescue AlmaApi::Error => e
       log_alma_unavailable(e)
-      flash.now[:error] = "Die Anmeldung ist zurzeit nicht möglich, weil das Bibliothekssystem nicht erreichbar ist. " \
-                          "Bitte versuchen Sie es später noch einmal."
+      flash.now[:error] = t("sessions.create.unavailable")
       render :new, status: :service_unavailable
     end
 
