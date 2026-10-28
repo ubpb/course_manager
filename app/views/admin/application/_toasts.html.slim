@@ -1,0 +1,26 @@
+/ The flash messages left once the page has rendered, as toasts at the top
+/ right. A form page that keeps its messages renders "alerts" itself, which
+/ takes them out of the flash first (the login, the choice of a course).
+/
+/ The anchor is sticky and of zero height: at the top of the page it sits
+/ right below the navigation bar, however tall that is, and scrolled down it
+/ sticks to the top of the window. The toasts hang from it and move nothing.
+#admin-toasts.d-print-none
+  .toast-container
+    - flash.each do |type, message|
+      - flash.delete(type)
+      - next unless message.is_a?(String)
+      - color = admin_toast_color(type)
+      - sticky = admin_toast_sticky?(type)
+      .toast.show(
+        class="bg-#{color}-subtle text-#{color}-emphasis border-#{color}-subtle"
+        role=(sticky ? "alert" : "status")
+        aria-live=(sticky ? "assertive" : "polite")
+        aria-atomic="true"
+        data-controller="toast"
+        data-bs-autohide=(!sticky).to_s
+        data-bs-delay="5000"
+      )
+        .d-flex
+          .toast-body == message
+          button.btn-close.me-2.m-auto(type="button" data-bs-dismiss="toast" aria-label="Schließen")

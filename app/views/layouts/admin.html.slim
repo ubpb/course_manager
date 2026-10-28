@@ -13,6 +13,7 @@ html
     = render "application/global_message", global_message: @global_message
 
     = render "admin/application/navbar"
+    = render "admin/application/toasts"
 
     - if breadcrumb.any?
       nav#admin-breadcrumb.d-print-none(aria-label="breadcrumb")
@@ -21,5 +22,4 @@ html
 
     main.admin-page
       .container-fluid
-        = render "alerts", global: true
         = yield

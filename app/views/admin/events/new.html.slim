@@ -5,6 +5,7 @@
     .card-header
       h5.card-title.mb-0 = "Neuer Termin"
     .card-body
+      = render "alerts"
       = render "offer_choice", offers: @offers
     .card-footer
       .d-flex.gap-2.flex-column.flex-md-row

@@ -136,6 +136,38 @@
 }
 
 // ---------------------------------------------------------------------------
+// Toasts: the flash messages (admin/application/_toasts)
+// ---------------------------------------------------------------------------
+
+// A sticky anchor of zero height right after the navigation bar: below the bar
+// at the top of the page, at the top of the window once scrolled. The toasts
+// hang from it out of the flow, above modals like Bootstrap's own toasts.
+.admin-ui #admin-toasts {
+  position: sticky;
+  top: 0;
+  height: 0;
+  z-index: $zindex-toast;
+
+  .toast-container {
+    top: 0;
+    right: 0;
+    padding: 0.75rem;
+  }
+
+  // On a phone the toasts take the width of the screen.
+  @include media-breakpoint-down(md) {
+    .toast-container {
+      left: 0;
+      width: auto;
+    }
+
+    .toast {
+      width: 100%;
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Surfaces: flat cards, quiet tables
 // ---------------------------------------------------------------------------
 
