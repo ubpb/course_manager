@@ -98,6 +98,23 @@ class ToastsTest < ApplicationSystemTestCase
     using_wait_time(7) { assert_no_selector "#admin-toasts .toast", visible: :all }
   end
 
+  test "a menu of the navigation bar opens above a toast" do
+    move_without_selection
+
+    assert_selector "#admin-toasts .toast", text: "Bitte mindestens einen Termin auswählen"
+
+    find(".admin-navbar-tools .dropdown-toggle").click
+
+    assert_selector ".admin-navbar-tools .dropdown-menu.show"
+    # Every entry of the menu lies on top where it is drawn.
+    assert evaluate_script(<<~JS)
+      [...document.querySelectorAll(".admin-navbar-tools .dropdown-menu.show .dropdown-item")].every((item) => {
+        const box = item.getBoundingClientRect()
+        return item.contains(document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2))
+      })
+    JS
+  end
+
   private
 
   def archive_first_offer

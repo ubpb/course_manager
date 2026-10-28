@@ -167,6 +167,12 @@
   }
 }
 
+// The menus of the navigation bar drop down where the toasts hang; they open
+// above them. Only the menus: the bar itself stays below modal backdrops.
+.admin-ui #admin-navbar .dropdown-menu {
+  z-index: $zindex-toast + 1;
+}
+
 // ---------------------------------------------------------------------------
 // Surfaces: flat cards, quiet tables
 // ---------------------------------------------------------------------------
