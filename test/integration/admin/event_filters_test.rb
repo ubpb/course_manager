@@ -24,8 +24,10 @@ module Admin
     def filter(params)
       get admin_events_path(filter: params)
 
-      assert_redirected_to admin_events_path
+      assert_response :redirect
       follow_redirect!
+
+      assert_response :success
     end
 
     def listed
@@ -93,15 +95,22 @@ module Admin
       assert_equal [@next_week, @last_month], listed
     end
 
-    test "the export of the statistics is named after the period of the date filters" do
-      filter(from_date: "2026-09-01", to_date: "2026-09-30")
+    test "every filter of the list leads to a URL that renders" do
+      filter(upcoming_or_past: "upcoming_and_last_3_months", published: "true", online: "false", with_report: "true",
+             title: "Recherche", from_date: "2026-10-01", to_date: "2026-12-31")
 
-      get reports_admin_events_path(format: :xlsx)
+      assert_equal "/admin/events?upcoming-or-past=upcoming-and-last-3-months&published=1&online=0&with-report=1" \
+                   "&title=Recherche&from-date=2026-10-01&to-date=2026-12-31", request.fullpath
+    end
+
+    test "the export of the statistics is named after the period of the date filters" do
+      get reports_admin_events_path(format: :xlsx, filter: {from_date: "2026-09-01", to_date: "2026-09-30"})
+      follow_redirect!
 
       assert_response :success
       assert_equal 'attachment; filename="2026-09-01_2026-09-30_report.xlsx"', response.headers["Content-Disposition"]
 
-      # The list of the offer keeps filters of its own and has none set.
+      # The export of the offer's list covers what its own URL names, here nothing.
       get reports_admin_offer_events_path(@offer, format: :xlsx)
 
       assert_equal 'attachment; filename="literaturrecherche_report.xlsx"', response.headers["Content-Disposition"]

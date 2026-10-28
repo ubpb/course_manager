@@ -9,7 +9,7 @@ module Admin
     OFFER_MISSING = "Bitte ein Angebot auswählen".freeze
 
     before_action -> { add_breadcrumb "Termine", admin_events_path }
-    before_action -> { persist_filter_params(:events) }, only: [:index, :reports]
+    before_action -> { canonicalize_filter_url(:events) }, only: [:index, :reports]
 
     def index
       load_events

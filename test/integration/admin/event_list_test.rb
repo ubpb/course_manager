@@ -225,5 +225,22 @@ module Admin
       assert_select "tr.event-list-today", count: 0
     end
 
+    test "the offer context keeps nav_scope through the short URL and the reset" do
+      get admin_offer_events_path(@offer, nav_scope: "offer", filter: {online: "true"})
+
+      assert_redirected_to "/admin/offers/#{@offer.to_param}/events?nav_scope=offer&online=1"
+
+      get admin_offer_events_path(@offer, nav_scope: "offer", reset_filter: true)
+
+      assert_redirected_to "/admin/offers/#{@offer.to_param}/events?nav_scope=offer"
+    end
+
+    test "the memory of the global list does not filter the list of an offer" do
+      get admin_offer_events_path(@offer),
+          headers: {Filterable::FILTER_STATE_HEADER => {"admin/events" => "online=1"}.to_json}
+
+      assert_response :success
+    end
+
   end
 end

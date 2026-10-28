@@ -34,17 +34,8 @@ class ApplicationController < ActionController::Base
   # because that state is only ever written to the cookie the victim's browser
   # receives. It is what keeps the login safe from session fixation should the
   # session ever be moved to a server side store.
-  #
-  # List filters survive the rotation: they are a UI preference, not session
-  # state, and logging in or out must not throw a list's settings away. Carrying
-  # them over is safe because `Filterable` casts and validates every value on
-  # read, so nothing can be smuggled in that an ordinary request could not set.
   def rotate_session
-    filters = session.to_hash.select { |key, _| key.to_s.end_with?("/filter") }
-
     reset_session
-
-    filters.each { |key, value| session[key] = value }
   end
 
   def authenticate_user!

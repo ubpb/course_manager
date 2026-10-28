@@ -4,10 +4,10 @@ module Frontend
     include Filterable
 
     before_action :prepare_offer_context, except: [:redirect_courses, :redirect_consultings, :redirect_events]
-    before_action -> { persist_filter_params(:offers) }, only: :index
+    before_action -> { canonicalize_filter_url(:offers) }, only: :index
 
     define_filter :offers do
-      filter_by :scope, :string do |arel, scope|
+      filter_by :scope, :string, values: ["courses", "consultings", "self_study_courses"] do |arel, scope|
         case scope
         when "courses"
           arel.courses
@@ -34,11 +34,11 @@ module Frontend
         arel.where("offers.title like ?", "%#{ApplicationRecord.sanitize_sql_like(title)}%")
       end
 
-      filter_by :target_groups, :integer do |arel, target_group_ids|
+      filter_by :target_groups, :integer, multiple: true do |arel, target_group_ids|
         arel.joins(:target_groups).where(target_groups: {id: target_group_ids}).distinct
       end
 
-      filter_by :topics, :integer do |arel, topic_ids|
+      filter_by :topics, :integer, multiple: true do |arel, topic_ids|
         arel.joins(:topics).where(topics: {id: topic_ids}).distinct
       end
     end

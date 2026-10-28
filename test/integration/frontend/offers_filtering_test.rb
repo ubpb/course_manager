@@ -1,8 +1,8 @@
 require "test_helper"
 
-# The filter round trip on the public offers index: filter params are persisted
-# in the session, the request redirects to the clean list URL, and the next
-# render reflects exactly the filters that are still set.
+# The filter round trip on the public offers index: a filter leads to the short
+# URL of the list, which renders exactly the filters it names, and a clean list
+# URL requested by Turbo leads to the filter the tab remembers.
 module Frontend
   class OffersFilteringTest < ActionDispatch::IntegrationTest
 
@@ -19,14 +19,23 @@ module Frontend
     def filter(params)
       get frontend_offers_path(filter: params)
 
-      assert_redirected_to frontend_offers_path
+      assert_response :redirect
       follow_redirect!
+
+      assert_response :success
+    end
+
+    # The header with which Turbo sends the filters the tab remembers.
+    def remembering(query)
+      {Filterable::FILTER_STATE_HEADER => {"frontend/offers" => query}.to_json}
     end
 
     # Titles are matched against the rendered page, so they must not occur in the
     # page chrome ("Beratung" would match the "Beratungsangebote" heading).
     def listed
-      [@scheduled_course, @unscheduled_course, @consulting].select { |offer| response.body.include?(offer.title) }
+      [@scheduled_course, @unscheduled_course, @consulting].select do |offer|
+        response.body.include?(ERB::Util.html_escape(offer.title))
+      end
     end
 
     test "the scope filter alone" do
@@ -58,31 +67,84 @@ module Frontend
       assert_equal [@consulting], listed
     end
 
-    test "filters survive the next request and reset_filter clears them" do
-      filter(scope: "courses", with_upcoming_events: "1")
+    test "a form's filter leads to the short URL of the list" do
+      get frontend_offers_path(filter: {scope: "courses", with_upcoming_events: "1", title: ""})
 
-      get frontend_offers_path
+      assert_redirected_to "/angebote?scope=courses&with-upcoming-events=1"
+    end
 
+    test "the short URL renders filtered without a redirect" do
+      get "/angebote?scope=courses&with-upcoming-events=1"
+
+      assert_response :success
       assert_equal [@scheduled_course], listed
+    end
 
-      get frontend_offers_path(reset_filter: true)
+    test "other forms of a filter lead to its short URL" do
+      {"/angebote?with-upcoming-events=1&scope=courses" => "/angebote?scope=courses&with-upcoming-events=1",
+       "/angebote?scope=courses&title=" => "/angebote?scope=courses",
+       "/angebote?scope=courses&commit=Filtern" => "/angebote?scope=courses",
+       "/angebote?scope=schulungen" => "/angebote"}.each do |from, to|
+        get from
+
+        assert_redirected_to to, from
+      end
+    end
+
+    test "a title with special characters keeps a stable short URL" do
+      @consulting.update!(title: "Recherche & Zitieren, Tübingen")
+
+      filter(title: "Recherche & Zitieren, Tübingen")
+
+      assert_equal "/angebote?title=Recherche+%26+Zitieren,+T%C3%BCbingen", request.fullpath
+      assert_equal [@consulting], listed
+    end
+
+    test "a clean URL requested by Turbo leads to the filter the tab remembers" do
+      get frontend_offers_path, headers: remembering("scope=courses")
+
+      assert_redirected_to "/angebote?scope=courses"
+    end
+
+    test "without a remembered filter the clean URL renders unfiltered" do
+      [{}, {Filterable::FILTER_STATE_HEADER => "{}"}].each do |headers|
+        get frontend_offers_path, headers: headers
+
+        assert_response :success
+        assert_equal [@scheduled_course, @unscheduled_course, @consulting], listed
+      end
+    end
+
+    test "resetting ignores the filter the header still remembers" do
+      get frontend_offers_path(reset_filter: true), headers: remembering("scope=courses")
 
       assert_redirected_to frontend_offers_path
-      follow_redirect!
 
+      follow_redirect!(headers: remembering("scope=courses"))
+
+      assert_response :success
       assert_equal [@scheduled_course, @unscheduled_course, @consulting], listed
     end
 
-    test "blank filter values are not persisted" do
-      filter(scope: "courses", title: "")
+    test "a malformed or stale header is ignored" do
+      ["no json", "[1]", {"frontend/offers" => 5}.to_json,
+       {"frontend/offers" => "scope=schulungen&topics=x"}.to_json, {"frontend/offers" => "title=%E0%A4%A"}.to_json,
+       {"frontend/offers" => "scope=courses", "pad" => "x" * 5000}.to_json].each do |value|
+        get frontend_offers_path, headers: {Filterable::FILTER_STATE_HEADER => value}
 
-      get frontend_offers_path
+        assert_response :success, value.first(40)
+      end
+    end
 
-      assert_equal [@scheduled_course, @unscheduled_course], listed
+    test "every filter of the list leads to a URL that renders" do
+      topic = Topic.create!(title: "Recherche")
+      group = TargetGroup.create!(title: "Studierende")
 
-      filter(scope: "", title: "")
+      filter(scope: "courses", with_upcoming_events: "1", title: "Test", topics: [topic.id],
+             target_groups: [group.id])
 
-      assert_equal [@scheduled_course, @unscheduled_course, @consulting], listed
+      assert_equal "/angebote?scope=courses&with-upcoming-events=1&title=Test" \
+                   "&target-groups=#{group.id}&topics=#{topic.id}", request.fullpath
     end
 
     test "removing a filter through its chip drops only that filter" do

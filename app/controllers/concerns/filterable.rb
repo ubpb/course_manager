@@ -3,18 +3,18 @@
 # A controller declares its filters once:
 #
 #   define_filter :offers do
-#     filter_by :scope, :string do |arel, scope| ... end
+#     filter_by :scope, :string, values: ["courses", "consultings"] do |arel, scope| ... end
 #     filter_by :with_upcoming_events, :flag do |arel, _value| ... end
 #   end
 #
-#   before_action -> { persist_filter_params(:offers) }, only: :index
+#   before_action -> { canonicalize_filter_url(:offers) }, only: :index
 #
 #   def index
 #     @filter = create_filter(:offers)
 #     @offers = @filter.filter(Offer.all)
 #   end
 #
-# In a URL, each filter has a short name and value form, e.g.
+# The filter of a list lives in its URL, in a short form, e.g.
 # `?upcoming-or-past=upcoming&published=1&topics=3,5`:
 #
 #   param:    The name in the URL; the filter's name dasherized by default
@@ -26,9 +26,19 @@
 # Booleans appear as 1 / 0, a set flag as 1, dates as YYYY-MM-DD; unset values
 # and defaults stay out of the URL.
 #
-# Filter values are persisted in the session per controller path, so a list keeps
-# its filtering while the user navigates. `?filter[...]=` sets them and
-# `?reset_filter=1` clears them; both redirect to the clean list URL (PRG).
+# Every other form of a filter leads to this canonical URL: the `filter[...]`
+# params of a form, another order, unknown values, defaults, and params that are
+# no filters (such as a form's `commit`); of those, only the params of
+# `default_url_options` (nav_scope) stay. An empty filter and `?reset_filter=1`
+# lead to the clean list URL.
+#
+# Each browser tab remembers the filters of its lists and sends them with every
+# request Turbo makes, in the header X-Filter-State: JSON of list key (the
+# controller path) -> canonical query. A clean list URL requested with a filter
+# remembered for it leads to that filter, so the menu bar, back links and the
+# redirects after actions come back to the filtered list. The server keeps no
+# filter, only a note for the one request after a reset, which still carries the
+# memory from before.
 #
 # Value semantics -- one rule, used by casting, `#filter` and `#active?`:
 #
@@ -66,43 +76,88 @@ module Filterable
     end
   end
 
+  FILTER_STATE_HEADER = "X-Filter-State".freeze
+  MAX_FILTER_STATE_BYTES = 4096
+  RESET_NOTE_KEY = "filter_reset".freeze
+
   private
 
-  # Persists incoming filter params in the session and redirects to the clean
-  # list URL. Declare as a `before_action` so the action never runs on a request
+  # Leads a request for a list to the canonical URL of its filter, keeping the
+  # flash. Declare as a `before_action` so the action never runs on a request
   # that is about to be redirected.
-  def persist_filter_params(context_name,
-                            filter_param: :filter,
-                            reset_filter_param: :reset_filter,
-                            path: request.path)
+  def canonicalize_filter_url(context_name)
+    context = filter_context!(context_name)
+    form_filter = request.query_parameters["filter"]
+    in_url = url_filter_params(context)
+
+    if params[:reset_filter].present?
+      redirect_to_filter(context, {})
+    elsif form_filter.is_a?(Hash)
+      redirect_to_filter(context, context.storable_params(form_filter))
+    elsif in_url.present?
+      stored = context.storable_params(context.decode(in_url))
+      redirect_to_filter(context, stored) unless request.query_string == canonical_filter_query(context, stored)
+    elsif !take_reset_note
+      remembered = remembered_filter_params(context)
+      redirect_to_filter(context, remembered) if remembered.present?
+    end
+  end
+
+  # The filter of the URL. A filter that is not in the URL is empty by now: the
+  # before_action led a remembered one into the URL.
+  def create_filter(context_name)
     context = filter_context!(context_name)
 
-    if params[reset_filter_param].present?
-      session.delete(filter_session_key)
-      return redirect_to(path)
-    end
+    filter_params = context.storable_params(context.decode(url_filter_params(context)))
 
-    raw = params[filter_param]
-    return unless raw.respond_to?(:to_unsafe_h)
-
-    stored = context.storable_params(raw.to_unsafe_h)
-
-    if stored.present?
-      session[filter_session_key] = stored
-    else
-      session.delete(filter_session_key)
-    end
-
-    redirect_to(path)
+    Filter.new(filter_context: context, filter_params:)
   end
 
-  def create_filter(context_name)
-    Filter.new(filter_context: filter_context!(context_name),
-               filter_params: session[filter_session_key] || {})
+  def redirect_to_filter(context, stored)
+    flash.keep
+    query = canonical_filter_query(context, stored)
+
+    session[RESET_NOTE_KEY] = filter_list_key if context.query(stored).blank?
+
+    redirect_to([request.path, query.presence].compact.join("?"))
   end
 
-  def filter_session_key
-    "#{controller_path}/filter"
+  # The params of default_url_options (nav_scope), then the filter's query.
+  def canonical_filter_query(context, stored)
+    [kept_url_params.to_query.presence, context.query(stored).presence].compact.join("&")
+  end
+
+  def kept_url_params
+    request.query_parameters.slice(*default_url_options.keys.map(&:to_s))
+  end
+
+  def url_filter_params(context)
+    request.query_parameters.slice(*context.param_names)
+  end
+
+  def filter_list_key
+    controller_path
+  end
+
+  # Whether the list was just reset, so the memory its request still carries
+  # does not count.
+  def take_reset_note
+    session.delete(RESET_NOTE_KEY) if session[RESET_NOTE_KEY] == filter_list_key
+  end
+
+  # The filter the tab remembers for this list: nil without the header, empty
+  # when the header is malformed, too large or names nothing valid.
+  def remembered_filter_params(context)
+    header = request.headers[FILTER_STATE_HEADER]
+    return if header.nil?
+    return {} if header.bytesize > MAX_FILTER_STATE_BYTES
+
+    entry = JSON.parse(header).then { |state| state[filter_list_key] if state.is_a?(Hash) }
+    return {} unless entry.is_a?(String)
+
+    context.storable_params(context.decode(Rack::Utils.parse_query(entry)))
+  rescue JSON::ParserError, ArgumentError
+    {}
   end
 
   def filter_context!(context_name)

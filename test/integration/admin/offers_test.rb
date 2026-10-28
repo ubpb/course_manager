@@ -19,8 +19,10 @@ module Admin
     def filter(params)
       get admin_offers_path(filter: params)
 
-      assert_redirected_to admin_offers_path
+      assert_response :redirect
       follow_redirect!
+
+      assert_response :success
     end
 
     def listed
@@ -202,6 +204,26 @@ module Admin
 
       assert_redirected_to admin_offers_path
       assert_not Offer.exists?(@course.id)
+    end
+
+    test "deleting an offer leads back to the list as the tab remembers it, with the notice" do
+      headers = {Filterable::FILTER_STATE_HEADER => {"admin/offers" => "scope=consultings"}.to_json}
+
+      delete admin_offer_path(@self_study), headers: headers
+      follow_redirect!(headers: headers)
+
+      assert_redirected_to "/admin/offers?scope=consultings"
+
+      follow_redirect!(headers: headers)
+
+      assert_equal [@consulting], listed
+      assert_select ".toast", text: /Erfolgreich gelöscht/
+    end
+
+    test "every filter of the list leads to a URL that renders" do
+      filter(published: "true", scope: "courses", title: "Literatur", include_archived: "1")
+
+      assert_equal "/admin/offers?published=1&scope=courses&title=Literatur&include-archived=1", request.fullpath
     end
 
   end

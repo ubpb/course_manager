@@ -5,9 +5,11 @@ module Admin
 
     extend ActiveSupport::Concern
 
+    PERIODS = ["all", "upcoming", "upcoming_and_last_3_months", "past"].freeze
+
     included do
       define_filter :events do
-        filter_by :upcoming_or_past, :string, default: "all" do |arel, value|
+        filter_by :upcoming_or_past, :string, default: "all", values: PERIODS do |arel, value|
           case value
           when "all"
             arel

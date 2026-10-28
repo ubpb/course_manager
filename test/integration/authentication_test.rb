@@ -21,12 +21,6 @@ class AuthenticationTest < ActionDispatch::IntegrationTest
                                               password: AlmaAuthenticationStub::VALID_PASSWORD}}
   end
 
-  # Persists a filter for the offers list in the session.
-  def set_offers_filter
-    get frontend_offers_path(filter: {scope: "courses"})
-    follow_redirect!
-  end
-
   # The session cookie always changes here, simply because its contents do, so it
   # says nothing about a rotation. Compare the session id -- by value: two
   # Rack::Session::SessionId objects for one and the same session are never `==`.
@@ -35,7 +29,8 @@ class AuthenticationTest < ActionDispatch::IntegrationTest
   end
 
   test "the login rotates the session id" do
-    set_offers_filter
+    # Remembering where to return after the login starts a session.
+    get new_frontend_event_registration_path(@event)
     before = session_id
 
     assert_predicate before, :present?
@@ -146,26 +141,6 @@ class AuthenticationTest < ActionDispatch::IntegrationTest
     get account_root_path
 
     assert_response :success
-  end
-
-  test "list filters survive the login" do
-    set_offers_filter
-
-    assert_equal({"scope" => "courses"}, session["frontend/offers/filter"])
-
-    log_in
-
-    assert_equal({"scope" => "courses"}, session["frontend/offers/filter"])
-  end
-
-  test "list filters survive the logout" do
-    log_in
-    follow_redirect!
-    set_offers_filter
-
-    get logout_path
-
-    assert_equal({"scope" => "courses"}, session["frontend/offers/filter"])
   end
 
   test "the login is rate limited" do

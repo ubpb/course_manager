@@ -8,14 +8,14 @@ module Admin
     before_action -> { @offer_page = true }, only: [:edit, :update]
     before_action -> { add_breadcrumb "Angebotsdaten" }, only: [:edit, :update]
     before_action -> { add_breadcrumb "Neues Angebot" }, only: [:new, :create]
-    before_action -> { persist_filter_params(:offers) }, only: :index
+    before_action -> { canonicalize_filter_url(:offers) }, only: :index
 
     define_filter :offers do
       filter_by :published, :boolean, default: nil do |arel, published|
         arel.where(published: published)
       end
 
-      filter_by :scope, :string do |arel, scope|
+      filter_by :scope, :string, values: ["courses", "consultings", "self_study_courses"] do |arel, scope|
         case scope
         when "courses"
           arel.courses

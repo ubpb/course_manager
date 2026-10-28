@@ -11,7 +11,7 @@ module Admin
       # rubocop:disable Rails/LexicallyScopedActionFilter
       before_action -> { prepare_offer_event_context(offer_page: true) },
                     only: [:index, :reports, :bulk_process, :bulk_move]
-      before_action -> { persist_filter_params(:events) }, only: [:index, :reports]
+      before_action -> { canonicalize_filter_url(:events) }, only: [:index, :reports]
       before_action :prepare_offer_event_context, except: [:index, :reports, :bulk_process, :bulk_move]
       # rubocop:enable Rails/LexicallyScopedActionFilter
       before_action -> { add_breadcrumb "Termindaten" }, only: [:edit, :update]
