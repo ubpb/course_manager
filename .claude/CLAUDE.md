@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Course/event manager for the University of Paderborn library (UB). Staff publish training **offers** and consultings, schedule **events** (termine), and manage participant **registrations**, certificates, and reports. Rails 8.1, Ruby (see `.ruby-version`). **The UI and URLs are in German** (`angebote`, `termine`, `anmeldung`); default locale is `:de`.
 
+**Language:** everything in the repository is in English — code, comments, commit messages, docs — except `README.md`, which is German, and the German UI texts and mail templates.
+
 ## Commands
 
 ```bash
