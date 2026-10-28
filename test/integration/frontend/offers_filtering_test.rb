@@ -136,6 +136,19 @@ module Frontend
       end
     end
 
+    # RACK_QUERY_PARSER_PARAMS_LIMIT can lower the number of params Rack parses
+    # below what a header of 4 KB holds.
+    test "a remembered filter does not depend on the params limit of the query parser" do
+      parser = Rack::Utils.default_query_parser
+      Rack::Utils.default_query_parser = Rack::QueryParser.make_default(32, params_limit: 2)
+
+      get frontend_offers_path, headers: remembering("scope=courses&with-upcoming-events=1&title=Test")
+
+      assert_redirected_to "/angebote?scope=courses&with-upcoming-events=1&title=Test"
+    ensure
+      Rack::Utils.default_query_parser = parser
+    end
+
     test "every filter of the list leads to a URL that renders" do
       topic = Topic.create!(title: "Recherche")
       group = TargetGroup.create!(title: "Studierende")

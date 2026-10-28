@@ -84,6 +84,12 @@ module Filterable
 
   FILTER_STATE_HEADER = "X-Filter-State".freeze
   MAX_FILTER_STATE_BYTES = 4096
+  # Rack's query parser with limits of its own: the environment can set the
+  # default parser's limits (RACK_QUERY_PARSER_PARAMS_LIMIT, ..._BYTESIZE_LIMIT)
+  # below what the header holds.
+  FILTER_STATE_PARSER = Rack::QueryParser.make_default(Rack::Utils.param_depth_limit,
+                                                       params_limit: MAX_FILTER_STATE_BYTES,
+                                                       bytesize_limit: MAX_FILTER_STATE_BYTES)
   RESET_NOTE_KEY = "filter_reset".freeze
 
   private
@@ -167,7 +173,7 @@ module Filterable
     entry = JSON.parse(header).then { |state| state[filter_list_key] if state.is_a?(Hash) }
     return {} unless entry.is_a?(String)
 
-    context.storable_params(context.decode(Rack::Utils.parse_query(entry)))
+    context.storable_params(context.decode(FILTER_STATE_PARSER.parse_query(entry)))
   rescue JSON::ParserError, ArgumentError
     {}
   end
