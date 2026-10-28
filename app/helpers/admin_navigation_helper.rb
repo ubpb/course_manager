@@ -23,8 +23,8 @@ module AdminNavigationHelper
   end
 
   # The way back from an event or offer page to where it was opened from.
-  def back_link(label, path, **options)
-    link_to(path, **options) do
+  def back_link(label, path, **)
+    link_to(path, **) do
       tag.i(class: "fa-solid fa-arrow-left me-1", "aria-hidden": true) + label
     end
   end

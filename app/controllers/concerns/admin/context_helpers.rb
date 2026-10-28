@@ -47,7 +47,7 @@ module Admin
     # `offer_page: true` for the event list of the offer page, which belongs to
     # the offer context without a nav_scope.
     def prepare_offer_event_context(offer_page: false)
-      @offer = Offer.includes(:events).find(params[:offer_id])
+      @offer = Offer.includes(:events).find(params.expect(:offer_id))
 
       unless @offer.course?
         redirect_back_or_to(admin_offers_path, alert: "Nur Kurse können Termine haben.")

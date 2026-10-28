@@ -10,10 +10,8 @@ module Admin
     def bulk_process
       events = bulk_events.where(id: params[:bulk_process_ids])
 
-      # Every branch ends in the redirect below, so the flash messages must not be
-      # flash.now (the cop misreads the case branches). update_all on purpose: one
-      # old, invalid record must not stop a bulk change.
-      # rubocop:disable-next Rails/ActionControllerFlashBeforeRender, Rails/SkipsModelValidations
+      # update_all on purpose: one old, invalid record must not stop a bulk change.
+      # rubocop:disable-next Rails/SkipsModelValidations
       case params[:bulk_process_action]
       when "publish"
         events.update_all(published: true)

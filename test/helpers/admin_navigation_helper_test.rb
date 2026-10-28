@@ -8,8 +8,8 @@ class AdminNavigationHelperTest < ActionView::TestCase
   end
 
   test "offer_type_label translates the type" do
-    assert_equal ["Schulung", "Beratung", "Selbstlernkurs"],
-                 Offer::TYPES.map { |type| offer_type_label(Offer.new(type: type)) }
+    assert_equal(["Schulung", "Beratung", "Selbstlernkurs"],
+                 Offer::TYPES.map { |type| offer_type_label(Offer.new(type: type)) })
   end
 
   test "published_badge tells published from unpublished" do
