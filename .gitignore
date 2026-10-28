@@ -46,5 +46,6 @@
 # Ignore other unneeded files
 .DS_Store
 
-# Brainstorming mockups (superpowers visual companion)
-/.superpowers
+# Working documents of the superpowers skills: mockups, ledgers, specs and plans
+/.superpowers/
+/docs/superpowers/
