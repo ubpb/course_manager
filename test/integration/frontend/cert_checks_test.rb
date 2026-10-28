@@ -45,6 +45,26 @@ module Frontend
       assert_includes response.body, "Die Teilnahmebescheinigung ist gültig."
     end
 
+    # The cleanup anonymizes a registration ten days after the event but keeps
+    # it; a deleted registration takes the validity of its certificates along.
+    test "a certificate stays valid once anonymized, but not once deleted" do
+      @offer = create_offer
+      @event = create_event
+      registration = create_registration
+      registration.certificates.create!(digest: "abc123", initials: "Ma / Mu")
+
+      registration.update_columns(Registration::ANONYMIZED_ATTRIBUTES)
+      get frontend_cert_check_path(id: "abc123")
+
+      assert_includes response.body, "Die Teilnahmebescheinigung ist gültig."
+
+      registration.destroy
+      get frontend_cert_check_path(id: "abc123")
+
+      assert_includes response.body, "Die Teilnahmebescheinigung ist ungültig."
+      assert Certificate.exists?(digest: "abc123")
+    end
+
     test "an unknown checksum is invalid" do
       get frontend_cert_check_path(id: "unbekannt")
 
