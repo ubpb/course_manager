@@ -7,6 +7,9 @@ class ApplicationHelperTest < ActionView::TestCase
 
   setup { travel_to Time.zone.parse("2026-10-20 16:08") }
 
+  # The controller provides the breadcrumb to the views.
+  def breadcrumb = @breadcrumb || []
+
   def in_days(count)
     date_in_words(Time.zone.today + count.days)
   end
@@ -47,6 +50,33 @@ class ApplicationHelperTest < ActionView::TestCase
   test "distant dates fall back to months and years" do
     assert_equal "in 2 Monaten", in_days(61)
     assert_equal "in etwa einem Jahr", in_days(366)
+  end
+
+  test "active_when matches the path by pattern or exactly, or takes a condition" do
+    request.path_info = "/admin/offers/42/edit"
+
+    assert_equal "active", active_when(%r{\A/admin/offers})
+    assert_equal "", active_when(%r{\A/admin/events})
+    assert_equal "active", active_when("/admin/offers/42/edit")
+    assert_equal "", active_when("/admin/offers")
+    assert_equal "active", active_when(true)
+    assert_equal "", active_when(false)
+    assert_equal "", active_when(nil)
+  end
+
+  test "strip_markdown leaves plain text in one line" do
+    assert_equal "Titel Ein fetter Satz.", strip_markdown("# Titel\n\nEin **fetter**\nSatz.")
+    assert_equal "", strip_markdown(nil)
+  end
+
+  test "the page title is the deepest breadcrumb unless a page sets its own" do
+    @breadcrumb = [{label: "Angebote"}, {label: "Literaturrecherche"}]
+
+    assert_equal "Literaturrecherche", page_title
+
+    content_for(:page_title, "Eigener Titel")
+
+    assert_equal "Eigener Titel", page_title
   end
 
 end
