@@ -1,13 +1,13 @@
 source "https://rubygems.org"
 
-gem "active_flag", "~> 2.0"
+gem "active_flag", "~> 2.2"
 gem "acts_as_list", "~> 1.1"
 gem "alma_api", "~> 2.0"
 gem "bootsnap", require: false
 gem "caxlsx_rails", "~> 0.7"
-gem "commonmarker", "~> 2.0"
-gem "github-markup", "~> 6.0", require: "github/markup"
-gem "hexapdf", "~> 1.1"
+gem "commonmarker", "~> 2.10"
+gem "github-markup", "~> 6.1", require: "github/markup"
+gem "hexapdf", "~> 1.11"
 gem "jbuilder"
 # Delivers mails to files and shows them in the browser: development, and test
 # systems that set mail.delivery_method: letter_opener_web (config/application.yml)
@@ -15,7 +15,7 @@ gem "letter_opener_web"
 gem "mysql2"
 gem "propshaft"
 gem "puma", ">= 5.0"
-gem "rails", "~> 8.1.3"
+gem "rails", "~> 8.1.4"
 gem "rails-i18n", "~> 8.0"
 gem "simple_form", "~> 5.1"
 gem "slim"
@@ -23,7 +23,7 @@ gem "solid_queue"
 gem "stimulus-rails"
 gem "strip_attributes", "~> 2.0"
 gem "turbo-rails"
-gem "view_component", "~> 4.0"
+gem "view_component", "~> 4.19"
 
 gem "inline_svg", "~> 1.10" # Must be after propshaft
 
