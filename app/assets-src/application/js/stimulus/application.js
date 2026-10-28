@@ -32,6 +32,10 @@ application.register("select-filter", SelectFilter)
 import ModalController from "./modal_controller.js"
 application.register("modal", ModalController)
 
+// Register Toast controller
+import ToastController from "./toast_controller.js"
+application.register("toast", ToastController)
+
 // Register Tooltip controller
 import TooltipController from "./tooltip_controller.js"
 application.register("tooltip", TooltipController)
