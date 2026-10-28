@@ -27,7 +27,7 @@ module Admin
           @certification = @event.build_certification(certification_params)
 
           if @certification.save
-            redirect_to edit_admin_offer_event_certification_path(@offer, @event, @certification),
+            redirect_to edit_admin_offer_event_certification_path(@offer, @event),
                         notice: t("admin.application.form.success")
           else
             render :new, status: :unprocessable_content
@@ -36,7 +36,7 @@ module Admin
 
         def update
           if @certification.update(certification_params)
-            redirect_to edit_admin_offer_event_certification_path(@offer, @event, @certification),
+            redirect_to edit_admin_offer_event_certification_path(@offer, @event),
                         notice: t("admin.application.form.success")
           else
             render :edit, status: :unprocessable_content

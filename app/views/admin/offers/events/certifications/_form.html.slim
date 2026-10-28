@@ -2,7 +2,7 @@
 
 / The certificate tab, for a new certificate as well as a saved one.
 = render layout: "admin/offers/events/frame", locals: {offer: offer, event: event, active_tab: :certification} do
-  = simple_form_for certification, url: admin_offer_event_certification_path(offer, event, certification) do |form|
+  = simple_form_for certification, url: admin_offer_event_certification_path(offer, event) do |form|
     .card.card-shadowed
       .card-header.d-flex.align-items-center.gap-2
         h5.card-title.mb-0 = "Zertifikat"

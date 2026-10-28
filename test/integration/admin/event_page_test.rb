@@ -126,6 +126,43 @@ class Admin::EventPageTest < ActionDispatch::IntegrationTest
     assert_select "textarea", text: /Katalogrecherche/
   end
 
+  # Statistics and certificate are singular resources of the event: a record
+  # passed to their path helpers would end up as the format (".../report.5").
+  test "statistics and certificate save to and return to their plain URLs" do
+    report, edit_report = admin_offer_event_report_path(@offer, @event), edit_admin_offer_event_report_path(@offer, @event)
+    certification = admin_offer_event_certification_path(@offer, @event)
+    edit_certification = edit_admin_offer_event_certification_path(@offer, @event)
+    report_params = {duration: 90, number_of_participants: 5, lecturer: "Schulungsteam",
+                     lecturer_md: 0, lecturer_gd: 1, lecturer_hd: 0,
+                     presence_types: "presence", organization_types: "library", levels: "beginner",
+                     categories: "interdisciplinary", forms: ["presentation"], audiences: ["bachelor_students"],
+                     focus: ["information_competence"]}
+
+    post report, params: {report: report_params}
+
+    assert_redirected_to edit_report
+
+    get edit_report
+
+    assert_select "form[action=?]", report
+
+    patch report, params: {report: report_params.merge(number_of_participants: 6)}
+
+    assert_redirected_to edit_report
+
+    post certification, params: {certification: {learning_results: "Katalogrecherche"}}
+
+    assert_redirected_to edit_certification
+
+    get edit_certification
+
+    assert_select "form[action=?]", certification
+
+    patch certification, params: {certification: {learning_results: "Datenbanken"}}
+
+    assert_redirected_to edit_certification
+  end
+
   test "the cards no longer close with an x" do
     get edit_admin_offer_event_path(@offer, @event)
 

@@ -42,7 +42,7 @@ module Admin
           @report = @event.build_report(report_params)
 
           if @report.save
-            redirect_to edit_admin_offer_event_report_path(@offer, @event, @report),
+            redirect_to edit_admin_offer_event_report_path(@offer, @event),
                         notice: t("admin.application.form.success")
           else
             render :new, status: :unprocessable_content
@@ -51,7 +51,7 @@ module Admin
 
         def update
           if @report.update(report_params)
-            redirect_to edit_admin_offer_event_report_path(@offer, @event, @report),
+            redirect_to edit_admin_offer_event_report_path(@offer, @event),
                         notice: t("admin.application.form.success")
           else
             render :edit, status: :unprocessable_content

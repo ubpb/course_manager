@@ -3,7 +3,7 @@
 / The statistics tab, for new statistics as well as saved ones, which can be
 / exported.
 = render layout: "admin/offers/events/frame", locals: {offer: offer, event: event, active_tab: :report} do
-  = simple_form_for report, url: admin_offer_event_report_path(offer, event, report) do |form|
+  = simple_form_for report, url: admin_offer_event_report_path(offer, event) do |form|
     .card.card-shadowed
       .card-header.d-flex.align-items-center.gap-2
         h5.card-title.mb-0 = "Statistik"
