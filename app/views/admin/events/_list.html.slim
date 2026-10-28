@@ -11,10 +11,6 @@
   - reports_path = reports_admin_events_path(format: :xlsx)
   - filter_url = admin_events_path
 
-/ Saving in the modal refreshes the list; stay where the entry is.
-- content_for(:head) do
-  meta(name="turbo-refresh-scroll" content="preserve")
-
 .card.card-shadowed
   .card-header.d-flex.align-items-center.gap-2
     h5.card-title.mb-0 = "Termine"

@@ -38,7 +38,9 @@ module Admin
 
       assert_select "#event-modal"
       assert_select "a[href=?][data-turbo-stream]", new_admin_offer_event_path(@offer, nav_scope: "offer")
-      assert_select "head meta[name=turbo-refresh-scroll][content=preserve]"
+      # Only the modal's refresh keeps the scroll position; the bulk and row
+      # actions redirect to the list and scroll up to their notice.
+      assert_select "head meta[name=turbo-refresh-scroll]", count: 0
     end
 
     test "the form for a new event opens in a modal that a click beside it does not close" do
@@ -74,7 +76,7 @@ module Admin
              params: {event: {date_and_time: "2026-12-01T10:00", max_no_of_participants: 10}}, as: :turbo_stream
       end
 
-      assert_select "turbo-stream[action=refresh]"
+      assert_select "turbo-stream[action=refresh][scroll=preserve]"
       assert_equal "Erfolgreich gespeichert.", flash[:notice]
     end
 

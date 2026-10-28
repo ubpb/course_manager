@@ -172,6 +172,30 @@ class ModalFormsTest < ApplicationSystemTestCase
     assert_empty script_errors
   end
 
+  test "saving in the modal keeps the list where it was" do
+    @offer = create_offer
+    @event = create_event(max_no_of_participants: 0)
+    40.times { |index| create_registration(email: "teilnehmer#{index}@example.com") }
+    visit admin_offer_event_registrations_path(@offer, @event)
+    execute_script("window.scrollTo(0, document.body.scrollHeight)")
+
+    all("td.actions .dropdown-toggle").last.click
+    click_on "Bearbeiten"
+
+    assert_selector "#registration_first_name:focus"
+    scrolled = evaluate_script("window.scrollY")
+
+    assert_operator scrolled, :>, 0
+
+    click_on "Speichern"
+
+    assert_text "Erfolgreich gespeichert."
+    assert_no_selector ".modal", visible: :all
+    # The notice above makes the page taller; the browser keeps the rows in
+    # view, so the position may only grow.
+    assert_operator evaluate_script("window.scrollY"), :>=, scrolled
+  end
+
   private
 
   def open_participant_in_modal

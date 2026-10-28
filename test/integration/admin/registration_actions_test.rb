@@ -66,7 +66,9 @@ module Admin
       assert_select "a[href=?][data-turbo-stream]", new_admin_offer_event_registration_path(@offer, @event)
       assert_select "a[href=?][data-turbo-stream]",
                     edit_admin_offer_event_registration_path(@offer, @event, @registration)
-      assert_select "head meta[name=turbo-refresh-scroll][content=preserve]"
+      # Only the modal's refresh keeps the scroll position; the bulk and row
+      # actions redirect to the list and scroll up to their notice.
+      assert_select "head meta[name=turbo-refresh-scroll]", count: 0
     end
 
     test "a participant opens in a modal that a click beside it does not close" do
@@ -92,7 +94,7 @@ module Admin
       patch admin_offer_event_registration_path(@offer, @event, @registration),
             params: {registration: {first_name: "Moritz"}}, as: :turbo_stream
 
-      assert_select "turbo-stream[action=refresh]"
+      assert_select "turbo-stream[action=refresh][scroll=preserve]"
       assert_equal "Erfolgreich gespeichert.", flash[:notice]
       assert_equal "Moritz", @registration.reload.first_name
     end
