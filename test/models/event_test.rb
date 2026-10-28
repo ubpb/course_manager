@@ -47,6 +47,11 @@ class EventTest < ActiveSupport::TestCase
 
     assert_not_predicate @event, :registration_closed?
 
+    @event.registrations_count = @event.max_no_of_participants
+
+    assert_predicate @event, :registration_closed?
+
+    @event.registrations_count = 0
     @event.date_and_time = Time.zone.now.end_of_day - 1.minute
 
     assert_predicate @event, :registration_closed?

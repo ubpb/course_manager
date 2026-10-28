@@ -1,5 +1,7 @@
 require "test_helper"
 
+# The user of the frontend is no record: it is built from the Alma account at
+# the login and kept in the session.
 class UserTest < ActiveSupport::TestCase
 
   def alma_user(emails)
