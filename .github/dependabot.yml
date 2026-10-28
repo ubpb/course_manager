@@ -1,12 +1,29 @@
 version: 2
+
+# Version updates come weekly, minor and patch updates of an ecosystem in one
+# pull request; a major update gets one of its own. Vulnerable dependencies
+# show up daily in the audit steps of the CI.
 updates:
 - package-ecosystem: bundler
   directory: "/"
   schedule:
-    interval: daily
-  open-pull-requests-limit: 10
+    interval: weekly
+  groups:
+    gems:
+      update-types: [minor, patch]
+
+- package-ecosystem: bun
+  directory: "/"
+  schedule:
+    interval: weekly
+  groups:
+    js-packages:
+      update-types: [minor, patch]
+
 - package-ecosystem: github-actions
   directory: "/"
   schedule:
-    interval: daily
-  open-pull-requests-limit: 10
+    interval: monthly
+  groups:
+    actions:
+      patterns: ["*"]
