@@ -11,8 +11,10 @@
       = render "form_fields", form: form, autofocus: true
       - if registration.new_record?
         = render "send_confirmation", event: event
+    / Deleting goes to the left, away from the save button, which keeps the
+    / right edge as in every other modal.
     .modal-footer
+      - if registration.persisted?
+        = link_to t("admin.application.btn_delete"), admin_offer_event_registration_path(offer, event, registration), data: {turbo_method: :delete, turbo_confirm: t("admin.application.confirm_delete")}, class: "btn btn-danger me-auto"
       button.btn.btn-outline-secondary(type="button" data-bs-dismiss="modal") = t("admin.application.btn_cancel")
       = form.submit t("admin.application.btn_save"), class: "btn btn-primary"
-      - if registration.persisted?
-        = link_to t("admin.application.btn_delete"), admin_offer_event_registration_path(offer, event, registration), data: {turbo_method: :delete, turbo_confirm: t("admin.application.confirm_delete")}, class: "btn btn-danger ms-auto"

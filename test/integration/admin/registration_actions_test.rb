@@ -77,8 +77,11 @@ module Admin
       assert_select "turbo-stream[action=replace][target=registration-modal] template" do
         assert_select ".modal[data-bs-backdrop=static] .modal-dialog.modal-lg #registration-form"
         assert_select "input[name='registration[first_name]'][autofocus]"
-        assert_select "a[href=?][data-turbo-method=delete]",
+        # Left, away from the save button, which keeps the right edge as in
+        # every other modal.
+        assert_select ".modal-footer > a:first-child.me-auto[href=?][data-turbo-method=delete]",
                       admin_offer_event_registration_path(@offer, @event, @registration), text: "Löschen"
+        assert_select ".modal-footer > input:last-child[type=submit][value=Speichern]"
         assert_select "input[name=send_confirmation]", count: 0
       end
     end
