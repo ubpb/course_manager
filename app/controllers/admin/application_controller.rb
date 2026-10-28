@@ -6,6 +6,8 @@ module Admin
 
     before_action :authenticate!
 
+    rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
+
     layout "admin"
 
     # The admin identity lives in its own cookie instead of the session, because
@@ -39,6 +41,21 @@ module Admin
     def sign_out_admin
       cookies.delete(ADMIN_COOKIE, path: ADMIN_COOKIE_OPTIONS[:path])
       @current_admin_user = nil
+    end
+
+    # A record that is gone -- deleted in another tab, whose menu bar still
+    # leads to its page, or by a colleague -- leads to the list of the area of
+    # its page. A 303, so that Turbo follows a form sent for it with a GET.
+    def record_not_found
+      redirect_to area_list_path, alert: "Den aufgerufenen Eintrag gibt es nicht (mehr).", status: :see_other
+    end
+
+    def area_list_path
+      case helpers.admin_menu_section
+      when :offers then admin_offers_path(nav_scope: nil)
+      when :master_data then url_for(action: :index, nav_scope: nil)
+      else admin_events_path(nav_scope: nil)
+      end
     end
 
   end
