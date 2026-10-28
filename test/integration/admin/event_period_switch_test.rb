@@ -2,7 +2,7 @@ require "test_helper"
 
 # The period of the event lists is a visible switch instead of a field in the
 # filter panel. Switching keeps all other filters, and the panel keeps the
-# period, although both store the filters as a whole.
+# period, although both lead to a URL that names the whole filter.
 module Admin
   class EventPeriodSwitchTest < ActionDispatch::IntegrationTest
 

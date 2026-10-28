@@ -49,9 +49,9 @@ module FilterChipHelper
   end
 
   # Path that removes one filter key, or a single value from an array filter,
-  # from the currently stored filter params. Shared by the frontend and admin
+  # from the params of the current filter. Shared by the frontend and admin
   # chip helpers. Falls back to a clean reset when no filters remain.
-  # Filterable only persists params that carry a value, so what is left here is
+  # A filter only holds params that carry a value, so what is left here is
   # exactly the still-set filters.
   def filter_remove_path(filter, key, value = nil)
     params = filter.params.deep_dup

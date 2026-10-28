@@ -24,7 +24,7 @@ module AdminFilterHelper
   end
 
   # Path of the current event list with another period and all other filters
-  # kept: storing filters replaces the stored ones as a whole.
+  # kept: a filter URL names the whole filter.
   def admin_event_period_path(filter, value)
     filtered_list_path(filter, filter.params.merge("upcoming_or_past" => value))
   end

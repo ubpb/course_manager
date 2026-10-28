@@ -317,9 +317,9 @@ module Filterable
       @filters ||= {}.with_indifferent_access
     end
 
-    # The subset of a raw filter param hash worth persisting: known keys whose
-    # value actually casts to something. Keeps unset values and unrelated keys
-    # out of the (cookie-backed) session.
+    # The subset of a raw filter param hash that sets something: known keys
+    # whose value actually casts to something. Keeps unset values and unrelated
+    # keys out of a filter and its URL.
     def storable_params(raw_params)
       raw_params.slice(*filters.keys.map(&:to_s)).reject do |name, value|
         filters[name].cast(value).nil?
