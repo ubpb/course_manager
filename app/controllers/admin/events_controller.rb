@@ -3,6 +3,7 @@ module Admin
 
     include Filterable
     include EventFilter
+    include EventBulkActions
 
     before_action -> { add_breadcrumb "Termine", admin_events_path }
     before_action -> { persist_filter_params(:events) }, only: [:index, :reports]
@@ -29,43 +30,6 @@ module Admin
       end
     end
 
-    def bulk_process
-      events = Event.where(id: params[:bulk_process_ids])
-
-      # Every branch ends in the redirect below, so the flash messages must not be
-      # flash.now (the cop misreads the case branches). update_all on purpose: one
-      # old, invalid record must not stop a bulk change.
-      # rubocop:disable-next Rails/ActionControllerFlashBeforeRender, Rails/SkipsModelValidations
-      case params[:bulk_process_action]
-      when "publish"
-        events.update_all(published: true)
-        flash[:success] = "Termin(e) wurde(n) veröffentlicht"
-      when "unpublish"
-        events.update_all(published: false)
-        flash[:success] = "Veröffentlichung von Termin(en) wurde zurückgezogen"
-      when "move_to_offer"
-        return render_move_to_offer_form(events) if events.any?
-
-        flash[:alert] = "Bitte mindestens einen Termin auswählen"
-      end
-
-      redirect_to admin_events_path
-    end
-
-    def bulk_move
-      events = Event.where(id: params[:event_ids])
-      offer = Offer.courses.find_by(id: params[:target_offer_id])
-
-      if offer.nil? || events.none?
-        flash[:alert] = "Bitte Termine und Ziel-Angebot auswählen"
-      else
-        events.update_all(offer_id: offer.id) # rubocop:disable Rails/SkipsModelValidations -- see bulk_process
-        flash[:success] = "Termin(e) wurde(n) nach \"#{offer.title}\" verschoben"
-      end
-
-      redirect_to admin_events_path
-    end
-
     def reports
       prepare_report_export(load_events)
 
@@ -80,26 +44,17 @@ module Admin
 
     private
 
-    # The dialog for picking the target offer, opened as a modal.
-    def render_move_to_offer_form(events)
-      render turbo_stream: turbo_stream.replace(
-        "bulk-action-form",
-        partial: "bulk_action_move_to_offer",
-        locals: {
-          events: events.includes(:offer),
-          offers: Offer.courses.order(:title),
-          url: bulk_move_admin_events_path
-        }
-      )
+    # See EventBulkActions.
+    def bulk_events
+      Event.all
     end
 
-    def setup_bulk_process_actions(events)
-      @bulk_process_actions = []
-      return if events.empty?
+    def bulk_target_offers
+      Offer.courses
+    end
 
-      @bulk_process_actions << ["Veröffentlichen", "publish"]
-      @bulk_process_actions << ["Veröffentlichung zurückziehen", "unpublish"]
-      @bulk_process_actions << ["In anderes Angebot verschieben", "move_to_offer"]
+    def bulk_return_path
+      admin_events_path
     end
 
     def load_events

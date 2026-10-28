@@ -97,6 +97,66 @@ class Admin::EventListTest < ActionDispatch::IntegrationTest
     assert_includes response.body, '<turbo-stream action="replace" target="bulk-action-form">'
   end
 
+  test "bulk actions work in the global list" do
+    @upcoming.update!(published: false)
+    patch bulk_process_admin_events_path,
+          params: {bulk_process_action: "publish", bulk_process_ids: [@upcoming.id]}
+
+    assert_redirected_to admin_events_path
+    assert_predicate @upcoming.reload, :published?
+
+    patch bulk_process_admin_events_path,
+          params: {bulk_process_action: "unpublish", bulk_process_ids: [@upcoming.id]}
+
+    assert_not_predicate @upcoming.reload, :published?
+  end
+
+  test "the move dialog offers every course, in the offer context all but its own" do
+    turbo = {"Accept" => "text/vnd.turbo-stream.html, text/html"}
+    global_move, offer_move = bulk_move_admin_events_path, bulk_move_admin_offer_events_path(@offer)
+
+    patch bulk_process_admin_events_path,
+          params: {bulk_process_action: "move_to_offer", bulk_process_ids: [@upcoming.id]}, headers: turbo
+
+    assert_includes response.body, %(action="#{global_move}")
+    assert_includes response.body, ">Literaturrecherche</option>"
+    assert_includes response.body, ">Recherche in Fachdatenbanken</option>"
+
+    patch bulk_process_admin_offer_events_path(@offer),
+          params: {bulk_process_action: "move_to_offer", bulk_process_ids: [@upcoming.id]}, headers: turbo
+
+    assert_includes response.body, %(action="#{offer_move}")
+    assert_not_includes response.body, ">Literaturrecherche</option>"
+    assert_includes response.body, ">Recherche in Fachdatenbanken</option>"
+  end
+
+  test "moving events puts them into the chosen course and returns to the list" do
+    global_list, other_list = admin_events_path, admin_offer_events_path(@other)
+
+    patch bulk_move_admin_events_path, params: {event_ids: [@upcoming.id], target_offer_id: @other.id}
+
+    assert_redirected_to global_list
+    assert_equal @other, @upcoming.reload.offer
+
+    patch bulk_move_admin_offer_events_path(@other), params: {event_ids: [@upcoming.id], target_offer_id: @offer.id}
+
+    assert_redirected_to other_list
+    assert_equal @offer, @upcoming.reload.offer
+  end
+
+  test "an offer moves neither into itself nor the events of another offer" do
+    patch bulk_move_admin_offer_events_path(@offer), params: {event_ids: [@upcoming.id], target_offer_id: @offer.id}
+
+    assert_equal "Bitte Termine und Ziel-Angebot auswählen", flash[:alert]
+
+    foreign = @other.events.first
+    patch bulk_move_admin_offer_events_path(@offer),
+          params: {event_ids: [foreign.id], target_offer_id: create_offer(title: "Zotero").id}
+
+    assert_equal "Bitte Termine und Ziel-Angebot auswählen", flash[:alert]
+    assert_equal @other, foreign.reload.offer
+  end
+
   # The checkbox and the actions menu sit in cells larger than themselves; a
   # click next to them must not open the event (see row_link_controller.js).
   test "the checkbox and actions cells do not open the event" do

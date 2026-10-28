@@ -4,6 +4,7 @@ module Admin
 
       include Filterable
       include EventFilter
+      include EventBulkActions
 
       before_action -> { prepare_offer_event_context(offer_page: true) },
                     only: [:index, :reports, :bulk_process, :bulk_move]
@@ -29,43 +30,6 @@ module Admin
             render "admin/offers/events/reports/show"
           end
         end
-      end
-
-      def bulk_process
-        events = @offer.events.where(id: params[:bulk_process_ids])
-
-        # Every branch ends in the redirect below, so the flash messages must not be
-        # flash.now (the cop misreads the case branches). update_all on purpose: one
-        # old, invalid record must not stop a bulk change.
-        # rubocop:disable-next Rails/ActionControllerFlashBeforeRender, Rails/SkipsModelValidations
-        case params[:bulk_process_action]
-        when "publish"
-          events.update_all(published: true)
-          flash[:success] = "Termin(e) wurde(n) veröffentlicht"
-        when "unpublish"
-          events.update_all(published: false)
-          flash[:success] = "Veröffentlichung von Termin(en) wurde zurückgezogen"
-        when "move_to_offer"
-          return render_move_to_offer_form(events) if events.any?
-
-          flash[:alert] = "Bitte mindestens einen Termin auswählen"
-        end
-
-        redirect_to admin_offer_events_path(@offer)
-      end
-
-      def bulk_move
-        events = @offer.events.where(id: params[:event_ids])
-        offer = Offer.courses.where.not(id: @offer.id).find_by(id: params[:target_offer_id])
-
-        if offer.nil? || events.none?
-          flash[:alert] = "Bitte Termine und Ziel-Angebot auswählen"
-        else
-          events.update_all(offer_id: offer.id) # rubocop:disable Rails/SkipsModelValidations -- see bulk_process
-          flash[:success] = "Termin(e) wurde(n) nach \"#{offer.title}\" verschoben"
-        end
-
-        redirect_to admin_offer_events_path(@offer)
       end
 
       def new
@@ -144,17 +108,17 @@ module Admin
 
       private
 
-      # The dialog for picking the target offer, opened as a modal.
-      def render_move_to_offer_form(events)
-        render turbo_stream: turbo_stream.replace(
-          "bulk-action-form",
-          partial: "admin/events/bulk_action_move_to_offer",
-          locals: {
-            events: events.includes(:offer),
-            offers: Offer.courses.where.not(id: @offer.id).order(:title),
-            url: bulk_move_admin_offer_events_path(@offer)
-          }
-        )
+      # See EventBulkActions.
+      def bulk_events
+        @offer.events
+      end
+
+      def bulk_target_offers
+        Offer.courses.where.not(id: @offer.id)
+      end
+
+      def bulk_return_path
+        admin_offer_events_path(@offer)
       end
 
       # The mail texts need a date, so without one there is only a hint.
@@ -180,15 +144,6 @@ module Admin
           last_name: "Mustermann",
           email: "schulung@ub.uni-paderborn.de"
         )
-      end
-
-      def setup_bulk_process_actions(events)
-        @bulk_process_actions = []
-        return if events.empty?
-
-        @bulk_process_actions << ["Veröffentlichen", "publish"]
-        @bulk_process_actions << ["Veröffentlichung zurückziehen", "unpublish"]
-        @bulk_process_actions << ["In anderes Angebot verschieben", "move_to_offer"]
       end
 
       def event_params
