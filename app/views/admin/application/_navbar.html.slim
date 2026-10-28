@@ -1,6 +1,16 @@
 / App bar of the admin area: the brand, the areas and the account. Every link
-/ leaves the offer context. Before the login only the brand shows.
-nav#admin-navbar.navbar.navbar-expand-md.d-print-none(data-bs-theme="dark" aria-label="Admin-Bereiche")
+/ leaves the offer context. The admin-nav controller turns the links to the
+/ other areas into the pages last seen there, in this tab; the login page has
+/ no area and forgets them. Before the login only the brand shows.
+- section = admin_menu_section if current_admin_user
+nav#admin-navbar.navbar.navbar-expand-md.d-print-none(
+  data-bs-theme="dark"
+  aria-label="Admin-Bereiche"
+  data-controller="admin-nav"
+  data-action="turbo:morph@document->admin-nav#resume"
+  data-admin-nav-section-value=section
+  data-admin-nav-path-value=(admin_menu_resume_path if section)
+)
   .container-fluid
     = link_to admin_root_path(nav_scope: nil), class: "navbar-brand admin-brand" do
       = inline_svg_tag "ub-logo-symbol.svg", class: "admin-brand-logo", aria_hidden: true
@@ -8,7 +18,6 @@ nav#admin-navbar.navbar.navbar-expand-md.d-print-none(data-bs-theme="dark" aria-
       span.admin-brand-area = "Admin"
 
     - if current_admin_user
-      - section = admin_menu_section
       button.navbar-toggler(
         type="button"
         data-bs-toggle="collapse"
@@ -23,12 +32,14 @@ nav#admin-navbar.navbar.navbar-expand-md.d-print-none(data-bs-theme="dark" aria-
         ul.navbar-nav.me-auto
           li.nav-item
             = link_to admin_events_path(nav_scope: nil),
+                      data: {admin_nav_target: "link", admin_nav_section: "events"},
                       class: ["nav-link", ("active" if section == :events)],
                       "aria-current": ("page" if section == :events) do
               i.fa-regular.fa-calendar.me-2(aria-hidden="true")
               = "Termine"
           li.nav-item
             = link_to admin_offers_path(nav_scope: nil),
+                      data: {admin_nav_target: "link", admin_nav_section: "offers"},
                       class: ["nav-link", ("active" if section == :offers)],
                       "aria-current": ("page" if section == :offers) do
               i.fa-solid.fa-layer-group.me-2(aria-hidden="true")

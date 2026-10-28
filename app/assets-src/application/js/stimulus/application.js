@@ -44,6 +44,10 @@ application.register("tooltip", TooltipController)
 import MailPreviewController from "./mail_preview_controller.js"
 application.register("mail-preview", MailPreviewController)
 
+// Register AdminNav controller
+import AdminNavController from "./admin_nav_controller.js"
+application.register("admin-nav", AdminNavController)
+
 // Register RowLink controller
 import RowLinkController from "./row_link_controller.js"
 application.register("row-link", RowLinkController)

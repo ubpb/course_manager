@@ -18,6 +18,14 @@ module AdminNavigationHelper
     end
   end
 
+  # The page the menu bar leads back to from another area (see the admin-nav
+  # controller): the current one, unless it answers a form (HEAD is routed like
+  # GET). Leading slashes are squeezed: "//admin/events" routes like
+  # "/admin/events", but as a link it would lead to a host "admin".
+  def admin_menu_resume_path
+    request.fullpath.sub(%r{\A/+}, "/") if request.get? || request.head?
+  end
+
   def offer_type_label(offer)
     OFFER_TYPE_LABELS.fetch(offer.type, offer.type)
   end

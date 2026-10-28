@@ -7,6 +7,35 @@ class AdminNavigationHelperTest < ActionView::TestCase
     assert_equal "3 / ∞", event_capacity(Event.new(registrations_count: 3, max_no_of_participants: 0))
   end
 
+  test "admin_menu_resume_path is the page with its query" do
+    request.path = "/admin/events"
+    request.query_string = "period=past"
+
+    assert_equal "/admin/events?period=past", admin_menu_resume_path
+  end
+
+  test "admin_menu_resume_path is the page for a HEAD, which is routed like a GET" do
+    request.path = "/admin/events"
+    request.request_method = "HEAD"
+
+    assert_equal "/admin/events", admin_menu_resume_path
+  end
+
+  test "admin_menu_resume_path is nothing for the answer to a form" do
+    request.path = "/admin/offers/1"
+    request.request_method = "PATCH"
+
+    assert_nil admin_menu_resume_path
+  end
+
+  # "//admin/events" routes like "/admin/events", but as a link it would lead
+  # to a host "admin".
+  test "admin_menu_resume_path stays on this site" do
+    request.path = "//admin/events"
+
+    assert_equal "/admin/events", admin_menu_resume_path
+  end
+
   test "offer_type_label translates the type" do
     assert_equal(["Schulung", "Beratung", "Selbstlernkurs"],
                  Offer::TYPES.map { |type| offer_type_label(Offer.new(type: type)) })

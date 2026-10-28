@@ -44,6 +44,46 @@ module Admin
       assert_select "#admin-navbar a[href*='nav_scope']", count: 0
     end
 
+    # The menu leads back to the page last seen in another area (see the
+    # admin-nav controller), so it names the area of each page and the page to
+    # come back to, with its offer context.
+    test "the menu names the area and the page to come back to" do
+      {admin_events_path => "events",
+       edit_admin_offer_path(@offer) => "offers",
+       admin_offer_event_registrations_path(@offer, @event, nav_scope: "offer") => "offers",
+       admin_topics_path => "master_data"}.each do |path, section|
+        get path
+
+        assert_select "#admin-navbar[data-admin-nav-section-value=?][data-admin-nav-path-value=?]", section, path
+      end
+    end
+
+    test "a form sent back with errors is no page to come back to" do
+      patch admin_offer_path(@offer), params: {offer: {title: ""}}
+
+      assert_response :unprocessable_content
+      assert_select "#admin-navbar[data-admin-nav-section-value=offers]"
+      assert_select "#admin-navbar[data-admin-nav-path-value]", count: 0
+    end
+
+    test "the menu leads to the other areas through the pages last seen there" do
+      get edit_admin_offer_path(@offer)
+
+      assert_select "#admin-navbar a[data-admin-nav-target=link][data-admin-nav-section=events][href=?]",
+                    admin_events_path, text: "Termine"
+      assert_select "#admin-navbar a[data-admin-nav-target=link][data-admin-nav-section=offers][href=?]",
+                    admin_offers_path, text: "Angebote"
+    end
+
+    # The login page forgets the pages of the last login.
+    test "the login page has no area" do
+      delete admin_session_path
+      get new_admin_session_path
+
+      assert_select "#admin-navbar[data-controller=admin-nav]"
+      assert_select "#admin-navbar[data-admin-nav-section-value]", count: 0
+    end
+
     # A test system keeps its mails for reading instead of sending them, and
     # staff check them there. The mail viewer has no admin menu to come back
     # with, so it opens in a tab of its own.
