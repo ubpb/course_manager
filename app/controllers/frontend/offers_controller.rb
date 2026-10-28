@@ -69,7 +69,7 @@ module Frontend
     end
 
     def redirect_courses
-      course = Offer.courses.find_by(old_id: params[:id]) if params[:id].present?
+      course = Offer.published.not_archived.courses.find_by(old_id: params[:id]) if params[:id].present?
 
       if course
         redirect_to frontend_offer_path(course), status: :moved_permanently
@@ -79,7 +79,7 @@ module Frontend
     end
 
     def redirect_consultings
-      consulting = Offer.consultings.find_by(old_id: params[:id]) if params[:id].present?
+      consulting = Offer.published.not_archived.consultings.find_by(old_id: params[:id]) if params[:id].present?
 
       if consulting
         redirect_to frontend_offer_path(consulting), status: :moved_permanently
@@ -89,7 +89,7 @@ module Frontend
     end
 
     def redirect_events
-      event = Event.find_by(id: params[:id]) if params[:id].present?
+      event = Event.from_published_offers.from_non_archived_offers.find_by(id: params[:id]) if params[:id].present?
 
       if event
         redirect_to frontend_offer_path(event.offer), status: :moved_permanently
