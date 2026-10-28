@@ -1,7 +1,8 @@
 require "test_helper"
 
 # Unit tests for the value semantics of Filterable: casting, unset values,
-# defaults, and which filters end up being applied / shown as active.
+# defaults, which filters end up being applied / shown as active, and the
+# short form of a filter in the URL.
 class FilterableTest < ActiveSupport::TestCase
 
   # Builds a filter for an ad-hoc context. Blocks append the filter name to a
@@ -235,6 +236,105 @@ class FilterableTest < ActiveSupport::TestCase
         arel + ["upcoming"]
       end
     end
+  end
+
+  # --- URL form --------------------------------------------------------------
+
+  def build_context(&)
+    context = Filterable::FilterContext.new
+    context.instance_eval(&)
+    context
+  end
+
+  def url_context
+    build_context do
+      filter_by :period, :string, default: "all", values: ["all", "upcoming_and_last_3_months"]
+      filter_by :published, :boolean
+      filter_by :online, :boolean
+      filter_by :archived, :flag
+      filter_by :from_date, :date
+      filter_by :topics, :integer, multiple: true
+      filter_by :title, :string
+    end
+  end
+
+  test "the URL name is the dasherized filter name unless param sets it" do
+    context = build_context do
+      filter_by :target_groups, :integer, multiple: true
+      filter_by :scope, :string, param: "art"
+    end
+
+    assert_equal ["target-groups", "art"], context.param_names
+  end
+
+  test "repeated or reserved URL names are rejected when the filter is defined" do
+    assert_raises(ArgumentError) do
+      build_context do
+        filter_by :title
+        filter_by :name, param: "title"
+      end
+    end
+    assert_raises(ArgumentError) { build_context { filter_by(:filter) } }
+    assert_raises(ArgumentError) { build_context { filter_by(:other, param: "reset_filter") } }
+  end
+
+  test "the query lists set values in URL form, in the order of the definitions" do
+    query = url_context.query("title" => "Zotero & Citavi, Tübingen", "topics" => ["3", "", "5"],
+                              "from_date" => "2026-10-01", "archived" => "1", "online" => "0",
+                              "published" => "true", "period" => "upcoming_and_last_3_months")
+
+    assert_equal "period=upcoming-and-last-3-months&published=1&online=0&archived=1&from-date=2026-10-01" \
+                 "&topics=3,5&title=Zotero+%26+Citavi,+T%C3%BCbingen", query
+  end
+
+  test "unset values, an unchecked flag and defaults are left out of the query" do
+    assert_equal "", url_context.query("period" => "all", "archived" => "0", "title" => "", "topics" => [""])
+  end
+
+  test "decoding reads the URL form back and leaves unknown values unset" do
+    context = url_context
+    raw = context.decode("period" => "upcoming-and-last-3-months", "published" => "0", "online" => "ja",
+                         "archived" => "1", "topics" => "3,x,5", "title" => "a,b", "from-date" => "2026-10-01")
+    filter = Filterable::Filter.new(filter_context: context, filter_params: context.storable_params(raw))
+
+    assert_equal "upcoming_and_last_3_months", filter.period
+    assert_same false, filter.published
+    assert_nil filter.online
+    assert filter.archived
+    assert_equal [3, 5], filter.topics
+    assert_equal "a,b", filter.title
+    assert_equal Date.new(2026, 10, 1), filter.from_date
+  end
+
+  test "an unknown enumerated value is unset" do
+    context = url_context
+    filter = Filterable::Filter.new(filter_context: context,
+                                    filter_params: context.storable_params(context.decode("period" => "kommend")))
+
+    assert_equal "all", filter.period
+    assert_not filter.active?(:period)
+  end
+
+  test "a hash of values sets their URL form" do
+    context = build_context { filter_by :scope, :string, values: {"courses" => "schulungen"} }
+
+    assert_equal "scope=schulungen", context.query("scope" => "courses")
+    assert_equal({"scope" => "courses"}, context.decode("scope" => "schulungen"))
+  end
+
+  test "a query decodes to the filter it was made from" do
+    raw = {"period" => "upcoming_and_last_3_months", "published" => "false", "topics" => ["3", "5"],
+           "title" => "Zotero & Citavi, Tübingen"}
+    context = url_context
+    query = context.query(raw)
+
+    assert_equal query, context.query(context.storable_params(context.decode(Rack::Utils.parse_query(query))))
+  end
+
+  test "a filter knows its query" do
+    filter = Filterable::Filter.new(filter_context: url_context, filter_params: {"published" => "true"})
+
+    assert_equal "published=1", filter.query
   end
 
 end

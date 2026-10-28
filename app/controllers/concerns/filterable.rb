@@ -14,6 +14,18 @@
 #     @offers = @filter.filter(Offer.all)
 #   end
 #
+# In a URL, each filter has a short name and value form, e.g.
+# `?upcoming-or-past=upcoming&published=1&topics=3,5`:
+#
+#   param:    The name in the URL; the filter's name dasherized by default
+#             (target_groups -> target-groups).
+#   values:   The values a filter knows: a list, whose values appear dasherized,
+#             or a hash of value -> URL form. Any other value in a URL is unset.
+#   multiple: A list filter, written as a comma-separated list.
+#
+# Booleans appear as 1 / 0, a set flag as 1, dates as YYYY-MM-DD; unset values
+# and defaults stay out of the URL.
+#
 # Filter values are persisted in the session per controller path, so a list keeps
 # its filtering while the user navigates. `?filter[...]=` sets them and
 # `?reset_filter=1` clears them; both redirect to the clean list URL (PRG).
@@ -110,15 +122,37 @@ module Filterable
 
     TYPES = (CASTERS.keys + [:integer, :flag]).freeze
 
-    attr_reader :name, :type, :default, :block
+    BOOLEAN_PARAMS = {"1" => "true", "0" => "false"}.freeze
 
-    def initialize(name:, type:, default:, block:)
+    attr_reader :name, :type, :default, :block, :param
+
+    def initialize(name:, type:, default:, block:, param: nil, values: nil, multiple: false)
       raise ArgumentError, "unknown filter type #{type.inspect}" unless TYPES.include?(type)
 
       @name = name
       @type = type
       @default = default
       @block = block
+      @param = (param || name.to_s.dasherize).to_s
+      @values = values.is_a?(Array) ? values.to_h { |v| [v.to_s, v.to_s.dasherize] } : values&.transform_keys(&:to_s)
+      @multiple = multiple
+    end
+
+    # The URL form of a raw value; nil when it is unset or the default.
+    def encode(raw)
+      value = cast(raw)
+      return if value.nil? || value == default_value
+      return value.filter_map { |v| encode_one(v) }.join(",").presence if value.is_a?(Array)
+
+      encode_one(value)
+    end
+
+    # The raw value of a URL param; nil for anything the filter does not know.
+    def decode(value)
+      return unless value.is_a?(String)
+      return value.split(",").filter_map { |v| decode_one(v) } if @multiple
+
+      decode_one(value)
     end
 
     # The value a filter holds for the given raw param: the cast param, or the
@@ -142,6 +176,23 @@ module Filterable
 
     private
 
+    def encode_one(value)
+      case value
+      when true then "1"
+      when false then "0"
+      when Date then value.iso8601
+      else @values ? @values[value.to_s] : value.to_s
+      end
+    end
+
+    def decode_one(value)
+      case @type
+      when :boolean then BOOLEAN_PARAMS[value]
+      when :flag then value if value == "1"
+      else @values ? @values.key(value) : value
+      end
+    end
+
     def cast_one(value)
       return if value.nil?
       return if value.respond_to?(:empty?) && value.empty?
@@ -161,8 +212,38 @@ module Filterable
 
   class FilterContext
 
-    def filter_by(name, type = :string, default: nil, &block)
-      filters[name] = Definition.new(name: name, type: type, default: default, block: block)
+    RESERVED_PARAMS = ["filter", "reset_filter"].freeze
+
+    def filter_by(name, type = :string, default: nil, param: nil, values: nil, multiple: false, &block)
+      definition = Definition.new(name:, type:, default:, block:, param:, values:, multiple:)
+
+      if RESERVED_PARAMS.include?(definition.param) || param_names.include?(definition.param)
+        raise ArgumentError, "filter #{name.inspect} needs another URL name than #{definition.param.inspect}"
+      end
+
+      filters[name] = definition
+    end
+
+    def param_names
+      filters.values.map(&:param)
+    end
+
+    # The raw filter params of the URL params that name a filter, by filter name.
+    def decode(url_params)
+      filters.each_value.with_object({}) do |definition, raw|
+        raw[definition.name.to_s] = definition.decode(url_params[definition.param]) if url_params.key?(definition.param)
+      end
+    end
+
+    # The canonical query of raw filter params: the set values in URL form, in
+    # the order of the definitions, with commas left readable.
+    def query(raw_params)
+      raw_params = raw_params.with_indifferent_access
+
+      filters.each_value.filter_map do |definition|
+        value = definition.encode(raw_params[definition.name])
+        "#{CGI.escape(definition.param)}=#{CGI.escape(value).gsub("%2C", ",")}" if value
+      end.join("&")
     end
 
     def filters
@@ -212,6 +293,10 @@ module Filterable
       return @context.filters.each_key.any? { |n| active?(n) } if name.nil?
 
       applied?(name) && send(name) != @context.filters.fetch(name).default_value
+    end
+
+    def query
+      @context.query(@params)
     end
 
     def filter(arel)
