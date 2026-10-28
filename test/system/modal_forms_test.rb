@@ -138,6 +138,27 @@ class ModalFormsTest < ApplicationSystemTestCase
     assert_empty script_errors
   end
 
+  test "a mail preview closed by its close button leaves the event form open" do
+    offer = Offer.create!(title: "Literaturrecherche", type: "course")
+    visit admin_offer_events_path(offer)
+    collect_script_errors
+    click_on "Neuer Termin"
+
+    assert_selector "#event_date_and_time:focus"
+    fill_in "event_date_and_time", with: 1.month.from_now.change(hour: 10)
+    fill_in "event_participant_notes", with: "Bitte Laptop mitbringen"
+    click_on "Vorschau Erinnerungsmail"
+
+    # Bootstrap ignores a close before the preview is fully open.
+    within(".modal.show:focus", text: "Vorschau: Erinnerungsmail") { find(".btn-close").click }
+
+    assert_selector ".modal.show", count: 1
+    assert_selector ".modal-backdrop", count: 1
+    assert_selector "body.modal-open"
+    assert_field "event_participant_notes", with: "Bitte Laptop mitbringen"
+    assert_empty script_errors
+  end
+
   test "a participant edited in the modal shows in the list" do
     @offer = create_offer
     @event = create_event
