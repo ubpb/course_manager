@@ -180,6 +180,15 @@ class ParticipantMailerTest < ActionMailer::TestCase
     end
   end
 
+  test "an anonymized registration gets no change notice" do
+    @registration.update_columns(first_name: "Gelöscht", last_name: "Gelöscht", email: "Gelöscht")
+    @event.date_and_time = Time.zone.parse("2026-11-01 14:00")
+
+    assert_no_emails do
+      ParticipantMailer.change_notice(@event, @registration).deliver_now
+    end
+  end
+
   test "a moved date is reported with the old and the new value" do
     @event.date_and_time = Time.zone.parse("2026-11-01 14:00")
 

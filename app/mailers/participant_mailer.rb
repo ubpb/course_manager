@@ -48,6 +48,7 @@ class ParticipantMailer < ApplicationMailer
   # for the two attributes the template actually reports.
   def change_notice(event, registration)
     @registration = registration
+    return if @registration.anonymized?
 
     @event = event
     @offer = @event.offer
