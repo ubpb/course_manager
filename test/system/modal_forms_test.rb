@@ -95,4 +95,45 @@ class ModalFormsTest < ApplicationSystemTestCase
     assert_empty script_errors
   end
 
+  test "a mail preview stacks on the new event form and closes back to it" do
+    offer = Offer.create!(title: "Literaturrecherche", type: "course")
+    visit admin_offer_events_path(offer)
+    collect_script_errors
+    click_on "Neuer Termin"
+
+    assert_selector "#event_date_and_time:focus"
+    fill_in "event_date_and_time", with: 1.month.from_now.change(hour: 10)
+    fill_in "event_participant_notes", with: "Bitte Laptop mitbringen"
+    click_on "Vorschau Anmeldebestätigung"
+
+    assert_selector ".modal.show", count: 2
+    assert_text "Bitte Laptop mitbringen"
+    # The preview and its backdrop lie above the form.
+    assert evaluate_script(<<~JS)
+      (() => {
+        const [form, preview] = document.querySelectorAll(".modal.show")
+        const backdrops = document.querySelectorAll(".modal-backdrop")
+        const z = (element) => Number(getComputedStyle(element).zIndex)
+        return backdrops.length === 2 && z(backdrops[1]) > z(form) && z(preview) > z(backdrops[1])
+      })()
+    JS
+
+    # The preview takes the focus once it is fully open, so Escape closes it
+    # and not the form below.
+    assert_selector ".modal.show:focus", text: "Vorschau: E-Mail Anmeldebestätigung"
+    send_keys :escape
+
+    assert_selector ".modal.show", count: 1
+    assert_selector ".modal-backdrop", count: 1
+    assert_selector "body.modal-open"
+    assert_equal "hidden", evaluate_script("document.body.style.overflow")
+    assert_field "event_participant_notes", with: "Bitte Laptop mitbringen"
+
+    send_keys :escape
+
+    assert_no_selector ".modal, .modal-backdrop", visible: :all
+    assert_no_selector "body.modal-open"
+    assert_empty script_errors
+  end
+
 end

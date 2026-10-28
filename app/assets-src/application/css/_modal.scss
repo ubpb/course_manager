@@ -1,0 +1,11 @@
+// A modal opened on top of another one, like the mail preview over the form
+// of a new event. The modal controller appends each modal to <body>, and
+// Bootstrap appends its backdrop right after it: only a stacked modal and its
+// backdrop follow an earlier backdrop. Both go above the modal below.
+.modal-backdrop ~ .modal {
+  --bs-modal-zindex: #{$zindex-modal + 10};
+}
+
+.modal-backdrop ~ .modal-backdrop {
+  --bs-backdrop-zindex: #{$zindex-modal + 5};
+}

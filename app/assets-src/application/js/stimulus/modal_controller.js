@@ -3,7 +3,8 @@ import { Modal } from "bootstrap"
 
 // Opens a Bootstrap modal as soon as it enters the DOM (used for bulk action
 // dialogs injected via Turbo Streams) and tears it down again on removal or
-// before Turbo caches the page, so no backdrop is left behind.
+// before Turbo caches the page, so no backdrop is left behind. A modal may
+// open on top of another one; _modal.scss stacks them.
 export default class extends Controller {
   connect() {
     // Bootstrap appends the backdrop to <body>. If the modal itself lives
@@ -17,9 +18,13 @@ export default class extends Controller {
 
     this.modal = new Modal(this.element)
 
+    // Without a field to start in, the modal itself takes the focus. Opened on
+    // top of another modal, Bootstrap leaves it in the modal below (whose
+    // focus trap pulls it back while this one opens), and Escape would close
+    // that one instead.
     this.element.addEventListener(
       "shown.bs.modal",
-      () => this.element.querySelector("[autofocus]")?.focus(),
+      () => (this.element.querySelector("[autofocus]") ?? this.element).focus(),
       { once: true }
     )
 
@@ -50,6 +55,17 @@ export default class extends Controller {
     // finish after dispose() on the emptied instance and throw. So clean up
     // the backdrop and the <body> styles by hand.
     modal.dispose()
+
+    // A modal stacked on another one (the mail preview over an event form):
+    // dispose() took its own backdrop along, and Bootstrap restores the scroll
+    // lock of <body> itself, but hiding removed body.modal-open. Leave the
+    // modal below as it is and hand it the focus, so Escape closes it next.
+    const below = [...document.querySelectorAll(".modal.show")].filter((element) => element !== this.element).at(-1)
+    if (below) {
+      document.body.classList.add("modal-open")
+      below.focus()
+      return
+    }
 
     document.querySelectorAll(".modal-backdrop").forEach((element) => element.remove())
     document.body.classList.remove("modal-open")
