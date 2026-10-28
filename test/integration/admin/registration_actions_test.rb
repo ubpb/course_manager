@@ -140,6 +140,19 @@ module Admin
       assert_nil other.reload.certificate_sent_at
     end
 
+    # The job of the mail runs after the request, as in production -- by then
+    # the participant is marked as reminded.
+    test "the bulk reminder leaves out participants who already have one" do
+      reminded = create_registration(first_name: "Erika", email: "erika@example.com",
+                                     reminder_message_sent_at: 1.day.ago)
+
+      bulk_process("send_reminder_messages", [@registration, reminded])
+      perform_enqueued_jobs
+
+      assert_redirected_to admin_offer_event_registrations_path(@offer, @event)
+      assert_equal ["max@example.com"], ActionMailer::Base.deliveries.map(&:to).flatten
+    end
+
     test "the forced bulk reminder goes to everyone selected" do
       reminded = create_registration(first_name: "Erika", email: "erika@example.com",
                                      reminder_message_sent_at: 1.day.ago)

@@ -205,10 +205,9 @@ module Admin
         def send_reminder_message!(registration, skip_if_sent: true)
           return if registration.reminder_message_sent_at.present? && skip_if_sent
 
-          ParticipantMailer.reminder(
-            registration,
-            skip_if_sent: skip_if_sent
-          ).deliver_later
+          # The check above takes the place of the mailer's own guard: the mail
+          # goes out after the update below and would see the timestamp.
+          ParticipantMailer.reminder(registration, skip_if_sent: false).deliver_later
 
           registration.update(reminder_message_sent_at: Time.zone.now)
         end
