@@ -18,6 +18,8 @@ module Admin
       assert_select "#admin-toasts .toast-container .toast.show[role=status][data-controller=toast]" \
                     "[data-bs-autohide=true][data-bs-delay='5000']", text: /Angebot\(e\) wurde archiviert/
       assert_select "#admin-toasts .toast .btn-close[data-bs-dismiss=toast]"
+      # Slides in by CSS (animate.css), not by Bootstrap's fade.
+      assert_select "#admin-toasts .toast.animate__animated.animate__fadeInRight.animate__faster"
       assert_select "main .alert", count: 0
     end
 

@@ -14,9 +14,11 @@
       - sticky = admin_toast_sticky?(type)
       / An id of its own: a refresh morphs the page, and without it the toast of
       / an earlier message would be reused for this one, its timing included.
+      / It slides in by CSS (animate.css, left out under reduced motion): Bootstrap's
+      / fade is off, see the toast controller.
       .toast.show(
         id="admin-toast-#{SecureRandom.alphanumeric(12)}"
-        class="bg-#{color}-subtle text-#{color}-emphasis border-#{color}-subtle"
+        class="bg-#{color}-subtle text-#{color}-emphasis border-#{color}-subtle animate__animated animate__fadeInRight animate__faster"
         role=(sticky ? "alert" : "status")
         aria-live=(sticky ? "assertive" : "polite")
         aria-atomic="true"
