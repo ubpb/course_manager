@@ -9,6 +9,7 @@ module Admin
     include ActionMailer::TestHelper
     include AdminLogin
     include MailerRecords
+    include TurboStreamRequests
 
     setup do
       @offer = create_offer
@@ -58,11 +59,68 @@ module Admin
       assert_select "select#bulk_process_action", count: 0
     end
 
-    test "saving a participant leads back to the form" do
+    test "the participant list opens new participants and edits in a modal" do
+      get admin_offer_event_registrations_path(@offer, @event)
+
+      assert_select "#registration-modal"
+      assert_select "a[href=?][data-turbo-stream]", new_admin_offer_event_registration_path(@offer, @event)
+      assert_select "a[href=?][data-turbo-stream]",
+                    edit_admin_offer_event_registration_path(@offer, @event, @registration)
+      assert_select "head meta[name=turbo-refresh-scroll][content=preserve]"
+    end
+
+    test "a participant opens in a modal that a click beside it does not close" do
+      get edit_admin_offer_event_registration_path(@offer, @event, @registration), headers: TURBO_STREAM_HEADERS
+
+      assert_select "turbo-stream[action=replace][target=registration-modal] template" do
+        assert_select ".modal[data-bs-backdrop=static] .modal-dialog.modal-lg #registration-form"
+        assert_select "input[name='registration[first_name]'][autofocus]"
+        assert_select "a[href=?][data-turbo-method=delete]",
+                      admin_offer_event_registration_path(@offer, @event, @registration), text: "Löschen"
+        assert_select "input[name=send_confirmation]", count: 0
+      end
+    end
+
+    test "a participant is edited on a page of its own, submitted without Turbo" do
+      get edit_admin_offer_event_registration_path(@offer, @event, @registration)
+
+      assert_select "form[action=?][data-turbo=false]",
+                    admin_offer_event_registration_path(@offer, @event, @registration)
+    end
+
+    test "a participant saved in the modal refreshes the list" do
+      patch admin_offer_event_registration_path(@offer, @event, @registration),
+            params: {registration: {first_name: "Moritz"}}, as: :turbo_stream
+
+      assert_select "turbo-stream[action=refresh]"
+      assert_equal "Erfolgreich gespeichert.", flash[:notice]
+      assert_equal "Moritz", @registration.reload.first_name
+    end
+
+    test "an invalid participant in the modal shows the errors there" do
+      patch admin_offer_event_registration_path(@offer, @event, @registration),
+            params: {registration: {email: "keine-adresse"}}, as: :turbo_stream
+
+      assert_response :unprocessable_content
+      assert_select "turbo-stream[action=replace][target=registration-form]"
+      assert_select "turbo-stream[target=registration-modal]", count: 0
+    end
+
+    # From the modal, Turbo renders the redirect to the list that is open as a
+    # refresh of it; from the participant's page it leads to the list.
+    test "removing a participant from the modal leads back to the list" do
+      delete admin_offer_event_registration_path(@offer, @event, @registration), as: :turbo_stream
+
+      assert_redirected_to admin_offer_event_registrations_path(@offer, @event)
+      assert_not Registration.exists?(@registration.id)
+    end
+
+    test "saving a participant leads back to the list" do
       patch admin_offer_event_registration_path(@offer, @event, @registration),
             params: {registration: {first_name: "Moritz", internal_notes: "Kommt später"}}
 
-      assert_redirected_to edit_admin_offer_event_registration_path(@offer, @event, @registration)
+      assert_redirected_to admin_offer_event_registrations_path(@offer, @event)
+      assert_equal "Erfolgreich gespeichert.", flash[:notice]
       assert_equal "Moritz", @registration.reload.first_name
       assert_equal "Kommt später", @registration.internal_notes
     end

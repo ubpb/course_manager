@@ -1,0 +1,18 @@
+/ <%# locals: (offer:, event:, registration:) -%>
+
+/ Carries its own id so validation errors can re-render just the content of
+/ the already open modal instead of spawning a second one.
+#registration-form.modal-content
+  = simple_form_for [:admin, offer, event, registration] do |form|
+    .modal-header
+      h5.modal-title = registration.new_record? ? "Neuer Teilnehmer" : "Teilnehmer bearbeiten"
+      button.btn-close(type="button" data-bs-dismiss="modal" aria-label="Schließen")
+    .modal-body
+      = render "form_fields", form: form, autofocus: true
+      - if registration.new_record?
+        = render "send_confirmation", event: event
+    .modal-footer
+      button.btn.btn-outline-secondary(type="button" data-bs-dismiss="modal") = t("admin.application.btn_cancel")
+      = form.submit t("admin.application.btn_save"), class: "btn btn-primary"
+      - if registration.persisted?
+        = link_to t("admin.application.btn_delete"), admin_offer_event_registration_path(offer, event, registration), data: {turbo_method: :delete, turbo_confirm: t("admin.application.confirm_delete")}, class: "btn btn-danger ms-auto"

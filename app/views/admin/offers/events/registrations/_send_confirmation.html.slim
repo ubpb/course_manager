@@ -1,0 +1,10 @@
+/ <%# locals: (event:) -%>
+
+h5.m-0 Benachrichtigung
+hr.mt-1.mb-3
+.form-check
+  = hidden_field_tag :send_confirmation, "0", id: nil
+  / Preselected for upcoming events only: after the event a "thank you for
+  / registering" would only confuse (staff add attendees for certificates).
+  = check_box_tag :send_confirmation, "1", params.fetch(:send_confirmation, event.upcoming? ? "1" : "0") == "1", class: "form-check-input"
+  = label_tag :send_confirmation, "Anmeldebestätigung senden", class: "form-check-label"

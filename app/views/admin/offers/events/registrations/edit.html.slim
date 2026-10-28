@@ -1,7 +1,9 @@
 - return_path = admin_offer_event_registrations_path(@offer, @event, anchor: dom_id(@registration))
 
 = render layout: "admin/offers/events/frame", locals: {offer: @offer, event: @event, active_tab: :registrations} do
-  = simple_form_for [:admin, @offer, @event, @registration] do |form|
+  / Only reached without Turbo; the list opens the form in a modal. Submitting
+  / through Turbo would get the answers meant for the modal.
+  = simple_form_for [:admin, @offer, @event, @registration], data: {turbo: false} do |form|
     .card.card-shadowed
       .card-header.d-flex.align-items-center.gap-2
         h5.card-title.mb-0 = "Teilnehmer bearbeiten"

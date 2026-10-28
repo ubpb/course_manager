@@ -8,6 +8,7 @@ module Admin
 
     include ActionMailer::TestHelper
     include MailerRecords
+    include TurboStreamRequests
 
     setup do
       @offer = create_offer
@@ -27,7 +28,42 @@ module Admin
       get new_admin_offer_event_registration_path(@offer, @event)
 
       assert_response :success
+      assert_select "form[action=?][data-turbo=false]", admin_offer_event_registrations_path(@offer, @event)
       assert_select "input[type=checkbox][name=send_confirmation][checked]"
+    end
+
+    test "the new form opens in a modal with the confirmation checkbox, checked" do
+      get new_admin_offer_event_registration_path(@offer, @event), headers: TURBO_STREAM_HEADERS
+
+      assert_select "turbo-stream[action=replace][target=registration-modal] template" do
+        assert_select "input[type=checkbox][name=send_confirmation][checked]"
+      end
+    end
+
+    test "a manual registration from the modal sends the confirmation when asked" do
+      assert_enqueued_emails 1 do
+        post admin_offer_event_registrations_path(@offer, @event),
+             params: {registration: {first_name: "Max", last_name: "Mustermann", email: "max@example.com"},
+                      send_confirmation: "1"},
+             as: :turbo_stream
+      end
+
+      assert_select "turbo-stream[action=refresh]"
+    end
+
+    test "an invalid registration in the modal keeps the choice" do
+      assert_no_enqueued_emails do
+        post admin_offer_event_registrations_path(@offer, @event),
+             params: {registration: {first_name: "", last_name: "Mustermann", email: "max@example.com"},
+                      send_confirmation: "0"},
+             as: :turbo_stream
+      end
+
+      assert_response :unprocessable_content
+      assert_select "turbo-stream[action=replace][target=registration-form] template" do
+        assert_select "input[type=checkbox][name=send_confirmation]"
+        assert_select "input[type=checkbox][name=send_confirmation][checked]", count: 0
+      end
     end
 
     # Staff add attendees after the event too, e.g. for a certificate. Thanking

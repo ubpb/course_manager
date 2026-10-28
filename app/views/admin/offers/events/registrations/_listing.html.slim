@@ -40,7 +40,7 @@
               button.btn.btn-outline-primary.btn-sm.dropdown-toggle(type="button" data-bs-toggle="dropdown")
                 i.fas.fa-cog
               ul.dropdown-menu.dropdown-menu-end
-                li = link_to edit_admin_offer_event_registration_path(offer, event, registration), class: "dropdown-item" do
+                li = link_to edit_admin_offer_event_registration_path(offer, event, registration), class: "dropdown-item", data: {turbo_stream: true} do
                   i.fa-solid.fa-edit.me-2
                   = "Bearbeiten"
                 - if @event.certification.present?
@@ -58,8 +58,10 @@
                   i.fa-solid.fa-envelope.me-2
                   =< "(Erneut) senden"
 
-/ Fix to reset indeterminate state of checkbox on turbo:load
+/ Fix to reset indeterminate state of checkbox on turbo:load. The listener
+/ outlives the list, e.g. once its last participant is deleted.
 javascript:
   document.addEventListener("turbo:load", function() {
-    document.querySelector("#bulk_process_select_all").indeterminate = false;
+    const selectAll = document.querySelector("#bulk_process_select_all");
+    if (selectAll) selectAll.indeterminate = false;
   })

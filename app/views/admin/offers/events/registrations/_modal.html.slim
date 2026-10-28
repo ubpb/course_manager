@@ -1,0 +1,7 @@
+/ <%# locals: (offer:, event:, registration:) -%>
+
+/ A static backdrop: a click beside the form must not throw it away.
+#registration-modal
+  .modal.fade(tabindex="-1" aria-hidden="true" data-controller="modal" data-bs-backdrop="static")
+    .modal-dialog.modal-lg.modal-dialog-centered
+      = render "form", offer: offer, event: event, registration: registration

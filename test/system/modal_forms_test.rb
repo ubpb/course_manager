@@ -4,6 +4,8 @@ require "application_system_test_case"
 # as modals on top of their list and lead back to it.
 class ModalFormsTest < ApplicationSystemTestCase
 
+  include MailerRecords
+
   setup { log_in_admin }
 
   test "a new offer saved in the modal shows in the list" do
@@ -134,6 +136,49 @@ class ModalFormsTest < ApplicationSystemTestCase
     assert_no_selector ".modal, .modal-backdrop", visible: :all
     assert_no_selector "body.modal-open"
     assert_empty script_errors
+  end
+
+  test "a participant edited in the modal shows in the list" do
+    @offer = create_offer
+    @event = create_event
+    create_registration
+    visit admin_offer_event_registrations_path(@offer, @event)
+    collect_script_errors
+
+    open_participant_in_modal
+    fill_in "registration_first_name", with: "Moritz"
+    click_on "Speichern"
+
+    assert_text "Erfolgreich gespeichert."
+    assert_selector "td", text: "Moritz"
+    assert_no_selector ".modal, .modal-backdrop", visible: :all
+    assert_empty script_errors
+  end
+
+  test "a participant deleted in the modal leaves the list" do
+    @offer = create_offer
+    @event = create_event
+    registration = create_registration
+    visit admin_offer_event_registrations_path(@offer, @event)
+    collect_script_errors
+
+    open_participant_in_modal
+    accept_confirm { click_on "Löschen" }
+
+    assert_text "Erfolgreich gelöscht."
+    assert_current_path admin_offer_event_registrations_path(@offer, @event)
+    assert_no_selector "td", text: registration.email
+    assert_no_selector ".modal, .modal-backdrop", visible: :all
+    assert_empty script_errors
+  end
+
+  private
+
+  def open_participant_in_modal
+    find("td.actions .dropdown-toggle").click
+    click_on "Bearbeiten"
+
+    assert_selector "#registration_first_name:focus"
   end
 
 end

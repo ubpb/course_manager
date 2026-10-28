@@ -3,6 +3,8 @@ module Admin
     module Events
       class RegistrationsController < ApplicationController
 
+        include ModalForm
+
         before_action :prepare_offer_event_registration_context
         before_action -> { add_breadcrumb "Neuer Teilnehmer" }, only: [:new, :create]
 
@@ -28,10 +30,12 @@ module Admin
 
         def new
           @registration = @event.registrations.build
+          respond_with_modal(**form_locals)
         end
 
         def edit
           @registration = @event.registrations.find(params.expect(:id))
+          respond_with_modal(**form_locals)
         end
 
         def create
@@ -43,19 +47,19 @@ module Admin
             # right away instead of only with the reminder.
             ParticipantMailer.confirmation(@registration).deliver_later if params[:send_confirmation] == "1"
 
-            redirect_to edit_admin_offer_event_registration_path(@offer, @event, @registration),
-                        notice: t("admin.application.form.success")
+            respond_with_list(admin_offer_event_registrations_path(@offer, @event),
+                              notice: t("admin.application.form.success"))
           else
-            render :new, status: :unprocessable_content
+            respond_with_errors(:new, **form_locals)
           end
         end
 
         def update
           if @registration.update(registration_params)
-            redirect_to edit_admin_offer_event_registration_path(@offer, @event, @registration),
-                        notice: t("admin.application.form.success")
+            respond_with_list(admin_offer_event_registrations_path(@offer, @event),
+                              notice: t("admin.application.form.success"))
           else
-            render :edit, status: :unprocessable_content
+            respond_with_errors(:edit, **form_locals)
           end
         end
 
@@ -153,6 +157,10 @@ module Admin
         end
 
         private
+
+        def form_locals
+          {offer: @offer, event: @event, registration: @registration}
+        end
 
         # The dialog for writing a message to the selected participants.
         def render_new_message_form(registrations)

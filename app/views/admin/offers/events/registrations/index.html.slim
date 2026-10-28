@@ -1,9 +1,13 @@
+/ Saving in the modal refreshes the list; stay where the entry is.
+- content_for(:head) do
+  meta(name="turbo-refresh-scroll" content="preserve")
+
 = render layout: "admin/offers/events/frame", locals: {offer: @offer, event: @event, active_tab: :registrations} do
   .card.card-shadowed
     .card-header.d-flex.align-items-center.gap-2
       h5.card-title.mb-0 = "Teilnehmer"
       .ms-auto
-      = link_to new_admin_offer_event_registration_path(@offer, @event), class: "btn btn-primary btn-sm" do
+      = link_to new_admin_offer_event_registration_path(@offer, @event), class: "btn btn-primary btn-sm", data: {turbo_stream: true} do
         i.fa-solid.fa-plus.me-2
         = "Neuen Teilnehmer anlegen"
       .dropdown
@@ -19,3 +23,5 @@
         = render "listing", offer: @offer, event: @event, registrations: @registrations
       - else
         .p-2.text-muted = "Keine Teilnehmer vorhanden"
+
+  #registration-modal

@@ -1,4 +1,4 @@
-/ <%# locals: (form:) -%>
+/ <%# locals: (form:, autofocus: false) -%>
 
 - if form.object.errors.any?
   .alert.alert-danger.mb-3.text-center
@@ -8,7 +8,7 @@
 h5.m-0 Allgemeine Angaben
 hr.mt-1.mb-3
 .row
-  .col = form.input :first_name
+  .col = form.input :first_name, input_html: { autofocus: autofocus }
   .col = form.input :last_name
 = form.input :email
 = form.input :field_of_interest
