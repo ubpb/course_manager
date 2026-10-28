@@ -23,7 +23,7 @@ gem "solid_queue"
 gem "stimulus-rails"
 gem "strip_attributes", "~> 2.0"
 gem "turbo-rails"
-gem "view_component", "~> 4.0"
+gem "view_component", "~> 4.19"
 
 gem "inline_svg", "~> 1.10" # Must be after propshaft
 
