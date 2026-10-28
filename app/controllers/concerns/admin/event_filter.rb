@@ -28,10 +28,6 @@ module Admin
           arel.where(online: online)
         end
 
-        filter_by :delivery_format, :integer, default: nil do |arel, delivery_format_id|
-          arel.where(delivery_format_id: delivery_format_id)
-        end
-
         filter_by :with_report, :boolean, default: nil do |arel, with_report|
           if with_report == true
             arel.with_report
