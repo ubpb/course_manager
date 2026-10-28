@@ -98,6 +98,34 @@ class Admin::EventPageTest < ActionDispatch::IntegrationTest
     assert_select ".event-tabs .nav-link.active", text: "Termindaten"
   end
 
+  test "statistics and certificate share one form, new or saved" do
+    participants = admin_offer_event_registrations_path(@offer, @event)
+    export = admin_offer_event_report_path(@offer, @event, format: :xlsx)
+
+    get new_admin_offer_event_report_path(@offer, @event)
+
+    assert_select ".card-title", text: "Statistik"
+    assert_select "a[href=?]", export, count: 0
+    assert_select ".card-footer a[href=?]", participants, text: "Abbrechen"
+
+    create_report
+    get edit_admin_offer_event_report_path(@offer, @event)
+
+    assert_select ".event-tabs .nav-link.active", text: "Statistik"
+    assert_select "a[href=?]", export, text: /Excel Export/
+
+    get new_admin_offer_event_certification_path(@offer, @event)
+
+    assert_select ".card-title", text: "Zertifikat"
+    assert_select ".card-footer a[href=?]", participants, text: "Abbrechen"
+
+    Certification.create!(event: @event, learning_results: "Katalogrecherche", signature: "Max Muster")
+    get edit_admin_offer_event_certification_path(@offer, @event)
+
+    assert_select ".event-tabs .nav-link.active", text: "Zertifikat"
+    assert_select "textarea", text: /Katalogrecherche/
+  end
+
   test "the cards no longer close with an x" do
     get edit_admin_offer_event_path(@offer, @event)
 
