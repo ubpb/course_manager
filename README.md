@@ -21,7 +21,7 @@ bun run build:watch      # JavaScript/CSS bei Änderungen neu bauen – in einem
 
 `bin/dev` startet nur den Rails-Server; ohne `bun run build:watch` (oder einmalig `bun run build`) werden Änderungen an JavaScript und CSS nicht übernommen.
 
-Mails werden lokal nicht verschickt, sondern abgelegt und sind nach der Anmeldung im Admin-Bereich unter <http://localhost:3000/admin/mail> zu lesen.
+Mails werden lokal nicht verschickt, sondern abgelegt und sind ohne Anmeldung unter <http://localhost:3000/admin/mail> zu lesen.
 
 ### Tests und Linting
 

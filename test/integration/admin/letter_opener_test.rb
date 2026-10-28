@@ -14,6 +14,17 @@ module Admin
       assert_redirected_to new_admin_session_path
     end
 
+    # In development the mails only exist on the developer's machine, so no login
+    # gets in the way.
+    test "locally the mails can be read without logging in" do
+      Rails.env = "development"
+      get "/admin/mail"
+
+      assert_response :success
+    ensure
+      Rails.env = "test"
+    end
+
     test "logged in admins can read the mails" do
       post admin_session_path, params: {login: {user_id: AlmaAuthenticationStub::VALID_USER_ID,
                                                 password: AlmaAuthenticationStub::VALID_PASSWORD}}
