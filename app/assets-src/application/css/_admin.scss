@@ -318,11 +318,13 @@
     white-space: nowrap;
   }
 
-  .badge.text-bg-light {
+  // Facts about the event or offer. Not text-bg-light, whose black text stays
+  // black in the dark mode.
+  .context-badge {
     --bs-badge-color: var(--bs-body-color);
 
-    background-color: var(--admin-canvas) !important;
-    border-color: var(--admin-line) !important;
+    background-color: var(--admin-canvas);
+    border: 1px solid var(--admin-line);
   }
 }
 

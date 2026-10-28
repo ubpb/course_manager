@@ -33,12 +33,12 @@
         = published_badge(stored)
         - if offer.archived?
           span.badge.text-bg-secondary = "archiviert"
-        span.badge.text-bg-light.border = stored.online? ? "Online" : "Präsenz"
-        span.badge(class=(stored.full? ? "text-bg-warning" : "text-bg-light border")) = "#{event_capacity(stored)} Plätze"
+        span.badge.context-badge = stored.online? ? "Online" : "Präsenz"
+        span.badge(class=(stored.full? ? "text-bg-warning" : "context-badge")) = "#{event_capacity(stored)} Plätze"
         - if stored.past?
-          span.badge.text-bg-light.border = stored.report&.persisted? ? "Statistik erfasst" : "keine Statistik"
+          span.badge.context-badge = stored.report&.persisted? ? "Statistik erfasst" : "keine Statistik"
         - if stored.certification&.persisted?
-          span.badge.text-bg-light.border = "Zertifikat"
+          span.badge.context-badge = "Zertifikat"
     .d-flex.flex-column.align-items-md-end.gap-2
       / In the offer context the bar above leads back.
       - unless offer_context?

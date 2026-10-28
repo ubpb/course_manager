@@ -25,6 +25,19 @@ class Admin::AdminLayoutTest < ActionDispatch::IntegrationTest
     assert_select ".container", count: 0
   end
 
+  # Bootstrap's text-bg-light forces black text, which the dark mode cannot
+  # turn light, so the facts in the heads use badges of their own.
+  test "the heads show their facts in badges that follow the colour mode" do
+    log_in_admin
+
+    [admin_offer_event_registrations_path(@offer, @event), admin_offer_events_path(@offer)].each do |path|
+      get path
+
+      assert_select ".context-head .context-badge", {minimum: 1}, "for #{path}"
+      assert_select ".context-head .text-bg-light", {count: 0}, "for #{path}"
+    end
+  end
+
   test "the login page shows the app bar without the menu" do
     get new_admin_session_path
 
