@@ -1,15 +1,17 @@
-- new_target_group_turbo_frame_name = dom_id(TargetGroup.new)
+/ Saving in the modal refreshes the list; stay where the entry is.
+- content_for(:head) do
+  meta(name="turbo-refresh-scroll" content="preserve")
 
 .card.card-shadowed
   .card-header.d-flex.align-items-center.gap-2
     h5.card-title.mb-0 = "Zielgruppen"
     .ms-auto
-    = link_to new_admin_target_group_path, class: "btn btn-primary btn-sm", data: {turbo_frame: new_target_group_turbo_frame_name} do
+    = link_to new_admin_target_group_path, class: "btn btn-primary btn-sm", data: {turbo_stream: true} do
       i.fa-solid.fa-plus
   .card-body
-    = turbo_frame_tag(new_target_group_turbo_frame_name)
-
     - if @target_groups.present?
       = render "listing", target_groups: @target_groups
     - else
       .p-2.text-muted = "Keine Zielgruppen vorhanden"
+
+#target-group-modal

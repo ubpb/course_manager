@@ -1,15 +1,17 @@
-- new_topic_turbo_frame_name = dom_id(Topic.new)
+/ Saving in the modal refreshes the list; stay where the entry is.
+- content_for(:head) do
+  meta(name="turbo-refresh-scroll" content="preserve")
 
 .card.card-shadowed
   .card-header.d-flex.align-items-center.gap-2
     h5.card-title.mb-0 = "Themen"
     .ms-auto
-    = link_to new_admin_topic_path, class: "btn btn-primary btn-sm", data: {turbo_frame: new_topic_turbo_frame_name} do
+    = link_to new_admin_topic_path, class: "btn btn-primary btn-sm", data: {turbo_stream: true} do
       i.fa-solid.fa-plus
   .card-body
-    = turbo_frame_tag(new_topic_turbo_frame_name)
-
     - if @topics.present?
       = render "listing", topics: @topics
     - else
       .p-2.text-muted = "Keine Themen vorhanden"
+
+#topic-modal

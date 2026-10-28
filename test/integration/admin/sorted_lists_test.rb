@@ -1,8 +1,8 @@
 require "test_helper"
 
 # Topics and target groups are short lists staff keep in an order of their
-# own. Both work the same way: new entries open in place and join at the end,
-# entries are dragged to a new position.
+# own. Both work the same way: new entries and renames open in a modal, new
+# entries join at the end, entries are dragged to a new position.
 module Admin
   class SortedListsTest < ActionDispatch::IntegrationTest
 
@@ -11,6 +11,11 @@ module Admin
     LISTS = {
       "topic" => {model: Topic, list_id: "topics"},
       "target_group" => {model: TargetGroup, list_id: "target-groups"}
+    }.freeze
+
+    # What Turbo sends for a link with data-turbo-stream.
+    TURBO_STREAM_HEADERS = {
+      "Accept" => "text/vnd.turbo-stream.html, text/html, application/xhtml+xml"
     }.freeze
 
     setup { log_in_admin }
@@ -23,6 +28,8 @@ module Admin
     LISTS.each do |name, list|
       model = list[:model]
       plural = name.pluralize
+      modal_id = "#{name.dasherize}-modal"
+      form_id = "#{name.dasherize}-form"
 
       test "#{plural}: the list shows the entries in their order" do
         model.create!(title: "B")
@@ -41,11 +48,37 @@ module Admin
         assert_select ".text-muted", text: /\AKeine \S+ vorhanden\z/
       end
 
-      test "#{plural}: the form for a new entry opens in its frame" do
-        get route("new_admin_#{name}"), headers: {"Turbo-Frame" => "new_#{name}"}
+      test "#{plural}: the list opens new entries and renames in a modal" do
+        entry = model.create!(title: "Vorhanden")
+
+        get route("admin_#{plural}")
+
+        assert_select "##{modal_id}"
+        assert_select "a[href=?][data-turbo-stream]", route("new_admin_#{name}")
+        assert_select "a[href=?][data-turbo-stream]", route("edit_admin_#{name}", entry)
+      end
+
+      test "#{plural}: the list keeps its scroll position when it refreshes" do
+        get route("admin_#{plural}")
+
+        assert_select "head meta[name=turbo-refresh-scroll][content=preserve]"
+      end
+
+      test "#{plural}: the form for a new entry opens in a modal" do
+        get route("new_admin_#{name}"), headers: TURBO_STREAM_HEADERS
 
         assert_response :success
-        assert_select "turbo-frame#new_#{name} form"
+        assert_equal "text/vnd.turbo-stream.html", response.media_type
+        assert_select "turbo-stream[action=replace][target=#{modal_id}]"
+        assert_includes response.body, %(id="#{form_id}")
+      end
+
+      # Submitted through Turbo, the form would get the answers meant for the modal.
+      test "#{plural}: the form for a new entry also opens as a page, submitted without Turbo" do
+        get route("new_admin_#{name}")
+
+        assert_response :success
+        assert_select "form[action=?][data-turbo=false]", route("admin_#{plural}")
       end
 
       test "#{plural}: a new entry joins at the end" do
@@ -57,9 +90,8 @@ module Admin
         assert_equal ["Erstes", "Neues"], model.order(:position).pluck(:title)
       end
 
-      test "#{plural}: a new entry from the frame refreshes the page" do
-        post route("admin_#{plural}"), params: {name => {title: "Neues"}},
-                                       headers: {"Turbo-Frame" => "new_#{name}"}, as: :turbo_stream
+      test "#{plural}: a new entry from the modal refreshes the page" do
+        post route("admin_#{plural}"), params: {name => {title: "Neues"}}, as: :turbo_stream
 
         assert_response :success
         assert_select "turbo-stream[action=refresh]"
@@ -75,16 +107,48 @@ module Admin
         assert_equal 1, model.count
       end
 
-      test "#{plural}: an entry is renamed in place" do
+      test "#{plural}: a new entry in the modal shows its errors there" do
+        model.create!(title: "Vorhanden")
+
+        post route("admin_#{plural}"), params: {name => {title: "Vorhanden"}}, as: :turbo_stream
+
+        assert_response :unprocessable_content
+        assert_select "turbo-stream[action=replace][target=#{form_id}]"
+        assert_equal 1, model.count
+      end
+
+      test "#{plural}: the form for renaming an entry opens in a modal" do
+        entry = model.create!(title: "Alt")
+
+        get route("edit_admin_#{name}", entry), headers: TURBO_STREAM_HEADERS
+
+        assert_response :success
+        assert_equal "text/vnd.turbo-stream.html", response.media_type
+        assert_select "turbo-stream[action=replace][target=#{modal_id}]"
+        assert_includes response.body, %(id="#{form_id}")
+      end
+
+      test "#{plural}: an entry is renamed on a page of its own, submitted without Turbo" do
         entry = model.create!(title: "Alt")
 
         get route("edit_admin_#{name}", entry)
 
         assert_response :success
+        assert_select "form[action=?][data-turbo=false]", route("admin_#{name}", entry)
 
         patch route("admin_#{name}", entry), params: {name => {title: "Neu"}}
 
         assert_redirected_to route("admin_#{plural}")
+        assert_equal "Neu", entry.reload.title
+      end
+
+      test "#{plural}: an entry renamed in the modal refreshes the page" do
+        entry = model.create!(title: "Alt")
+
+        patch route("admin_#{name}", entry), params: {name => {title: "Neu"}}, as: :turbo_stream
+
+        assert_response :success
+        assert_select "turbo-stream[action=refresh]"
         assert_equal "Neu", entry.reload.title
       end
 
@@ -94,6 +158,16 @@ module Admin
         patch route("admin_#{name}", entry), params: {name => {title: ""}}
 
         assert_response :unprocessable_content
+        assert_equal "Alt", entry.reload.title
+      end
+
+      test "#{plural}: a rename in the modal shows its errors there" do
+        entry = model.create!(title: "Alt")
+
+        patch route("admin_#{name}", entry), params: {name => {title: ""}}, as: :turbo_stream
+
+        assert_response :unprocessable_content
+        assert_select "turbo-stream[action=replace][target=#{form_id}]"
         assert_equal "Alt", entry.reload.title
       end
 

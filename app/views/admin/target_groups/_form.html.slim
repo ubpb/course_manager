@@ -1,0 +1,14 @@
+/ <%# locals: (target_group:) -%>
+
+/ Carries its own id so validation errors can re-render just the content of
+/ the already open modal instead of spawning a second one.
+#target-group-form.modal-content
+  = simple_form_for [:admin, target_group] do |form|
+    .modal-header
+      h5.modal-title = target_group.new_record? ? "Neue Zielgruppe erstellen" : "Zielgruppe bearbeiten"
+      button.btn-close(type="button" data-bs-dismiss="modal" aria-label="Schließen")
+    .modal-body
+      = form.input :title, input_html: {autofocus: true}
+    .modal-footer
+      button.btn.btn-outline-secondary(type="button" data-bs-dismiss="modal") = t("admin.application.btn_cancel")
+      = form.submit t("admin.application.btn_save"), class: "btn btn-primary"

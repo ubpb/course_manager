@@ -1,0 +1,14 @@
+/ <%# locals: (topic:) -%>
+
+/ Carries its own id so validation errors can re-render just the content of
+/ the already open modal instead of spawning a second one.
+#topic-form.modal-content
+  = simple_form_for [:admin, topic] do |form|
+    .modal-header
+      h5.modal-title = topic.new_record? ? "Neues Thema erstellen" : "Thema bearbeiten"
+      button.btn-close(type="button" data-bs-dismiss="modal" aria-label="Schließen")
+    .modal-body
+      = form.input :title, input_html: {autofocus: true}
+    .modal-footer
+      button.btn.btn-outline-secondary(type="button" data-bs-dismiss="modal") = t("admin.application.btn_cancel")
+      = form.submit t("admin.application.btn_save"), class: "btn btn-primary"
