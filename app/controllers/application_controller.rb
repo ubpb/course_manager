@@ -77,8 +77,14 @@ class ApplicationController < ActionController::Base
   # Locale
   # --------------------------------------------------------------------------
 
-  # For each request set the locale
-  before_action -> { I18n.locale = current_locale if helpers.locale_switching_enabled? }
+  # For each request set the locale. I18n.locale belongs to the thread, which
+  # serves the next request too; with_locale sets it back afterwards.
+  around_action :switch_locale
+
+  def switch_locale(&)
+    locale = helpers.locale_switching_enabled? ? current_locale : I18n.default_locale
+    I18n.with_locale(locale, &)
+  end
 
   # Gets the current locale from the cookie or if no cookie was set from the browser settings.
   # If the browser locale is other than the default locale, :en will be used.
