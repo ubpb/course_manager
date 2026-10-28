@@ -12,7 +12,10 @@
       - next unless message.is_a?(String)
       - color = admin_toast_color(type)
       - sticky = admin_toast_sticky?(type)
+      / An id of its own: a refresh morphs the page, and without it the toast of
+      / an earlier message would be reused for this one, its timing included.
       .toast.show(
+        id="admin-toast-#{SecureRandom.alphanumeric(12)}"
         class="bg-#{color}-subtle text-#{color}-emphasis border-#{color}-subtle"
         role=(sticky ? "alert" : "status")
         aria-live=(sticky ? "assertive" : "polite")

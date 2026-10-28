@@ -83,6 +83,21 @@ class ToastsTest < ApplicationSystemTestCase
     assert_empty script_errors
   end
 
+  # A refresh morphs the page; the toast of the new message must not take
+  # over the timing of the old one.
+  test "a success after a warning on the same list still hides by itself" do
+    move_without_selection
+
+    assert_selector "#admin-toasts .toast", text: "Bitte mindestens einen Termin auswählen"
+
+    first("input[name='bulk_process_ids[]']").click
+    select "Veröffentlichen", from: "bulk_process_action"
+    click_on "Ausführen"
+
+    assert_selector "#admin-toasts .toast", text: "veröffentlicht"
+    using_wait_time(7) { assert_no_selector "#admin-toasts .toast", visible: :all }
+  end
+
   private
 
   def archive_first_offer
