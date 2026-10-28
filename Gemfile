@@ -5,7 +5,7 @@ gem "acts_as_list", "~> 1.1"
 gem "alma_api", "~> 2.0"
 gem "bootsnap", require: false
 gem "caxlsx_rails", "~> 0.7"
-gem "commonmarker", "~> 2.0"
+gem "commonmarker", "~> 2.10"
 gem "github-markup", "~> 6.0", require: "github/markup"
 gem "hexapdf", "~> 1.1"
 gem "jbuilder"
