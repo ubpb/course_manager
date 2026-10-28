@@ -27,7 +27,7 @@ bin/rubocop               # lint (config: rubocop-ubpb rails.yml, see .rubocop.y
 
 ## Assets — non-standard
 
-Propshaft + **Bun as the bundler** (not importmap or jsbundling). `bun.build.js` bundles `app/assets/src/application.js` → `app/assets/builds/`, including SCSS via the custom `bun.plugin.sass.js`. Because `bin/dev` only starts the Rails server, you must run `bun run build:watch` separately during development. Deploy (Capistrano) runs `bun install` + `bun run build` before `assets:precompile` (see `lib/capistrano/tasks/bun.rake`). Views are **Slim**; forms use **simple_form** + Bootstrap; JS behavior is **Stimulus** controllers in `app/assets/src/application/js/stimulus/`.
+Propshaft + **Bun as the bundler** (not importmap or jsbundling). `bun.build.js` bundles `app/assets-src/application.js` → `app/assets/builds/`, including SCSS via the custom `bun.plugin.sass.js`. Because `bin/dev` only starts the Rails server, you must run `bun run build:watch` separately during development. Deploy (Capistrano) runs `bun install` + `bun run build` before `assets:precompile` (see `lib/capistrano/tasks/bun.rake`). Views are **Slim**; forms use **simple_form** + Bootstrap; JS behavior is **Stimulus** controllers in `app/assets-src/application/js/stimulus/`.
 
 ## Architecture
 
