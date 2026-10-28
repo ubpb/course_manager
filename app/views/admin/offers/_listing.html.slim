@@ -47,9 +47,3 @@
                   li = link_to admin_offer_events_path(offer), class: "dropdown-item" do
                     i.fa-solid.fa-calendar-alt.me-2
                     = "Termine"
-
-/ Fix to reset indeterminate state of checkbox on turbo:load
-javascript:
-  document.addEventListener("turbo:load", function() {
-    document.querySelector("#bulk_process_select_all").indeterminate = false;
-  })

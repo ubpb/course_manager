@@ -57,11 +57,3 @@
                 li = link_to send_reminder_message_admin_offer_event_registration_path(offer, event, registration), data: {turbo_method: :patch, turbo_confirm: "Erinnerungsmail wirklich senden?"}, class: "dropdown-item" do
                   i.fa-solid.fa-envelope.me-2
                   =< "(Erneut) senden"
-
-/ Fix to reset indeterminate state of checkbox on turbo:load. The listener
-/ outlives the list, e.g. once its last participant is deleted.
-javascript:
-  document.addEventListener("turbo:load", function() {
-    const selectAll = document.querySelector("#bulk_process_select_all");
-    if (selectAll) selectAll.indeterminate = false;
-  })
