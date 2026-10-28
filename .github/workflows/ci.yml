@@ -16,20 +16,21 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      mysql:
-        image: mysql:8.4
+      # The version the servers run.
+      mariadb:
+        image: mariadb:11.8
         env:
-          MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+          MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: "1"
         ports:
           - 3306:3306
         options: >-
-          --health-cmd="mysqladmin ping --host=127.0.0.1 --user=root"
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=10
 
     env:
-      # config/database.yml picks these up so we talk to the MySQL service via
+      # config/database.yml picks these up so we talk to the MariaDB service via
       # TCP instead of the local socket used in development.
       DB_HOST: 127.0.0.1
       DB_PORT: 3306
