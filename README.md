@@ -28,7 +28,7 @@ Mails werden lokal nicht verschickt, sondern abgelegt und sind ohne Anmeldung un
 ```bash
 bin/rails test           # alle Tests
 bin/rubocop              # Linting (Konfiguration: rubocop-ubpb, siehe .rubocop.yml); -a für sichere Korrekturen
-bin/ci                   # Setup, RuboCop, Brakeman, Tests, Seeds
+bin/ci                   # Setup, RuboCop, Audit der Gems und JS-Pakete, Brakeman, Tests, Seeds
 ```
 
 Die Tests laufen gegen eine eigene Test-Datenbank (`course_manager_test`), deren Schema aus `db/schema.rb` aufgebaut wird.

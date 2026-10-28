@@ -29,6 +29,7 @@ gem "inline_svg", "~> 1.10" # Must be after propshaft
 
 group :development, :test do
   gem "brakeman", require: false
+  gem "bundler-audit", require: false
   gem "debug", platforms: [:mri, :windows], require: "debug/prelude"
   gem "dotenv"
   gem "rubocop-rails", require: false

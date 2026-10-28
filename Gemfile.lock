@@ -108,6 +108,9 @@ GEM
     brakeman (8.1.0)
       racc
     builder (3.3.0)
+    bundler-audit (0.9.3)
+      bundler (>= 1.2.0)
+      thor (~> 1.0)
     capistrano (3.20.1)
       airbrussh (>= 1.0.0)
       i18n
@@ -464,6 +467,7 @@ DEPENDENCIES
   alma_api (~> 2.0)
   bootsnap
   brakeman
+  bundler-audit
   capistrano
   capistrano-bundler
   capistrano-passenger

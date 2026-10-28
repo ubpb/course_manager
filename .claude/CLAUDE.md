@@ -15,7 +15,7 @@ bin/setup                 # install deps, prepare DB, start server (idempotent)
 bin/dev                   # start Rails server (thin wrapper around `rails server` — does NOT build JS)
 bun run build:watch       # rebuild JS/CSS on change — run this ALONGSIDE bin/dev in a second terminal
 bun run build             # one-off asset build → app/assets/builds/
-bin/ci                    # CI: setup, rubocop, brakeman, tests, seeds (config/ci.rb)
+bin/ci                    # CI: setup, rubocop, gem and JS audit, brakeman, tests, seeds (config/ci.rb)
 bin/rails test            # run minitest suite
 bin/rails test test/models/offer_test.rb              # single file
 bin/rails test test/models/offer_test.rb:42           # single test by line
