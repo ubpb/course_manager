@@ -11,5 +11,6 @@ en:
     create:
       failed: Login failed. Please check your input.
       rate_limited: Too many login attempts. Please try again in a few minutes.
+      unavailable: Login is not possible at the moment because the library system cannot be reached. Please try again later.
     destroy:
       logged_out: You have been logged out.

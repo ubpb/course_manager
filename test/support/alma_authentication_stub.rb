@@ -8,6 +8,8 @@ module AlmaAuthenticationStub
   # expired. Both log in with VALID_PASSWORD.
   PATRON_USER_ID = "23456".freeze
   INACTIVE_USER_ID = "34567".freeze
+  # Logging in with this id finds Alma unreachable.
+  UNAVAILABLE_USER_ID = "45678".freeze
 
   USERS = {
     VALID_USER_ID => {record_type: "STAFF", status: "ACTIVE"},
@@ -16,6 +18,8 @@ module AlmaAuthenticationStub
   }.freeze
 
   def authenticate_against_alma(user_id, password) # rubocop:disable Naming/PredicateMethod -- the name of the stubbed method
+    raise AlmaApi::GatewayError.new("Service unavailable", "GENERAL_ERROR") if user_id == UNAVAILABLE_USER_ID
+
     USERS.key?(user_id) && password == VALID_PASSWORD
   end
 

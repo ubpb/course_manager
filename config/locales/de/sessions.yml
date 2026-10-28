@@ -18,5 +18,6 @@ de:
     create:
       failed: Fehler bei der Anmeldung. Bitte überprüfen Sie Ihre Eingaben.
       rate_limited: Zu viele Anmeldeversuche. Bitte versuchen Sie es in einigen Minuten erneut.
+      unavailable: Die Anmeldung ist zurzeit nicht möglich, weil das Bibliothekssystem nicht erreichbar ist. Bitte versuchen Sie es später noch einmal.
     destroy:
       logged_out: Sie wurden abgemeldet.

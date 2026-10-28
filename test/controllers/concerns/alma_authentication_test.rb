@@ -65,6 +65,15 @@ class AlmaAuthenticationTest < ActiveSupport::TestCase
     assert_nil @login.fetch_alma_user("erika@uni")
   end
 
+  # The controllers tell a failed login from an unreachable Alma.
+  test "an unreachable Alma is not taken for a wrong password" do
+    def @client.post(*, **) = raise(AlmaApi::GatewayError.new("Service unavailable", "GENERAL_ERROR"))
+    def @client.get(*) = raise(AlmaApi::ServerError.new("Internal error", "SERVER_ERROR"))
+
+    assert_raises(AlmaApi::GatewayError) { @login.authenticate_against_alma("max@uni", "geheim") }
+    assert_raises(AlmaApi::ServerError) { @login.fetch_alma_user("max@uni") }
+  end
+
   test "the user id is escaped in the URL" do
     @login.authenticate_against_alma("max@uni", "geheim")
     @login.fetch_alma_user("../max")

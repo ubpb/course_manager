@@ -23,4 +23,11 @@ module AlmaAuthentication
     nil
   end
 
+  # Any other AlmaApi::Error means Alma could not answer at all: it is down,
+  # overloaded or refuses the API key. The login forms say so instead of
+  # failing; the log keeps the cause.
+  def log_alma_unavailable(error)
+    Rails.logger.error("Alma is unavailable for the login: #{error.class}: #{error.message}")
+  end
+
 end

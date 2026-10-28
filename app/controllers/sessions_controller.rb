@@ -32,6 +32,10 @@ class SessionsController < ApplicationController
     else
       redirect_to new_session_path
     end
+  rescue AlmaApi::Error => e
+    log_alma_unavailable(e)
+    flash.now[:error] = t(".unavailable")
+    render :new, status: :service_unavailable
   end
 
   def destroy

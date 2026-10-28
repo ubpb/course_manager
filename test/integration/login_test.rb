@@ -27,6 +27,22 @@ class LoginTest < ActionDispatch::IntegrationTest
     assert_includes response.body, I18n.t("sessions.create.failed")
   end
 
+  test "without Alma the login says it is not possible right now" do
+    log_in(STUB::UNAVAILABLE_USER_ID)
+
+    assert_response :service_unavailable
+    assert_select ".alert", text: I18n.t("sessions.create.unavailable")
+    assert_select "form[action=?]", session_path
+  end
+
+  test "without Alma the admin login says it is not possible right now" do
+    log_in_admin(STUB::UNAVAILABLE_USER_ID)
+
+    assert_response :service_unavailable
+    assert_select ".alert", text: /Bibliothekssystem nicht erreichbar/
+    assert_select "form[action=?]", admin_session_path
+  end
+
   test "the login form without user or password is shown again" do
     log_in("", "")
 
