@@ -19,6 +19,6 @@
     "build:clobber": "rm -fr ./app/assets/builds/*"
   },
   "devDependencies": {
-    "sass": "^1.103.1"
+    "sass": "^1.106.1"
   }
 }
