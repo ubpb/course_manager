@@ -107,6 +107,54 @@ module Frontend
       assert_empty(css_select("span.badge").select { |badge| badge.text.include?("Mit anstehenden Terminen") })
     end
 
+    test "the self study scope" do
+      self_study = Offer.create!(title: "Testkurs zum Selbstlernen", type: "self_study_course", published: true)
+
+      filter(scope: "self_study_courses")
+
+      assert_includes response.body, self_study.title
+      assert_empty listed
+    end
+
+    test "the title filter matches a part of the title" do
+      filter(title: "ohne Termin")
+
+      assert_equal [@unscheduled_course], listed
+    end
+
+    test "topics and target groups each filter by any of the chosen ones" do
+      recherche = Topic.create!(title: "Recherche")
+      publizieren = Topic.create!(title: "Publizieren")
+      studierende = TargetGroup.create!(title: "Studierende")
+      @scheduled_course.update!(topics: [recherche, publizieren], target_groups: [studierende])
+      @consulting.update!(topics: [publizieren])
+
+      filter(topics: [recherche.id, publizieren.id])
+
+      assert_equal [@scheduled_course, @consulting], listed
+
+      filter(target_groups: [studierende.id])
+
+      assert_equal [@scheduled_course], listed
+    end
+
+    test "the chip of one target group removes only that one" do
+      studierende = TargetGroup.create!(title: "Studierende")
+      lehrende = TargetGroup.create!(title: "Lehrende")
+      @unscheduled_course.update!(target_groups: [studierende])
+      @consulting.update!(target_groups: [lehrende])
+
+      filter(target_groups: [studierende.id, lehrende.id])
+
+      assert_equal [@unscheduled_course, @consulting], listed
+
+      chip = css_select("span.badge").find { |badge| badge.text.include?("Zielgruppe: Lehrende") }
+      get chip.at_css("a")["href"]
+      follow_redirect!
+
+      assert_equal [@unscheduled_course], listed
+    end
+
     test "a filter param that is not a hash does not raise" do
       get frontend_offers_path(filter: "nonsense")
 
