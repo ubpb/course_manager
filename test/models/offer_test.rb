@@ -1,8 +1,13 @@
 require "test_helper"
 
+# An offer stores only the contact and call to action that differ from the
+# defaults of the configuration, and carries its title in its URL.
 class OfferTest < ActiveSupport::TestCase
 
   include ConfigOverride
+
+  DEFAULTS = {default_contact: {name: "Schulungsteam", email: "schulung@ub.uni-paderborn.de", phone: "05251 60-2017"},
+              default_call_to_action: {text: "Selbstlernkurs öffnen"}}.freeze
 
   def build_offer(**attributes)
     Offer.new({title: "Literaturrecherche", type: "course"}.merge(attributes))
@@ -13,7 +18,7 @@ class OfferTest < ActiveSupport::TestCase
   test "contact and call to action equal to the defaults are not stored" do
     offer = build_offer(contact_name: "Schulungsteam", contact_email: "schulung@ub.uni-paderborn.de",
                         contact_phone: "05251 60-2017", call_to_action_text: "Selbstlernkurs öffnen")
-    offer.save!
+    with_config(DEFAULTS) { offer.save! }
 
     assert_nil offer[:contact_name]
     assert_nil offer[:contact_email]
@@ -33,7 +38,7 @@ class OfferTest < ActiveSupport::TestCase
   test "values of its own are stored and win over the defaults" do
     offer = build_offer(contact_name: "Max Muster", contact_email: "muster@ub.uni-paderborn.de",
                         contact_phone: "05251 60-1234", call_to_action_text: "Jetzt lernen")
-    offer.save!
+    with_config(DEFAULTS) { offer.save! }
 
     assert_equal "Max Muster", offer.reload.contact_name
     assert_equal "muster@ub.uni-paderborn.de", offer.contact_email
