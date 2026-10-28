@@ -39,6 +39,31 @@ module Frontend
       end
     end
 
+    test "the list of registrations leads to the form" do
+      get frontend_event_registrations_path(@event)
+
+      assert_redirected_to new_frontend_event_registration_path(@event)
+    end
+
+    test "a registration without consent shows the form again" do
+      assert_no_difference -> { @event.registrations.count } do
+        post frontend_event_registrations_path(@event),
+             params: {registration: {first_name: "Erika", last_name: "Mustermann", email: "erika@example.com"}}
+      end
+
+      assert_response :unprocessable_content
+      assert_select "form[action=?]", frontend_event_registrations_path(@event)
+    end
+
+    test "in the modal a registration without consent only replaces the form" do
+      post frontend_event_registrations_path(@event, modal: 1),
+           params: {registration: {first_name: "Erika", last_name: "Mustermann", email: "erika@example.com"}},
+           as: :turbo_stream
+
+      assert_response :unprocessable_content
+      assert_select "turbo-stream[action=replace][target=registration-form]"
+    end
+
     test "an event without registration turns the user away" do
       @event.update!(registration_required: false)
 

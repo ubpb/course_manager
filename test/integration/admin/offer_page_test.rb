@@ -35,6 +35,13 @@ module Admin
       assert_select ".context-head-offer", text: /Beratung/
     end
 
+    test "other offers have no event list to go to" do
+      get admin_offer_events_path(@consulting), headers: {"Referer" => admin_offers_url}
+
+      assert_redirected_to admin_offers_url
+      assert_equal "Nur Kurse können Termine haben.", flash[:alert]
+    end
+
     test "the head counts the events of a course and says nothing about statistics" do
       get admin_offer_events_path(@offer)
 

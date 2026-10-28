@@ -116,6 +116,12 @@ module Frontend
       assert_empty listed
     end
 
+    test "an unknown scope does not filter" do
+      filter(scope: "seminars")
+
+      assert_equal [@scheduled_course, @unscheduled_course, @consulting], listed
+    end
+
     test "the title filter matches a part of the title" do
       filter(title: "ohne Termin")
 

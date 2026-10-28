@@ -98,6 +98,20 @@ module Admin
       assert_includes response.body, '<turbo-stream action="replace" target="bulk-action-form">'
     end
 
+    test "moving without a selected event asks for one" do
+      patch bulk_process_admin_events_path, params: {bulk_process_action: "move_to_offer"}
+
+      assert_redirected_to admin_events_path
+      assert_equal "Bitte mindestens einen Termin auswählen", flash[:alert]
+    end
+
+    test "an unknown bulk action changes nothing" do
+      patch bulk_process_admin_events_path, params: {bulk_process_action: "unknown", bulk_process_ids: [@upcoming.id]}
+
+      assert_redirected_to admin_events_path
+      assert_predicate @upcoming.reload, :published?
+    end
+
     test "bulk actions work in the global list" do
       @upcoming.update!(published: false)
       patch bulk_process_admin_events_path,
