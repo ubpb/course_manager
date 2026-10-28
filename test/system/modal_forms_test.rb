@@ -18,7 +18,7 @@ class ModalFormsTest < ApplicationSystemTestCase
     fill_in "offer_title", with: "Datenmanagement"
     click_on "Speichern"
 
-    assert_text "Erfolgreich gespeichert."
+    assert_selector "#admin-toasts .toast", text: "Erfolgreich gespeichert."
     assert_link "Datenmanagement"
     assert_no_selector ".modal, .modal-backdrop", visible: :all
     assert_empty script_errors
@@ -66,7 +66,7 @@ class ModalFormsTest < ApplicationSystemTestCase
     fill_in "event_max_no_of_participants", with: "12"
     click_on "Speichern"
 
-    assert_text "Erfolgreich gespeichert."
+    assert_selector "#admin-toasts .toast", text: "Erfolgreich gespeichert."
     assert_current_path admin_offer_events_path(offer)
     assert_equal 1, offer.events.count
     assert_no_selector ".modal, .modal-backdrop", visible: :all
@@ -90,7 +90,7 @@ class ModalFormsTest < ApplicationSystemTestCase
     fill_in "event_max_no_of_participants", with: "12"
     click_on "Speichern"
 
-    assert_text "Erfolgreich gespeichert."
+    assert_selector "#admin-toasts .toast", text: "Erfolgreich gespeichert."
     assert_current_path admin_events_path
     assert_equal 1, offer.events.count
     assert_no_selector ".modal, .modal-backdrop", visible: :all
@@ -170,7 +170,7 @@ class ModalFormsTest < ApplicationSystemTestCase
     fill_in "registration_first_name", with: "Moritz"
     click_on "Speichern"
 
-    assert_text "Erfolgreich gespeichert."
+    assert_selector "#admin-toasts .toast", text: "Erfolgreich gespeichert."
     assert_selector "td", text: "Moritz"
     assert_no_selector ".modal, .modal-backdrop", visible: :all
     assert_empty script_errors
@@ -186,7 +186,7 @@ class ModalFormsTest < ApplicationSystemTestCase
     open_participant_in_modal
     accept_confirm { click_on "Löschen" }
 
-    assert_text "Erfolgreich gelöscht."
+    assert_selector "#admin-toasts .toast", text: "Erfolgreich gelöscht."
     assert_current_path admin_offer_event_registrations_path(@offer, @event)
     assert_no_selector "td", text: registration.email
     assert_no_selector ".modal, .modal-backdrop", visible: :all
@@ -210,7 +210,7 @@ class ModalFormsTest < ApplicationSystemTestCase
 
     click_on "Speichern"
 
-    assert_text "Erfolgreich gespeichert."
+    assert_selector "#admin-toasts .toast", text: "Erfolgreich gespeichert."
     assert_no_selector ".modal", visible: :all
     # The notice above makes the page taller; the browser keeps the rows in
     # view, so the position may only grow.

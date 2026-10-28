@@ -48,11 +48,12 @@ module Admin
       assert_select "#admin-toasts .toast", count: 0
     end
 
+    # The notice after logging out is one only the layout of the front end shows.
     test "the front end keeps its alerts in the page" do
-      post frontend_cert_checks_path
-      follow_redirect!
+      get logout_path
+      follow_redirect! while response.redirect?
 
-      assert_select ".alert.alert-danger", text: /Bitte wählen Sie eine Datei aus/
+      assert_select ".alert.alert-info.alert-global", text: /Sie wurden abgemeldet/
       assert_select "#admin-toasts", count: 0
     end
 

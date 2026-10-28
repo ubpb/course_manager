@@ -1,5 +1,6 @@
 require "test_helper"
 
+# The colors of the admin's toasts and which of them stay until closed.
 class AdminToastHelperTest < ActionView::TestCase
 
   test "admin_toast_color follows the colors of the alerts" do
