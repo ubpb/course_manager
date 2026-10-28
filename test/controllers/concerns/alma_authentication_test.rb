@@ -38,8 +38,18 @@ class AlmaAuthenticationTest < ActiveSupport::TestCase
 
     include AlmaAuthentication
 
-    public :alma_client, :authenticate_against_alma, :fetch_alma_user
+    public :alma_client, :authenticate_against_alma, :fetch_alma_user, :log_alma_unavailable
 
+  end
+
+  def logged
+    io = StringIO.new
+    logger = ActiveSupport::Logger.new(io)
+    Rails.logger.broadcast_to(logger)
+    yield
+    io.string
+  ensure
+    Rails.logger.stop_broadcasting_to(logger)
   end
 
   setup do
@@ -72,6 +82,25 @@ class AlmaAuthenticationTest < ActiveSupport::TestCase
 
     assert_raises(AlmaApi::GatewayError) { @login.authenticate_against_alma("max@uni", "geheim") }
     assert_raises(AlmaApi::ServerError) { @login.fetch_alma_user("max@uni") }
+  end
+
+  # For a refused connection or a timeout the client raises a bare
+  # AlmaApi::Error with a fixed message and keeps the network error as cause.
+  test "the log names what kept Alma from answering" do
+    error = begin
+      begin
+        raise Faraday::ConnectionFailed, "Failed to open TCP connection (Connection refused)"
+      rescue Faraday::ConnectionFailed
+        raise AlmaApi::Error, AlmaApi::GENERAL_ERROR_MESSAGE
+      end
+    rescue AlmaApi::Error => e
+      e
+    end
+
+    log = logged { @login.log_alma_unavailable(error) }
+
+    assert_includes log, "AlmaApi::Error"
+    assert_includes log, "Faraday::ConnectionFailed: Failed to open TCP connection (Connection refused)"
   end
 
   test "the user id is escaped in the URL" do
