@@ -49,3 +49,8 @@
 # Working documents of the superpowers skills: mockups, ledgers, specs and plans
 /.superpowers/
 /docs/superpowers/
+
+# Personal Claude Code settings and instructions, and its worktrees (see AGENTS.md)
+/.claude/settings.local.json
+/.claude/worktrees/
+CLAUDE.local.md
