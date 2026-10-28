@@ -5,6 +5,7 @@ module Admin
       include Filterable
       include EventFilter
       include EventBulkActions
+      include ModalForm
 
       # bulk_process and bulk_move come from EventBulkActions.
       # rubocop:disable Rails/LexicallyScopedActionFilter
@@ -37,6 +38,7 @@ module Admin
 
       def new
         @event = @offer.events.build
+        respond_with_modal(offer: @offer, event: @event)
       end
 
       def edit; end
@@ -45,9 +47,9 @@ module Admin
         @event = @offer.events.build(event_params)
 
         if @event.save
-          redirect_to edit_admin_offer_event_path(@offer, @event), notice: t("admin.application.form.success")
+          respond_with_list(event_list_path, notice: t("admin.application.form.success"))
         else
-          render :new, status: :unprocessable_content
+          respond_with_errors(:new, offer: @offer, event: @event)
         end
       end
 

@@ -1,6 +1,8 @@
 - return_path = event_list_path
 
-= simple_form_for [:admin, @offer, @event] do |form|
+/ Only reached without Turbo; the list opens the form in a modal. Submitting
+/ through Turbo would get the answers meant for the modal.
+= simple_form_for [:admin, @offer, @event], data: {turbo: false} do |form|
   .card.card-shadowed
     .card-header.d-flex.align-items-center.gap-2
       h5.card-title.mb-0 = "Neuen Termin anlegen"

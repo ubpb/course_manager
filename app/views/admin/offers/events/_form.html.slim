@@ -1,0 +1,20 @@
+/ <%# locals: (offer:, event:) -%>
+
+/ Carries its own id so validation errors can re-render just the content of
+/ the already open modal instead of spawning a second one; the choice of the
+/ course in the global event list is replaced by it the same way. Rendered
+/ from Admin::EventsController too, so partial paths are given in full. The
+/ form takes part in the flex layout of the modal, or its body would not
+/ scroll.
+#event-form.modal-content
+  = simple_form_for [:admin, offer, event], html: {class: "d-flex flex-column overflow-hidden"} do |form|
+    .modal-header
+      div
+        h5.modal-title = "Neuen Termin anlegen"
+        .small.text-body-secondary = offer.title
+      button.btn-close(type="button" data-bs-dismiss="modal" aria-label="Schließen")
+    .modal-body
+      = render "admin/offers/events/form_fields", form: form, offer: offer, event: event, autofocus: true
+    .modal-footer
+      button.btn.btn-outline-secondary(type="button" data-bs-dismiss="modal") = t("admin.application.btn_cancel")
+      = form.submit t("admin.application.btn_save"), class: "btn btn-primary"

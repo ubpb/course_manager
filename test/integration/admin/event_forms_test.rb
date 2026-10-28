@@ -9,6 +9,7 @@ module Admin
     include AdminLogin
     include MailerRecords
     include ReportRecords
+    include TurboStreamRequests
 
     setup do
       @offer = create_offer
@@ -30,6 +31,60 @@ module Admin
       end
 
       assert_response :unprocessable_content
+    end
+
+    test "the events of a course open a new event in a modal" do
+      get admin_offer_events_path(@offer)
+
+      assert_select "#event-modal"
+      assert_select "a[href=?][data-turbo-stream]", new_admin_offer_event_path(@offer, nav_scope: "offer")
+      assert_select "head meta[name=turbo-refresh-scroll][content=preserve]"
+    end
+
+    test "the form for a new event opens in a modal that a click beside it does not close" do
+      get new_admin_offer_event_path(@offer), headers: TURBO_STREAM_HEADERS
+
+      assert_select "turbo-stream[action=replace][target=event-modal] template" do
+        assert_select ".modal[data-bs-backdrop=static] .modal-dialog.modal-lg.modal-dialog-scrollable #event-form"
+        assert_select "form[action=?]", admin_offer_events_path(@offer)
+        assert_select "input[name='event[date_and_time]'][autofocus]"
+        assert_select "button[data-action='mail-preview#open']", count: 2
+      end
+    end
+
+    test "the form for a new event also opens as a page, submitted without Turbo" do
+      get new_admin_offer_event_path(@offer)
+
+      assert_select "form[action=?][data-turbo=false]", admin_offer_events_path(@offer)
+    end
+
+    test "a new event from the events of its course leads back to them" do
+      post admin_offer_events_path(@offer, nav_scope: "offer"),
+           params: {event: {date_and_time: "2026-12-01T10:00", max_no_of_participants: 10}}
+
+      event = @offer.events.order(:id).last
+
+      assert_redirected_to admin_offer_events_path(@offer, anchor: "event_#{event.id}", nav_scope: nil)
+      assert_equal "Erfolgreich gespeichert.", flash[:notice]
+    end
+
+    test "a new event from the modal refreshes the list" do
+      assert_difference -> { @offer.events.count }, 1 do
+        post admin_offer_events_path(@offer),
+             params: {event: {date_and_time: "2026-12-01T10:00", max_no_of_participants: 10}}, as: :turbo_stream
+      end
+
+      assert_select "turbo-stream[action=refresh]"
+      assert_equal "Erfolgreich gespeichert.", flash[:notice]
+    end
+
+    test "a new event in the modal shows its errors there" do
+      post admin_offer_events_path(@offer),
+           params: {event: {date_and_time: "", max_no_of_participants: 10}}, as: :turbo_stream
+
+      assert_response :unprocessable_content
+      assert_select "turbo-stream[action=replace][target=event-form]"
+      assert_select "turbo-stream[target=event-modal]", count: 0
     end
 
     test "moving an upcoming event tells every participant" do

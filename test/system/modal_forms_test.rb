@@ -52,4 +52,23 @@ class ModalFormsTest < ApplicationSystemTestCase
     assert_selector ".modal.show #offer-form"
   end
 
+  test "a new event saved in the modal shows in the events of its course" do
+    offer = Offer.create!(title: "Literaturrecherche", type: "course")
+    visit admin_offer_events_path(offer)
+    collect_script_errors
+
+    click_on "Neuer Termin"
+
+    assert_selector "#event_date_and_time:focus"
+    fill_in "event_date_and_time", with: 1.month.from_now.change(hour: 10)
+    fill_in "event_max_no_of_participants", with: "12"
+    click_on "Speichern"
+
+    assert_text "Erfolgreich gespeichert."
+    assert_current_path admin_offer_events_path(offer)
+    assert_equal 1, offer.events.count
+    assert_no_selector ".modal, .modal-backdrop", visible: :all
+    assert_empty script_errors
+  end
+
 end

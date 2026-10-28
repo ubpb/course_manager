@@ -44,13 +44,14 @@ module Admin
       end
     end
 
-    test "the new event belongs to the chosen offer and opens globally" do
+    test "a new event outside the offer context leads back to the global list" do
       post admin_offer_events_path(@offer),
            params: {event: {date_and_time: "2026-12-01T10:00", max_no_of_participants: 10}}
 
       event = @offer.events.last
 
-      assert_redirected_to edit_admin_offer_event_path(@offer, event)
+      assert_redirected_to admin_events_path(anchor: "event_#{event.id}")
+      assert_equal "Erfolgreich gespeichert.", flash[:notice]
     end
 
     test "the breadcrumb of the choice leads back to the event list" do
