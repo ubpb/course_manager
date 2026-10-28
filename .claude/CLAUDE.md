@@ -16,7 +16,8 @@ bin/dev                   # start Rails server (thin wrapper around `rails serve
 bun run build:watch       # rebuild JS/CSS on change — run this ALONGSIDE bin/dev in a second terminal
 bun run build             # one-off asset build → app/assets/builds/
 bin/ci                    # CI: setup, rubocop, gem and JS audit, brakeman, tests, seeds (config/ci.rb)
-bin/rails test            # run minitest suite
+bin/rails test            # run minitest suite (without system tests)
+bin/rails test:system     # run system tests in headless Chrome (needs built assets)
 bin/rails test test/models/offer_test.rb              # single file
 bin/rails test test/models/offer_test.rb:42           # single test by line
 bin/rubocop               # lint (config: rubocop-ubpb rails.yml, see .rubocop.yml); -a for safe autocorrections
@@ -61,5 +62,7 @@ Minitest, run in parallel, without fixtures: each test creates its own records. 
 - `AlmaAuthenticationStub` replaces the Alma calls of both logins (a valid staff user, a library user who is not staff, an inactive staff member); `AdminLogin#log_in_admin` signs in to the admin.
 - `MailerRecords` builds the offer → event → registration chain (`create_offer`, `create_event`, `create_registration`); `ReportRecords#create_report` adds statistics.
 - `ConfigOverride#with_config` replaces values of `config/application.yml` for a block, e.g. to switch on a feature flag.
+
+System tests (`test/system`, headless Chrome via Selenium) cover what only a browser shows, such as modals and other JavaScript behaviour. `bin/rails test` leaves them out; `bin/rails test:system` runs them against the built assets, so run `bun run build` first. `ApplicationSystemTestCase#log_in_admin` signs in through the login form, with Alma stubbed out as above.
 
 No coverage tool is set up yet.

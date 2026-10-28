@@ -46,7 +46,9 @@ export default class extends Controller {
     const modal = this.modal
     this.modal = null
 
-    modal.hide()
+    // No hide(): the element goes away anyway, and its fade transition would
+    // finish after dispose() on the emptied instance and throw. So clean up
+    // the backdrop and the <body> styles by hand.
     modal.dispose()
 
     document.querySelectorAll(".modal-backdrop").forEach((element) => element.remove())
