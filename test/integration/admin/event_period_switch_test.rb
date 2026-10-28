@@ -28,6 +28,13 @@ class Admin::EventPeriodSwitchTest < ActionDispatch::IntegrationTest
     assert_select "table.event-list tbody tr.event-row", count: 3
   end
 
+  test "the period of the last three months names that it includes the upcoming events" do
+    get admin_events_path
+
+    assert_select ".period-switch a[title=?]", "Alle kommenden Termine und die der letzten 3 Monate",
+                  text: "Kommende + letzte 3 Monate"
+  end
+
   test "switching the period keeps the other filters" do
     get admin_events_path(filter: {online: "true"})
     follow_redirect!

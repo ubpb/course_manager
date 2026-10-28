@@ -1,9 +1,10 @@
 module AdminFilterHelper
 
-  # The periods of the event lists' switch, as [label, value of upcoming_or_past].
+  # The periods of the event lists' switch, as [label, value of upcoming_or_past,
+  # tooltip or nil].
   EVENT_PERIODS = [
     ["Kommende", "upcoming"],
-    ["+ 3 Monate", "upcoming_and_last_3_months"],
+    ["Kommende + letzte 3 Monate", "upcoming_and_last_3_months", "Alle kommenden Termine und die der letzten 3 Monate"],
     ["Vergangene", "past"],
     ["Alle", "all"]
   ].freeze

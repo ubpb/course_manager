@@ -2,8 +2,9 @@
 
 / Switch between the periods of an event list, keeping all other filters.
 .btn-group.btn-group-sm.period-switch(role="group" aria-label="Zeitraum")
-  - AdminFilterHelper::EVENT_PERIODS.each do |label, value|
+  - AdminFilterHelper::EVENT_PERIODS.each do |label, value, hint|
     - active = filter.upcoming_or_past == value
     = link_to label, admin_event_period_path(filter, value),
               class: ["btn", (active ? "btn-primary active" : "btn-outline-primary")],
+              title: hint,
               "aria-current": ("true" if active)
