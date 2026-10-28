@@ -1,0 +1,20 @@
+/ <%# locals: (offers:, error: nil) -%>
+
+/ Carries the id of the event form, which replaces it once a course is
+/ chosen; a choice that is no current course re-renders it with the error.
+/ The form takes part in the flex layout of the modal, or its body would not
+/ scroll.
+#event-form.modal-content
+  = form_tag new_admin_event_path, method: :get, data: {turbo_stream: true}, class: "d-flex flex-column overflow-hidden" do
+    .modal-header
+      h5.modal-title = "Neuer Termin"
+      button.btn-close(type="button" data-bs-dismiss="modal" aria-label="Schließen")
+    .modal-body
+      - if error
+        .alert.alert-warning
+          i.fa-solid.fa-exclamation-triangle.me-2
+          = error
+      = render "admin/events/offer_choice", offers: offers
+    .modal-footer
+      button.btn.btn-outline-secondary(type="button" data-bs-dismiss="modal") = t("admin.application.btn_cancel")
+      = submit_tag "Weiter", name: nil, class: "btn btn-primary"

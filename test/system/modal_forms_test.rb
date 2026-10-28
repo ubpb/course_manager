@@ -71,4 +71,28 @@ class ModalFormsTest < ApplicationSystemTestCase
     assert_empty script_errors
   end
 
+  test "a new event from the global list: choose the course, continue, save" do
+    offer = Offer.create!(title: "Literaturrecherche", type: "course")
+    visit admin_events_path
+    collect_script_errors
+
+    click_on "Neuer Termin"
+
+    assert_selector "input[type=search]:focus"
+    select "Literaturrecherche", from: "offer_id"
+    click_on "Weiter"
+
+    assert_selector "#event_date_and_time"
+    assert_selector ".modal", count: 1, visible: :all
+    fill_in "event_date_and_time", with: 1.month.from_now.change(hour: 10)
+    fill_in "event_max_no_of_participants", with: "12"
+    click_on "Speichern"
+
+    assert_text "Erfolgreich gespeichert."
+    assert_current_path admin_events_path
+    assert_equal 1, offer.events.count
+    assert_no_selector ".modal, .modal-backdrop", visible: :all
+    assert_empty script_errors
+  end
+
 end

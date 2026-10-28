@@ -1,0 +1,18 @@
+/ <%# locals: (offers:) -%>
+
+/ The courses a new event can belong to, filtered by title as staff type.
+div(data-controller="select-filter")
+  label.form-label(for="offer_id") = "Für welches Angebot?"
+  input.form-control.mb-2(
+    type="search"
+    placeholder="Nach Titel filtern …"
+    autofocus=true
+    data-select-filter-target="input"
+    data-action="input->select-filter#filter"
+  )
+  = select_tag :offer_id,
+               options_from_collection_for_select(offers, :id, :title),
+               class: "form-select",
+               size: 8,
+               required: true,
+               "data-select-filter-target": "select"

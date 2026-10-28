@@ -1,12 +1,13 @@
 require "test_helper"
 
 # A new event can be started from the global event list: staff choose the
-# course first and then fill in the usual event form.
+# course first and then fill in the usual event form, both in one modal.
 module Admin
   class NewEventTest < ActionDispatch::IntegrationTest
 
     include AdminLogin
     include MailerRecords
+    include TurboStreamRequests
 
     setup do
       @offer = create_offer
@@ -16,10 +17,42 @@ module Admin
       log_in_admin
     end
 
-    test "the global list starts a new event" do
+    test "the global list starts a new event in a modal" do
       get admin_events_path
 
-      assert_select "a[href=?]", new_admin_event_path, text: /Neuer Termin/
+      assert_select "a[href=?][data-turbo-stream]", new_admin_event_path, text: /Neuer Termin/
+      assert_select "#event-modal"
+    end
+
+    test "the choice of the course opens in a modal that a click beside it does not close" do
+      get new_admin_event_path, headers: TURBO_STREAM_HEADERS
+
+      assert_select "turbo-stream[action=replace][target=event-modal] template" do
+        assert_select ".modal[data-bs-backdrop=static] #event-form form[action=?][method=get][data-turbo-stream]",
+                      new_admin_event_path
+        assert_select "select[name=offer_id] option", count: 1, text: "Literaturrecherche"
+      end
+    end
+
+    test "choosing a course in the modal turns it into the event form" do
+      get new_admin_event_path(offer_id: @offer.id), headers: TURBO_STREAM_HEADERS
+
+      assert_response :success
+      assert_select "turbo-stream", count: 1
+      assert_select "turbo-stream[action=replace][target=event-form] template" do
+        assert_select "#event-form form[action=?]", admin_offer_events_path(@offer)
+        assert_select "button[data-action='mail-preview#open']", count: 2
+      end
+    end
+
+    test "an unsuitable offer is refused in the modal" do
+      get new_admin_event_path(offer_id: @consulting.id), headers: TURBO_STREAM_HEADERS
+
+      assert_response :unprocessable_content
+      assert_select "turbo-stream[action=replace][target=event-form] template" do
+        assert_select ".alert", text: /Bitte ein Angebot auswählen/
+        assert_select "select[name=offer_id]"
+      end
     end
 
     test "only current courses can be chosen" do
