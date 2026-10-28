@@ -153,7 +153,7 @@ Ein Tippfehler im Schlüssel fällt sonst nicht auf: Die Anwendung verschickt da
 
 ### Mails lesen statt verschicken
 
-Mit `mail.delivery_method: letter_opener_web` verlässt keine Mail der Anwendung den Server – weder aus der Web-Anwendung noch aus dem Jobs-Dienst, Rake-Tasks oder der Konsole. Die Mails werden unter `tmp/letter_opener` abgelegt (über Deploys hinweg) und sind nach der Anmeldung im Admin-Bereich unter `/admin/mail` zu lesen.
+Mit `mail.delivery_method: letter_opener_web` verlässt keine Mail der Anwendung den Server – weder aus der Web-Anwendung noch aus dem Jobs-Dienst, Rake-Tasks oder der Konsole. Die Mails werden unter `tmp/letter_opener` abgelegt (über Deploys hinweg) und sind nach der Anmeldung im Admin-Bereich unter `/admin/mail` zu lesen; die Menüleiste des Admin-Bereichs verlinkt sie dann unter „Mails“.
 
 Das betrifft nur Mails dieser Anwendung. Was andere Software auf dem Server über `sendmail` verschickt, regelt der Mailserver des Servers.
 

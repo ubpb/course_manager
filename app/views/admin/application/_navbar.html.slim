@@ -53,8 +53,15 @@ nav#admin-navbar.navbar.navbar-expand-md.d-print-none(data-bs-theme="dark" aria-
             = render "application/color_mode_switcher"
           - if locale_switching_enabled?
             = render "application/locale_switcher"
+          - if mail_viewer_enabled?
+            = link_to admin_letter_opener_path(nav_scope: nil),
+                      target: "_blank",
+                      title: "Verschickte Mails dieses Systems lesen",
+                      class: "nav-link admin-tool-link" do
+              i.fa-regular.fa-envelope.me-2(aria-hidden="true")
+              = "Mails"
           = link_to admin_session_path(nav_scope: nil),
                     data: {turbo_method: :delete, turbo_confirm: t("application.account_menu.logout_msg")},
-                    class: "nav-link admin-logout" do
+                    class: "nav-link admin-tool-link" do
             i.fa-solid.fa-power-off.me-2(aria-hidden="true")
             = t("application.account_menu.logout")

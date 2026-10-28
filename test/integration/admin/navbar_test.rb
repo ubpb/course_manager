@@ -15,6 +15,13 @@ module Admin
       log_in_admin
     end
 
+    teardown { ApplicationMailer.delivery_method = @delivery_method if @delivery_method }
+
+    def deliver_mails_to(delivery_method)
+      @delivery_method = ApplicationMailer.delivery_method
+      ApplicationMailer.delivery_method = delivery_method
+    end
+
     test "the menu marks the area" do
       {admin_events_path => "Termine",
        admin_offer_event_registrations_path(@offer, @event) => "Termine",
@@ -35,6 +42,23 @@ module Admin
 
       assert_select "#admin-navbar a[href=?]", events
       assert_select "#admin-navbar a[href*='nav_scope']", count: 0
+    end
+
+    # A test system keeps its mails for reading instead of sending them, and
+    # staff check them there. The mail viewer has no admin menu to come back
+    # with, so it opens in a tab of its own.
+    test "the menu links the mails a test system keeps" do
+      deliver_mails_to :letter_opener_web
+      get admin_offer_event_registrations_path(@offer, @event, nav_scope: "offer")
+
+      assert_select "#admin-navbar a[href=?][target=_blank]", "/admin/mail", text: "Mails"
+    end
+
+    test "the menu has no mail link where the mails go out" do
+      deliver_mails_to :sendmail
+      get admin_events_path
+
+      assert_select "#admin-navbar a[href^='/admin/mail']", count: 0
     end
 
     test "the breadcrumb shows the admin path only and does not link the current page" do
