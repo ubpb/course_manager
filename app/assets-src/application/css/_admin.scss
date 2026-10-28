@@ -59,7 +59,7 @@
     width: auto;
 
     * {
-      fill: #fff !important;
+      fill: #fff;
     }
   }
 
@@ -115,7 +115,6 @@
   font-size: 0.875rem;
 
   .breadcrumb {
-    flex-wrap: wrap;
     row-gap: 0.25rem;
   }
 
@@ -148,11 +147,7 @@
   --bs-card-inner-border-radius: calc(0.5rem - 1px);
   --bs-card-cap-padding-y: 0.875rem;
   --bs-card-cap-padding-x: 1.25rem;
-
-  &.card-shadowed {
-    box-shadow: none;
-    filter: none;
-  }
+  --bs-card-title-color: var(--admin-heading);
 }
 
 // Lists use the full width, forms keep a readable line length.
@@ -161,7 +156,6 @@
 }
 
 .admin-ui .card-title {
-  color: var(--admin-heading) !important;
   font-size: 1.0625rem;
   font-weight: 700;
 }
@@ -176,10 +170,10 @@
     font-size: 0.8125rem;
     font-weight: 700;
     white-space: nowrap;
-    border-bottom-width: 1px;
   }
 
-  // The bulk action bar and the checkbox column used table-light.
+  // The bulk action bars and checkbox columns of the offer and participant
+  // lists use table-light.
   .table-light {
     --bs-table-bg: transparent;
     --bs-table-color: inherit;
@@ -227,10 +221,6 @@
 .admin-ui .status-published {
   color: var(--admin-ink);
   background-color: color-mix(in srgb, var(--admin-published) 28%, var(--admin-surface));
-
-  &::before {
-    background-color: var(--admin-ink);
-  }
 }
 
 .admin-ui .status-unpublished {

@@ -2,16 +2,6 @@ require "test_helper"
 
 class AdminNavigationHelperTest < ActionView::TestCase
 
-  test "event_heading names weekday, date and time span" do
-    event = Event.new(date_and_time: Time.zone.parse("2026-10-15 10:00"), duration: 90)
-
-    assert_equal "Do, 15.10.2026 · 10:00–11:30 Uhr", event_heading(event)
-
-    event.duration = nil
-
-    assert_equal "Do, 15.10.2026 · 10:00 Uhr", event_heading(event)
-  end
-
   test "event_capacity shows the limit or infinity" do
     assert_equal "3 / 20", event_capacity(Event.new(registrations_count: 3, max_no_of_participants: 20))
     assert_equal "3 / ∞", event_capacity(Event.new(registrations_count: 3, max_no_of_participants: 0))
@@ -34,6 +24,10 @@ class AdminNavigationHelperTest < ActionView::TestCase
 
     assert_equal "Do, 15.10.2026", event_date(event)
     assert_equal "10:00–11:30 Uhr", event_time_span(event)
+
+    event.duration = nil
+
+    assert_equal "10:00 Uhr", event_time_span(event)
   end
 
 end

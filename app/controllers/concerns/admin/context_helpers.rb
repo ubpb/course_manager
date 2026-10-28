@@ -38,7 +38,7 @@ module Admin
     def prepare_offer_context
       add_breadcrumb "Angebote", admin_offers_path(nav_scope: nil)
 
-      offer_id = params[:offer_id] || params[:id] || return
+      offer_id = params[:id] || return
       @offer = Offer.includes(:events).find(offer_id)
 
       add_breadcrumb @offer.title, offer_page_path(@offer)

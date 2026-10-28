@@ -31,15 +31,6 @@ module FilterChipHelper
       chip(filter.with_report ? "Mit Bericht" : "Ohne Bericht", filter, :with_report) unless filter.with_report.nil?
     when :include_archived
       chip("Archivierte anzeigen", filter, :include_archived) if filter.include_archived
-    when :upcoming_or_past
-      return if filter.upcoming_or_past.blank? || filter.upcoming_or_past == "all"
-
-      labels = {
-        "upcoming" => "Kommende Termine",
-        "upcoming_and_last_3_months" => "Kommende + letzte 3 Monate",
-        "past" => "Vergangene Termine"
-      }
-      chip(labels.fetch(filter.upcoming_or_past.to_s, filter.upcoming_or_past), filter, :upcoming_or_past)
     when :from_date
       chip("Ab #{I18n.l(filter.from_date)}", filter, :from_date) if filter.from_date.present?
     when :to_date

@@ -88,8 +88,7 @@ module Admin
         locals: {
           events: events.includes(:offer),
           offers: Offer.courses.order(:title),
-          url: bulk_move_admin_events_path,
-          container_id: "bulk-action-form"
+          url: bulk_move_admin_events_path
         }
       )
     end

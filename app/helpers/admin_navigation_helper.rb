@@ -31,11 +31,6 @@ module AdminNavigationHelper
     end
   end
 
-  # "Do, 15.10.2026 · 10:00–11:30 Uhr", without a duration only the start.
-  def event_heading(event)
-    "#{event_date(event)} · #{event_time_span(event)}"
-  end
-
   # "Do, 15.10.2026"
   def event_date(event)
     l(event.date_and_time, format: "%a, %d.%m.%Y")

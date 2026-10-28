@@ -144,8 +144,7 @@ module Admin
 
       private
 
-      # The dialog for picking the target offer, opened as a modal in the list
-      # (upcoming or past) it was started from.
+      # The dialog for picking the target offer, opened as a modal.
       def render_move_to_offer_form(events)
         render turbo_stream: turbo_stream.replace(
           "bulk-action-form",
@@ -153,8 +152,7 @@ module Admin
           locals: {
             events: events.includes(:offer),
             offers: Offer.courses.where.not(id: @offer.id).order(:title),
-            url: bulk_move_admin_offer_events_path(@offer),
-            container_id: "bulk-action-form"
+            url: bulk_move_admin_offer_events_path(@offer)
           }
         )
       end

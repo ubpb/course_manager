@@ -8,7 +8,7 @@ module NavScope
 
   included do
     before_action -> { @nav_scope = params[:nav_scope].presence }
-    helper_method :nav_scope, :offer_context?
+    helper_method :offer_context?
   end
 
   private

@@ -41,7 +41,6 @@ de:
         lecturer_hd: "höherer Dienst"
       filter:
         published: "Veröffentlicht?"
-        upcoming_or_past: "Termine"
         with_report: "Statistik erfasst?"
         from_date: "Datum von"
         to_date: "Datum bis"
