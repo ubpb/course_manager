@@ -15,4 +15,23 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     assert_no_current_path new_admin_session_path
   end
 
+  # Records the script errors of the current page, read with #script_errors.
+  def collect_script_errors
+    execute_script(<<~JS)
+      window.scriptErrors = [];
+      window.addEventListener("error", (event) => window.scriptErrors.push(event.message));
+    JS
+  end
+
+  def script_errors
+    wait_for_transitions
+    evaluate_script("window.scriptErrors")
+  end
+
+  # Bootstrap finishes showing or hiding a modal after its fade transition
+  # (0.3 s), so wait that out before looking.
+  def wait_for_transitions
+    evaluate_async_script("setTimeout(arguments[0], 500)")
+  end
+
 end

@@ -1,4 +1,4 @@
-/ <%# locals: (form:, offer:) -%>
+/ <%# locals: (form:, offer:, autofocus: false) -%>
 
 - if form.object.errors.any?
   .alert.alert-danger.mb-3.text-center
@@ -10,7 +10,7 @@ hr.mt-1.mb-3
 = form.input :type, as: :select, collection: [["Schulung", "course"], ["Beratung", "consulting"], ["Selbstlernkurs", "self_study_course"]], label: "Art des Angebots", include_blank: false
 = form.input :published, as: :boolean
 = form.input :events_on_request, as: :boolean, hint: "... für Schulungen"
-= form.input :title
+= form.input :title, input_html: { autofocus: autofocus }
 .row
   .col
     = form.association :topics, as: :check_boxes

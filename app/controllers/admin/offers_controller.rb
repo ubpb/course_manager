@@ -2,6 +2,7 @@ module Admin
   class OffersController < ApplicationController
 
     include Filterable
+    include ModalForm
 
     before_action :prepare_offer_context
     before_action -> { @offer_page = true }, only: [:edit, :update]
@@ -62,6 +63,7 @@ module Admin
 
     def new
       @offer = Offer.new(type: "course")
+      respond_with_modal(offer: @offer)
     end
 
     def edit; end
@@ -70,9 +72,9 @@ module Admin
       @offer = Offer.new(offer_params)
 
       if @offer.save
-        redirect_to edit_admin_offer_path(@offer), notice: t("admin.application.form.success")
+        respond_with_list(admin_offers_path, notice: t("admin.application.form.success"))
       else
-        render :new, status: :unprocessable_content
+        respond_with_errors(:new, offer: @offer)
       end
     end
 

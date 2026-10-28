@@ -1,0 +1,15 @@
+/ <%# locals: (offer:) -%>
+
+/ Carries its own id so validation errors can re-render just the content of
+/ the already open modal instead of spawning a second one. The form takes part
+/ in the flex layout of the modal, or its body would not scroll.
+#offer-form.modal-content
+  = simple_form_for [:admin, offer], html: {class: "d-flex flex-column overflow-hidden"} do |form|
+    .modal-header
+      h5.modal-title = "Neues Angebot anlegen"
+      button.btn-close(type="button" data-bs-dismiss="modal" aria-label="Schließen")
+    .modal-body
+      = render "admin/offers/form_fields", form: form, offer: offer, autofocus: true
+    .modal-footer
+      button.btn.btn-outline-secondary(type="button" data-bs-dismiss="modal") = t("admin.application.btn_cancel")
+      = form.submit t("admin.application.btn_save"), class: "btn btn-primary"

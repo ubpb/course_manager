@@ -38,19 +38,4 @@ class ModalsTest < ApplicationSystemTestCase
     assert_empty script_errors
   end
 
-  private
-
-  def collect_script_errors
-    execute_script(<<~JS)
-      window.scriptErrors = [];
-      window.addEventListener("error", (event) => window.scriptErrors.push(event.message));
-    JS
-  end
-
-  # Bootstrap finishes hiding a modal after its fade transition (0.3 s), so
-  # wait that out before looking.
-  def script_errors
-    evaluate_async_script("const done = arguments[0]; setTimeout(() => done(window.scriptErrors), 500)")
-  end
-
 end

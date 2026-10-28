@@ -1,6 +1,8 @@
 - return_path = admin_offers_path(anchor: dom_id(@offer))
 
-= simple_form_for [:admin, @offer] do |form|
+/ Only reached without Turbo; the list opens the form in a modal. Submitting
+/ through Turbo would get the answers meant for the modal.
+= simple_form_for [:admin, @offer], data: {turbo: false} do |form|
   .card.card-shadowed
     .card-header.d-flex.align-items-center.gap-2
       h5.card-title.mb-0 = "Neues Angebot anlegen"

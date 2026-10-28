@@ -6,6 +6,7 @@ module Admin
   class OffersTest < ActionDispatch::IntegrationTest
 
     include AdminLogin
+    include TurboStreamRequests
 
     setup do
       @course = Offer.create!(title: "Literaturrecherche", type: "course", published: true)
@@ -126,9 +127,50 @@ module Admin
 
       offer = Offer.last
 
-      assert_redirected_to edit_admin_offer_path(offer)
+      assert_redirected_to admin_offers_path
+      assert_equal "Erfolgreich gespeichert.", flash[:notice]
       assert_equal [topic], offer.topics
       assert_equal [target_group], offer.target_groups
+    end
+
+    test "the list opens a new offer in a modal" do
+      get admin_offers_path
+
+      assert_select "#offer-modal"
+      assert_select "a[href=?][data-turbo-stream]", new_admin_offer_path
+      assert_select "head meta[name=turbo-refresh-scroll][content=preserve]"
+    end
+
+    test "the form for a new offer opens in a modal that a click beside it does not close" do
+      get new_admin_offer_path, headers: TURBO_STREAM_HEADERS
+
+      assert_equal "text/vnd.turbo-stream.html", response.media_type
+      assert_select "turbo-stream[action=replace][target=offer-modal] template" do
+        assert_select ".modal[data-bs-backdrop=static] .modal-dialog.modal-xl.modal-dialog-scrollable #offer-form"
+        assert_select "input[name='offer[title]'][autofocus]"
+      end
+    end
+
+    test "the form for a new offer also opens as a page, submitted without Turbo" do
+      get new_admin_offer_path
+
+      assert_select "form[action=?][data-turbo=false]", admin_offers_path
+    end
+
+    test "a new offer from the modal refreshes the list" do
+      post admin_offers_path, params: {offer: {type: "course", title: "Datenmanagement"}}, as: :turbo_stream
+
+      assert_select "turbo-stream[action=refresh]"
+      assert_equal "Erfolgreich gespeichert.", flash[:notice]
+      assert Offer.exists?(title: "Datenmanagement")
+    end
+
+    test "a new offer in the modal shows its errors there" do
+      post admin_offers_path, params: {offer: {type: "course", title: ""}}, as: :turbo_stream
+
+      assert_response :unprocessable_content
+      assert_select "turbo-stream[action=replace][target=offer-form]"
+      assert_select "turbo-stream[target=offer-modal]", count: 0
     end
 
     test "a new offer without a title shows the form again" do
