@@ -17,9 +17,9 @@ module Frontend
                     .find(offer_id)             # find the offer by its ID
 
       if @offer.course?
-        add_breadcrumb "Schulungen", frontend_offers_path(filter: {scope: "courses"})
+        add_breadcrumb "Schulungen", helpers.frontend_offers_filtered_path(scope: "courses")
       elsif @offer.consulting?
-        add_breadcrumb "Beratungen", frontend_offers_path(filter: {scope: "consultings"})
+        add_breadcrumb "Beratungen", helpers.frontend_offers_filtered_path(scope: "consultings")
       end
 
       add_breadcrumb @offer.title, frontend_offer_path(@offer)
@@ -27,7 +27,7 @@ module Frontend
 
     def prepare_event_context
       add_breadcrumb "Angebote", frontend_offers_path
-      add_breadcrumb "Schulungen", frontend_offers_path(filter: {scope: "courses"})
+      add_breadcrumb "Schulungen", helpers.frontend_offers_filtered_path(scope: "courses")
       add_breadcrumb "Termine", frontend_redirect_events_path
 
       event_id = params[:event_id] || params[:id] || return

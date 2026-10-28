@@ -29,7 +29,7 @@ module Frontend
       ["/angebote/kurse/99", "/angebote/kurse"].each do |path|
         get path
 
-        assert_moved_to frontend_offers_path(filter: {scope: "courses"})
+        assert_moved_to "/angebote?scope=courses"
       end
     end
 
@@ -43,7 +43,7 @@ module Frontend
       ["/angebote/beratungen/99", "/angebote/beratungen"].each do |path|
         get path
 
-        assert_moved_to frontend_offers_path(filter: {scope: "consultings"})
+        assert_moved_to "/angebote?scope=consultings"
       end
     end
 
@@ -57,7 +57,7 @@ module Frontend
       ["/angebote/termine/0", "/angebote/termine"].each do |path|
         get path
 
-        assert_moved_to frontend_offers_path(filter: {scope: "courses", with_upcoming_events: true})
+        assert_moved_to "/angebote?scope=courses&with-upcoming-events=1"
       end
     end
 
@@ -69,15 +69,15 @@ module Frontend
 
       get "/angebote/kurse/7"
 
-      assert_moved_to frontend_offers_path(filter: {scope: "courses"})
+      assert_moved_to "/angebote?scope=courses"
 
       get "/angebote/beratungen/7"
 
-      assert_moved_to frontend_offers_path(filter: {scope: "consultings"})
+      assert_moved_to "/angebote?scope=consultings"
 
       get "/angebote/termine/#{@event.id}"
 
-      assert_moved_to frontend_offers_path(filter: {scope: "courses", with_upcoming_events: true})
+      assert_moved_to "/angebote?scope=courses&with-upcoming-events=1"
     end
 
   end

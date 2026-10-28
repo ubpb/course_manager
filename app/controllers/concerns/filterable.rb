@@ -74,6 +74,12 @@ module Filterable
       # all including classes, and a subclass must not write into its parent.
       self.filter_contexts = filter_contexts.merge(name => filter_context)
     end
+
+    # The canonical query of raw filter params, for links to a list from
+    # elsewhere.
+    def filter_query(context_name, raw_params)
+      filter_contexts.fetch(context_name).query(raw_params)
+    end
   end
 
   FILTER_STATE_HEADER = "X-Filter-State".freeze

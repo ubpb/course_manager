@@ -6,4 +6,10 @@ module FrontendFilterHelper
     filter_chips_for(filter, :scope, :with_upcoming_events, :title, :topics, :target_groups)
   end
 
+  # The offers index filtered by the given raw filter params, by its canonical
+  # URL.
+  def frontend_offers_filtered_path(**params)
+    with_filter_query(frontend_offers_path, Frontend::OffersController.filter_query(:offers, params))
+  end
+
 end

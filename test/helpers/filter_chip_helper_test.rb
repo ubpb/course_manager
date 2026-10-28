@@ -8,14 +8,14 @@ class FilterChipHelperTest < ActionView::TestCase
              with_upcoming_events: :flag, with_report: :boolean, include_archived: :flag,
              from_date: :date, to_date: :date, topics: :integer, target_groups: :integer}.freeze
 
-  # The remove paths are checked as the params they are built from.
+  # The list is at /list; its clean URL resets the filter.
   def url_for(options)
-    options
+    options == {reset_filter: true} ? "/list?reset_filter=true" : "/list"
   end
 
   def build_filter(params = {})
     context = Filterable::FilterContext.new
-    FILTERS.each { |name, type| context.filter_by(name, type) }
+    FILTERS.each { |name, type| context.filter_by(name, type, multiple: name.in?([:topics, :target_groups])) }
     Filterable::Filter.new(filter_context: context, filter_params: params)
   end
 
@@ -78,7 +78,7 @@ class FilterChipHelperTest < ActionView::TestCase
   test "a chip removes its filter and keeps the others" do
     chip = chips({title: "Recherche", scope: "courses"}, :title).sole
 
-    assert_equal({filter: {"scope" => "courses"}}, chip[:remove_path])
+    assert_equal "/list?scope=courses", chip[:remove_path]
   end
 
   test "the chip of one topic removes only that topic" do
@@ -87,14 +87,20 @@ class FilterChipHelperTest < ActionView::TestCase
 
     chip = chips({topics: [recherche.id, publizieren.id]}, :topics).first
 
-    assert_equal({filter: {"topics" => [publizieren.id]}}, chip[:remove_path])
+    assert_equal "/list?topics=#{publizieren.id}", chip[:remove_path]
   end
 
   test "removing the last filter resets the list" do
     topic = Topic.create!(title: "Recherche")
 
-    assert_equal({reset_filter: true}, chips({topics: [topic.id]}, :topics).sole[:remove_path])
-    assert_equal({reset_filter: true}, chips({title: "Recherche"}, :title).sole[:remove_path])
+    assert_equal "/list?reset_filter=true", chips({topics: [topic.id]}, :topics).sole[:remove_path]
+    assert_equal "/list?reset_filter=true", chips({title: "Recherche"}, :title).sole[:remove_path]
+  end
+
+  test "a filter query joins a path with or without a query of its own" do
+    assert_equal "/list?online=1", with_filter_query("/list", "online=1")
+    assert_equal "/list?nav_scope=offer&online=1", with_filter_query("/list?nav_scope=offer", "online=1")
+    assert_equal "/list?nav_scope=offer", with_filter_query("/list?nav_scope=offer", "")
   end
 
 end

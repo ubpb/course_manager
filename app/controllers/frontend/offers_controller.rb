@@ -74,7 +74,7 @@ module Frontend
       if course
         redirect_to frontend_offer_path(course), status: :moved_permanently
       else
-        redirect_to frontend_offers_path(filter: {scope: "courses"}), status: :moved_permanently
+        redirect_to helpers.frontend_offers_filtered_path(scope: "courses"), status: :moved_permanently
       end
     end
 
@@ -84,7 +84,7 @@ module Frontend
       if consulting
         redirect_to frontend_offer_path(consulting), status: :moved_permanently
       else
-        redirect_to frontend_offers_path(filter: {scope: "consultings"}), status: :moved_permanently
+        redirect_to helpers.frontend_offers_filtered_path(scope: "consultings"), status: :moved_permanently
       end
     end
 
@@ -94,7 +94,7 @@ module Frontend
       if event
         redirect_to frontend_offer_path(event.offer), status: :moved_permanently
       else
-        redirect_to frontend_offers_path(filter: {scope: "courses", with_upcoming_events: true}),
+        redirect_to helpers.frontend_offers_filtered_path(scope: "courses", with_upcoming_events: true),
                     status: :moved_permanently
       end
     end

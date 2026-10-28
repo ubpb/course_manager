@@ -56,7 +56,7 @@
         p
           ' Ausgewählte Onlinekurse oder Video-Tutorials zum Selbststudium.
         .d-flex.gap-2.justify-content-center.flex-column
-          = link_to frontend_offers_path(filter: {scope: "self_study_courses"}), class: "btn btn-primary" do
+          = link_to frontend_offers_filtered_path(scope: "self_study_courses"), class: "btn btn-primary" do
             i.fa-solid.fa-user-graduate.me-2
             = "Zu den Selbstlernkursen"
 
@@ -66,11 +66,11 @@
   .mt-4.text-center
     h5.mb-4 = "... steigen Sie über ein Thema ein"
     - topics&.each do |topic|
-      = link_to topic.title, frontend_offers_path(filter: {topics: [topic.id]}), class: "btn btn-outline-primary me-2 mb-2"
+      = link_to topic.title, frontend_offers_filtered_path(topics: [topic.id]), class: "btn btn-outline-primary me-2 mb-2"
 
 - target_groups = TargetGroup.order(:position)
 - if target_groups.present?
   .mt-4.text-center
     h5.mb-4 = "... oder steigen Sie über eine Zielgruppe ein"
     - target_groups&.each do |target_group|
-      = link_to target_group.title, frontend_offers_path(filter: {target_groups: [target_group.id]}), class: "btn btn-outline-primary me-2 mb-2"
+      = link_to target_group.title, frontend_offers_filtered_path(target_groups: [target_group.id]), class: "btn btn-outline-primary me-2 mb-2"

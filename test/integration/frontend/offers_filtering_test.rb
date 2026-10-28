@@ -157,7 +157,8 @@ module Frontend
       assert chip, "expected a chip for the with_upcoming_events filter"
 
       get chip.at_css("a")["href"]
-      follow_redirect!
+
+      assert_response :success
 
       assert_equal [@scheduled_course, @unscheduled_course], listed
       assert_empty(css_select("span.badge").select { |badge| badge.text.include?("Mit anstehenden Terminen") })
@@ -218,7 +219,8 @@ module Frontend
 
       chip = css_select("span.badge").find { |badge| badge.text.include?("Zielgruppe: Lehrende") }
       get chip.at_css("a")["href"]
-      follow_redirect!
+
+      assert_response :success
 
       assert_equal [@unscheduled_course], listed
     end

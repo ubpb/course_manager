@@ -4,11 +4,11 @@
 / period switch and the filters around the rows of _listing.
 - if offer
   - new_path = new_admin_offer_event_path(offer, nav_scope: NavScope::OFFER)
-  - reports_path = reports_admin_offer_events_path(offer, format: :xlsx)
+  - reports_path = with_filter_query(reports_admin_offer_events_path(offer, format: :xlsx), filter.query)
   - filter_url = admin_offer_events_path(offer)
 - else
   - new_path = new_admin_event_path
-  - reports_path = reports_admin_events_path(format: :xlsx)
+  - reports_path = with_filter_query(reports_admin_events_path(format: :xlsx), filter.query)
   - filter_url = admin_events_path
 
 .card.card-shadowed

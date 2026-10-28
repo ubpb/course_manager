@@ -8,7 +8,7 @@
       data-bs-title="Art des Angebots"
     )
       i.fa-solid.fa-chalkboard-teacher.fa-fw
-      = link_to frontend_offers_path(filter: { scope: :courses }), class: "text-decoration-none text-dark" do
+      = link_to frontend_offers_filtered_path(scope: "courses"), class: "text-decoration-none text-dark" do
         = "Schulung"
   - elsif offer.type == "consulting"
     span.badge.rounded-pill.text-bg-light.border.d-inline-flex.align-items-center.gap-2(
@@ -17,7 +17,7 @@
       data-bs-title="Art des Angebots"
     )
       i.fa-solid.fa-people-arrows.fa-fw
-      = link_to frontend_offers_path(filter: { scope: :consultings }), class: "text-decoration-none text-dark" do
+      = link_to frontend_offers_filtered_path(scope: "consultings"), class: "text-decoration-none text-dark" do
         = "Beratung"
   - elsif offer.type == "self_study_course"
     span.badge.rounded-pill.text-bg-light.border.d-inline-flex.align-items-center.gap-2(
@@ -26,7 +26,7 @@
       data-bs-title="Art des Angebots"
     )
       i.fa-solid.fa-user-graduate.fa-fw
-      = link_to frontend_offers_path(filter: { scope: :self_study_courses }), class: "text-decoration-none text-dark" do
+      = link_to frontend_offers_filtered_path(scope: "self_study_courses"), class: "text-decoration-none text-dark" do
         = "Selbstlernkurs"
 
   - if offer.respond_to?(:topics) && offer.topics.present?
@@ -37,7 +37,7 @@
         data-bs-title="Thema"
       )
         i.fa-solid.fa-tags.fa-fw
-        = link_to frontend_offers_path(filter: { topics: [t.id] }), class: "text-decoration-none text-dark" do
+        = link_to frontend_offers_filtered_path(topics: [t.id]), class: "text-decoration-none text-dark" do
           = t.title
 
   - if offer.respond_to?(:target_groups) && offer.target_groups.present?
@@ -48,5 +48,5 @@
         data-bs-title="Zielgruppe"
       )
         i.fa-solid.fa-users-viewfinder.fa-fw
-        = link_to frontend_offers_path(filter: { target_groups: [tg.id] }), class: "text-decoration-none text-dark" do
+        = link_to frontend_offers_filtered_path(target_groups: [tg.id]), class: "text-decoration-none text-dark" do
           = tg.title

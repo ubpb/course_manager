@@ -40,10 +40,19 @@ module Admin
       get admin_events_path(filter: {online: "true"})
       follow_redirect!
       get period_link("Vergangene")
-      follow_redirect!
+
+      assert_response :success
 
       assert_select ".period-switch a.active", text: "Vergangene"
       assert_select "table.event-list tbody tr.event-row", count: 1
+    end
+
+    test "the switch links to the short URL of each period" do
+      get admin_events_path(filter: {published: "true"})
+      follow_redirect!
+
+      assert_equal "/admin/events?upcoming-or-past=upcoming&published=1", period_link("Kommende")
+      assert_equal "/admin/events?published=1", period_link("Alle")
     end
 
     test "the filter panel keeps the period" do
@@ -64,7 +73,8 @@ module Admin
     test "the switch works in the offer context" do
       get admin_offer_events_path(@offer)
       get period_link("Kommende")
-      follow_redirect!
+
+      assert_response :success
 
       assert_select ".period-switch a.active", text: "Kommende"
       assert_select "table.event-list tbody tr.event-row", count: 1

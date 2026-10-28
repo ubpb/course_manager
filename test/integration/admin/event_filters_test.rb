@@ -103,9 +103,14 @@ module Admin
                    "&title=Recherche&from-date=2026-10-01&to-date=2026-12-31", request.fullpath
     end
 
+    test "the export link carries the filter of the list" do
+      filter(online: "true")
+
+      assert_select "a[href=?]", "/admin/events/reports.xlsx?online=1"
+    end
+
     test "the export of the statistics is named after the period of the date filters" do
-      get reports_admin_events_path(format: :xlsx, filter: {from_date: "2026-09-01", to_date: "2026-09-30"})
-      follow_redirect!
+      get "/admin/events/reports.xlsx?from-date=2026-09-01&to-date=2026-09-30"
 
       assert_response :success
       assert_equal 'attachment; filename="2026-09-01_2026-09-30_report.xlsx"', response.headers["Content-Disposition"]

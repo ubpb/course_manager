@@ -63,7 +63,24 @@ module FilterChipHelper
       params.delete(key)
     end
 
-    params.present? ? url_for(filter: params) : url_for(reset_filter: true)
+    filtered_list_path(filter, params)
+  end
+
+  # The current list with the given raw filter params, by its canonical URL;
+  # its clean URL, which resets the filter, when none of them is set.
+  def filtered_list_path(filter, params)
+    query = filter.context.query(params)
+    return url_for(reset_filter: true) if query.blank?
+
+    with_filter_query(url_for(only_path: true), query)
+  end
+
+  # The path with a filter query appended, whether or not it has a query of its
+  # own (nav_scope).
+  def with_filter_query(path, query)
+    return path if query.blank?
+
+    "#{path}#{path.include?("?") ? "&" : "?"}#{query}"
   end
 
 end
