@@ -36,6 +36,9 @@ jobs:
       DB_PORT: 3306
       DB_USERNAME: root
       DB_PASSWORD: ""
+      # mise only sets up Bun, in the version of .mise.toml. Ruby comes from
+      # setup-ruby, which caches the gems.
+      MISE_ENABLE_TOOLS: bun
 
     steps:
       - name: Checkout code
@@ -51,7 +54,7 @@ jobs:
           bundler-cache: true
 
       - name: Set up Bun
-        uses: oven-sh/setup-bun@v2
+        uses: jdx/mise-action@v5
 
       - name: Build assets
         run: |
