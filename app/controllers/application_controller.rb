@@ -85,6 +85,7 @@ class ApplicationController < ActionController::Base
     locale = helpers.locale_switching_enabled? ? current_locale : I18n.default_locale
     I18n.with_locale(locale, &)
   end
+  private :switch_locale
 
   # Gets the current locale from the cookie or if no cookie was set from the browser settings.
   # If the browser locale is other than the default locale, :en will be used.
