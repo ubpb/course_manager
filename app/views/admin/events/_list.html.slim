@@ -1,0 +1,35 @@
+/ <%# locals: (events:, filter:, offer: nil) -%>
+
+/ The card of an event list, of all events or of one offer: its actions, the
+/ period switch and the filters around the rows of _listing.
+- if offer
+  - new_path = new_admin_offer_event_path(offer, nav_scope: NavScope::OFFER)
+  - reports_path = reports_admin_offer_events_path(offer, format: :xlsx)
+  - filter_url = admin_offer_events_path(offer)
+- else
+  - new_path = new_admin_event_path
+  - reports_path = reports_admin_events_path(format: :xlsx)
+  - filter_url = admin_events_path
+
+.card.card-shadowed
+  .card-header.d-flex.align-items-center.gap-2
+    h5.card-title.mb-0 = "Termine"
+    .ms-auto
+    = link_to new_path, class: "btn btn-primary btn-sm" do
+      i.fa-solid.fa-plus.me-2
+      = "Neuer Termin"
+    = link_to reports_path, class: "btn btn-outline-primary btn-sm" do
+      i.fa-solid.fa-download.me-2
+      = "Statistik (Excel)"
+  .card-body
+    .d-flex.flex-wrap.align-items-center.gap-3.mb-3
+      = render "admin/events/period_switch", filter: filter
+      .flex-grow-1 = render "application/filter_bar", filter: filter, chips: admin_event_filter_chips(filter), always: true, button_end: true
+    - if events.present?
+      = render "admin/events/listing", events: events, offer: offer
+    - else
+      .p-2.text-muted = "Keine Termine vorhanden"
+
+/ The offer page names the offer already, so its filters need no title filter.
+= render "application/filter_offcanvas", filter: filter, filters_partial: "admin/events/filter_form", always: true,
+                                         filters_locals: {url: filter_url, show_title: offer.nil?}
