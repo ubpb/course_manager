@@ -136,6 +136,21 @@ module Frontend
       end
     end
 
+    test "a header with a partly valid filter leads to the valid rest" do
+      get frontend_offers_path, headers: remembering("scope=courses&topics=x&with-upcoming-events=ja")
+
+      assert_redirected_to "/angebote?scope=courses"
+    end
+
+    test "a short param given as a list or a hash is unset" do
+      {"/angebote?scope=courses&topics[]=3" => "/angebote?scope=courses",
+       "/angebote?scope=courses&title[a]=b" => "/angebote?scope=courses"}.each do |from, to|
+        get from
+
+        assert_redirected_to to, from
+      end
+    end
+
     # RACK_QUERY_PARSER_PARAMS_LIMIT can lower the number of params Rack parses
     # below what a header of 4 KB holds.
     test "a remembered filter does not depend on the params limit of the query parser" do

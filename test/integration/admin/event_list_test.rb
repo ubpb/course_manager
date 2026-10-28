@@ -230,6 +230,10 @@ module Admin
 
       assert_redirected_to "/admin/offers/#{@offer.to_param}/events?nav_scope=offer&online=1"
 
+      follow_redirect!
+
+      assert_response :success
+
       get admin_offer_events_path(@offer, nav_scope: "offer", reset_filter: true)
 
       assert_redirected_to "/admin/offers/#{@offer.to_param}/events?nav_scope=offer"
