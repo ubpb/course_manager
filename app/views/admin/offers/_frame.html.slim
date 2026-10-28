@@ -20,21 +20,12 @@
           span.badge.context-badge = "#{stored.events.upcoming.count} kommende"
           span.badge.context-badge = "#{stored.events.past.count} vergangene"
     .d-flex.flex-column.align-items-md-end.gap-2
-      = link_to admin_offers_path(anchor: dom_id(stored), nav_scope: nil), class: "text-nowrap" do
-        i.fa-solid.fa-arrow-left.me-1
-        = "Zurück zur Angebotsliste"
+      = back_link "Zurück zur Angebotsliste", admin_offers_path(anchor: dom_id(stored), nav_scope: nil), class: "text-nowrap"
       - if stored.published? && !stored.archived?
         = link_to frontend_offer_path(stored), class: "btn btn-outline-primary btn-sm", target: "_blank", rel: "noopener" do
           i.fa-solid.fa-arrow-up-right-from-square.me-1
           = "Im Frontend"
 
-.row.g-4
-  .col-lg-3.col-xl-2
-    nav.nav.nav-pills.flex-lg-column.gap-1.offer-tabs(aria-label="Bereiche des Angebots")
-      - tabs.each do |key, label, path, count|
-        = link_to path, class: ["nav-link", ("active" if key == active_tab)], "aria-current": ("page" if key == active_tab) do
-          = label
-          - if count
-            span.badge.rounded-pill.text-bg-light.ms-2 = count
-  .col-lg-9.col-xl-10
-    = yield
+= render layout: "admin/application/context_tabs",
+         locals: {tabs: tabs, active_tab: active_tab, label: "Bereiche des Angebots", css_class: "offer-tabs"} do
+  = yield

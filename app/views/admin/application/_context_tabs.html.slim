@@ -1,0 +1,14 @@
+/ <%# locals: (tabs:, active_tab:, label:, css_class:) -%>
+
+/ The tabs of an event or offer page beside its content, for the frames of
+/ both. Each tab is [key, label, path, count or nil].
+.row.g-4
+  .col-lg-3.col-xl-2
+    nav.nav.nav-pills.flex-lg-column.gap-1(class=css_class aria-label=label)
+      - tabs.each do |key, tab_label, path, count|
+        = link_to path, class: ["nav-link", ("active" if key == active_tab)], "aria-current": ("page" if key == active_tab) do
+          = tab_label
+          - if count
+            span.badge.rounded-pill.text-bg-light.ms-2 = count
+  .col-lg-9.col-xl-10
+    = yield

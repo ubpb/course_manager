@@ -19,6 +19,12 @@ class AdminNavigationHelperTest < ActionView::TestCase
                      published_badge(Event.new(published: false))
   end
 
+  test "back_link leads back with an arrow" do
+    assert_dom_equal '<a class="text-nowrap" href="/admin/events">' \
+                     '<i class="fa-solid fa-arrow-left me-1" aria-hidden="true"></i>Zurück zur Terminliste</a>',
+                     back_link("Zurück zur Terminliste", "/admin/events", class: "text-nowrap")
+  end
+
   test "event_date and event_time_span split the heading" do
     event = Event.new(date_and_time: Time.zone.parse("2026-10-15 10:00"), duration: 90)
 

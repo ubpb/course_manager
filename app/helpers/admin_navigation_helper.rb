@@ -22,6 +22,13 @@ module AdminNavigationHelper
     OFFER_TYPE_LABELS.fetch(offer.type, offer.type)
   end
 
+  # The way back from an event or offer page to where it was opened from.
+  def back_link(label, path, **options)
+    link_to(path, **options) do
+      tag.i(class: "fa-solid fa-arrow-left me-1", "aria-hidden": true) + label
+    end
+  end
+
   # For offers and events alike.
   def published_badge(record)
     if record.published?
