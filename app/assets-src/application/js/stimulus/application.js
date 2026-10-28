@@ -48,6 +48,10 @@ application.register("mail-preview", MailPreviewController)
 import AdminNavController from "./admin_nav_controller.js"
 application.register("admin-nav", AdminNavController)
 
+// Register FilterMemory controller
+import FilterMemoryController from "./filter_memory_controller.js"
+application.register("filter-memory", FilterMemoryController)
+
 // Register RowLink controller
 import RowLinkController from "./row_link_controller.js"
 application.register("row-link", RowLinkController)

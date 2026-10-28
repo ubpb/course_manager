@@ -3,6 +3,12 @@
 - button_visibility_class = always ? "" : "d-lg-none"
 - button_position_class = button_end ? "ms-auto order-last" : ""
 .d-flex.flex-wrap.align-items-center.gap-2
+  / The tab remembers the filter of the list (filter_memory_controller.js).
+  div(hidden
+      data-controller="filter-memory"
+      data-filter-memory-key-value=controller_path
+      data-filter-memory-query-value=filter.query
+      data-filter-memory-restore-value=filter.restore?)
   button.btn.btn-primary(type="button" class=[button_visibility_class, button_position_class] data-bs-toggle="offcanvas" data-bs-target="#offcanvas-filters")
     i.fa-solid.fa-filter.me-2
     = "Filter"

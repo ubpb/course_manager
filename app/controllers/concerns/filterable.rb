@@ -103,7 +103,9 @@ module Filterable
     elsif in_url.present?
       stored = context.storable_params(context.decode(in_url))
       redirect_to_filter(context, stored) unless request.query_string == canonical_filter_query(context, stored)
-    elsif !take_reset_note
+    elsif take_reset_note
+      @filter_reset = true
+    else
       remembered = remembered_filter_params(context)
       redirect_to_filter(context, remembered) if remembered.present?
     end
@@ -114,9 +116,13 @@ module Filterable
   def create_filter(context_name)
     context = filter_context!(context_name)
 
-    filter_params = context.storable_params(context.decode(url_filter_params(context)))
+    in_url = url_filter_params(context)
+    filter_params = context.storable_params(context.decode(in_url))
+    # Without Turbo's header, the request cannot know what the tab remembers;
+    # the page then asks the tab (filter_memory_controller.js).
+    restore = in_url.blank? && !@filter_reset && request.headers[FILTER_STATE_HEADER].nil?
 
-    Filter.new(filter_context: context, filter_params:)
+    Filter.new(filter_context: context, filter_params:, restore:)
   end
 
   def redirect_to_filter(context, stored)
@@ -328,9 +334,10 @@ module Filterable
 
     attr_reader :context, :params
 
-    def initialize(filter_context:, filter_params: {})
+    def initialize(filter_context:, filter_params: {}, restore: false)
       @context = filter_context
       @params = filter_params.with_indifferent_access
+      @restore = restore
 
       # On the singleton class, so filter names stay scoped to this context
       # instead of accumulating on the shared Filter class.
@@ -358,6 +365,12 @@ module Filterable
 
     def query
       @context.query(@params)
+    end
+
+    # Whether the list should ask the tab for the filter it remembers: the
+    # request named none and could not tell what the tab remembers.
+    def restore?
+      @restore
     end
 
     def filter(arel)

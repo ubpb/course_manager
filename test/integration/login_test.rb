@@ -101,4 +101,10 @@ class LoginTest < ActionDispatch::IntegrationTest
     assert_match "Zu viele Anmeldeversuche", flash[:alert]
   end
 
+  test "the admin login page forgets the admin filters of the tab" do
+    get new_admin_session_path
+
+    assert_select "[data-controller=filter-memory][data-filter-memory-forget-value='admin/']"
+  end
+
 end

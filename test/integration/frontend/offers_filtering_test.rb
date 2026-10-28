@@ -231,5 +231,27 @@ module Frontend
       assert_response :success
     end
 
+    test "the list tells the tab its key and query, and asks to restore only without the header" do
+      get "/angebote?scope=courses"
+
+      assert_select "[data-controller=filter-memory][data-filter-memory-key-value='frontend/offers']" \
+                    "[data-filter-memory-query-value='scope=courses']:not([data-filter-memory-restore-value])"
+
+      get frontend_offers_path
+
+      assert_select "[data-controller=filter-memory][data-filter-memory-restore-value]"
+
+      get frontend_offers_path, headers: {Filterable::FILTER_STATE_HEADER => "{}"}
+
+      assert_select "[data-controller=filter-memory]:not([data-filter-memory-restore-value])"
+    end
+
+    test "the list after a reset does not ask to restore what the tab remembers" do
+      get frontend_offers_path(reset_filter: true)
+      follow_redirect!
+
+      assert_select "[data-controller=filter-memory]:not([data-filter-memory-restore-value])"
+    end
+
   end
 end
