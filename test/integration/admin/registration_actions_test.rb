@@ -1,8 +1,9 @@
 require "test_helper"
 
-# What staff do with the participants of an event: edit and remove them, hand
-# out certificates, send reminders and write to them -- one at a time from the
-# row menu or for a selection through the bulk actions.
+# What staff do with the participants of an event: edit and remove them, mark
+# who did not attend, hand out certificates to the others, send reminders and
+# write to them -- one at a time from the row menu or for a selection through
+# the bulk actions.
 module Admin
   class RegistrationActionsTest < ActionDispatch::IntegrationTest
 
@@ -228,6 +229,9 @@ module Admin
       end
 
       assert_equal "0 Zertifikat(e) versendet, 2 ausgelassen (nicht erschienen)", flash[:success]
+      assert_nil @registration.reload.certificate_sent_at
+      assert_nil missing.reload.certificate_sent_at
+      assert_equal 0, Certificate.count
     end
 
     test "a participant who did not attend is not sent a certificate" do
@@ -241,6 +245,7 @@ module Admin
       assert_redirected_to admin_offer_event_registrations_path(@offer, @event)
       assert_equal "Nicht erschienene Teilnehmer erhalten kein Zertifikat", flash[:alert]
       assert_nil @registration.reload.certificate_sent_at
+      assert_equal 0, Certificate.count
     end
 
     test "a participant who did not attend has no certificate to download" do
@@ -300,7 +305,7 @@ module Admin
       assert_redirected_to admin_offer_event_registrations_path(@offer, @event)
     end
 
-    test "the bulk actions mark participants as not attended and back, also without a certification" do
+    test "the bulk actions offer to mark participants as not attended and back, also without a certification" do
       get admin_offer_event_registrations_path(@offer, @event)
 
       assert_select "select#bulk_process_action option[value=mark_no_show]", text: "Als nicht erschienen markieren"
