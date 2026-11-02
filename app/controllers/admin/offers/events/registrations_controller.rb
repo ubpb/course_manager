@@ -72,6 +72,7 @@ module Admin
         def download_certificate
           if @event.certification.present?
             registration = @event.registrations.includes(event: [:offer, :certification]).find(params.expect(:id))
+            return refuse_certificate if registration.no_show?
 
             send_data(
               Certificate.generate(registration),
@@ -86,6 +87,8 @@ module Admin
 
         def send_certificate
           registration = @event.registrations.includes(event: [:offer, :certification]).find(params.expect(:id))
+          return refuse_certificate if registration.no_show?
+
           send_certificate!(registration)
 
           flash[:success] = "Zertifikat wurde versendet"
@@ -110,8 +113,9 @@ module Admin
           # rubocop:disable-next Rails/ActionControllerFlashBeforeRender
           case action
           when "send_certificates"
-            send_certificates!(registrations)
-            flash[:success] = "Zertifikat(e) wurde versendet"
+            missing, attended = registrations.partition(&:no_show?)
+            send_certificates!(attended)
+            flash[:success] = certificates_sent_message(attended.size, missing.size)
           when "send_reminder_messages"
             send_reminder_messages!(registrations)
             flash[:success] = "Erinnerungsmail(s) wurde versendet"
@@ -203,6 +207,19 @@ module Admin
           params.expect(
             registration: [:first_name, :last_name, :email, :field_of_interest, :user_notes, :internal_notes, :no_show]
           )
+        end
+
+        # Participants who did not attend get no certificate, whichever way staff
+        # ask for one.
+        def refuse_certificate
+          redirect_to admin_offer_event_registrations_path(@offer, @event),
+                      alert: "Nicht erschienene Teilnehmer erhalten kein Zertifikat"
+        end
+
+        def certificates_sent_message(sent, skipped)
+          message = "#{sent} Zertifikat(e) versendet"
+          message += ", #{skipped} ausgelassen (nicht erschienen)" if skipped.positive?
+          message
         end
 
         def send_certificate!(registration)

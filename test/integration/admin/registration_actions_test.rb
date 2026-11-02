@@ -199,8 +199,74 @@ module Admin
       end
 
       assert_redirected_to admin_offer_event_registrations_path(@offer, @event)
+      assert_equal "1 Zertifikat(e) versendet", flash[:success]
       assert_not_nil @registration.reload.certificate_sent_at
       assert_nil other.reload.certificate_sent_at
+    end
+
+    test "the bulk certificate mail leaves out participants who did not attend" do
+      certify
+      missing = create_registration(first_name: "Erika", email: "erika@example.com", no_show: true)
+
+      assert_enqueued_emails 1 do
+        bulk_process("send_certificates", [@registration, missing])
+      end
+
+      assert_equal "1 Zertifikat(e) versendet, 1 ausgelassen (nicht erschienen)", flash[:success]
+      assert_not_nil @registration.reload.certificate_sent_at
+      assert_nil missing.reload.certificate_sent_at
+      assert_equal 0, missing.certificates.count
+    end
+
+    test "a bulk certificate mail to no-shows only sends nothing" do
+      certify
+      @registration.update!(no_show: true)
+      missing = create_registration(first_name: "Erika", email: "erika@example.com", no_show: true)
+
+      assert_no_enqueued_emails do
+        bulk_process("send_certificates", [@registration, missing])
+      end
+
+      assert_equal "0 Zertifikat(e) versendet, 2 ausgelassen (nicht erschienen)", flash[:success]
+    end
+
+    test "a participant who did not attend is not sent a certificate" do
+      certify
+      @registration.update!(no_show: true)
+
+      assert_no_enqueued_emails do
+        patch send_certificate_admin_offer_event_registration_path(@offer, @event, @registration)
+      end
+
+      assert_redirected_to admin_offer_event_registrations_path(@offer, @event)
+      assert_equal "Nicht erschienene Teilnehmer erhalten kein Zertifikat", flash[:alert]
+      assert_nil @registration.reload.certificate_sent_at
+    end
+
+    test "a participant who did not attend has no certificate to download" do
+      certify
+      @registration.update!(no_show: true)
+
+      assert_no_difference -> { Certificate.count } do
+        get download_certificate_admin_offer_event_registration_path(@offer, @event, @registration)
+      end
+
+      assert_redirected_to admin_offer_event_registrations_path(@offer, @event)
+      assert_equal "Nicht erschienene Teilnehmer erhalten kein Zertifikat", flash[:alert]
+    end
+
+    test "the row menu offers no certificate for a participant who did not attend" do
+      certify
+      missing = create_registration(first_name: "Erika", email: "erika@example.com", no_show: true)
+
+      get admin_offer_event_registrations_path(@offer, @event)
+
+      assert_select "a[href=?]", download_certificate_admin_offer_event_registration_path(@offer, @event, @registration)
+      assert_select "a[href=?]", send_certificate_admin_offer_event_registration_path(@offer, @event, @registration)
+      assert_select "a[href=?]", download_certificate_admin_offer_event_registration_path(@offer, @event, missing),
+                    count: 0
+      assert_select "a[href=?]", send_certificate_admin_offer_event_registration_path(@offer, @event, missing),
+                    count: 0
     end
 
     # The job of the mail runs after the request, as in production -- by then

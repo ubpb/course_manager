@@ -45,7 +45,7 @@
                 li = link_to edit_admin_offer_event_registration_path(offer, event, registration), class: "dropdown-item", data: {turbo_stream: true} do
                   i.fa-solid.fa-edit.me-2
                   = "Bearbeiten"
-                - if @event.certification.present?
+                - if @event.certification.present? && !registration.no_show?
                   li.dropdown-divider
                   li: h6.dropdown-header = "Zertifikat"
                   li = link_to download_certificate_admin_offer_event_registration_path(offer, event, registration), class: "dropdown-item" do
