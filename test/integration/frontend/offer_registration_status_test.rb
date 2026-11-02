@@ -29,7 +29,7 @@ module Frontend
       get frontend_offer_path(@offer)
 
       assert_response :success
-      assert_select "a[href=?]", account_registration_path(registration), text: /Sie sind bereits angemeldet/
+      assert_select "a[href=?]", account_registration_path(registration), text: /Sie sind angemeldet/
       assert_not_includes response.body, "meet.example.com"
     end
 
