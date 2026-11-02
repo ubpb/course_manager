@@ -120,6 +120,14 @@ module Admin
             flash[:success] = "Erinnerungsmail(s) wurde versendet"
           when "send_message"
             return render_new_message_form(registrations)
+          when "mark_no_show"
+            # update_all, as anonymized participants fail the validation of
+            # their e-mail and would stay unmarked.
+            registrations.update_all(no_show: true) # rubocop:disable Rails/SkipsModelValidations
+            flash[:success] = "Teilnehmer als nicht erschienen markiert"
+          when "mark_attended"
+            registrations.update_all(no_show: false) # rubocop:disable Rails/SkipsModelValidations
+            flash[:success] = "Teilnehmer als erschienen markiert"
           end
 
           redirect_to admin_offer_event_registrations_path(@offer, @event)
@@ -182,6 +190,9 @@ module Admin
 
           @bulk_process_actions << ["Zertifikat per Mail senden", "send_certificates"] if @event.certification.present?
 
+          @bulk_process_actions << ["Als nicht erschienen markieren", "mark_no_show"]
+          @bulk_process_actions << ["Als erschienen markieren", "mark_attended"]
+
           @bulk_process_actions << ["Erinnerungsmail senden", "send_reminder_messages"]
           @bulk_process_actions << ["Erinnerungsmail ERNEUT senden", "force_send_reminder_messages"]
 
@@ -190,7 +201,7 @@ module Admin
 
         def registration_params
           params.expect(
-            registration: [:first_name, :last_name, :email, :field_of_interest, :user_notes, :internal_notes]
+            registration: [:first_name, :last_name, :email, :field_of_interest, :user_notes, :internal_notes, :no_show]
           )
         end
 

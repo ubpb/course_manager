@@ -234,6 +234,85 @@ module Admin
       assert_redirected_to admin_offer_event_registrations_path(@offer, @event)
     end
 
+    test "the bulk actions mark participants as not attended and back, also without a certification" do
+      get admin_offer_event_registrations_path(@offer, @event)
+
+      assert_select "select#bulk_process_action option[value=mark_no_show]", text: "Als nicht erschienen markieren"
+      assert_select "select#bulk_process_action option[value=mark_attended]", text: "Als erschienen markieren"
+    end
+
+    # An anonymized registration fails the e-mail validation; marking must not
+    # care.
+    test "marking as not attended changes the selection of this event only" do
+      other = create_registration(first_name: "Erika", email: "erika@example.com")
+      anonymized = create_registration(first_name: "Hans", email: "hans@example.com")
+      anonymized.update_columns(Registration::ANONYMIZED_ATTRIBUTES)
+      foreign = create_registration(create_event(date_and_time: 3.days.ago), email: "fremd@example.com")
+
+      bulk_process("mark_no_show", [@registration, anonymized, foreign])
+
+      assert_redirected_to admin_offer_event_registrations_path(@offer, @event)
+      assert_equal "Teilnehmer als nicht erschienen markiert", flash[:success]
+      assert_predicate @registration.reload, :no_show?
+      assert_predicate anonymized.reload, :no_show?
+      assert_not_predicate other.reload, :no_show?
+      assert_not_predicate foreign.reload, :no_show?
+    end
+
+    test "marking as attended takes the mark back" do
+      @registration.update!(no_show: true)
+
+      bulk_process("mark_attended")
+
+      assert_equal "Teilnehmer als erschienen markiert", flash[:success]
+      assert_not_predicate @registration.reload, :no_show?
+    end
+
+    test "marking without a selection changes nothing" do
+      bulk_process("mark_no_show", [])
+
+      assert_redirected_to admin_offer_event_registrations_path(@offer, @event)
+      assert_not_predicate @registration.reload, :no_show?
+    end
+
+    test "the participant list shows who attended" do
+      missing = create_registration(first_name: "Erika", email: "erika@example.com", no_show: true)
+
+      get admin_offer_event_registrations_path(@offer, @event)
+
+      assert_select "th[colspan=9]"
+      assert_select "th", text: "Erschienen?"
+      assert_select "tr#registration_#{@registration.id} td:nth-child(8)", text: "Ja"
+      assert_select "tr#registration_#{missing.id} td:nth-child(8)", text: "Nein"
+    end
+
+    test "the participant form marks and unmarks a no-show" do
+      get edit_admin_offer_event_registration_path(@offer, @event, @registration), headers: TURBO_STREAM_HEADERS
+
+      assert_select "template input[type=checkbox][name='registration[no_show]']"
+      assert_select "template label", text: "Nicht erschienen"
+
+      patch admin_offer_event_registration_path(@offer, @event, @registration), params: {registration: {no_show: "1"}}
+
+      assert_predicate @registration.reload, :no_show?
+
+      patch admin_offer_event_registration_path(@offer, @event, @registration), params: {registration: {no_show: "0"}}
+
+      assert_not_predicate @registration.reload, :no_show?
+    end
+
+    test "the participant export says who attended" do
+      create_registration(first_name: "Erika", email: "erika@example.com", no_show: true)
+
+      get admin_offer_event_registrations_path(@offer, @event, format: :xlsx)
+
+      strings = Zip::File.open_buffer(StringIO.new(response.body)).read("xl/sharedStrings.xml")
+
+      assert_includes strings, "Erschienen?"
+      assert_includes strings, ">Ja<"
+      assert_includes strings, ">Nein<"
+    end
+
     test "writing a message opens the message dialog for the selection" do
       bulk_process("send_message", as: :turbo_stream)
 

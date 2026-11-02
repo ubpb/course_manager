@@ -9,7 +9,7 @@
     thead
       - if @bulk_process_actions.any?
         tr
-          th.table-light(colspan="8")
+          th.table-light(colspan="9")
             .btn-toolbar.justify-content-start.flex-nowrap.align-items-center
               .ms-0 = check_box_tag :bulk_process_select_all, 0, false, "data-checkbox-select-all-target": "checkboxAll"
               .ms-2 = select_tag(:bulk_process_action, options_for_select(@bulk_process_actions), class: "form-control form-control-sm", prompt: "Aktion wählen")
@@ -23,6 +23,7 @@
         th = "E-Mail"
         th = "Erinnerungsmail?"
         th = "Zertifikat gesendet?"
+        th = "Erschienen?"
         th.actions = "Aktionen"
     tbody
       - registrations.each.with_index(1) do |registration, index|
@@ -35,6 +36,7 @@
           td = registration.email
           td = registration.reminder_message_sent_at? ? l(registration.reminder_message_sent_at) : "Nein"
           td = registration.certificate_sent_at? ? "Ja" : "Nein"
+          td = registration.no_show? ? "Nein" : "Ja"
           td.actions
             .dropdown
               button.btn.btn-outline-primary.btn-sm.dropdown-toggle(type="button" data-bs-toggle="dropdown")

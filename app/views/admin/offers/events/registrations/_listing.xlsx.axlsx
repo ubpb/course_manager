@@ -11,7 +11,8 @@ headers = [
   "Registriert am",
   "Fachgebiet",
   "Notizen des Nutzers",
-  "Interne Notizen"
+  "Interne Notizen",
+  "Erschienen?"
 ]
 
 # Add header row
@@ -29,7 +30,8 @@ registrations.each.with_index(1) do |r, index|
     r.created_at,
     r.field_of_interest,
     r.user_notes,
-    r.internal_notes
+    r.internal_notes,
+    r.no_show? ? "Nein" : "Ja"
   ]
 
   # Add values row
