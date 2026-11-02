@@ -334,10 +334,12 @@ module Admin
       assert_not_predicate @registration.reload, :no_show?
     end
 
-    test "marking without a selection changes nothing" do
+    test "marking without a selection changes nothing and asks for one" do
       bulk_process("mark_no_show", [])
 
       assert_redirected_to admin_offer_event_registrations_path(@offer, @event)
+      assert_equal "Bitte mindestens einen Teilnehmer auswählen", flash[:alert]
+      assert_nil flash[:success]
       assert_not_predicate @registration.reload, :no_show?
     end
 

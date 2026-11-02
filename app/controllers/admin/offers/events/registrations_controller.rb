@@ -109,8 +109,10 @@ module Admin
                                 .where(id: params[:bulk_process_ids])
           action = params[:bulk_process_action]
 
-          # The redirect below follows, so no flash.now (the cop misreads the case).
-          # rubocop:disable-next Rails/ActionControllerFlashBeforeRender
+          # The redirect below follows, so no flash.now (the cop misreads the case);
+          # marking uses update_all on purpose, as anonymized participants fail
+          # the validation of their e-mail and would stay unmarked.
+          # rubocop:disable-next Rails/ActionControllerFlashBeforeRender, Rails/SkipsModelValidations
           case action
           when "send_certificates"
             missing, attended = registrations.partition(&:no_show?)
@@ -124,14 +126,16 @@ module Admin
             flash[:success] = "Erinnerungsmail(s) wurde versendet"
           when "send_message"
             return render_new_message_form(registrations)
-          when "mark_no_show"
-            # update_all, as anonymized participants fail the validation of
-            # their e-mail and would stay unmarked.
-            registrations.update_all(no_show: true) # rubocop:disable Rails/SkipsModelValidations
-            flash[:success] = "Teilnehmer als nicht erschienen markiert"
-          when "mark_attended"
-            registrations.update_all(no_show: false) # rubocop:disable Rails/SkipsModelValidations
-            flash[:success] = "Teilnehmer als erschienen markiert"
+          when "mark_no_show", "mark_attended"
+            if registrations.none?
+              flash[:alert] = "Bitte mindestens einen Teilnehmer auswählen"
+            elsif action == "mark_no_show"
+              registrations.update_all(no_show: true)
+              flash[:success] = "Teilnehmer als nicht erschienen markiert"
+            else
+              registrations.update_all(no_show: false)
+              flash[:success] = "Teilnehmer als erschienen markiert"
+            end
           end
 
           redirect_to admin_offer_event_registrations_path(@offer, @event)
