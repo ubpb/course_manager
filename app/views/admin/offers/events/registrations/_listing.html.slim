@@ -36,7 +36,7 @@
           td = registration.email
           td = registration.reminder_message_sent_at? ? l(registration.reminder_message_sent_at) : "Nein"
           td = registration.certificate_sent_at? ? "Ja" : "Nein"
-          td = registration.no_show? ? "Nein" : "Ja"
+          td = attendance_label(registration)
           td.actions
             .dropdown
               button.btn.btn-outline-primary.btn-sm.dropdown-toggle(type="button" data-bs-toggle="dropdown")

@@ -352,6 +352,17 @@ module Admin
       assert_select "tr#registration_#{missing.id} td:nth-child(8)", text: "Nein"
     end
 
+    # Printed before the event, the list must not claim anyone attended.
+    test "the participant list leaves attendance open until the event begins" do
+      @event.update!(date_and_time: 2.days.from_now)
+      missing = create_registration(first_name: "Erika", email: "erika@example.com", no_show: true)
+
+      get admin_offer_event_registrations_path(@offer, @event)
+
+      assert_select "tr#registration_#{@registration.id} td:nth-child(8)", text: "—"
+      assert_select "tr#registration_#{missing.id} td:nth-child(8)", text: "Nein"
+    end
+
     test "the participant form marks and unmarks a no-show" do
       get edit_admin_offer_event_registration_path(@offer, @event, @registration), headers: TURBO_STREAM_HEADERS
 
@@ -367,16 +378,28 @@ module Admin
       assert_not_predicate @registration.reload, :no_show?
     end
 
-    test "the participant export says who attended" do
+    # The rows of the participant export as text, its shared strings resolved.
+    def export_rows
+      zip = Zip::File.open_buffer(StringIO.new(response.body))
+      strings = Nokogiri::XML(zip.read("xl/sharedStrings.xml")).remove_namespaces!.xpath("//si").map(&:text)
+
+      Nokogiri::XML(zip.read("xl/worksheets/sheet1.xml")).remove_namespaces!.xpath("//row").map do |row|
+        row.xpath("c").map { |cell| cell["t"] == "s" ? strings[cell.text.to_i] : cell.text }
+      end
+    end
+
+    # Erika comes first, sorted by first name after the shared last name.
+    test "the participant export says who attended, and nothing before the event" do
       create_registration(first_name: "Erika", email: "erika@example.com", no_show: true)
 
       get admin_offer_event_registrations_path(@offer, @event, format: :xlsx)
 
-      strings = Zip::File.open_buffer(StringIO.new(response.body)).read("xl/sharedStrings.xml")
+      assert_equal ["Erschienen?", "Nein", "Ja"], export_rows.map(&:last)
 
-      assert_includes strings, "Erschienen?"
-      assert_includes strings, ">Ja<"
-      assert_includes strings, ">Nein<"
+      @event.update!(date_and_time: 2.days.from_now)
+      get admin_offer_event_registrations_path(@offer, @event, format: :xlsx)
+
+      assert_equal ["Erschienen?", "Nein", "—"], export_rows.map(&:last)
     end
 
     test "writing a message opens the message dialog for the selection" do

@@ -31,7 +31,7 @@ registrations.each.with_index(1) do |r, index|
     r.field_of_interest,
     r.user_notes,
     r.internal_notes,
-    r.no_show? ? "Nein" : "Ja"
+    attendance_label(r)
   ]
 
   # Add values row
