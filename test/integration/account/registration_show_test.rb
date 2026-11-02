@@ -183,6 +183,39 @@ module Account
       assert_includes response.body, "Bitte laden Sie Ihre Teilnahmebescheinigung bei Bedarf bis dahin herunter."
     end
 
+    test "a no-show sees that they did not attend instead of the certificate" do
+      @event.update!(date_and_time: 3.days.ago)
+      Certification.create!(event: @event, learning_results: "Katalogrecherche", signature: "Max Muster")
+      @registration.update!(no_show: true)
+
+      log_in
+      get account_registration_path(@registration)
+
+      assert_includes response.body, "Nicht teilgenommen"
+      assert_select "a[href=?]", certificate_account_registration_path(@registration), count: 0
+      assert_not_includes response.body, "Bitte laden Sie Ihre Teilnahmebescheinigung"
+    end
+
+    # Staff mark right after the event, while it still counts as upcoming until
+    # midnight.
+    test "a no-show learns it on the day of the event already" do
+      travel_to Time.zone.parse("2026-10-21 18:00")
+      @event.update!(date_and_time: Time.zone.parse("2026-10-21 10:00"))
+      @registration.update!(no_show: true)
+
+      log_in
+      get account_registration_path(@registration)
+
+      assert_includes response.body, "Nicht teilgenommen"
+    end
+
+    test "an attended registration says nothing about attendance" do
+      log_in
+      get account_registration_path(@registration)
+
+      assert_not_includes response.body, "Nicht teilgenommen"
+    end
+
     test "an upcoming event has no deletion notice" do
       log_in
       get account_registration_path(@registration)

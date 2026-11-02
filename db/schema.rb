@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_22_150000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_02_120000) do
   create_table "categories", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "color_code", null: false
     t.datetime "created_at", null: false
@@ -105,6 +105,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_22_150000) do
     t.string "ils_primary_id"
     t.text "internal_notes"
     t.string "last_name", null: false
+    t.boolean "no_show", default: false, null: false
     t.timestamp "reminder_message_sent_at"
     t.datetime "updated_at", null: false
     t.text "user_notes"

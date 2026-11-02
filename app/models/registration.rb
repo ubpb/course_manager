@@ -54,9 +54,10 @@ class Registration < ApplicationRecord
 
   # Eine Teilnahmebescheinigung gibt es erst, wenn der Termin vorbei ist und für
   # den Termin überhaupt eine Zertifizierung hinterlegt wurde. Für anonymisierte
-  # Anmeldungen wäre die Bescheinigung wertlos, da der Name fehlt.
+  # Anmeldungen wäre die Bescheinigung wertlos, da der Name fehlt. Wer als nicht
+  # erschienen markiert ist (no_show), hat nicht teilgenommen und bekommt keine.
   def certificate_available?
-    !anonymized? && event.certification.present? && event.past?
+    !no_show? && !anonymized? && event.certification.present? && event.past?
   end
 
 end

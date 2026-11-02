@@ -40,6 +40,7 @@ de:
         public_page: Öffentliche Angebotsseite
         registration: Ihre Anmeldung
         registered_at: angemeldet am %{date}
+        no_show: Nicht teilgenommen
         field_of_interest: Interessengebiet
         user_notes: Ihre Anmerkung
         contact: Kontakt

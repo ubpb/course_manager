@@ -46,4 +46,21 @@ class RegistrationTest < ActiveSupport::TestCase
     assert_equal 2, event.registrations.count
   end
 
+  test "a registration counts as attended until marked as a no-show" do
+    assert_not_predicate Registration.new, :no_show?
+  end
+
+  test "a no-show gets no certificate" do
+    event = create_event
+    event.update!(date_and_time: 2.days.ago)
+    Certification.create!(event: event, learning_results: "Katalogrecherche")
+    registration = event.registrations.create!(first_name: "A", last_name: "B", email: "a@example.com")
+
+    assert_predicate registration, :certificate_available?
+
+    registration.no_show = true
+
+    assert_not_predicate registration, :certificate_available?
+  end
+
 end

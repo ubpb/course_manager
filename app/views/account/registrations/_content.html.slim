@@ -89,6 +89,10 @@
         div
           i.fa-regular.fa-calendar-check.fa-fw.me-2
           span = t(:registered_at, scope:, date: l(registration.created_at.to_date))
+        - if registration.no_show?
+          div
+            i.fa-solid.fa-user-xmark.fa-fw.me-2
+            span = t(:no_show, scope:)
         - if registration.field_of_interest.present?
           .mt-2
             .fw-semibold = t(:field_of_interest, scope:)

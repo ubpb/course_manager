@@ -40,6 +40,7 @@ en:
         public_page: Public offer page
         registration: Your registration
         registered_at: registered on %{date}
+        no_show: Did not attend
         field_of_interest: Field of interest
         user_notes: Your note
         contact: Contact

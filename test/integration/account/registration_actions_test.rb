@@ -54,6 +54,17 @@ module Account
       assert_includes response.headers["Content-Disposition"], Certificate.filename(@registration)
     end
 
+    test "a no-show gets no certificate" do
+      attend
+      @registration.update!(no_show: true)
+
+      get certificate_account_registration_path(@registration)
+
+      assert_redirected_to account_root_path
+      assert_equal I18n.t("account.registrations.certificate.not_available"), flash[:alert]
+      assert_equal 0, Certificate.count
+    end
+
     test "there is no certificate before the event" do
       Certification.create!(event: @event, learning_results: "Katalogrecherche")
 
