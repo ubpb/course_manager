@@ -12,6 +12,10 @@ class AdminAttendanceHelperTest < ActionView::TestCase
     assert_equal "—", attendance_label(registration(starts: 1.hour.from_now))
   end
 
+  test "attendance_label puts what it is given in place of open attendance" do
+    assert_nil attendance_label(registration(starts: 1.hour.from_now), before_event: nil)
+  end
+
   test "attendance_label counts a participant as attended once the event has begun" do
     assert_equal "Ja", attendance_label(registration(starts: 1.hour.ago))
   end

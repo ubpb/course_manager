@@ -31,7 +31,7 @@ registrations.each.with_index(1) do |r, index|
     r.field_of_interest,
     r.user_notes,
     r.internal_notes,
-    attendance_label(r)
+    attendance_label(r, before_event: nil)
   ]
 
   # Add values row

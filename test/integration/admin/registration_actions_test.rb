@@ -396,17 +396,24 @@ module Admin
     end
 
     # Erika comes first, sorted by first name after the shared last name.
-    test "the participant export says who attended, and nothing before the event" do
+    test "the participant export says who attended" do
       create_registration(first_name: "Erika", email: "erika@example.com", no_show: true)
 
       get admin_offer_event_registrations_path(@offer, @event, format: :xlsx)
 
       assert_equal ["Erschienen?", "Nein", "Ja"], export_rows.map(&:last)
+    end
 
+    # Printed before the event, the export leaves the cell blank, so that
+    # course leaders can fill in the attendance by hand.
+    test "the participant export leaves attendance blank until the event begins" do
       @event.update!(date_and_time: 2.days.from_now)
+      create_registration(first_name: "Erika", email: "erika@example.com", no_show: true)
+
       get admin_offer_event_registrations_path(@offer, @event, format: :xlsx)
 
-      assert_equal ["Erschienen?", "Nein", "—"], export_rows.map(&:last)
+      assert_equal [9, 9, 9], export_rows.map(&:size)
+      assert_equal ["Erschienen?", "Nein", ""], export_rows.map(&:last)
     end
 
     test "writing a message opens the message dialog for the selection" do
