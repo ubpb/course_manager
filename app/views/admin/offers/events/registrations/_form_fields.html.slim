@@ -16,5 +16,14 @@ hr.mt-1.mb-3
 
 h5.m-0 Interne Angaben
 hr.mt-1.mb-3
+- registration = form.object
+- if registration.persisted? && registration.entered_in_admin?
+  p.small.text-body-secondary
+    i.fa-solid.fa-user-pen.fa-fw.me-2
+    = "Im Admin eingetragen"
+- elsif registration.persisted? && registration.account_linked?
+  p.small.text-body-secondary
+    i.fa-solid.fa-user-check.fa-fw.me-2
+    = "Selbst angemeldet"
 = form.input :internal_notes
 = form.input :no_show, as: :boolean

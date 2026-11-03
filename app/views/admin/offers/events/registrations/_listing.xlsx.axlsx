@@ -12,6 +12,7 @@ headers = [
   "Fachgebiet",
   "Notizen des Nutzers",
   "Interne Notizen",
+  "Im Admin eingetragen?",
   "Erschienen?"
 ]
 
@@ -31,6 +32,7 @@ registrations.each.with_index(1) do |r, index|
     r.field_of_interest,
     r.user_notes,
     r.internal_notes,
+    ("Ja" if r.entered_in_admin?),
     attendance_label(r, before_event: nil)
   ]
 

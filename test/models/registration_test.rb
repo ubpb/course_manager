@@ -13,6 +13,17 @@ class RegistrationTest < ActiveSupport::TestCase
     assert_not_predicate Registration.new(ils_primary_id: ""), :account_linked?
   end
 
+  # Registering oneself takes a login, which leaves the ILS id behind.
+  test "a registration without an ILS id was entered in the admin" do
+    assert_predicate Registration.new(first_name: "Max", ils_primary_id: nil), :entered_in_admin?
+    assert_not_predicate Registration.new(first_name: "Max", ils_primary_id: "12345"), :entered_in_admin?
+  end
+
+  # Anonymizing drops the ILS id too, so who entered it is no longer known.
+  test "an anonymized registration does not count as entered in the admin" do
+    assert_not_predicate Registration.new(**Registration::ANONYMIZED_ATTRIBUTES), :entered_in_admin?
+  end
+
   test "personal data is kept for ten days after the event" do
     assert_equal 10.days, Registration::RETENTION_PERIOD
 

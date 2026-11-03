@@ -47,6 +47,13 @@ class Registration < ApplicationRecord
     ils_primary_id.present?
   end
 
+  # Staff entered the participant in the admin: registering oneself takes a
+  # login, which leaves the ILS id behind. Anonymizing drops the id as well, so
+  # for an anonymized registration it is no longer known.
+  def entered_in_admin?
+    !account_linked? && !anonymized?
+  end
+
   # Der Tag, ab dem app:dsgvo:cleanup die Anmeldung anonymisiert.
   def deletion_date
     (event.date_and_time + RETENTION_PERIOD).to_date

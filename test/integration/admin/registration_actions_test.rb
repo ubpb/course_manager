@@ -1,9 +1,10 @@
 require "test_helper"
 
-# What staff do with the participants of an event: edit and remove them, mark
-# who did not attend, hand out certificates to the others, send reminders and
-# write to them -- one at a time from the row menu or for a selection through
-# the bulk actions.
+# What staff do with the participants of an event: tell those entered in the
+# admin from those who registered themselves, edit and remove them, mark who
+# did not attend, hand out certificates to the others, send reminders and write
+# to them -- one at a time from the row menu or for a selection through the
+# bulk actions.
 module Admin
   class RegistrationActionsTest < ActionDispatch::IntegrationTest
 
@@ -353,10 +354,9 @@ module Admin
 
       get admin_offer_event_registrations_path(@offer, @event)
 
-      assert_select "th[colspan=9]"
       assert_select "th", text: "Erschienen?"
-      assert_select "tr#registration_#{@registration.id} td:nth-child(8)", text: "Ja"
-      assert_select "tr#registration_#{missing.id} td:nth-child(8)", text: "Nein"
+      assert_select "tr#registration_#{@registration.id} td:nth-child(9)", text: "Ja"
+      assert_select "tr#registration_#{missing.id} td:nth-child(9)", text: "Nein"
     end
 
     # Printed before the event, the list must not claim anyone attended.
@@ -366,8 +366,52 @@ module Admin
 
       get admin_offer_event_registrations_path(@offer, @event)
 
-      assert_select "tr#registration_#{@registration.id} td:nth-child(8)", text: "—"
-      assert_select "tr#registration_#{missing.id} td:nth-child(8)", text: "Nein"
+      assert_select "tr#registration_#{@registration.id} td:nth-child(9)", text: "—"
+      assert_select "tr#registration_#{missing.id} td:nth-child(9)", text: "Nein"
+    end
+
+    # Nearly everyone registers themselves, so only those staff entered get a
+    # mark and stand out.
+    test "the participant list marks participants entered in the admin" do
+      @registration.update!(ils_primary_id: "12345")
+      entered = create_registration(first_name: "Erika", email: "erika@example.com")
+      anonymized = create_registration(first_name: "Hans", email: "hans@example.com")
+      anonymized.update_columns(Registration::ANONYMIZED_ATTRIBUTES)
+
+      get admin_offer_event_registrations_path(@offer, @event)
+
+      assert_select "th[colspan=10]"
+      assert_select "th:nth-child(6)", text: "Im Admin eingetragen?"
+      assert_select "tr#registration_#{entered.id} td:nth-child(6)", text: "Ja"
+      assert_select "tr#registration_#{@registration.id} td:nth-child(6)", text: ""
+      assert_select "tr#registration_#{anonymized.id} td:nth-child(6)", text: ""
+    end
+
+    test "the participant form tells whether staff entered the participant" do
+      get edit_admin_offer_event_registration_path(@offer, @event, @registration), headers: TURBO_STREAM_HEADERS
+
+      assert_select "template", text: /Im Admin eingetragen/
+      assert_select "template", text: /Selbst angemeldet/, count: 0
+
+      @registration.update!(ils_primary_id: "12345")
+      get edit_admin_offer_event_registration_path(@offer, @event, @registration), headers: TURBO_STREAM_HEADERS
+
+      assert_select "template", text: /Selbst angemeldet/
+      assert_select "template", text: /Im Admin eingetragen/, count: 0
+    end
+
+    # A new participant is entered in the admin anyway; for an anonymized one
+    # it is no longer known.
+    test "the participant form says nothing about it for a new or an anonymized participant" do
+      @registration.update_columns(Registration::ANONYMIZED_ATTRIBUTES)
+
+      [new_admin_offer_event_registration_path(@offer, @event),
+       edit_admin_offer_event_registration_path(@offer, @event, @registration)].each do |path|
+        get path, headers: TURBO_STREAM_HEADERS
+
+        assert_select "template input[name='registration[last_name]']"
+        assert_select "template", text: /Im Admin eingetragen|Selbst angemeldet/, count: 0
+      end
     end
 
     test "the participant form marks and unmarks a no-show" do
@@ -412,8 +456,17 @@ module Admin
 
       get admin_offer_event_registrations_path(@offer, @event, format: :xlsx)
 
-      assert_equal [9, 9, 9], export_rows.map(&:size)
+      assert_equal [10, 10, 10], export_rows.map(&:size)
       assert_equal ["Erschienen?", "Nein", ""], export_rows.map(&:last)
+    end
+
+    test "the participant export marks participants entered in the admin" do
+      @registration.update!(ils_primary_id: "12345")
+      create_registration(first_name: "Erika", email: "erika@example.com")
+
+      get admin_offer_event_registrations_path(@offer, @event, format: :xlsx)
+
+      assert_equal ["Im Admin eingetragen?", "Ja", ""], export_rows.pluck(-2)
     end
 
     test "writing a message opens the message dialog for the selection" do
