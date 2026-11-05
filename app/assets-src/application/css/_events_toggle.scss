@@ -1,0 +1,16 @@
+// The toggle under the folded dates of an offer in the public list says what a
+// click does: Bootstrap's collapse keeps aria-expanded up to date on it.
+.events-toggle {
+  &[aria-expanded="true"] .when-collapsed,
+  &[aria-expanded="false"] .when-expanded {
+    display: none;
+  }
+
+  .fa-chevron-down {
+    @include transition(transform .2s ease-in-out);
+  }
+
+  &[aria-expanded="true"] .fa-chevron-down {
+    transform: rotate(180deg);
+  }
+}

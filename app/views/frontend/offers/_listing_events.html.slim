@@ -1,0 +1,26 @@
+/ <%# locals: (offer:, events:) -%>
+
+/ The first two dates show at once; the others are folded behind a toggle, so
+/ that a course with many dates does not stretch the list.
+- shown_events = events.take(2)
+- folded_events = events.drop(2)
+
+ul.list-unstyled.vstack.gap-1.mb-0
+  = render partial: "listing_event", collection: shown_events, as: :event
+
+- if folded_events.any?
+  - folded_id = dom_id(offer, :folded_events)
+  .collapse(id=folded_id)
+    / Padding rather than a margin, which would stay outside the collapse while it opens.
+    ul.list-unstyled.vstack.gap-1.mb-0.pt-1
+      = render partial: "listing_event", collection: folded_events, as: :event
+  a.events-toggle.d-inline-block.mt-1.text-decoration-none(
+    href="##{folded_id}"
+    role="button"
+    data-bs-toggle="collapse"
+    aria-expanded="false"
+    aria-controls=folded_id
+  )
+    i.fa-solid.fa-chevron-down.fa-fw.me-1
+    span.when-collapsed = t("frontend.events.more_events", count: folded_events.size)
+    span.when-expanded = t("frontend.events.fewer_events")

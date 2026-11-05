@@ -28,8 +28,8 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     evaluate_script("window.scriptErrors")
   end
 
-  # Bootstrap finishes showing or hiding a modal after its fade transition
-  # (0.3 s), so wait that out before looking.
+  # Bootstrap finishes showing or hiding a modal or a collapse after its
+  # transition (0.3 s, 0.35 s), so wait that out before looking.
   def wait_for_transitions
     evaluate_async_script("setTimeout(arguments[0], 500)")
   end

@@ -4,7 +4,7 @@
   - details_path = frontend_offer_path(offer)
   - margin_class = i == 0 ? "mt-0" : "mt-4"
 
-  .card(class=margin_class)
+  .card(id=dom_id(offer) class=margin_class)
     .card-header(style="background-color: var(--bs-light)")
       = link_to details_path, class: "text-decoration-none fw-bold" do
         h5.mb-0(style="color: var(--upb-irisviolett)") = offer.title
@@ -24,28 +24,11 @@
           - if offer.course?
             .mt-3
               .fw-bold = "Nächste Termine"
-              - if offer.upcoming_events.published.any?
-                ul.list-inline.mb-0
-                  - offer.upcoming_events.published.each do |event|
-                    li.list-inline-item
-                      i.fa-regular.fa-calendar.fa-fw.me-1
-                      = l(event.date_and_time)
-                      - if event.online?
-                        span.badge.text-bg-light(
-                          data-controller="tooltip"
-                          data-bs-toggle="tooltip"
-                          data-bs-title="Online-Veranstaltung"
-                        )
-                          i.fa-solid.fa-globe.fa-fw.me-1
-                          = "Online"
-                      - else
-                        span.badge.text-bg-light(
-                          data-controller="tooltip"
-                          data-bs-toggle="tooltip"
-                          data-bs-title="Präsenzveranstaltung"
-                        )
-                          i.fa-solid.fa-person-chalkboard.fa-fw.me-1
-                          = "Präsenz"
+              / Filtered here rather than by a query, which would bypass the
+              / events the controller preloads for all offers.
+              - events = offer.upcoming_events.select(&:published?)
+              - if events.any?
+                = render "listing_events", offer: offer, events: events
                 - if offer.events_on_request?
                   .fst-italic = events_on_request_message
               - else

@@ -5,3 +5,7 @@ de:
         Für dieses Semester sind keine regulären Termine mehr verfügbar.
       on_request_message: >
         Weitere Termine auf <a href="%{contact_url}">Anfrage (für Gruppen ab 5 Personen)</a>.
+      more_events:
+        one: "%{count} weiterer Termin"
+        other: "%{count} weitere Termine"
+      fewer_events: "Weniger Termine"
