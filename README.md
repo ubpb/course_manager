@@ -118,6 +118,30 @@ SolidQueue::FailedExecution.find(id).retry
 
 Braucht der Dienst Umgebungsvariablen, die die Anwendung sonst über nginx/Passenger erhält, gehören sie in `~/.config/course_manager/jobs.env` (eine Zeile `NAME=wert` je Variable); die Unit liest die Datei, falls sie existiert.
 
+### Monitoring der Hintergrundjobs
+
+`bin/rails app:jobs:health` gibt den Zustand von Solid Queue als JSON aus, für ein Prüfskript des Monitorings. Der Task stellt nur fest; Schwellen und Bewertung gehören ins Monitoring. Die Daten stehen in der Datenbank, der Task kann also auf jedem Server der Anwendung laufen, etwa als User `ubpb` auf dem mit der Rolle `jobs`:
+
+```bash
+cd /ubpb/course_manager/current && RAILS_ENV=production ~/.rvm/bin/rvm <Ruby-Version> do bundle exec bin/rails app:jobs:health
+```
+
+Die Standardausgabe enthält nur das JSON, Log-Zeilen gehen auf die Standardfehlerausgabe. Ist die Datenbank nicht erreichbar, endet der Task mit einem Exit-Code ungleich 0. Zeiten stehen in UTC, Alter und Dauern in Sekunden; `null` heißt: gibt es nicht.
+
+| Feld | Inhalt | Hinweis auf ein Problem |
+|---|---|---|
+| `processes.expected` | wie viele Prozesse je Art laufen sollen (`Supervisor`, `Dispatcher`, `Worker`, `Scheduler`), gelesen aus `config/queue.yml` und `config/recurring.yml` | – |
+| `processes.alive_threshold` | Zeit ohne Heartbeat, nach der Solid Queue einen Prozess für tot hält | – |
+| `processes.registered` | die angemeldeten Prozesse mit `kind`, `hostname`, `pid`, `last_heartbeat_at` und `heartbeat_age` | weniger Prozesse einer Art mit `heartbeat_age` unter `alive_threshold` als erwartet; mehr als ein `Supervisor` (Jobs auf zwei Servern) |
+| `jobs.ready` | wartende Jobs: `count`, `oldest_age` | `oldest_age` wächst: kein Worker arbeitet |
+| `jobs.scheduled` | geplante Jobs: `count`, `overdue_age` (wie lange der überfälligste über seiner Zeit ist) | `overdue_age` über einer Minute: der Dispatcher hängt |
+| `jobs.claimed` | laufende Jobs: `count`, `oldest_age` | `oldest_age` groß: ein Job hängt |
+| `jobs.failed` | fehlgeschlagene Jobs: `count`, `latest_at`, `by_job_class`, `by_exception_class` – ohne Fehlermeldungen, da sie personenbezogene Daten enthalten können | `latest_at` neuer als bei der letzten Prüfung |
+| `recurring.<Aufgabe>` | `schedule`, `last_due_at` (letzter planmäßiger Zeitpunkt), `last_enqueued_at`, `last_status` (`finished`, `failed`, `ready`, `claimed`) | `last_enqueued_at` einige Minuten nach `last_due_at` noch älter als dieses oder `null`; `last_status` `failed` |
+| `paused_queues` | pausierte Queues | nicht leer |
+
+`processes.expected` gilt für die Umgebung des Aufrufs: Steht `JOB_CONCURRENCY` in `jobs.env`, braucht auch der Aufruf des Tasks diese Variable.
+
 ## Konfiguration (`config/application.yml`)
 
 Die Datei hat die Abschnitte `shared`, `development` und `production` und darf ERB enthalten. Auf den Servern ersetzt die verlinkte Datei aus `shared/config/` die aus dem Repository vollständig – sie muss also alles enthalten, was der Server braucht.
