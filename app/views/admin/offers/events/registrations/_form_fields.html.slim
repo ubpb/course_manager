@@ -19,9 +19,7 @@ hr.mt-1.mb-3
 - registration = form.object
 / Nothing for a new participant, who is entered in the admin anyway, nor for
 / one anonymized before the origin was recorded.
-- icon, hint = {"account" => ["fa-user-check", "Mit Bibliothekskonto angemeldet"],
-                "guest" => ["fa-user", "Als Gast angemeldet"],
-                "admin" => ["fa-user-pen", "Im Admin eingetragen"]}[registration.origin] if registration.persisted?
+- icon, hint = origin_hint(registration) if registration.persisted?
 - if hint
   p.small.text-body-secondary
     i.fa-solid.fa-fw.me-2(class=icon)
