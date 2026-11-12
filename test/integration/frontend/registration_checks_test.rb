@@ -1,7 +1,8 @@
 require "test_helper"
 
 # Before the registration form is shown or saved, the event has to take
-# registrations at all, still be open, and the user must not be registered yet.
+# registrations at all, still be open, and the visitor must not be registered
+# yet. The checks hold for guests; a logged-in user is known by the ILS id too.
 module Frontend
   class RegistrationChecksTest < ActionDispatch::IntegrationTest
 
@@ -13,7 +14,9 @@ module Frontend
                                      max_no_of_participants: 10,
                                      registration_required: true,
                                      published: true)
+    end
 
+    def log_in
       post session_path, params: {login: {user_id: AlmaAuthenticationStub::VALID_USER_ID,
                                           password: AlmaAuthenticationStub::VALID_PASSWORD}}
     end
@@ -37,7 +40,7 @@ module Frontend
       assert_difference -> { @event.registrations.count }, 1 do
         register
       end
-      assert_predicate @event.registrations.last, :origin_account?
+      assert_predicate @event.registrations.last, :origin_guest?
     end
 
     test "the list of registrations leads to the form" do
@@ -108,9 +111,10 @@ module Frontend
     end
 
     # Two requests at the same moment (a double click, two tabs) both pass the
-    # checks; the unique index stops the second one, which must still end on
-    # the offer page instead of an error.
+    # checks; the unique index on the ILS id stops the second one of a logged-in
+    # user, which must still end on the offer page instead of an error.
     test "a registration losing the race to an identical one is turned away" do
+      log_in
       competing = lambda do |registration|
         Registration.insert_all!([registration.attributes.except("id").merge(
           "created_at" => Time.current, "updated_at" => Time.current
@@ -127,6 +131,7 @@ module Frontend
     end
 
     test "a second registration of the same user is turned away" do
+      log_in
       register
 
       assert_no_difference -> { @event.registrations.count } do

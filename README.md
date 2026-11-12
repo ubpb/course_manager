@@ -1,6 +1,6 @@
 # Schulungs- und Beratungsportal der UB Paderborn
 
-Rails-Anwendung, mit der die Universitätsbibliothek Paderborn Schulungs- und Beratungsangebote veröffentlicht, Termine plant und Anmeldungen verwaltet – einschließlich Bestätigungs- und Erinnerungsmails, Teilnahmebescheinigungen und Berichten. Teilnehmende melden sich mit ihrem Bibliothekskonto an (Alma) und finden ihre Anmeldungen im Benutzerkonto; das Schulungsteam arbeitet im Admin-Bereich unter `/admin`.
+Rails-Anwendung, mit der die Universitätsbibliothek Paderborn Schulungs- und Beratungsangebote veröffentlicht, Termine plant und Anmeldungen verwaltet – einschließlich Bestätigungs- und Erinnerungsmails, Teilnahmebescheinigungen und Berichten. Teilnehmende melden sich als Gast oder mit ihrem Bibliothekskonto (Alma) zu Terminen an; mit dem Konto finden sie ihre Anmeldungen im Benutzerkonto; das Schulungsteam arbeitet im Admin-Bereich unter `/admin`.
 
 ## Entwicklung
 

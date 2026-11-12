@@ -1,0 +1,24 @@
+/ <%# locals: (event:) -%>
+/ The login with the library account is optional. It stands above the fields,
+/ so the choice comes before any typing; logging in or out leads back to the
+/ form as a full page (the modal is gone by then).
+
+- form_path = new_frontend_event_registration_path(event)
+
+- if current_user
+  .callout.callout-success
+    i.fa-solid.fa-circle-check.fa-fw.me-2
+    = "Eingeloggt als #{current_user.full_name}. Die Anmeldung erscheint in Ihrem Konto."
+    .mt-2
+      = "Nicht Sie?"
+      =< link_to "Ausloggen", logout_path(return_to: form_path)
+- else
+  .callout.callout-info
+    .fw-semibold.mb-1
+      i.fa-solid.fa-circle-info.fa-fw.me-2
+      = "Haben Sie ein Bibliothekskonto? (optional)"
+    p.mb-2
+      = "Dann übernehmen wir Ihre Daten, und Sie finden die Anmeldung in Ihrem Konto: " \
+        "Dort können Sie sich selbst abmelden und Ihre Teilnahmebescheinigung herunterladen."
+    = link_to "Mit Bibliothekskonto einloggen", new_session_path(return_to: form_path),
+              class: "btn btn-outline-primary btn-sm"

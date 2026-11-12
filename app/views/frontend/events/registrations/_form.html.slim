@@ -1,6 +1,8 @@
 / <%# locals: (event:, registration:, modal: false) -%>
 
 #registration-form
+  = render "frontend/events/registrations/account_box", event: event
+
   = simple_form_for [:frontend, event, registration], html: {id: "event-registration-form"} do |f|
     - if registration.errors.any?
       .alert.alert-danger
@@ -23,5 +25,5 @@
     / In the modal the buttons live in the modal footer and submit via the
     / form attribute, so the form itself renders none.
     - unless modal
-      = f.submit "Jetzt anmelden", class: "btn btn-primary"
+      = f.submit "Verbindlich anmelden", class: "btn btn-primary"
       =< link_to "Abbrechen", frontend_offer_path(event.offer), class: "btn btn-link"
