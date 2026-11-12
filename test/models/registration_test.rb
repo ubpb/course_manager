@@ -62,6 +62,27 @@ class RegistrationTest < ActiveSupport::TestCase
     assert_equal 2, event.registrations.count
   end
 
+  # Registering oneself refuses the second; staff in the admin may still enter
+  # it, so the validation lives in the context of the front end.
+  test "the same email address registers only once for an event" do
+    event = create_event
+    event.registrations.create!(first_name: "Erika", last_name: "Mustermann", email: "erika@example.com")
+    second = event.registrations.build(first_name: "Erika", last_name: "Mustermann", email: "Erika@Example.com",
+                                       gdrp_consent: true)
+
+    assert_not second.valid?(:user_registration)
+    assert_equal [Registration::DUPLICATE_EMAIL], second.errors[:email]
+    assert_predicate second, :valid?
+  end
+
+  test "the same email address may register for another event" do
+    create_event.registrations.create!(first_name: "Erika", last_name: "Mustermann", email: "erika@example.com")
+    other = create_event.registrations.build(first_name: "Erika", last_name: "Mustermann", email: "erika@example.com",
+                                             gdrp_consent: true)
+
+    assert other.valid?(:user_registration)
+  end
+
   test "a registration counts as attended until marked as a no-show" do
     assert_not_predicate Registration.new, :no_show?
   end

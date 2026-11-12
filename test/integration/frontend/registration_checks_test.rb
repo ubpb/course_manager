@@ -65,6 +65,30 @@ module Frontend
       assert_select "turbo-stream[action=replace][target=registration-form]"
     end
 
+    test "a second registration with the same email address is refused at the email field" do
+      @event.registrations.create!(first_name: "Erika", last_name: "Mustermann", email: "ERIKA@example.com")
+
+      assert_no_difference -> { @event.registrations.count } do
+        register
+      end
+
+      assert_response :unprocessable_content
+      assert_select ".invalid-feedback", text: Registration::DUPLICATE_EMAIL
+    end
+
+    test "in the modal a second registration with the same email address only replaces the form" do
+      @event.registrations.create!(first_name: "Erika", last_name: "Mustermann", email: "ERIKA@example.com")
+
+      post frontend_event_registrations_path(@event, modal: 1),
+           params: {registration: {first_name: "Erika", last_name: "Mustermann",
+                                   email: "erika@example.com", gdrp_consent: "1"}},
+           as: :turbo_stream
+
+      assert_response :unprocessable_content
+      assert_select "turbo-stream[action=replace][target=registration-form]"
+      assert_select "template .invalid-feedback", text: Registration::DUPLICATE_EMAIL
+    end
+
     test "an event without registration turns the user away" do
       @event.update!(registration_required: false)
 

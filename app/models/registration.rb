@@ -14,6 +14,8 @@ class Registration < ApplicationRecord
     user_notes: nil
   }.freeze
 
+  DUPLICATE_EMAIL = "Für diese E-Mail-Adresse besteht bereits eine Anmeldung zu diesem Termin.".freeze
+
   # Relations
   belongs_to :event, counter_cache: true
   has_many :certificates, dependent: :nullify
@@ -32,6 +34,10 @@ class Registration < ApplicationRecord
   validates :email, presence: true, format: {with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i}
   validates :gdrp_consent, acceptance: {accept: true}, on: :user_registration
   validates :ils_primary_id, uniqueness: {scope: :event_id}, allow_nil: true, on: :user_registration
+  # Without a login the ILS id no longer tells a second registration of the same
+  # person. The collation of the column compares case-insensitively. No unique
+  # index backs it: anonymized registrations all share the same email.
+  validates :email, uniqueness: {scope: :event_id, message: DUPLICATE_EMAIL}, on: :user_registration # rubocop:disable Rails/UniqueValidationWithoutIndex -- see above
 
   def full_name
     [first_name, last_name].filter_map(&:presence).join(" ")
