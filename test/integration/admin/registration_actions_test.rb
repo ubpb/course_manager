@@ -1,11 +1,10 @@
 require "test_helper"
 
-# What staff do with the participants of an event: see how each registered --
-# with the library account, as a guest or entered in the admin --, edit and
-# remove them, mark who
-# did not attend, hand out certificates to the others, send reminders and write
-# to them -- one at a time from the row menu or for a selection through the
-# bulk actions.
+# What staff do with the participants of an event: see how each registered
+# (with the library account, as a guest or entered in the admin), edit and
+# remove them, mark who did not attend, hand out certificates to the others,
+# send reminders and write to them -- one at a time from the row menu or for a
+# selection through the bulk actions.
 module Admin
   class RegistrationActionsTest < ActionDispatch::IntegrationTest
 
