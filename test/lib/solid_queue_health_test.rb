@@ -123,7 +123,9 @@ class SolidQueueHealthTest < ActiveSupport::TestCase
   end
 
   # 08:15 UTC is 09:15 in Berlin, where the schedules are read.
-  test "each recurring task shows when it was due, when it last ran and how that went" do
+  test "each recurring task shows when it was registered and due, when it last ran and how that went" do
+    register_recurring_tasks("send_reminder_messages", at: Time.utc(2026, 11, 1))
+    register_recurring_tasks("dsgvo_cleanup", at: Time.utc(2026, 11, 11, 3, 30))
     yesterday = enqueue_job
     fail_job(yesterday, Timeout::Error.new)
     SolidQueue::RecurringExecution.create!(job: yesterday, task_key: "send_reminder_messages",
@@ -138,18 +140,38 @@ class SolidQueueHealthTest < ActiveSupport::TestCase
 
     with_rails_env("production") do
       assert_equal({"send_reminder_messages" => {"schedule" => "every day at 6am",
+                                                 "registered_at" => "2026-11-01T00:00:00Z",
                                                  "last_due_at" => "2026-11-11T05:00:00Z",
                                                  "last_enqueued_at" => "2026-11-11T05:00:00Z",
                                                  "last_status" => "finished"},
                     "dsgvo_cleanup" => {"schedule" => "every day at 5am",
+                                        "registered_at" => "2026-11-11T03:30:00Z",
                                         "last_due_at" => "2026-11-11T04:00:00Z",
                                         "last_enqueued_at" => "2026-11-11T04:00:00Z",
                                         "last_status" => "failed"},
                     "clear_solid_queue_finished_jobs" => {"schedule" => "every hour at minute 12",
+                                                          "registered_at" => nil,
                                                           "last_due_at" => "2026-11-11T08:12:00Z",
                                                           "last_enqueued_at" => nil,
                                                           "last_status" => nil}},
                    report["recurring"])
+    end
+  end
+
+  # Each time it starts, the scheduler registers the tasks of its configuration
+  # with Solid Queue's create_or_update_all. The time of the first registration
+  # tells a run missed while the scheduler was down from one due before it knew
+  # the task.
+  test "a recurring task stays registered from its first time when the scheduler starts again" do
+    with_rails_env("production") do
+      scheduler = SolidQueue::Configuration.new.configured_processes.find { it.kind == :scheduler }
+      tasks = scheduler.attributes[:recurring_tasks]
+      SolidQueue::RecurringTask.create_or_update_all(tasks)
+      # Solid Queue registers with the database's clock, which knows nothing of travel_to.
+      SolidQueue::RecurringTask.update_all(created_at: Time.utc(2026, 11, 1))
+      SolidQueue::RecurringTask.create_or_update_all(tasks)
+
+      assert_equal ["2026-11-01T00:00:00Z"] * 3, report["recurring"].values.pluck("registered_at")
     end
   end
 

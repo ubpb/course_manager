@@ -1,7 +1,7 @@
 # The state of Solid Queue for the monitoring, which reads it as JSON from
 # `bin/rails app:jobs:health`: the processes the configuration calls for and
 # those that sent heartbeats, the jobs by state, and the recurring tasks with
-# their last run. A summary up front judges these facts (see Summary); the
+# their registration and last run. A summary up front judges these facts (see Summary); the
 # facts stay for finer checks.
 #
 # Times are given in UTC, ages in seconds. The messages of failed jobs stay
@@ -69,11 +69,16 @@ class SolidQueueHealth
     }
   end
 
+  # The scheduler registers a task when it first starts with it in its
+  # configuration, and keeps that time when it starts again.
   def recurring
+    registered_at = SolidQueue::RecurringTask.pluck(:key, :created_at).to_h
+
     recurring_tasks.to_h do |task|
       last_run = SolidQueue::RecurringExecution.where(task_key: task.key).order(run_at: :desc).first
 
       [task.key, {schedule: task.schedule,
+                  registered_at: timestamp(registered_at[task.key]),
                   last_due_at: timestamp(task.previous_time),
                   last_enqueued_at: timestamp(last_run&.run_at),
                   last_status: last_run&.job&.status}]

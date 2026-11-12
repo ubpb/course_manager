@@ -174,7 +174,7 @@ Die Standardausgabe enthält nur das JSON, Log-Zeilen gehen auf die Standardfehl
 | `scheduled_jobs`: überfälligster geplanter Job | ab 1 min | ab 5 min |
 | `running_jobs`: ältester laufender Job | ab 10 min | ab 30 min |
 | `failed_jobs` | mindestens ein fehlgeschlagener Job, bis er erneut ausgeführt oder verworfen ist | – |
-| `recurring_tasks` | letzter Lauf einer Aufgabe fehlgeschlagen | 10 min nach ihrer Zeit nicht gelaufen |
+| `recurring_tasks` | letzter Lauf einer Aufgabe fehlgeschlagen | 10 min nach ihrer Zeit nicht gelaufen; zählt erst ab der ersten Zeit, nachdem der Scheduler die Aufgabe registriert hat (der Scheduler holt nichts nach, etwa nach dem ersten Deploy oder für eine neue Aufgabe) |
 | `paused_queues` | mindestens eine Queue pausiert | – |
 
 Beim Deploy fehlen die Prozesse kurz; das Monitoring sollte daher erst nach zwei, drei Prüfungen in Folge alarmieren. Die Schwellen stehen in `lib/solid_queue_health/summary.rb`. Wer anders prüfen will, findet neben `summary` die Fakten, aus denen sie entsteht. Zeiten stehen dort in UTC, Alter in Sekunden; `null` heißt: gibt es nicht.
@@ -188,7 +188,7 @@ Beim Deploy fehlen die Prozesse kurz; das Monitoring sollte daher erst nach zwei
 | `jobs.scheduled` | geplante Jobs: `count`, `overdue_age` (wie lange der überfälligste über seiner Zeit ist) |
 | `jobs.claimed` | laufende Jobs: `count`, `oldest_age` |
 | `jobs.failed` | fehlgeschlagene Jobs: `count`, `latest_at`, `by_job_class`, `by_exception_class` – ohne Fehlermeldungen, da sie personenbezogene Daten enthalten können |
-| `recurring.<Aufgabe>` | `schedule`, `last_due_at` (letzter planmäßiger Zeitpunkt), `last_enqueued_at`, `last_status` (`finished`, `failed`, `ready`, `claimed`) |
+| `recurring.<Aufgabe>` | `schedule`, `registered_at` (seit wann der Scheduler die Aufgabe kennt; bleibt bei Neustarts erhalten), `last_due_at` (letzter planmäßiger Zeitpunkt), `last_enqueued_at`, `last_status` (`finished`, `failed`, `ready`, `claimed`) |
 | `paused_queues` | pausierte Queues |
 
 `processes.expected` gilt für die Umgebung des Aufrufs: Steht `JOB_CONCURRENCY` oder `SOLID_QUEUE_SUPERVISOR_MODE` in `jobs.env`, braucht auch der Aufruf des Tasks diese Variable.

@@ -27,6 +27,13 @@ module SolidQueueRecords
     SolidQueue::RecurringExecution.create!(job: job, task_key: key, run_at: at)
   end
 
+  # Recurring tasks as the scheduler registers them when it first starts with
+  # them in its configuration. Only the time counts; the report reads the
+  # schedules from the configuration.
+  def register_recurring_tasks(*keys, at:)
+    keys.each { SolidQueue::RecurringTask.create!(key: it, schedule: "every hour", command: "nil", created_at: at) }
+  end
+
   def register_process(kind, **attributes)
     SolidQueue::Process.create!(kind: kind, name: "#{kind.downcase}-#{SecureRandom.hex(4)}", pid: 4711,
                                 hostname: "batch", last_heartbeat_at: Time.current, **attributes)
