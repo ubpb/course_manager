@@ -5,8 +5,12 @@ require "test_helper"
 # come back to, but never another host.
 class ReturnToTest < ActionDispatch::IntegrationTest
 
-  # Each a way to send a visitor off to another host.
-  FOREIGN_PATHS = ["//evil.example", "https://evil.example/x", "/\\evil.example"].freeze
+  # Each a way to send a visitor off to another host. Browsers drop tabs and
+  # newlines from a URL, so "/<tab>/host" ends up as "//host".
+  FOREIGN_PATHS = ["//evil.example", "https://evil.example/x", "/\\evil.example",
+                   "/\t/evil.example", "/\n/evil.example"].freeze
+  # Not a path a redirect can take.
+  MALFORMED_PATHS = ["/angebote foo", "/ä"].freeze
 
   def log_in
     post session_path, params: {login: {user_id: AlmaAuthenticationStub::VALID_USER_ID,
@@ -23,8 +27,8 @@ class ReturnToTest < ActionDispatch::IntegrationTest
     assert_redirected_to frontend_offers_path
   end
 
-  test "the login page ignores a page on another host" do
-    (FOREIGN_PATHS + [["/angebote"]]).each do |path|
+  test "the login page ignores a page on another host or not a plain path" do
+    (FOREIGN_PATHS + MALFORMED_PATHS + [["/angebote"]]).each do |path|
       get new_session_path(return_to: path)
 
       assert_nil session[:return_to], "#{path.inspect} was remembered"
@@ -48,7 +52,7 @@ class ReturnToTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to frontend_offers_path
 
-    FOREIGN_PATHS.each do |path|
+    (FOREIGN_PATHS + MALFORMED_PATHS).each do |path|
       log_in
       get logout_path(return_to: path)
 

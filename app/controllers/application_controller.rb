@@ -56,11 +56,17 @@ class ApplicationController < ActionController::Base
 
   # The path when it is safe to send a visitor to, else nil. Only genuinely
   # relative paths are: "//host" is routable (the router collapses leading
-  # slashes) but is a protocol-relative URL, and a backslash is normalised to a
-  # slash by browsers while Rails refuses to redirect to it at all. A param may
-  # also arrive as an array or a hash.
+  # slashes) but is a protocol-relative URL. Parsing refuses what browsers would
+  # turn into one -- a backslash becomes a slash, tabs and newlines are dropped
+  # ("/<tab>/host") -- and what Rails refuses to redirect to at all, such as
+  # spaces or non-ASCII. A param may also arrive as an array or a hash.
   def safe_return_path(path)
-    path if path.is_a?(String) && path.start_with?("/") && !path.start_with?("//") && path.exclude?("\\")
+    return unless path.is_a?(String) && path.start_with?("/") && !path.start_with?("//")
+
+    uri = URI.parse(path)
+    path if uri.scheme.nil? && uri.host.nil?
+  rescue URI::InvalidURIError
+    nil
   end
 
   # Where to send the user after a successful login. Controllers override this
