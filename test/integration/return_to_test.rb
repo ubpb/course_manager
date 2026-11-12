@@ -12,26 +12,53 @@ class ReturnToTest < ActionDispatch::IntegrationTest
   # Not a path a redirect can take.
   MALFORMED_PATHS = ["/angebote foo", "/ä"].freeze
 
-  def log_in
-    post session_path, params: {login: {user_id: AlmaAuthenticationStub::VALID_USER_ID,
-                                        password: AlmaAuthenticationStub::VALID_PASSWORD}}
+  # Like the login form, which carries the page that offered the login on.
+  def log_in(return_to: nil, password: AlmaAuthenticationStub::VALID_PASSWORD)
+    post session_path, params: {login: {user_id: AlmaAuthenticationStub::VALID_USER_ID, password: password},
+                                return_to: return_to}.compact
   end
 
-  test "the login page remembers the page it is given and returns there" do
+  test "the login leads back to the page that offered it" do
     get new_session_path(return_to: frontend_offers_path)
 
-    assert_equal frontend_offers_path, session[:return_to]
+    assert_select "form input[type=hidden][name=return_to][value=?]", frontend_offers_path
 
-    log_in
+    log_in(return_to: frontend_offers_path)
 
     assert_redirected_to frontend_offers_path
   end
 
-  test "the login page ignores a page on another host or not a plain path" do
+  test "the login leads back to the page that offered it after a failed attempt too" do
+    log_in(return_to: frontend_offers_path, password: "wrong")
+
+    assert_response :unprocessable_content
+    assert_select "form input[type=hidden][name=return_to][value=?]", frontend_offers_path
+
+    log_in(return_to: frontend_offers_path)
+
+    assert_redirected_to frontend_offers_path
+  end
+
+  # A guest who opened the login from a registration form, but then left it,
+  # logs in through the menu later on.
+  test "a page that offered the login is forgotten once the visitor leaves the login" do
+    get new_session_path(return_to: frontend_offers_path)
+    get new_session_path
+    log_in
+
+    assert_redirected_to account_root_path
+  end
+
+  test "the login ignores a page on another host or not a plain path" do
     (FOREIGN_PATHS + MALFORMED_PATHS + [["/angebote"]]).each do |path|
+      reset!
       get new_session_path(return_to: path)
 
-      assert_nil session[:return_to], "#{path.inspect} was remembered"
+      assert_select "input[name=return_to]", count: 0
+
+      log_in(return_to: path)
+
+      assert_redirected_to account_root_path
     end
   end
 

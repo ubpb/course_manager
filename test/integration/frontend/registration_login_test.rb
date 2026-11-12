@@ -22,10 +22,12 @@ module Frontend
       new_frontend_event_registration_path(@event)
     end
 
-    def log_in
+    # Like the login form, which carries the page that offered the login on.
+    def log_in(return_to: nil)
       post session_path, headers: TURBO_STREAM_HEADERS,
                          params: {login: {user_id: AlmaAuthenticationStub::VALID_USER_ID,
-                                          password: AlmaAuthenticationStub::VALID_PASSWORD}}
+                                          password: AlmaAuthenticationStub::VALID_PASSWORD},
+                                  return_to: return_to}.compact
     end
 
     def first_name_value
@@ -35,7 +37,7 @@ module Frontend
     # The modal is gone after the login, so the form comes back as a full page.
     test "the login from the form leads back to the form, prefilled" do
       get new_session_path(return_to: form_path), headers: TURBO_STREAM_HEADERS
-      log_in
+      log_in(return_to: form_path)
 
       assert_redirected_to form_path
 

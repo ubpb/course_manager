@@ -22,7 +22,7 @@ class AuthenticationTest < ActionDispatch::IntegrationTest
 
   test "the login rotates the session id" do
     # Remembering where to return after the login starts a session.
-    get new_session_path(return_to: frontend_offers_path)
+    get account_root_path
     before = session_id
 
     assert_predicate before, :present?
@@ -46,7 +46,7 @@ class AuthenticationTest < ActionDispatch::IntegrationTest
 
   # Anything that is not explicitly carried over is dropped by the rotation.
   test "the logout drops unrelated session data" do
-    get new_session_path(return_to: frontend_offers_path)
+    get account_root_path
 
     assert_predicate session[:return_to], :present?
 
@@ -146,6 +146,12 @@ class AuthenticationTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to new_session_path
     assert_equal I18n.t("sessions.create.rate_limited"), flash[:alert]
+  end
+
+  test "the rate limit keeps the page that offered the login" do
+    11.times { post session_path, params: {login: {user_id: "nobody", password: "wrong"}, return_to: "/angebote"} }
+
+    assert_redirected_to new_session_path(return_to: "/angebote")
   end
 
   test "the rate limit blocks a correct password too" do
