@@ -85,6 +85,30 @@ Capistrano erledigt dabei automatisch:
 - Passenger neu starten
 - den Jobs-Dienst installieren bzw. aktualisieren und neu starten
 
+### Wartungsmodus
+
+Im Wartungsmodus beantwortet nginx jede Anfrage mit Status 503 und der zweisprachigen Seite `public/maintenance.html`:
+
+```bash
+cap <stage> app:maintenance:on       # einschalten, auf allen Servern mit der Rolle web
+cap <stage> app:maintenance:off      # ausschalten
+cap <stage> app:maintenance:status   # Stand je Server anzeigen
+```
+
+Geschaltet wird über die Datei `/ubpb/course_manager/shared/public/system/MAINTENANCE_ON`. Sie liegt außerhalb der Releases, der Wartungsmodus bleibt also über Deploys hinweg aktiv, bis er ausgeschaltet wird.
+
+Dazu braucht nginx auf jedem Server mit der Rolle `web` einmalig diese Regeln im `server`-Block, nach `root` (nicht in einer `location`):
+
+```nginx
+if (-f $document_root/system/MAINTENANCE_ON) {
+  return 503;
+}
+error_page 503 @maintenance;
+location @maintenance {
+  rewrite ^ /maintenance.html break;
+}
+```
+
 ### Hintergrundjobs (Solid Queue)
 
 Über [Solid Queue](https://github.com/rails/solid_queue) laufen die per `deliver_later` verschickten Mails sowie die wiederkehrenden Aufgaben aus `config/recurring.yml`:
