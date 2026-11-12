@@ -157,7 +157,7 @@ Beim Deploy fehlen die Prozesse kurz; das Monitoring sollte daher erst nach zwei
 
 | Feld | Inhalt |
 |---|---|
-| `processes.expected` | wie viele Prozesse je Art laufen sollen (`Supervisor`, `Dispatcher`, `Worker`, `Scheduler`), gelesen aus `config/queue.yml` und `config/recurring.yml` |
+| `processes.expected` | wie viele Prozesse je Art laufen sollen (`Supervisor(fork)`, `Dispatcher`, `Worker`, `Scheduler`; der Supervisor nennt seinen Modus), gelesen aus `config/queue.yml` und `config/recurring.yml` |
 | `processes.alive_threshold` | Zeit ohne Heartbeat, nach der Solid Queue einen Prozess für tot hält |
 | `processes.registered` | die angemeldeten Prozesse mit `kind`, `hostname`, `pid`, `last_heartbeat_at` und `heartbeat_age` |
 | `jobs.ready` | wartende Jobs: `count`, `oldest_age` |
@@ -167,7 +167,7 @@ Beim Deploy fehlen die Prozesse kurz; das Monitoring sollte daher erst nach zwei
 | `recurring.<Aufgabe>` | `schedule`, `last_due_at` (letzter planmäßiger Zeitpunkt), `last_enqueued_at`, `last_status` (`finished`, `failed`, `ready`, `claimed`) |
 | `paused_queues` | pausierte Queues |
 
-`processes.expected` gilt für die Umgebung des Aufrufs: Steht `JOB_CONCURRENCY` in `jobs.env`, braucht auch der Aufruf des Tasks diese Variable.
+`processes.expected` gilt für die Umgebung des Aufrufs: Steht `JOB_CONCURRENCY` oder `SOLID_QUEUE_SUPERVISOR_MODE` in `jobs.env`, braucht auch der Aufruf des Tasks diese Variable.
 
 ## Konfiguration (`config/application.yml`)
 

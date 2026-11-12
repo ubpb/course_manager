@@ -45,7 +45,13 @@ class SolidQueueHealthTest < ActiveSupport::TestCase
   end
 
   test "the processes to expect follow the queue configuration" do
-    assert_equal({"Supervisor" => 1, "Dispatcher" => 1, "Worker" => 1}, report["processes"]["expected"])
+    assert_equal({"Supervisor(fork)" => 1, "Dispatcher" => 1, "Worker" => 1}, report["processes"]["expected"])
+  end
+
+  test "the supervisor is expected under the kind it registers with, which names its mode" do
+    with_env("SOLID_QUEUE_SUPERVISOR_MODE", "async") do
+      assert_equal({"Supervisor(async)" => 1, "Dispatcher" => 1, "Worker" => 1}, report["processes"]["expected"])
+    end
   end
 
   test "every worker process is expected" do
@@ -56,7 +62,7 @@ class SolidQueueHealthTest < ActiveSupport::TestCase
 
   test "in production a scheduler is expected for the recurring tasks" do
     with_rails_env("production") do
-      assert_equal({"Supervisor" => 1, "Dispatcher" => 1, "Worker" => 1, "Scheduler" => 1},
+      assert_equal({"Supervisor(fork)" => 1, "Dispatcher" => 1, "Worker" => 1, "Scheduler" => 1},
                    report["processes"]["expected"])
     end
   end

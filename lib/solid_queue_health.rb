@@ -42,9 +42,10 @@ class SolidQueueHealth
   end
 
   # The supervisor starts one process per configured dispatcher and scheduler
-  # and per worker process.
+  # and per worker process. It registers itself under a kind that names its
+  # mode, such as "Supervisor(fork)".
   def expected_processes
-    {"Supervisor" => 1}.merge(configured_processes.map { it.kind.to_s.camelize }.tally)
+    {"Supervisor(#{@configuration.mode})" => 1}.merge(configured_processes.map { it.kind.to_s.camelize }.tally)
   end
 
   def jobs

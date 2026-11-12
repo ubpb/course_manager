@@ -19,7 +19,7 @@ class SolidQueueHealthSummaryTest < ActiveSupport::TestCase
 
   # The processes the configuration of the test environment calls for, alive.
   def register_expected_processes
-    ["Supervisor", "Dispatcher", "Worker"].each { register_process(it) }
+    ["Supervisor(fork)", "Dispatcher", "Worker"].each { register_process(it) }
   end
 
   test "a healthy queue is ok in every check" do
@@ -39,7 +39,7 @@ class SolidQueueHealthSummaryTest < ActiveSupport::TestCase
   # Solid Queue counts a process as dead once its heartbeat is as old as the
   # threshold.
   test "a missing process is an error" do
-    register_process("Supervisor")
+    register_process("Supervisor(fork)")
     register_process("Dispatcher")
     register_process("Worker", last_heartbeat_at: 5.minutes.ago)
 
@@ -50,16 +50,16 @@ class SolidQueueHealthSummaryTest < ActiveSupport::TestCase
 
   test "more processes alive than expected are a warning" do
     register_expected_processes
-    register_process("Supervisor", hostname: "app1")
+    register_process("Supervisor(fork)", hostname: "app1")
 
-    assert_equal({"status" => "warning", "message" => "Supervisor: 2 alive, 1 expected"}, check("processes"))
+    assert_equal({"status" => "warning", "message" => "Supervisor(fork): 2 alive, 1 expected"}, check("processes"))
   end
 
   test "a missing process outweighs a surplus one" do
-    2.times { register_process("Supervisor") }
+    2.times { register_process("Supervisor(fork)") }
     register_process("Dispatcher")
 
-    assert_equal({"status" => "error", "message" => "Worker: 0 of 1 alive, Supervisor: 2 alive, 1 expected"},
+    assert_equal({"status" => "error", "message" => "Worker: 0 of 1 alive, Supervisor(fork): 2 alive, 1 expected"},
                  check("processes"))
   end
 
