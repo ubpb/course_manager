@@ -85,7 +85,8 @@ keeps coming up. Most decisions are not central; their why goes into the commit 
 
 - Everything in the repository is in English: code, comments, commit messages, docs, ADRs — except `README.md`, which
   is German, and the German UI texts and mail templates. Specs and plans are in English too.
-- Docs change with the code, in the same branch: the README and this file.
+- Docs change with the code, in the same branch: the README, and this file when a rule, convention, command or
+  pitfall changes. How a feature behaves belongs in its code and tests, not here.
 - A changed dependency changes lockfiles: commit every changed one (`Gemfile.lock`, `bun.lock`).
 - One commit per topic. The subject is a sentence in the imperative that says what changes, without a type prefix or
   a final period ("Lead the admin menu back to the page last seen in an area"). The body says why, when the subject
