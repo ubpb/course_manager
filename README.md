@@ -109,36 +109,63 @@ systemctl --user status course_manager-jobs
 journalctl --user -u course_manager-jobs
 ```
 
-Fehlgeschlagene Jobs bleiben erhalten und lassen sich in der Rails-Konsole ansehen und erneut ausführen:
+Fehlgeschlagene Jobs bleiben erhalten, bis sie jemand in der Rails-Konsole erneut ausführt oder verwirft; bis dahin meldet das Monitoring eine Warnung (siehe unten):
 
 ```ruby
 SolidQueue::FailedExecution.count
 SolidQueue::FailedExecution.find(id).retry
+SolidQueue::FailedExecution.find(id).discard
 ```
 
 Braucht der Dienst Umgebungsvariablen, die die Anwendung sonst über nginx/Passenger erhält, gehören sie in `~/.config/course_manager/jobs.env` (eine Zeile `NAME=wert` je Variable); die Unit liest die Datei, falls sie existiert.
 
 ### Monitoring der Hintergrundjobs
 
-`bin/rails app:jobs:health` gibt den Zustand von Solid Queue als JSON aus, für ein Prüfskript des Monitorings. Der Task stellt nur fest; Schwellen und Bewertung gehören ins Monitoring. Die Daten stehen in der Datenbank, der Task kann also auf jedem Server der Anwendung laufen, etwa als User `ubpb` auf dem mit der Rolle `jobs`:
+`bin/rails app:jobs:health` gibt den Zustand von Solid Queue als JSON aus, für ein Prüfskript des Monitorings. Die Daten stehen in der Datenbank, der Task kann also auf jedem Server der Anwendung laufen, etwa als User `ubpb` auf dem mit der Rolle `jobs`:
 
 ```bash
 cd /ubpb/course_manager/current && RAILS_ENV=production ~/.rvm/bin/rvm <Ruby-Version> do bundle exec bin/rails app:jobs:health
 ```
 
-Die Standardausgabe enthält nur das JSON, Log-Zeilen gehen auf die Standardfehlerausgabe. Ist die Datenbank nicht erreichbar, endet der Task mit einem Exit-Code ungleich 0. Zeiten stehen in UTC, Alter und Dauern in Sekunden; `null` heißt: gibt es nicht.
+Die Standardausgabe enthält nur das JSON, Log-Zeilen gehen auf die Standardfehlerausgabe. Ist ein Bericht geschrieben, endet der Task mit Exit-Code 0, sonst – etwa wenn die Datenbank nicht erreichbar ist – mit einem anderen; das Monitoring wertet das als Fehler.
 
-| Feld | Inhalt | Hinweis auf ein Problem |
+**Für das Monitoring reicht `summary`:** `summary.status` ist `ok`, `warning` oder `error`, der schlechteste Status der einzelnen Prüfungen unter `summary.checks`; `summary.message` ist eine Zeile für den Alarmtext mit den Meldungen aller Prüfungen, die nicht `ok` sind.
+
+```json
+"summary": {
+  "status": "warning",
+  "message": "failed_jobs: 1 failed (ActionMailer::MailDeliveryJob: 1)",
+  "checks": {
+    "processes": {"status": "ok", "message": "4 of 4 processes alive"},
+    "failed_jobs": {"status": "warning", "message": "1 failed (ActionMailer::MailDeliveryJob: 1)"},
+    …
+  }
+}
+```
+
+| Prüfung | `warning` | `error` |
 |---|---|---|
-| `processes.expected` | wie viele Prozesse je Art laufen sollen (`Supervisor`, `Dispatcher`, `Worker`, `Scheduler`), gelesen aus `config/queue.yml` und `config/recurring.yml` | – |
-| `processes.alive_threshold` | Zeit ohne Heartbeat, nach der Solid Queue einen Prozess für tot hält | – |
-| `processes.registered` | die angemeldeten Prozesse mit `kind`, `hostname`, `pid`, `last_heartbeat_at` und `heartbeat_age` | weniger Prozesse einer Art mit `heartbeat_age` unter `alive_threshold` als erwartet; mehr als ein `Supervisor` (Jobs auf zwei Servern) |
-| `jobs.ready` | wartende Jobs: `count`, `oldest_age` | `oldest_age` wächst: kein Worker arbeitet |
-| `jobs.scheduled` | geplante Jobs: `count`, `overdue_age` (wie lange der überfälligste über seiner Zeit ist) | `overdue_age` über einer Minute: der Dispatcher hängt |
-| `jobs.claimed` | laufende Jobs: `count`, `oldest_age` | `oldest_age` groß: ein Job hängt |
-| `jobs.failed` | fehlgeschlagene Jobs: `count`, `latest_at`, `by_job_class`, `by_exception_class` – ohne Fehlermeldungen, da sie personenbezogene Daten enthalten können | `latest_at` neuer als bei der letzten Prüfung |
-| `recurring.<Aufgabe>` | `schedule`, `last_due_at` (letzter planmäßiger Zeitpunkt), `last_enqueued_at`, `last_status` (`finished`, `failed`, `ready`, `claimed`) | `last_enqueued_at` einige Minuten nach `last_due_at` noch älter als dieses oder `null`; `last_status` `failed` |
-| `paused_queues` | pausierte Queues | nicht leer |
+| `processes` (lebendig: Heartbeat jünger als `alive_threshold`) | mehr lebende Prozesse einer Art als erwartet, z. B. Jobs auf zwei Servern | weniger als erwartet |
+| `ready_jobs`: ältester wartender Job | ab 5 min | ab 15 min |
+| `scheduled_jobs`: überfälligster geplanter Job | ab 1 min | ab 5 min |
+| `running_jobs`: ältester laufender Job | ab 10 min | ab 30 min |
+| `failed_jobs` | mindestens ein fehlgeschlagener Job, bis er erneut ausgeführt oder verworfen ist | – |
+| `recurring_tasks` | letzter Lauf einer Aufgabe fehlgeschlagen | 10 min nach ihrer Zeit nicht gelaufen |
+| `paused_queues` | mindestens eine Queue pausiert | – |
+
+Beim Deploy fehlen die Prozesse kurz; das Monitoring sollte daher erst nach zwei, drei Prüfungen in Folge alarmieren. Die Schwellen stehen in `lib/solid_queue_health/summary.rb`. Wer anders prüfen will, findet neben `summary` die Fakten, aus denen sie entsteht. Zeiten stehen dort in UTC, Alter in Sekunden; `null` heißt: gibt es nicht.
+
+| Feld | Inhalt |
+|---|---|
+| `processes.expected` | wie viele Prozesse je Art laufen sollen (`Supervisor`, `Dispatcher`, `Worker`, `Scheduler`), gelesen aus `config/queue.yml` und `config/recurring.yml` |
+| `processes.alive_threshold` | Zeit ohne Heartbeat, nach der Solid Queue einen Prozess für tot hält |
+| `processes.registered` | die angemeldeten Prozesse mit `kind`, `hostname`, `pid`, `last_heartbeat_at` und `heartbeat_age` |
+| `jobs.ready` | wartende Jobs: `count`, `oldest_age` |
+| `jobs.scheduled` | geplante Jobs: `count`, `overdue_age` (wie lange der überfälligste über seiner Zeit ist) |
+| `jobs.claimed` | laufende Jobs: `count`, `oldest_age` |
+| `jobs.failed` | fehlgeschlagene Jobs: `count`, `latest_at`, `by_job_class`, `by_exception_class` – ohne Fehlermeldungen, da sie personenbezogene Daten enthalten können |
+| `recurring.<Aufgabe>` | `schedule`, `last_due_at` (letzter planmäßiger Zeitpunkt), `last_enqueued_at`, `last_status` (`finished`, `failed`, `ready`, `claimed`) |
+| `paused_queues` | pausierte Queues |
 
 `processes.expected` gilt für die Umgebung des Aufrufs: Steht `JOB_CONCURRENCY` in `jobs.env`, braucht auch der Aufruf des Tasks diese Variable.
 

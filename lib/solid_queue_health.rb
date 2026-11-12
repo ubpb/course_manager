@@ -1,7 +1,8 @@
 # The state of Solid Queue for the monitoring, which reads it as JSON from
 # `bin/rails app:jobs:health`: the processes the configuration calls for and
 # those that sent heartbeats, the jobs by state, and the recurring tasks with
-# their last run. The report states facts; the monitoring judges them.
+# their last run. A summary up front judges these facts (see Summary); the
+# facts stay for finer checks.
 #
 # Times are given in UTC, ages in seconds. The messages of failed jobs stay
 # out, since they may hold personal data; their exception classes are enough
@@ -14,7 +15,7 @@ class SolidQueueHealth
   end
 
   def to_h
-    {
+    facts = {
       app: Rails.application.class.module_parent_name.underscore,
       environment: Rails.env,
       generated_at: timestamp(@now),
@@ -23,6 +24,8 @@ class SolidQueueHealth
       recurring: recurring,
       paused_queues: SolidQueue::Pause.order(:queue_name).pluck(:queue_name)
     }
+
+    {summary: Summary.new(facts).to_h, **facts}
   end
 
   private

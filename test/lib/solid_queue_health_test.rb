@@ -5,39 +5,12 @@ require "test_helper"
 # facts; the monitoring judges them.
 class SolidQueueHealthTest < ActiveSupport::TestCase
 
+  include SolidQueueRecords
+
   setup { travel_to Time.utc(2026, 11, 11, 8, 15) }
 
   def report
     JSON.parse(JSON.generate(SolidQueueHealth.new.to_h))
-  end
-
-  def enqueue_job(class_name: "SendReminderMessagesJob", **attributes)
-    SolidQueue::Job.create!(queue_name: "default", class_name: class_name, arguments: {}, **attributes)
-  end
-
-  # Runs a job the way a worker does: it leaves the ready jobs and ends up
-  # finished or failed.
-  def finish_job(job)
-    job.ready_execution.destroy!
-    job.finished!
-  end
-
-  def fail_job(job, exception)
-    job.ready_execution.destroy!
-    job.failed_with(exception)
-  end
-
-  def register_process(kind, **attributes)
-    SolidQueue::Process.create!(kind: kind, name: "#{kind.downcase}-#{SecureRandom.hex(4)}", pid: 4711,
-                                hostname: "batch", last_heartbeat_at: Time.current, **attributes)
-  end
-
-  def with_rails_env(name)
-    original = Rails.env
-    Rails.env = name
-    yield
-  ensure
-    Rails.env = original
   end
 
   def with_env(name, value)
