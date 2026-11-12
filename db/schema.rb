@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_02_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_12_120000) do
   create_table "categories", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "title", null: false
     t.string "color_code", null: false
@@ -109,6 +109,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_02_120000) do
     t.datetime "updated_at", null: false
     t.string "ils_primary_id"
     t.boolean "no_show", default: false, null: false
+    t.string "origin"
     t.index ["event_id", "ils_primary_id"], name: "index_registrations_on_event_id_and_ils_primary_id", unique: true
     t.index ["ils_primary_id"], name: "index_registrations_on_ils_primary_id"
   end

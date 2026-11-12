@@ -1,7 +1,8 @@
 require "test_helper"
 
-# What staff do with the participants of an event: tell those entered in the
-# admin from those who registered themselves, edit and remove them, mark who
+# What staff do with the participants of an event: see how each registered --
+# with the library account, as a guest or entered in the admin --, edit and
+# remove them, mark who
 # did not attend, hand out certificates to the others, send reminders and write
 # to them -- one at a time from the row menu or for a selection through the
 # bulk actions.
@@ -370,47 +371,52 @@ module Admin
       assert_select "tr#registration_#{missing.id} td:nth-child(9)", text: "Nein"
     end
 
-    # Nearly everyone registers themselves, so only those staff entered get a
-    # mark and stand out.
-    test "the participant list marks participants entered in the admin" do
-      @registration.update!(ils_primary_id: "12345")
-      entered = create_registration(first_name: "Erika", email: "erika@example.com")
-      anonymized = create_registration(first_name: "Hans", email: "hans@example.com")
-      anonymized.update_columns(Registration::ANONYMIZED_ATTRIBUTES)
+    test "the participant list shows how each participant registered" do
+      @registration.update!(origin: :account)
+      guest = create_registration(first_name: "Erika", email: "erika@example.com", origin: :guest)
+      entered = create_registration(first_name: "Hans", email: "hans@example.com", origin: :admin)
+      unknown = create_registration(first_name: "Otto", email: "otto@example.com")
+      unknown.update_columns(Registration::ANONYMIZED_ATTRIBUTES.merge(origin: nil))
 
       get admin_offer_event_registrations_path(@offer, @event)
 
       assert_select "th[colspan=10]"
-      assert_select "th:nth-child(6)", text: "Im Admin eingetragen?"
-      assert_select "tr#registration_#{entered.id} td:nth-child(6)", text: "Ja"
-      assert_select "tr#registration_#{@registration.id} td:nth-child(6)", text: ""
-      assert_select "tr#registration_#{anonymized.id} td:nth-child(6)", text: ""
+      assert_select "th:nth-child(6)", text: "Herkunft"
+      assert_select "tr#registration_#{@registration.id} td:nth-child(6)", text: "Konto"
+      assert_select "tr#registration_#{guest.id} td:nth-child(6)", text: "Gast"
+      assert_select "tr#registration_#{entered.id} td:nth-child(6)", text: "Admin"
+      assert_select "tr#registration_#{unknown.id} td:nth-child(6)", text: ""
     end
 
-    test "the participant form tells whether staff entered the participant" do
-      get edit_admin_offer_event_registration_path(@offer, @event, @registration), headers: TURBO_STREAM_HEADERS
+    ORIGIN_HINTS = {
+      account: "Mit Bibliothekskonto angemeldet",
+      guest: "Als Gast angemeldet",
+      admin: "Im Admin eingetragen"
+    }.freeze
 
-      assert_select "template", text: /Im Admin eingetragen/
-      assert_select "template", text: /Selbst angemeldet/, count: 0
+    test "the participant form tells how the participant registered" do
+      ORIGIN_HINTS.each do |origin, hint|
+        @registration.update!(origin: origin)
+        get edit_admin_offer_event_registration_path(@offer, @event, @registration), headers: TURBO_STREAM_HEADERS
 
-      @registration.update!(ils_primary_id: "12345")
-      get edit_admin_offer_event_registration_path(@offer, @event, @registration), headers: TURBO_STREAM_HEADERS
-
-      assert_select "template", text: /Selbst angemeldet/
-      assert_select "template", text: /Im Admin eingetragen/, count: 0
+        assert_select "template", text: /#{hint}/
+        (ORIGIN_HINTS.values - [hint]).each do |other|
+          assert_select "template", text: /#{other}/, count: 0
+        end
+      end
     end
 
-    # A new participant is entered in the admin anyway; for an anonymized one
-    # it is no longer known.
-    test "the participant form says nothing about it for a new or an anonymized participant" do
-      @registration.update_columns(Registration::ANONYMIZED_ATTRIBUTES)
+    # A new participant is entered in the admin anyway; for a participant
+    # anonymized before the origin was recorded it is no longer known.
+    test "the participant form says nothing about it for a new or an unknown participant" do
+      @registration.update_columns(Registration::ANONYMIZED_ATTRIBUTES.merge(origin: nil))
 
       [new_admin_offer_event_registration_path(@offer, @event),
        edit_admin_offer_event_registration_path(@offer, @event, @registration)].each do |path|
         get path, headers: TURBO_STREAM_HEADERS
 
         assert_select "template input[name='registration[last_name]']"
-        assert_select "template", text: /Im Admin eingetragen|Selbst angemeldet/, count: 0
+        assert_select "template", text: Regexp.union(ORIGIN_HINTS.values), count: 0
       end
     end
 
@@ -460,13 +466,15 @@ module Admin
       assert_equal ["Erschienen?", "Nein", ""], export_rows.map(&:last)
     end
 
-    test "the participant export marks participants entered in the admin" do
-      @registration.update!(ils_primary_id: "12345")
-      create_registration(first_name: "Erika", email: "erika@example.com")
+    # Sorted by first name after the shared last name: Erika, Hans, Max.
+    test "the participant export shows how each participant registered" do
+      @registration.update!(origin: :account)
+      create_registration(first_name: "Erika", email: "erika@example.com", origin: :guest)
+      create_registration(first_name: "Hans", email: "hans@example.com", origin: :admin)
 
       get admin_offer_event_registrations_path(@offer, @event, format: :xlsx)
 
-      assert_equal ["Im Admin eingetragen?", "Ja", ""], export_rows.pluck(-2)
+      assert_equal ["Herkunft", "Gast", "Admin", "Konto"], export_rows.pluck(-2)
     end
 
     test "writing a message opens the message dialog for the selection" do

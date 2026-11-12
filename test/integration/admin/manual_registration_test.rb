@@ -24,6 +24,12 @@ module Admin
                     send_confirmation: send_confirmation}
     end
 
+    test "a manual registration is recorded as entered in the admin" do
+      create_manual_registration(send_confirmation: "0")
+
+      assert_predicate @event.registrations.last, :origin_admin?
+    end
+
     test "the new form offers the confirmation checkbox, checked" do
       get new_admin_offer_event_registration_path(@offer, @event)
 

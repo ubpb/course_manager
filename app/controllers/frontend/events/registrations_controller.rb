@@ -42,6 +42,7 @@ module Frontend
         @registration = @event.registrations.build(registration_params)
         # Never taken from the params, so a user cannot register on behalf of someone else
         @registration.ils_primary_id = current_user.ils_primary_id
+        @registration.origin = :account
 
         if @registration.save(context: :user_registration)
           # Send confirmation to user

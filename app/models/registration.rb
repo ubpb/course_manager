@@ -18,6 +18,11 @@ class Registration < ApplicationRecord
   belongs_to :event, counter_cache: true
   has_many :certificates, dependent: :nullify
 
+  # How the registration came about: with the library account, as a guest or
+  # entered in the admin. Unknown (nil) only for registrations anonymized before
+  # it was recorded. Anonymizing keeps it, as it is no personal data.
+  enum :origin, {account: "account", guest: "guest", admin: "admin"}, prefix: true, validate: {allow_nil: true}
+
   # Scopes
   scope :for_ils_user, ->(ils_primary_id) { where(ils_primary_id: ils_primary_id) }
 
@@ -40,18 +45,11 @@ class Registration < ApplicationRecord
     first_name == "Gelöscht" || last_name == "Gelöscht" || email == "Gelöscht"
   end
 
-  # Nur selbst angemeldete Personen haben ein Benutzerkonto, in dem sie die
-  # Anmeldung wiederfinden. Im Admin angelegte und anonymisierte Anmeldungen
-  # tragen keine ILS-ID.
+  # Only a registration made while logged in carries the ILS id, which leads
+  # to the account the participant finds it in. Registrations entered in the
+  # admin, made by guests and anonymized ones carry none.
   def account_linked?
     ils_primary_id.present?
-  end
-
-  # Staff entered the participant in the admin: registering oneself takes a
-  # login, which leaves the ILS id behind. Anonymizing drops the id as well, so
-  # for an anonymized registration it is no longer known.
-  def entered_in_admin?
-    !account_linked? && !anonymized?
   end
 
   # Der Tag, ab dem app:dsgvo:cleanup die Anmeldung anonymisiert.

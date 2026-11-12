@@ -21,7 +21,7 @@
         th = "Nachname"
         th = "Vorname"
         th = "E-Mail"
-        th = "Im Admin eingetragen?"
+        th = "Herkunft"
         th = "Erinnerungsmail?"
         th = "Zertifikat gesendet?"
         th = "Erschienen?"
@@ -35,7 +35,7 @@
           td = registration.last_name
           td = registration.first_name
           td = registration.email
-          td = ("Ja" if registration.entered_in_admin?)
+          td = origin_label(registration)
           td = registration.reminder_message_sent_at? ? l(registration.reminder_message_sent_at) : "Nein"
           td = registration.certificate_sent_at? ? "Ja" : "Nein"
           td = attendance_label(registration)

@@ -40,6 +40,7 @@ module Admin
 
         def create
           @registration = @event.registrations.build(registration_params)
+          @registration.origin = :admin
 
           if @registration.save
             # Manually entered participants have no account to look things up

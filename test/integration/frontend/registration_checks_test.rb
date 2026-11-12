@@ -37,6 +37,7 @@ module Frontend
       assert_difference -> { @event.registrations.count }, 1 do
         register
       end
+      assert_predicate @event.registrations.last, :origin_account?
     end
 
     test "the list of registrations leads to the form" do

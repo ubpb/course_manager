@@ -13,15 +13,20 @@ class RegistrationTest < ActiveSupport::TestCase
     assert_not_predicate Registration.new(ils_primary_id: ""), :account_linked?
   end
 
-  # Registering oneself takes a login, which leaves the ILS id behind.
-  test "a registration without an ILS id was entered in the admin" do
-    assert_predicate Registration.new(first_name: "Max", ils_primary_id: nil), :entered_in_admin?
-    assert_not_predicate Registration.new(first_name: "Max", ils_primary_id: "12345"), :entered_in_admin?
+  test "a registration knows how it came about" do
+    registration = Registration.new(origin: :guest)
+
+    assert_predicate registration, :origin_guest?
+    assert_not_predicate registration, :origin_admin?
   end
 
-  # Anonymizing drops the ILS id too, so who entered it is no longer known.
-  test "an anonymized registration does not count as entered in the admin" do
-    assert_not_predicate Registration.new(**Registration::ANONYMIZED_ATTRIBUTES), :entered_in_admin?
+  test "an unknown origin is refused" do
+    assert_predicate Registration.new(origin: "phone").tap(&:validate).errors[:origin], :present?
+  end
+
+  # Registrations anonymized before the origin was recorded keep it unknown.
+  test "the origin may be unknown" do
+    assert_empty Registration.new(origin: nil).tap(&:validate).errors[:origin]
   end
 
   test "personal data is kept for ten days after the event" do
