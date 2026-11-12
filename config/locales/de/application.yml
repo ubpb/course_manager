@@ -2,13 +2,13 @@
 de:
   application:
     account_menu:
-      login: Anmelden
-      logout: Abmelden
-      logout_msg: Wirklich abmelden?
+      login: Einloggen
+      logout: Ausloggen
+      logout_msg: Wirklich ausloggen?
       my_account: Mein Konto
     app_name: "Schulung & Beratung"
     authentication:
-      login_required: Bitte melden Sie sich an, um fortzufahren.
+      login_required: Bitte loggen Sie sich ein, um fortzufahren.
     color_modes:
       auto: Automatisch
       dark: Dunkel

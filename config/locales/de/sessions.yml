@@ -2,22 +2,23 @@
 de:
   sessions:
     new:
-      title: Anmelden
+      title: Einloggen
       intro_html: >
-        Melden Sie sich mit den Zugangsdaten Ihres Bibliothekskontos an. Sollten Sie kein
-        Bibliothekskonto besitzen, wenden Sie sich bitte an <a href="%{contact_link}">unser Schulungsteam</a>.
+        Loggen Sie sich mit den Zugangsdaten Ihres Bibliothekskontos ein. Ohne Bibliothekskonto können Sie sich
+        trotzdem zu unseren Terminen anmelden: als Gast, direkt im Anmeldeformular. Bei Fragen hilft Ihnen gerne
+        <a href="%{contact_link}">unser Schulungsteam</a>.
       user_id: Bibliotheks- oder Matrikelnummer
       user_id_placeholder: Die Nummer finden Sie auf Ihrem Bibliotheks- oder Studierendenausweis
       password: Passwort
       password_placeholder: Ihr Bibliothekspasswort
-      submit: Anmelden
+      submit: Einloggen
       cancel: Abbrechen
       forgot_password_html: >
         Passwort für Ihr Bibliothekskonto vergessen? Sie können Ihr Passwort über unseren Katalog zurücksetzen, indem Sie auf
         <a href="https://katalog.ub.uni-paderborn.de/password/reset" target="_blank">diesen Link</a> klicken.
     create:
-      failed: Fehler bei der Anmeldung. Bitte überprüfen Sie Ihre Eingaben.
-      rate_limited: Zu viele Anmeldeversuche. Bitte versuchen Sie es in einigen Minuten erneut.
-      unavailable: Die Anmeldung ist zurzeit nicht möglich, weil das Bibliothekssystem nicht erreichbar ist. Bitte versuchen Sie es später noch einmal.
+      failed: Das Einloggen ist fehlgeschlagen. Bitte überprüfen Sie Ihre Eingaben.
+      rate_limited: Zu viele Versuche, sich einzuloggen. Bitte versuchen Sie es in einigen Minuten erneut.
+      unavailable: Das Einloggen ist zurzeit nicht möglich, weil das Bibliothekssystem nicht erreichbar ist. Bitte versuchen Sie es später noch einmal.
     destroy:
-      logged_out: Sie wurden abgemeldet.
+      logged_out: Sie wurden ausgeloggt.

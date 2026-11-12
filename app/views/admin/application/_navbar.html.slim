@@ -72,7 +72,7 @@ nav#admin-navbar.navbar.navbar-expand-md.d-print-none(
               i.fa-regular.fa-envelope.me-2(aria-hidden="true")
               = "Mails"
           = link_to admin_session_path(nav_scope: nil),
-                    data: {turbo_method: :delete, turbo_confirm: t("application.account_menu.logout_msg")},
+                    data: {turbo_method: :delete, turbo_confirm: "Wirklich abmelden?"},
                     class: "nav-link admin-tool-link" do
             i.fa-solid.fa-power-off.me-2(aria-hidden="true")
-            = t("application.account_menu.logout")
+            = "Abmelden"

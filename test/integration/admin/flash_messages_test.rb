@@ -55,7 +55,7 @@ module Admin
       get logout_path
       follow_redirect! while response.redirect?
 
-      assert_select ".alert.alert-info.alert-global", text: /Sie wurden abgemeldet/
+      assert_select ".alert.alert-info.alert-global", text: /Sie wurden ausgeloggt/
       assert_select "#admin-toasts", count: 0
     end
 

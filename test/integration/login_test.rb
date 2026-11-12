@@ -14,6 +14,32 @@ class LoginTest < ActionDispatch::IntegrationTest
     post admin_session_path, params: {login: {user_id: user_id, password: password}}
   end
 
+  # "Anmelden" is left to registering for an event, which needs no login.
+  test "the login is called einloggen" do
+    get new_session_path
+
+    assert_select ".card-header", text: "Einloggen"
+    assert_select "input[type=submit][value=Einloggen]"
+    assert_select ".callout", text: /als Gast/
+
+    get root_path
+
+    assert_select "#account-menu a", text: /Einloggen/
+  end
+
+  test "the logout is called ausloggen" do
+    log_in(STUB::VALID_USER_ID)
+    get logout_path
+
+    assert_equal "Sie wurden ausgeloggt.", flash[:notice]
+  end
+
+  test "a page that needs the login asks to log in" do
+    get account_root_path
+
+    assert_equal "Bitte loggen Sie sich ein, um fortzufahren.", flash[:alert]
+  end
+
   test "any active library account logs in to the account area" do
     log_in(STUB::PATRON_USER_ID)
 
