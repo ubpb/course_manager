@@ -127,27 +127,35 @@ module Admin
       end
 
       # The mail texts need a date, so without one there is only a hint.
+      # Participants with an account get a mail pointing to its detail page,
+      # guests and those entered in the admin one asking them to reply; the
+      # preview shows both.
       def render_mail_preview(title)
         event = @offer.events.build(event_params)
-        mail = yield(preview_registration(event)) if event.date_and_time.present?
+
+        if event.date_and_time.present?
+          mails = {
+            "Mit Bibliothekskonto" => yield(preview_registration(event, ils_primary_id: "preview", origin: :account)),
+            "Gast oder im Admin eingetragen" => yield(preview_registration(event, origin: :guest))
+          }
+        end
 
         render turbo_stream: turbo_stream.replace(
           "mail-preview-modal",
           partial: "mail_preview_modal",
-          locals: {title: title, mail: mail}
+          locals: {title: title, mails: mails}
         )
       end
 
-      # The mails most participants get: those for a registration made from an
-      # account. Its link to the detail page needs an id.
-      def preview_registration(event)
+      # The link to the detail page of a registration needs an id.
+      def preview_registration(event, **)
         Registration.new(
           id: 0,
-          ils_primary_id: "preview",
           event: event,
           first_name: "Max",
           last_name: "Mustermann",
-          email: "schulung@ub.uni-paderborn.de"
+          email: "schulung@ub.uni-paderborn.de",
+          **
         )
       end
 

@@ -1,4 +1,6 @@
-/ <%# locals: (title:, mail:) -%>
+/ <%# locals: (title:, mails:) -%>
+/ mails: the variants of one mail by label, which differ only in the text on
+/ the registration; the subject is the same for all.
 
 #mail-preview-modal
   .modal.fade(tabindex="-1" aria-hidden="true" data-controller="modal")
@@ -8,11 +10,24 @@
           h5.modal-title = title
           button.btn-close(type="button" data-bs-dismiss="modal" aria-label="Schließen")
         .modal-body
-          - if mail
+          - if mails
             .mb-3
               .small.text-body-secondary = "Betreff"
-              .fw-semibold = mail.subject
-            pre.mb-0(style="white-space: pre-wrap;") = mail.body.to_s
+              .fw-semibold = mails.values.first.subject
+            ul.nav.nav-tabs.mb-3(role="tablist")
+              - mails.each_key.with_index do |label, index|
+                li.nav-item(role="presentation")
+                  button.nav-link(class=("active" if index.zero?)
+                                  type="button"
+                                  role="tab"
+                                  data-bs-toggle="tab"
+                                  data-bs-target="#mail-preview-#{index}"
+                                  aria-controls="mail-preview-#{index}"
+                                  aria-selected=index.zero?.to_s) = label
+            .tab-content
+              - mails.each_value.with_index do |mail, index|
+                .tab-pane(id="mail-preview-#{index}" class=("active" if index.zero?) role="tabpanel")
+                  pre.mb-0(style="white-space: pre-wrap;") = mail.body.to_s
           - else
             .alert.alert-warning.mb-0
               i.fa-solid.fa-exclamation-triangle.me-2

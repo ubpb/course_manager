@@ -138,6 +138,26 @@ class ModalFormsTest < ApplicationSystemTestCase
     assert_empty script_errors
   end
 
+  test "a mail preview switches to the mail for participants without an account" do
+    offer = Offer.create!(title: "Literaturrecherche", type: "course")
+    visit admin_offer_events_path(offer)
+    click_on "Neuer Termin"
+
+    assert_selector "#event_date_and_time:focus"
+    fill_in "event_date_and_time", with: 1.month.from_now.change(hour: 10)
+    click_on "Vorschau Anmeldebestätigung"
+
+    within(".modal.show:focus", text: "Vorschau: E-Mail Anmeldebestätigung") do
+      assert_text "in Ihrem Benutzerkonto"
+      assert_no_text "bitten wir Sie, uns dies rechtzeitig mitzuteilen"
+
+      click_on "Gast oder im Admin eingetragen"
+
+      assert_text "bitten wir Sie, uns dies rechtzeitig mitzuteilen"
+      assert_no_text "in Ihrem Benutzerkonto"
+    end
+  end
+
   test "a mail preview closed by its close button leaves the event form open" do
     offer = Offer.create!(title: "Literaturrecherche", type: "course")
     visit admin_offer_events_path(offer)

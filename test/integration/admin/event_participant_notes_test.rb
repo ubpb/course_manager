@@ -81,9 +81,23 @@ module Admin
       assert_includes response.body, "vielen Dank für Ihre Anmeldung"
       assert_includes response.body, "05.11.2026"
       assert_includes response.body, "Zugangsdaten folgen für Max Mustermann."
-      # The mail most participants get: for a registration made from an account,
-      # pointing to its detail page.
-      assert_includes response.body, "/account/anmeldungen/0"
+    end
+
+    # Participants with an account are pointed to its detail page, guests and
+    # those entered in the admin are asked to reply instead.
+    test "the previews show the mail with and without an account" do
+      [:confirmation, :reminder].each do |kind|
+        preview(kind)
+
+        assert_select "turbo-stream template" do
+          assert_select ".nav-tabs button", text: "Mit Bibliothekskonto"
+          assert_select ".nav-tabs button", text: "Gast oder im Admin eingetragen"
+          assert_select ".tab-pane", count: 2
+          assert_select ".tab-pane:nth-of-type(1)", text: %r{/account/anmeldungen/0}
+          assert_select ".tab-pane:nth-of-type(2)", text: /bitten wir Sie, uns dies rechtzeitig mitzuteilen/
+          assert_select ".tab-pane:nth-of-type(2)", text: %r{/account/}, count: 0
+        end
+      end
     end
 
     test "the reminder preview shows the mail with the notes from the form" do
