@@ -92,12 +92,31 @@ module Frontend
       assert_select "template .invalid-feedback", text: Registration::DUPLICATE_EMAIL
     end
 
-    test "an event without registration turns the user away" do
+    test "an event without registration turns the user away, also when posting directly" do
       @event.update!(registration_required: false)
 
       get new_frontend_event_registration_path(@event)
 
       assert_turned_away_with "Anmeldung nicht erforderlich"
+
+      assert_no_difference -> { @event.registrations.count } do
+        register
+      end
+      assert_turned_away_with "Anmeldung nicht erforderlich"
+    end
+
+    # Registering closes on the day of the event, whether it has begun or not.
+    test "an event of today turns the user away, also when posting directly" do
+      @event.update!(date_and_time: Time.zone.today.noon)
+
+      get new_frontend_event_registration_path(@event)
+
+      assert_turned_away_with "Die Anmeldung ist geschlossen"
+
+      assert_no_difference -> { @event.registrations.count } do
+        register
+      end
+      assert_turned_away_with "Die Anmeldung ist geschlossen"
     end
 
     test "a full event turns the user away, also when posting directly" do
