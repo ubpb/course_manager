@@ -46,16 +46,21 @@ class ApplicationController < ActionController::Base
   end
 
   # Only remember GET (and HEAD, which Rails routes like GET) requests as return
-  # target, and only genuinely relative paths: "//host" is routable (the router
-  # collapses leading slashes) but is a protocol-relative URL, and a backslash is
-  # normalised to a slash by browsers while Rails refuses to redirect to it at all.
+  # target.
   def store_return_to
     return unless request.get? || request.head?
 
-    path = return_to_path.to_s
-    return unless path.start_with?("/") && !path.start_with?("//") && path.exclude?("\\")
+    path = safe_return_path(return_to_path.to_s)
+    session[:return_to] = path if path
+  end
 
-    session[:return_to] = path
+  # The path when it is safe to send a visitor to, else nil. Only genuinely
+  # relative paths are: "//host" is routable (the router collapses leading
+  # slashes) but is a protocol-relative URL, and a backslash is normalised to a
+  # slash by browsers while Rails refuses to redirect to it at all. A param may
+  # also arrive as an array or a hash.
+  def safe_return_path(path)
+    path if path.is_a?(String) && path.start_with?("/") && !path.start_with?("//") && path.exclude?("\\")
   end
 
   # Where to send the user after a successful login. Controllers override this

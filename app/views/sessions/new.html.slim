@@ -12,4 +12,5 @@
           p.text-body-secondary = t(".forgot_password_html")
         .card-footer
           => f.submit t(".submit"), class: "btn btn-primary"
-          => link_to t(".cancel"), root_path, class: "btn btn-default"
+          / Back to where the visitor came from, such as a registration form.
+          => link_to t(".cancel"), session[:return_to] || root_path, class: "btn btn-default"

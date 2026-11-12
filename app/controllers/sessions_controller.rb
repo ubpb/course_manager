@@ -12,8 +12,12 @@ class SessionsController < ApplicationController
 
   before_action { add_breadcrumb t("sessions.new.title"), new_session_path }
 
+  # A page that offers the login passes where to come back to as `return_to`.
   def new
-    redirect_to account_root_path if current_user
+    return_to = safe_return_path(params[:return_to])
+    return redirect_to(return_to || account_root_path) if current_user
+
+    session[:return_to] = return_to if return_to
   end
 
   def create
@@ -38,9 +42,11 @@ class SessionsController < ApplicationController
     render :new, status: :service_unavailable
   end
 
+  # A page that offers the logout passes where to come back to as `return_to`.
   def destroy
+    return_to = safe_return_path(params[:return_to])
     sign_out
-    redirect_to root_path, notice: t(".logged_out")
+    redirect_to return_to || root_path, notice: t(".logged_out")
   end
 
   private
