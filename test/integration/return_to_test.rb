@@ -60,15 +60,46 @@ class ReturnToTest < ActionDispatch::IntegrationTest
     end
   end
 
-  test "the cancel button of the login page leads back to the remembered page" do
+  def assert_cancel_leads_to(path)
+    assert_select "a[href=?]", path, text: I18n.t("sessions.new.cancel")
+  end
+
+  test "the cancel button of the login page leads back to the page that offered the login" do
     get new_session_path(return_to: frontend_offers_path)
 
-    assert_select "a[href=?]", frontend_offers_path, text: I18n.t("sessions.new.cancel")
+    assert_cancel_leads_to frontend_offers_path
+    assert_select "form input[type=hidden][name=return_to][value=?]", frontend_offers_path
 
     reset!
     get new_session_path
 
-    assert_select "a[href=?]", root_path, text: I18n.t("sessions.new.cancel")
+    assert_cancel_leads_to root_path
+    assert_select "input[name=return_to]", count: 0
+  end
+
+  # The page would only send the visitor back to the login.
+  test "the cancel button of the login page does not lead to a page that needs the login" do
+    get account_root_path
+    follow_redirect!
+
+    assert_cancel_leads_to root_path
+  end
+
+  test "a failed login keeps the cancel button leading back to the page that offered the login" do
+    get new_session_path(return_to: frontend_offers_path)
+    post session_path, params: {login: {user_id: AlmaAuthenticationStub::VALID_USER_ID, password: "wrong"},
+                                return_to: frontend_offers_path}
+
+    assert_response :unprocessable_content
+    assert_cancel_leads_to frontend_offers_path
+  end
+
+  test "the cancel button of the login page ignores a page on another host or not a plain path" do
+    (FOREIGN_PATHS + MALFORMED_PATHS).each do |path|
+      get new_session_path(return_to: path)
+
+      assert_cancel_leads_to root_path
+    end
   end
 
   test "the account remembers itself as the way back" do

@@ -12,12 +12,16 @@ class SessionsController < ApplicationController
 
   before_action { add_breadcrumb t("sessions.new.title"), new_session_path }
 
-  # A page that offers the login passes where to come back to as `return_to`.
-  def new
-    return_to = safe_return_path(params[:return_to])
-    return redirect_to(return_to || account_root_path) if current_user
+  # A page that offers the login, such as a registration form, passes where to
+  # come back to as `return_to`. Cancelling the login leads back there, and only
+  # there: the page that a login was required for would just send the visitor
+  # back to the login. The form carries it on, so it outlasts a failed attempt.
+  before_action(only: [:new, :create]) { @offered_by = safe_return_path(params[:return_to]) }
 
-    session[:return_to] = return_to if return_to
+  def new
+    return redirect_to(@offered_by || account_root_path) if current_user
+
+    session[:return_to] = @offered_by if @offered_by
   end
 
   def create
@@ -34,7 +38,7 @@ class SessionsController < ApplicationController
         render :new, status: :unprocessable_content
       end
     else
-      redirect_to new_session_path
+      redirect_to new_session_path(return_to: @offered_by)
     end
   rescue AlmaApi::Error => e
     log_alma_unavailable(e)

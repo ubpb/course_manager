@@ -1,6 +1,7 @@
 .row
   .col-lg-8.offset-lg-2.col-xl-6.offset-xl-3
     = simple_form_for :login, url: session_path, method: :post do |f|
+      = hidden_field_tag :return_to, @offered_by if @offered_by
       .card
         h5.card-header
           = t(".title")
@@ -12,5 +13,5 @@
           p.text-body-secondary = t(".forgot_password_html")
         .card-footer
           => f.submit t(".submit"), class: "btn btn-primary"
-          / Back to where the visitor came from, such as a registration form.
-          => link_to t(".cancel"), session[:return_to] || root_path, class: "btn btn-default"
+          / Back to the page that offered the login, such as a registration form.
+          => link_to t(".cancel"), @offered_by || root_path, class: "btn btn-default"
