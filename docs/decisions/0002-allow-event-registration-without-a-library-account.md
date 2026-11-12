@@ -41,6 +41,10 @@ check stays for logged-in users.
 ## Consequences
 
 - Anyone with an email address can register; the email address stays required.
+- There is no protection against bots or spam: no captcha, no rate limit, no confirmation of the address. Anyone can
+  make the application send a confirmation from the team's address, with a name of their choosing, to any address, and
+  a notice to the team. The previous system worked the same way and saw no abuse. Should abuse start, a rate limit on
+  registering or a confirmation link sent to the address come first.
 - Guests cancel by mail and get certificates by mail; the team handles both by hand.
 - The origin of a registration no longer depends on the account id and survives anonymizing. Registrations anonymized
   before the origin was recorded keep it unknown.
