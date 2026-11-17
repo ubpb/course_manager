@@ -56,6 +56,9 @@ module Admin
       when "archive"
         offers.update_all(archived: true)
         flash[:success] = "Angebot(e) wurde archiviert"
+      when "unarchive"
+        offers.update_all(archived: false)
+        flash[:success] = "Archivierung wurde aufgehoben"
       end
 
       redirect_to admin_offers_path
@@ -98,6 +101,7 @@ module Admin
       return if offers.empty?
 
       @bulk_process_actions << ["Archivieren", "archive"]
+      @bulk_process_actions << ["Archivierung aufheben", "unarchive"]
     end
 
     def offer_params

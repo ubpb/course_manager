@@ -1,7 +1,7 @@
 require "test_helper"
 
-# The offer list of the admin with its filters and the archive bulk action, and
-# creating, saving and deleting an offer.
+# The offer list of the admin with its filters and the bulk actions that archive
+# offers and undo that, and creating, saving and deleting an offer.
 module Admin
   class OffersTest < ActionDispatch::IntegrationTest
 
@@ -88,6 +88,12 @@ module Admin
       assert_select "select#bulk_process_action option[value=archive]"
     end
 
+    test "the list offers to undo the archiving of its offers" do
+      get admin_offers_path
+
+      assert_select "select#bulk_process_action option[value=unarchive]", text: "Archivierung aufheben"
+    end
+
     test "an empty list offers no bulk action" do
       filter(title: "nichts dergleichen")
 
@@ -101,6 +107,17 @@ module Admin
       assert_equal "Angebot(e) wurde archiviert", flash[:success]
       assert_predicate @course.reload, :archived?
       assert_not_predicate @consulting.reload, :archived?
+    end
+
+    test "undoing the archiving brings the selected offers back into the list" do
+      other = Offer.create!(title: "Alte Beratung", type: "consulting", archived: true)
+
+      patch bulk_process_admin_offers_path, params: {bulk_process_action: "unarchive", bulk_process_ids: [@archived.id]}
+
+      assert_redirected_to admin_offers_path
+      assert_equal "Archivierung wurde aufgehoben", flash[:success]
+      assert_not_predicate @archived.reload, :archived?
+      assert_predicate other.reload, :archived?
     end
 
     test "an unknown bulk action changes nothing" do
