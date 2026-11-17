@@ -10,7 +10,7 @@
     "@stimulus-components/checkbox-select-all": "^6.1.0",
     "@stimulus-components/sortable": "^5.0.3",
     "animate.css": "^4.1.1",
-    "bootstrap": "^5.3.8",
+    "bootstrap": "^5.3.9",
     "sortablejs": "^1.15.7"
   },
   "scripts": {
@@ -19,6 +19,6 @@
     "build:clobber": "rm -fr ./app/assets/builds/*"
   },
   "devDependencies": {
-    "sass": "^1.107.1"
+    "sass": "^1.108.2"
   }
 }
