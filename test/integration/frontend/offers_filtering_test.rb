@@ -176,6 +176,16 @@ module Frontend
                    "&target-groups=#{group.id}&topics=#{topic.id}", request.fullpath
     end
 
+    # Keyboard and screen readers follow the markup: the button comes after
+    # the chips, as on screen, and each × names its chip.
+    test "the filter bar reads in the order it shows" do
+      filter(scope: "courses", with_upcoming_events: "1")
+
+      assert_select "span.badge a[aria-label=?]", "Schulungen entfernen"
+      assert_select "span.badge a[aria-label=?]", "Mit anstehenden Terminen entfernen"
+      assert_select "button[data-bs-target='#offcanvas-filters']:last-child"
+    end
+
     test "removing a filter through its chip drops only that filter" do
       filter(scope: "courses", with_upcoming_events: "1")
 
