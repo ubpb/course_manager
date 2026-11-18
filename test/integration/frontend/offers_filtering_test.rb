@@ -84,7 +84,8 @@ module Frontend
       {"/angebote?with-upcoming-events=1&scope=courses" => "/angebote?scope=courses&with-upcoming-events=1",
        "/angebote?scope=courses&title=" => "/angebote?scope=courses",
        "/angebote?scope=courses&commit=Filtern" => "/angebote?scope=courses",
-       "/angebote?scope=schulungen" => "/angebote"}.each do |from, to|
+       "/angebote?scope=schulungen" => "/angebote",
+       "/angebote?topics=5,3,5" => "/angebote?topics=5,3"}.each do |from, to|
         get from
 
         assert_redirected_to to, from

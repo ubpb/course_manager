@@ -332,6 +332,15 @@ class FilterableTest < ActiveSupport::TestCase
     assert_equal query, context.query(context.storable_params(context.decode(Rack::Utils.parse_query(query))))
   end
 
+  test "a list is written once per value, known values in their order" do
+    context = build_context do
+      filter_by :kinds, :string, multiple: true, values: ["a", "b", "c"]
+      filter_by :ids, :integer, multiple: true
+    end
+
+    assert_equal "kinds=a,c&ids=5,3", context.query("kinds" => ["c", "a", "c"], "ids" => ["5", "3", "5"])
+  end
+
   test "a filter knows its query" do
     filter = Filterable::Filter.new(filter_context: url_context, filter_params: {"published" => "true"})
 

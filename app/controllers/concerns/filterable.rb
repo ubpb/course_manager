@@ -215,7 +215,7 @@ module Filterable
     def encode(raw)
       value = cast(raw)
       return if value.nil? || value == default_value
-      return value.filter_map { |v| encode_one(v) }.join(",").presence if value.is_a?(Array)
+      return encode_list(value) if value.is_a?(Array)
 
       encode_one(value)
     end
@@ -248,6 +248,14 @@ module Filterable
     end
 
     private
+
+    # Each value once, and known values in the order of their definition, so
+    # that a list has one URL whatever order it was chosen in.
+    def encode_list(values)
+      encoded = values.filter_map { |v| encode_one(v) }.uniq
+      encoded = encoded.sort_by { |v| @values.values.index(v) } if @values
+      encoded.join(",").presence
+    end
 
     def encode_one(value)
       case value
