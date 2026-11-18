@@ -134,15 +134,23 @@ class ListFiltersTest < ApplicationSystemTestCase
 
   test "a new login forgets the admin filters" do
     visit "/admin/offers?scope=consultings"
+
+    assert_includes remembered_lists, "admin/offers"
+
     accept_confirm { within("#admin-navbar") { click_on "Abmelden" } }
 
     assert_current_path root_path
 
     log_in_admin
-    visit admin_offers_path
 
-    assert_text "Literaturrecherche"
+    assert_not_includes remembered_lists, "admin/offers"
+
+    visit admin_offers_path
+    # Time for a reload to a remembered filter, had there been one.
+    evaluate_async_script("setTimeout(arguments[0], 1000)")
+
     assert_current_path admin_offers_path
+    assert_text "Literaturrecherche"
   end
 
   test "back shows the list as it was, forward the filtered one" do
@@ -176,6 +184,11 @@ class ListFiltersTest < ApplicationSystemTestCase
   end
 
   private
+
+  # The keys of the lists whose filter the tab remembers (filter_state.js).
+  def remembered_lists
+    JSON.parse(evaluate_script("sessionStorage.getItem('filters')") || "{}").keys
+  end
 
   # Waits for the area to show, so that the next click does not land on the
   # page before.
