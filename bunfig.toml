@@ -1,0 +1,7 @@
+[install]
+# Leave out optional dependencies. The only ones are sass's file watcher
+# (@parcel/watcher) for `sass --watch` and its binaries per platform; the
+# build calls sass.compile() and watches the files itself (bun.build.js).
+# A package added later that ships its binaries as optional dependencies
+# needs this turned back on.
+optional = false

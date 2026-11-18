@@ -127,6 +127,9 @@ bin/rubocop               # lint (config: rubocop-ubpb rails.yml, see .rubocop.y
 
 Propshaft + **Bun as the bundler** (not importmap or jsbundling): `bun.build.js` bundles `app/assets-src/application.js`, SCSS included (`bun.plugin.sass.js`), into `app/assets/builds/`. Views are **Slim**, forms **simple_form** with Bootstrap, JavaScript behaviour **Stimulus** controllers.
 
+`bunfig.toml` leaves out optional dependencies: the only ones are sass's own file watcher and its binaries, which the
+build does not use. A package that ships its binaries as optional dependencies needs this turned back on.
+
 ## Architecture
 
 What reading one file does not show: rules that span several places, and the reasons behind them.
