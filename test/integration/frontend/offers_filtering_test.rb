@@ -285,6 +285,18 @@ module Frontend
       assert_select "[data-controller=filter-memory]:not([data-filter-memory-restore-value])"
     end
 
+    # What the plain list URL shows depends on the tab's filter, so Turbo must
+    # not show its copy of it ahead of the page.
+    test "only the plain list is exempt from Turbo's preview" do
+      get frontend_offers_path, headers: {Filterable::FILTER_STATE_HEADER => "{}"}
+
+      assert_select "head meta[name=turbo-cache-control][content=no-preview]"
+
+      get "/angebote?scope=courses"
+
+      assert_select "head meta[name=turbo-cache-control]", count: 0
+    end
+
     test "the list after a reset does not ask to restore what the tab remembers" do
       get frontend_offers_path(reset_filter: true)
       follow_redirect!

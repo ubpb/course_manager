@@ -28,6 +28,34 @@ class ListFiltersTest < ApplicationSystemTestCase
     assert_empty script_errors
   end
 
+  # Turbo would show its copy of the plain list ahead of the page, which shows
+  # the list unfiltered.
+  test "coming back to the list shows no unfiltered copy of it ahead" do
+    visit admin_offers_path
+    execute_script(<<~JS)
+      window.previews = [];
+      document.addEventListener("turbo:render", () => {
+        if (document.documentElement.hasAttribute("data-turbo-preview")) {
+          window.previews.push(location.pathname + location.search + " " + document.body.innerText.includes("Literaturrecherche"));
+        }
+      });
+    JS
+    execute_script("Turbo.visit('/admin/offers?scope=consultings')")
+
+    assert_current_path "/admin/offers?scope=consultings"
+
+    execute_script("Turbo.visit(#{edit_admin_offer_path(@consulting).to_json})")
+
+    assert_current_path edit_admin_offer_path(@consulting)
+
+    click_menu "Angebote"
+
+    assert_current_path "/admin/offers?scope=consultings"
+    unfiltered = evaluate_script("window.previews").select { it.end_with?("true") }
+
+    assert_empty unfiltered
+  end
+
   test "each tab keeps its own filter" do
     visit "/admin/offers?scope=consultings"
 

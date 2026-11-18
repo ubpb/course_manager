@@ -2,6 +2,11 @@
 
 / The markup follows the order on screen, which keyboard and screen readers
 / read: with `button_end`, the button comes after the chips.
+/ What the plain list URL shows depends on the tab's filter, so Turbo must not
+/ show its copy of it ahead of the page: that would be the list as it was then,
+/ unfiltered. Server-side, so that a morph keeps it in the head. Back still
+/ shows the copy, the list as it was.
+- turbo_exempts_page_from_preview if filter.query.blank?
 - button_visibility_class = always ? "" : "d-lg-none"
 - button_position_class = button_end ? "ms-auto" : ""
 - filter_button = capture do
