@@ -32,15 +32,16 @@ class FilterableTest < ActiveSupport::TestCase
   end
 
   test "blank params are unset" do
-    filter = build_filter({str: "", int: "", date: "", bool: "", list: []}) do
+    filter = build_filter({str: "", spaces: "   ", int: "", date: "", bool: "", list: []}) do
       filter_by :str, :string
+      filter_by :spaces, :string
       filter_by :int, :integer
       filter_by :date, :date
       filter_by :bool, :boolean
       filter_by :list, :integer
     end
 
-    [:str, :int, :date, :bool, :list].each do |name|
+    [:str, :spaces, :int, :date, :bool, :list].each do |name|
       assert_nil filter.public_send(name), "expected #{name} to be unset"
       assert_not filter.applied?(name), "expected #{name} not to be applied"
       assert_not filter.active?(name), "expected #{name} not to be active"

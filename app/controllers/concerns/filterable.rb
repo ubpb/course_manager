@@ -268,7 +268,9 @@ module Filterable
 
     def cast_one(value)
       return if value.nil?
-      return if value.respond_to?(:empty?) && value.empty?
+      # A string of spaces is as blank as an empty one; not `blank?` for all,
+      # which `false` is, a value of a :boolean filter.
+      return if value.is_a?(String) ? value.blank? : value.respond_to?(:empty?) && value.empty?
 
       case @type
       when :integer
