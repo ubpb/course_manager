@@ -20,7 +20,15 @@ export default class extends Controller {
   connect() {
     const colorMode = this.getPreferredColorMode()
     this.setColorMode(colorMode)
+    document.addEventListener("turbo:morph", this.afterMorph)
   }
+
+  disconnect() {
+    document.removeEventListener("turbo:morph", this.afterMorph)
+  }
+
+  // A morph sets the button back to the server's markup: show the mode again.
+  afterMorph = () => this.setUI(this.getPreferredColorMode())
 
   getPreferredColorMode() {
     const storedColorMode = this.getStoredColorMode()
