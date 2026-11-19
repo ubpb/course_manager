@@ -73,7 +73,9 @@ class ParticipantMailer < ApplicationMailer
     )
   end
 
-  def certificate(registration, certificate, certificate_filename)
+  # Builds the PDF itself, when the mail goes out: as an argument of the job
+  # the binary PDF would not survive the JSON the job queue keeps it in.
+  def certificate(registration)
     @registration = registration
     return if @registration.anonymized?
 
@@ -82,7 +84,7 @@ class ParticipantMailer < ApplicationMailer
 
     @offer = @event.offer
 
-    attachments[certificate_filename] = certificate
+    attachments[Certificate.filename(@registration)] = Certificate.generate(@registration)
     mail(
       reply_to: @event.email_from || "schulung@ub.uni-paderborn.de",
       to: @registration.email,

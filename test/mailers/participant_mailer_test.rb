@@ -7,7 +7,6 @@ class ParticipantMailerTest < ActionMailer::TestCase
   include MailerRecords
 
   TEAM = "schulung@ub.uni-paderborn.de".freeze
-  CERTIFICATE_FILENAME = "Teilnahmebescheinigung.pdf".freeze
 
   setup do
     @offer = create_offer
@@ -24,7 +23,7 @@ class ParticipantMailerTest < ActionMailer::TestCase
   end
 
   def certificate_mail
-    ParticipantMailer.certificate(@registration, "%PDF-1.7 fake", CERTIFICATE_FILENAME)
+    ParticipantMailer.certificate(@registration)
   end
 
   def certify!
@@ -409,7 +408,9 @@ class ParticipantMailerTest < ActionMailer::TestCase
     assert_includes body, "das Schulungsteam der UB Paderborn"
   end
 
-  test "the certificate is attached under the given filename" do
+  # The mail builds the PDF itself: a job keeps its arguments as JSON, which
+  # the binary PDF does not survive.
+  test "the certificate is attached as a PDF and kept for the check" do
     certify!
 
     mail = certificate_mail
@@ -418,10 +419,11 @@ class ParticipantMailerTest < ActionMailer::TestCase
     assert_equal [TEAM], mail.reply_to
     assert_equal "[UB Paderborn] Teilnahmebescheinigung: Literaturrecherche (15.10.2026)", mail.subject
 
-    attachment = mail.attachments[CERTIFICATE_FILENAME]
+    attachment = mail.attachments[Certificate.filename(@registration)]
 
     assert_not_nil attachment
-    assert_equal "%PDF-1.7 fake", attachment.body.decoded
+    assert_equal "application/pdf", attachment.mime_type
+    assert_equal Digest::SHA256.hexdigest(attachment.body.decoded), @registration.certificates.sole.digest
     assert_includes mail.text_part.body.to_s,
                     "anbei erhalten Sie Ihre Teilnahmebescheinigung für die Schulungsveranstaltung " \
                     "\"Literaturrecherche\" am 15.10.2026."
@@ -435,11 +437,13 @@ class ParticipantMailerTest < ActionMailer::TestCase
   end
 
   # Without a certification there is nothing to certify, and an anonymized
-  # registration has no name and no address left to send it to.
+  # registration has no name and no address left to send it to. Neither keeps
+  # a certificate for the check.
   test "no certificate is built for an event without a certification" do
     assert_no_emails do
       certificate_mail.deliver_now
     end
+    assert_equal 0, Certificate.count
   end
 
   test "no certificate is built for an anonymized registration" do
@@ -449,6 +453,7 @@ class ParticipantMailerTest < ActionMailer::TestCase
     assert_no_emails do
       certificate_mail.deliver_now
     end
+    assert_equal 0, Certificate.count
   end
 
   test "a linked user message points to the detail page" do

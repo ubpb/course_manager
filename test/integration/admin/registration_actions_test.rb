@@ -11,6 +11,7 @@ module Admin
     include ActionMailer::TestHelper
     include AdminLogin
     include MailerRecords
+    include SolidQueueJobs
     include TurboStreamRequests
 
     setup do
@@ -204,6 +205,21 @@ module Admin
       assert_equal "1 Zertifikat(e) versendet", flash[:success]
       assert_not_nil @registration.reload.certificate_sent_at
       assert_nil other.reload.certificate_sent_at
+    end
+
+    test "the bulk certificate mail reaches the participant through the job queue of the servers" do
+      certify
+
+      enqueue_in_solid_queue { bulk_process("send_certificates") }
+
+      assert_emails 1 do
+        work_off_solid_queue
+      end
+
+      mail = ActionMailer::Base.deliveries.last
+
+      assert_equal ["max@example.com"], mail.to
+      assert_equal "application/pdf", mail.attachments[Certificate.filename(@registration)].mime_type
     end
 
     test "the bulk certificate mail leaves out participants who did not attend" do

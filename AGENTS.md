@@ -151,7 +151,9 @@ What reading one file does not show: rules that span several places, and the rea
 
 ## Testing
 
-Minitest, run in parallel, without fixtures: each test creates its own records. Most behaviour is covered by integration tests per area (`test/integration/{admin,frontend,account}`). A test reads like the existing ones: a comment above the class says what the area is for, the test names describe behaviour in plain English. Before writing a helper, look in `test/support/`: there are helpers for the Alma logins, the offer → event → registration chain, config values, the state of Solid Queue and Turbo stream requests (`TURBO_STREAM_HEADERS`; `assert_select` reaches into the `<template>` of a `<turbo-stream>`).
+Minitest, run in parallel, without fixtures: each test creates its own records. Most behaviour is covered by integration tests per area (`test/integration/{admin,frontend,account}`). A test reads like the existing ones: a comment above the class says what the area is for, the test names describe behaviour in plain English. Before writing a helper, look in `test/support/`: there are helpers for the Alma logins, the offer → event → registration chain, config values, the state of Solid Queue, queueing jobs in it (`SolidQueueJobs`) and Turbo stream requests (`TURBO_STREAM_HEADERS`; `assert_select` reaches into the `<template>` of a `<turbo-stream>`).
+
+Tests queue jobs, mails sent with `deliver_later` included, in the test adapter, which keeps their arguments as Ruby objects. The servers queue them in Solid Queue, which keeps them as JSON: an argument JSON cannot carry, such as binary data, fails only there. Pass records and plain values, and let the job or the mail build the rest; `SolidQueueJobs` runs a test through Solid Queue.
 
 System tests (`test/system`, headless Chrome) cover what only a browser shows, such as modals. `bin/rails test` leaves them out; `bin/rails test:system` runs them against the built assets, so run `bun run build` first. A Bootstrap modal ignores a close while it is still opening: wait for it to have the focus first (`wait_for_transitions`).
 

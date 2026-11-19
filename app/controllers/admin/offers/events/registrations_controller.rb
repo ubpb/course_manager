@@ -228,11 +228,7 @@ module Admin
         end
 
         def send_certificate!(registration)
-          ParticipantMailer.certificate(
-            registration,
-            Certificate.generate(registration),
-            Certificate.filename(registration)
-          ).deliver_later
+          ParticipantMailer.certificate(registration).deliver_later
 
           registration.update(certificate_sent_at: Time.zone.now)
         end
