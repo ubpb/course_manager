@@ -73,8 +73,10 @@ Rails.application.configure do
   #   authentication: :plain
   # }
 
-  # Send mails using sendmail
-  config.action_mailer.delivery_method = :sendmail
+  # Keep the mails for reading at /admin/mail: no mail leaves a server unless
+  # its config/application.yml lets them go out (mail.delivery_method: sendmail
+  # on a production machine), see ApplicationMailer.apply_server_settings.
+  config.action_mailer.delivery_method = :letter_opener_web
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).

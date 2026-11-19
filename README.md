@@ -203,15 +203,22 @@ Jeder Wert lässt sich außerdem über eine Umgebungsvariable setzen, deren Name
 
 | Schlüssel | Bedeutung | Standard |
 |---|---|---|
-| `mail.delivery_method` | Versandweg der Mails | `sendmail` |
+| `mail.delivery_method` | Versandweg der Mails | `letter_opener_web` (Mails bleiben auf dem Server) |
 | `mail.host` | Host für Links in Mails | `schulungen.ub.uni-paderborn.de` |
 
-Für den Produktivbetrieb ist kein Eintrag nötig. Ein Testsystem verschickt keine Mails und verlinkt auf sich selbst:
+Ohne Eintrag verlässt keine Mail der Anwendung den Server. **Jeder Produktivserver braucht deshalb den Eintrag, bevor eine Version mit diesem Standard ausgeliefert wird; ohne ihn verschickt die Produktion keine Mails:**
 
 ```yaml
 production:
   mail:
-    delivery_method: letter_opener_web
+    delivery_method: sendmail
+```
+
+Ein Testsystem braucht keinen Versandweg, nur den eigenen Host für Links in Mails:
+
+```yaml
+production:
+  mail:
     host: <Adresse des Testsystems>
 ```
 
@@ -223,13 +230,13 @@ RAILS_ENV=production ~/.rvm/bin/rvm $(cat .ruby-version) do bundle exec bin/rail
   'p ApplicationMailer.delivery_method, ApplicationMailer.default_url_options'
 ```
 
-Ein Tippfehler im Schlüssel fällt sonst nicht auf: Die Anwendung verschickt dann wieder per `sendmail`.
+Ein Wert, für den es keinen Versandweg gibt (etwa `sendmial`), verhindert den Start der Anwendung. Ein Tippfehler im Schlüssel fällt dagegen nicht auf: Die Mails bleiben dann auf dem Server, und die Menüleiste des Admin-Bereichs zeigt den Link „Mails“.
 
 ## Testsysteme
 
 ### Mails lesen statt verschicken
 
-Mit `mail.delivery_method: letter_opener_web` verlässt keine Mail der Anwendung den Server – weder aus der Web-Anwendung noch aus dem Jobs-Dienst, Rake-Tasks oder der Konsole. Die Mails werden unter `tmp/letter_opener` abgelegt (über Deploys hinweg) und sind nach der Anmeldung im Admin-Bereich unter `/admin/mail` zu lesen; die Menüleiste des Admin-Bereichs verlinkt sie dann unter „Mails“.
+Ohne `mail.delivery_method` verlässt keine Mail der Anwendung den Server – weder aus der Web-Anwendung noch aus dem Jobs-Dienst, Rake-Tasks oder der Konsole. Die Mails werden unter `tmp/letter_opener` abgelegt (über Deploys hinweg) und sind nach der Anmeldung im Admin-Bereich unter `/admin/mail` zu lesen; die Menüleiste des Admin-Bereichs verlinkt sie dann unter „Mails“. Mit `delivery_method: sendmail` gehen die Mails hinaus, und der Link fehlt.
 
 Das betrifft nur Mails dieser Anwendung. Was andere Software auf dem Server über `sendmail` verschickt, regelt der Mailserver des Servers.
 

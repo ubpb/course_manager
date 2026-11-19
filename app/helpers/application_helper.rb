@@ -8,10 +8,11 @@ module ApplicationHelper
     ApplicationConfig[:locale_switching, :enabled, default: false]
   end
 
-  # Mails delivered to letter_opener_web are kept for reading at /admin/mail
-  # (see config/routes.rb): in development and on a test system.
+  # Whether this system keeps its mails for reading at /admin/mail (see
+  # config/routes.rb), which the admin's bar then links: everywhere but where
+  # its configuration lets them go out.
   def mail_viewer_enabled?
-    ApplicationMailer.delivery_method == :letter_opener_web
+    ApplicationMailer.keeps_mails?
   end
 
   def active_when(regexp_path_or_boolean)

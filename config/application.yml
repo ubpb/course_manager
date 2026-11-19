@@ -33,7 +33,10 @@ production:
   alma_api:
     api_key: <%= Rails.application.credentials.dig("alma_api", "production", "api_key") %>
 
-  # Only on a test system (the servers' config/application.yml):
+  # On a production machine (the servers' config/application.yml), to let the
+  # mails go out; without it they are kept for reading at /admin/mail:
   # mail:
-  #   delivery_method: letter_opener_web   # default: sendmail; read at /admin/mail
+  #   delivery_method: sendmail   # default on a server: letter_opener_web
+  # On a test system, for links in mails that point to itself:
+  # mail:
   #   host: stage.ub.uni-paderborn.de       # default: schulungen.ub.uni-paderborn.de

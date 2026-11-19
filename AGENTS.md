@@ -146,6 +146,7 @@ What reading one file does not show: rules that span several places, and the rea
 - Admin forms that open in a modal over their list use `Admin::ModalForm` (see its header comment).
 - Turbo morphs a page instead of replacing it (`layouts/_head`) when a visit replaces it with one of the same path (the query aside), such as a redirect back to a list, and when a form is sent back with errors. The elements and their Stimulus controllers stay, but their markup goes back to the server's: what a controller set up in `connect` (inline styles, classes, `hidden`, content) is gone, and `connect` does not run again. Such a controller sets its element up again on `turbo:morph` (`afterMorph`).
 - Mails are grouped by recipient (`ParticipantMailer`, `TeamMailer`), plain text only; their templates live under `app/views/mailers/`.
+- No mail leaves a server by default: they are kept for reading (`letter_opener_web`, as in development) at `/admin/mail`, behind the admin login on a server, and the admin's bar links them (`ApplicationMailer.keeps_mails?`). A production machine lets them go out by `mail.delivery_method: sendmail` in its `config/application.yml` (`ApplicationMailer.apply_server_settings`; the README has the details).
 - Recurring jobs run on Solid Queue from `config/recurring.yml`. The README covers the jobs service on the servers, its monitoring and anonymizing a stage.
 
 ## Testing

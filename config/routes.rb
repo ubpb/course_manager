@@ -104,11 +104,12 @@ Rails.application.routes.draw do
     end
   end
 
-  # Mails delivered to letter_opener_web (config/application.yml:
-  # mail.delivery_method) can be read here. On a server only logged in admins
-  # get in, as the mails hold personal data; the admin cookie is only sent below
-  # /admin. In development, where the mails stay on the machine, anyone does.
-  if Rails.env.local? || ApplicationConfig[:mail, :delivery_method] == "letter_opener_web"
+  # The mails kept for reading (letter_opener_web, the default on a server; see
+  # ApplicationMailer.apply_server_settings) can be read here. On a server only
+  # logged in admins get in, as the mails hold personal data; the admin cookie
+  # is only sent below /admin. In development, where the mails stay on the
+  # machine, anyone does.
+  if ApplicationMailer.mail_viewer_mounted?
     may_read_mails = lambda do |request|
       Rails.env.development? || request.cookie_jar.signed[Admin::ApplicationController::ADMIN_COOKIE].present?
     end
