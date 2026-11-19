@@ -14,6 +14,22 @@ module Admin
       assert_redirected_to new_admin_session_path
     end
 
+    # The viewer's actions that delete mails are POSTs; they find no route.
+    test "logged out visitors cannot delete the mails" do
+      letter = Pathname(LetterOpenerWeb.config.letters_location).join("#{Time.now.to_i}_#{SecureRandom.hex(6)}")
+      FileUtils.mkdir_p(letter)
+      File.write(letter.join("plain.html"), "A kept mail")
+
+      ["/admin/mail/clear", "/admin/mail/#{letter.basename}/delete"].each do |path|
+        post path
+
+        assert_response :not_found
+      end
+      assert_path_exists letter.join("plain.html")
+    ensure
+      FileUtils.rm_rf(letter)
+    end
+
     # In development the mails only exist on the developer's machine, so no login
     # gets in the way.
     test "locally the mails can be read without logging in" do
