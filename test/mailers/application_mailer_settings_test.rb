@@ -70,4 +70,15 @@ class ApplicationMailerSettingsTest < ActiveSupport::TestCase
     assert_not mailer_with({[:mail, :delivery_method] => "sendmail"}).mail_viewer_mounted?(production)
   end
 
+  # On a server tmp/letter_opener is a link to a directory that survives
+  # deploys. The viewer's "Clear" removes the mails' directory with rm_rf,
+  # which would remove only the link and leave the mails; so they lie one level
+  # deeper, where both the viewer and the delivery look for them.
+  test "the kept mails lie in a directory of their own inside the linked one" do
+    location = Rails.root.join("tmp/letter_opener/letters").to_s
+
+    assert_equal location, LetterOpenerWeb.config.letters_location.to_s
+    assert_equal location, ActionMailer::Base.letter_opener_web_settings[:location].to_s
+  end
+
 end
