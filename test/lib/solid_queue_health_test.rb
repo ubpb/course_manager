@@ -71,8 +71,20 @@ class SolidQueueHealthTest < ActiveSupport::TestCase
     assert_equal({"ready" => {"count" => 0, "oldest_age" => nil},
                   "scheduled" => {"count" => 0, "overdue_age" => nil},
                   "claimed" => {"count" => 0, "oldest_age" => nil},
-                  "failed" => {"count" => 0, "latest_at" => nil, "by_job_class" => {}, "by_exception_class" => {}}},
+                  "failed" => {"count" => 0, "latest_at" => nil, "by_job_class" => {}, "by_exception_class" => {}},
+                  "finished" => {"kept_for" => 86_400}},
                  report["jobs"])
+  end
+
+  # Finished jobs, and with them the records of the runs of recurring tasks,
+  # are cleared once they are older than that.
+  test "the report says how long Solid Queue keeps finished jobs" do
+    original = SolidQueue.clear_finished_jobs_after
+    SolidQueue.clear_finished_jobs_after = 3.days
+
+    assert_equal({"kept_for" => 259_200}, report["jobs"]["finished"])
+  ensure
+    SolidQueue.clear_finished_jobs_after = original
   end
 
   test "jobs waiting for a worker show how long the oldest has waited" do

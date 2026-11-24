@@ -49,4 +49,14 @@ module SolidQueueRecords
     Rails.env = original
   end
 
+  # Reads the recurring tasks of production from a schedule of its own in
+  # test/fixtures/files/solid_queue/ instead of config/recurring.yml.
+  def with_recurring_schedule(name, &)
+    original = ENV.fetch("SOLID_QUEUE_RECURRING_SCHEDULE", nil)
+    ENV["SOLID_QUEUE_RECURRING_SCHEDULE"] = "test/fixtures/files/solid_queue/#{name}.yml"
+    with_rails_env("production", &)
+  ensure
+    ENV["SOLID_QUEUE_RECURRING_SCHEDULE"] = original
+  end
+
 end

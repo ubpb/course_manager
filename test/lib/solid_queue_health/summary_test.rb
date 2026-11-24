@@ -195,6 +195,29 @@ class SolidQueueHealthSummaryTest < ActiveSupport::TestCase
     end
   end
 
+  # The weekly report is due on Mondays at 07:00 in Berlin, 06:00 UTC.
+  test "a weekly task that has not run within the day after its time is an error" do
+    register_recurring_tasks("weekly_report", at: Time.utc(2026, 11, 1))
+
+    with_recurring_schedule("weekly") do
+      travel_to Time.utc(2026, 11, 9, 6, 30)
+
+      assert_equal({"status" => "error", "message" => "weekly_report missed its run due at 2026-11-09T06:00:00Z"},
+                   check("recurring_tasks"))
+    end
+  end
+
+  # Solid Queue clears a finished job a day after it ran, and with it the
+  # record of the run, so a run due longer ago cannot be told from a missed
+  # one. The weekly report was due on Monday; it is Wednesday.
+  test "a task's run due longer ago than finished jobs are kept counts as on schedule" do
+    register_recurring_tasks("weekly_report", at: Time.utc(2026, 11, 1))
+
+    with_recurring_schedule("weekly") do
+      assert_equal({"status" => "ok", "message" => "1 of 1 on schedule"}, check("recurring_tasks"))
+    end
+  end
+
   test "a recurring task the scheduler never registered has missed nothing, as no scheduler is alive" do
     register_expected_processes
 

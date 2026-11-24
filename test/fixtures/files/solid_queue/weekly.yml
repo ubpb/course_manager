@@ -1,0 +1,6 @@
+# A weekly recurring task for the tests of SolidQueueHealth, as the app's own
+# schedule (config/recurring.yml) has none. Read in Berlin time, as the app's.
+production:
+  weekly_report:
+    command: "nil"
+    schedule: every monday at 7am

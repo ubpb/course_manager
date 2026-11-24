@@ -103,9 +103,12 @@ class SolidQueueHealth
     # from the next time after it registered it and does not catch up, so a
     # run due before, as on the first deployment, was not missed. A task it
     # never registered has no scheduler, which the processes check reports.
+    # Solid Queue clears a finished run with its job, so a run due longer ago
+    # than finished jobs are kept, as a weekly one, cannot be judged any more.
     def missed?(task)
       due_at = Time.iso8601(task[:last_due_at])
       return false if @now - due_at < RECURRING_GRACE
+      return false if @now - due_at >= jobs[:finished][:kept_for]
       return false if task[:registered_at].nil? || Time.iso8601(task[:registered_at]) >= due_at
 
       task[:last_enqueued_at].nil? || Time.iso8601(task[:last_enqueued_at]) < due_at

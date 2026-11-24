@@ -56,7 +56,9 @@ class SolidQueueHealth
                   overdue_age: age(SolidQueue::ScheduledExecution.where(scheduled_at: ..@now).minimum(:scheduled_at))},
       claimed: {count: SolidQueue::ClaimedExecution.count,
                 oldest_age: age(SolidQueue::ClaimedExecution.minimum(:created_at))},
-      failed: failed_jobs
+      failed: failed_jobs,
+      # Cleared after that, and with them the records of recurring runs.
+      finished: {kept_for: SolidQueue.clear_finished_jobs_after.to_i}
     }
   end
 
